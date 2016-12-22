@@ -7,6 +7,24 @@ apply plugin: 'checkstyle'
 
 com.android.ddmlib.DdmPreferences.setTimeOut(60000)
 
+// Build numbers were manually set until 1063
+def LEGACY_BUILD_NUMBER_OFFSET = 1063
+
+// From http://stackoverflow.com/questions/17097263/automatically-versioning-android-project-from-git-describe-with-android-studio-g/24121734#24121734
+def getMasterCommitCount = { ->
+    try {
+        def stdout = new ByteArrayOutputStream()
+        exec {
+            commandLine 'git', 'rev-list', '--first-parent', '--count', 'master'
+            standardOutput = stdout
+        }
+        return Integer.parseInt(stdout.toString().trim())
+    }
+    catch (ignored) {
+        return -1;
+    }
+}
+
 android {
     compileSdkVersion(22)
     buildToolsVersion("25.0.0")
@@ -15,7 +33,7 @@ android {
         applicationId("org.odk.collect.android")
         minSdkVersion(9)
         targetSdkVersion(9)
-        versionCode(1063)
+        versionCode LEGACY_BUILD_NUMBER_OFFSET + getMasterCommitCount()
         versionName("1.4.12")
         testInstrumentationRunner("android.support.test.runner.AndroidJUnitRunner")
     }
