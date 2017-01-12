@@ -694,12 +694,17 @@ public class FormEntryActivity extends Activity implements AnimationListener,
                 String destImagePath = mInstanceFolder1 + File.separator
                         + System.currentTimeMillis() + ".jpg";
 
-                File source = new File(sourceImagePath);
-                File newImage = new File(destImagePath);
-                FileUtils.copyFile(source, newImage);
+                if (sourceImagePath != null) {
+                    File source = new File(sourceImagePath);
+                    File newImage = new File(destImagePath);
+                    FileUtils.copyFile(source, newImage);
 
-                ((ODKView) mCurrentView).setBinaryData(newImage);
-                saveAnswersForCurrentScreen(DO_NOT_EVALUATE_CONSTRAINTS);
+                    ((ODKView) mCurrentView).setBinaryData(newImage);
+                    saveAnswersForCurrentScreen(DO_NOT_EVALUATE_CONSTRAINTS);
+                } else {
+                    Log.e(t, "Could not receive chosen image");
+                    showCustomToast(getString(R.string.error_occured), Toast.LENGTH_SHORT);
+                }
                 break;
             case AUDIO_CAPTURE:
             case VIDEO_CAPTURE:
