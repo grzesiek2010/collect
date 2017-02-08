@@ -109,6 +109,9 @@
             android:name=".activities.DrawActivity"
             android:label="@string/app_name" />
         <activity
+            android:name=".activities.MainActivity"
+            android:label="@string/app_name" />
+        <activity
             android:name=".activities.OpenSourceLicensesActivity"
             android:label="@string/all_open_source_licenses" />
         <activity
