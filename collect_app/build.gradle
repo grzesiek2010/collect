@@ -45,7 +45,7 @@ android {
         versionName getVersionName()
         testInstrumentationRunner("android.support.test.runner.AndroidJUnitRunner")
         multiDexEnabled true
-        DdmPreferences.setTimeOut(60000)
+        com.android.ddmlib.DdmPreferences.setTimeOut(60000)
     }
 
     buildTypes {
