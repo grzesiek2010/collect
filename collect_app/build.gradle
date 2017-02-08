@@ -1,3 +1,5 @@
+import com.android.ddmlib.DdmPreferences
+
 /**************************************************************************************************
  GRADLE CONFIG
  *************************************************************************************************/
@@ -43,6 +45,7 @@ android {
         versionName getVersionName()
         testInstrumentationRunner("android.support.test.runner.AndroidJUnitRunner")
         multiDexEnabled true
+        DdmPreferences.setTimeOut(60000)
     }
 
     buildTypes {

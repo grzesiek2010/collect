@@ -14,8 +14,17 @@ test:
         - ./gradlew lint assembleRelease assembleAndroidTest
 
     override:
-        - ./gradlew testReleaseUnitTest
-        - cp -r collect_app/build/outputs/apk $CIRCLE_ARTIFACTS
+        # start the emulator
+            - emulator -avd circleci-android22 -no-audio -no-window:
+                background: true
+                parallel: true
+            # wait for it to have booted
+            - circle-android wait-for-boot
+            # unlock the emulator screen
+            - sleep 30
+            - adb shell input keyevent 82
+            # run tests  against the emulator.
+            - ./gradlew connectedAndroidTest -PdisablePreDex
 
     post:
         - mkdir -p $CIRCLE_TEST_REPORTS/junit/
