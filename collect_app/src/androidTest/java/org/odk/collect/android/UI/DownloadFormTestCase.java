@@ -5,6 +5,7 @@ import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.odk.collect.android.R;
 import org.odk.collect.android.activities.MainMenuActivity;
+import org.odk.collect.android.activities.OpenSourceLicensesActivity;
 
 import android.support.test.rule.ActivityTestRule;
 import android.support.test.runner.AndroidJUnit4;
@@ -22,8 +23,8 @@ public class DownloadFormTestCase {
     private static final String FORM_NAME = "Biggest N of Set";
 
     @Rule
-    public ActivityTestRule<MainMenuActivity> mActivityRule = new ActivityTestRule<>(
-            MainMenuActivity.class);
+    public ActivityTestRule<OpenSourceLicensesActivity> mActivityRule = new ActivityTestRule<>(
+            OpenSourceLicensesActivity.class);
 
     @Test
     public void testDownloadForm() {
