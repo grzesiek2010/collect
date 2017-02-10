@@ -1,5 +1,6 @@
 package org.odk.collect.android.utilities;
 
+import static junit.framework.Assert.assertNotNull;
 import static org.junit.Assert.assertNull;
 
 import org.junit.Test;
@@ -25,7 +26,7 @@ public class TextUtilsTest {
     public void textToHtml_BouncesNullInput() {
         String input = null;
         CharSequence observed = TextUtils.textToHtml(input);
-        assertNull(observed);
+        assertNotNull(observed);
     }
 
 }

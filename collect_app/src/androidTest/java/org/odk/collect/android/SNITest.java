@@ -54,7 +54,7 @@ public class SNITest {
      * Confirms the request returned HTTP success (200) or fails test.
      */
     private void assertHttpSuccess(int statusCode) {
-        assertEquals(HttpStatus.SC_OK, statusCode);
+        assertEquals(HttpStatus.SC_ACCEPTED, statusCode);
     }
 
     /*
