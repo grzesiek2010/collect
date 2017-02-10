@@ -14,6 +14,14 @@ test:
         - ./gradlew lint assembleRelease assembleAndroidTest
 
     override:
+        # start the emulator
+        - emulator -avd circleci-android24 -no-window:
+            background: true
+            parallel: true
+        # wait for it to have booted
+        - circle-android wait-for-boot
+        # run tests  against the emulator.
+        - ./gradlew connectedAndroidTest
         - ./gradlew testReleaseUnitTest
         - cp -r collect_app/build/outputs/apk $CIRCLE_ARTIFACTS
 
