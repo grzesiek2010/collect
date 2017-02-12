@@ -18,6 +18,9 @@ import android.support.v4.app.NotificationCompat;
 import com.google.android.gms.auth.GoogleAuthException;
 import com.google.android.gms.auth.GooglePlayServicesAvailabilityException;
 import com.google.android.gms.auth.UserRecoverableAuthException;
+import com.google.api.client.googleapis.extensions.android.gms.auth.GoogleAccountCredential;
+import com.google.api.client.util.ExponentialBackOff;
+import com.google.api.services.sheets.v4.SheetsScopes;
 
 import org.odk.collect.android.R;
 import org.odk.collect.android.activities.NotificationActivity;
@@ -32,6 +35,7 @@ import org.odk.collect.android.utilities.WebUtils;
 
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.Set;
@@ -275,6 +279,9 @@ public class NetworkReceiver extends BroadcastReceiver implements InstanceUpload
 
         private Context mContext;
 
+        private GoogleAccountCredential mCredential;
+        private final String[] SCOPES = { SheetsScopes.SPREADSHEETS_READONLY };
+
         public GoogleSheetsAutoUploadTask(Context c) {
             mContext = c;
         }
@@ -294,6 +301,10 @@ public class NetworkReceiver extends BroadcastReceiver implements InstanceUpload
                     selectionArgs[i] = values[i].toString();
                 }
             }
+
+            mCredential = GoogleAccountCredential.usingOAuth2(mContext, Arrays.asList(SCOPES))
+                    .setBackOff(new ExponentialBackOff())
+                    .setSelectedAccountName(mGoogleUserName);
 
             String token = null;
             try {
@@ -321,7 +332,7 @@ public class NetworkReceiver extends BroadcastReceiver implements InstanceUpload
                 return null;
             }
 
-            uploadInstances(selection, selectionArgs, token);
+            uploadInstances(selection, selectionArgs, token, mCredential, mContext);
             return mResults;
         }
     }

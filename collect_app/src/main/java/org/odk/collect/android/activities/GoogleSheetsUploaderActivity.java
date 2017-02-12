@@ -37,6 +37,9 @@ import com.google.android.gms.auth.GoogleAuthException;
 import com.google.android.gms.auth.GooglePlayServicesAvailabilityException;
 import com.google.android.gms.auth.UserRecoverableAuthException;
 import com.google.android.gms.common.GooglePlayServicesUtil;
+import com.google.api.client.googleapis.extensions.android.gms.auth.GoogleAccountCredential;
+import com.google.api.client.util.ExponentialBackOff;
+import com.google.api.services.sheets.v4.SheetsScopes;
 
 import org.odk.collect.android.R;
 import org.odk.collect.android.application.Collect;
@@ -47,6 +50,7 @@ import org.odk.collect.android.tasks.GoogleSheetsAbstractUploader;
 import org.odk.collect.android.tasks.GoogleSheetsTask;
 
 import java.io.IOException;
+import java.util.Arrays;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.Set;
@@ -359,6 +363,10 @@ public class GoogleSheetsUploaderActivity extends Activity implements InstanceUp
     public class GoogleSheetsInstanceUploaderTask extends
             GoogleSheetsAbstractUploader<Long, Integer, HashMap<String, String>> {
 
+        private GoogleAccountCredential mCredential;
+        private final String[] SCOPES = { SheetsScopes.SPREADSHEETS };
+
+
         @Override
         protected HashMap<String, String> doInBackground(Long... values) {
             mResults = new HashMap<String, String>();
@@ -373,6 +381,10 @@ public class GoogleSheetsUploaderActivity extends Activity implements InstanceUp
                     selectionArgs[i] = values[i].toString();
                 }
             }
+
+            mCredential = GoogleAccountCredential.usingOAuth2(getApplicationContext(), Arrays.asList(SCOPES))
+                    .setBackOff(new ExponentialBackOff())
+                    .setSelectedAccountName(mGoogleUserName);
 
             String token;
             try {
@@ -409,7 +421,7 @@ public class GoogleSheetsUploaderActivity extends Activity implements InstanceUp
                 return null;
             }
 
-            uploadInstances(selection, selectionArgs, token);
+            uploadInstances(selection, selectionArgs, token, mCredential, GoogleSheetsUploaderActivity.this);
             return mResults;
         }
     }

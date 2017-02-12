@@ -55,7 +55,7 @@ android {
         debug {
             debuggable(true)
             // Allows AndroidTest JaCoCo reports to be generated
-            testCoverageEnabled(true)
+            //testCoverageEnabled(true)
         }
     }
 
