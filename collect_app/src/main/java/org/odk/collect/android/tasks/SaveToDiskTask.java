@@ -14,7 +14,6 @@
 
 package org.odk.collect.android.tasks;
 
-import android.content.ContentValues;
 import android.database.Cursor;
 import android.net.Uri;
 import android.os.AsyncTask;
@@ -25,6 +24,8 @@ import org.javarosa.core.services.transport.payload.ByteArrayPayload;
 import org.javarosa.form.api.FormEntryController;
 import org.odk.collect.android.R;
 import org.odk.collect.android.application.Collect;
+import org.odk.collect.android.dao.InstancesDao;
+import org.odk.collect.android.dto.Instance;
 import org.odk.collect.android.exception.EncryptionException;
 import org.odk.collect.android.listeners.FormSavedListener;
 import org.odk.collect.android.logic.FormController;
@@ -152,23 +153,22 @@ public class SaveToDiskTask extends AsyncTask<Void, String, SaveResult> {
         FormController formController = Collect.getInstance().getFormController();
 
         // Update the instance database...
-        ContentValues values = new ContentValues();
+        Instance.Builder instanceBuilder = new Instance.Builder();
         if (mInstanceName != null) {
-            values.put(InstanceColumns.DISPLAY_NAME, mInstanceName);
+            instanceBuilder.displayName(mInstanceName);
         }
         if (incomplete || !mMarkCompleted) {
-            values.put(InstanceColumns.STATUS, InstanceProviderAPI.STATUS_INCOMPLETE);
+            instanceBuilder.status(InstanceProviderAPI.STATUS_INCOMPLETE);
         } else {
-            values.put(InstanceColumns.STATUS, InstanceProviderAPI.STATUS_COMPLETE);
+            instanceBuilder.status(InstanceProviderAPI.STATUS_COMPLETE);
         }
         // update this whether or not the status is complete...
-        values.put(InstanceColumns.CAN_EDIT_WHEN_COMPLETE, Boolean.toString(canEditAfterCompleted));
+        instanceBuilder.canEditWhenComplete(Boolean.toString(canEditAfterCompleted));
 
         // If FormEntryActivity was started with an Instance, just update that instance
         if (Collect.getInstance().getContentResolver().getType(mUri).equals(
                 InstanceColumns.CONTENT_ITEM_TYPE)) {
-            int updated = Collect.getInstance().getContentResolver().update(mUri, values, null,
-                    null);
+            int updated = new InstancesDao().updateInstance(instanceBuilder.build(), null, null);
             if (updated > 1) {
                 Log.w(t, "Updated more than one entry, that's not good: " + mUri.toString());
             } else if (updated == 1) {
@@ -188,9 +188,7 @@ public class SaveToDiskTask extends AsyncTask<Void, String, SaveResult> {
             String[] whereArgs = {
                     instancePath
             };
-            int updated =
-                    Collect.getInstance().getContentResolver()
-                            .update(InstanceColumns.CONTENT_URI, values, where, whereArgs);
+            int updated = new InstancesDao().updateInstance(instanceBuilder.build(), where, whereArgs);
             if (updated > 1) {
                 Log.w(t, "Updated more than one entry, that's not good: " + instancePath);
             } else if (updated == 1) {
@@ -214,22 +212,21 @@ public class SaveToDiskTask extends AsyncTask<Void, String, SaveResult> {
                     }
 
                     // add missing fields into values
-                    values.put(InstanceColumns.INSTANCE_FILE_PATH, instancePath);
-                    values.put(InstanceColumns.SUBMISSION_URI, submissionUri);
+                    instanceBuilder.instanceFilePath(instancePath);
+                    instanceBuilder.submissionUri(submissionUri);
                     if (mInstanceName != null) {
-                        values.put(InstanceColumns.DISPLAY_NAME, mInstanceName);
+                        instanceBuilder.displayName(mInstanceName);
                     } else {
-                        values.put(InstanceColumns.DISPLAY_NAME, formname);
+                        instanceBuilder.displayName(formname);
                     }
-                    values.put(InstanceColumns.JR_FORM_ID, jrformid);
-                    values.put(InstanceColumns.JR_VERSION, jrversion);
+                    instanceBuilder.jrFormId(jrformid);
+                    instanceBuilder.jrVersion(jrversion);
                 } finally {
                     if (c != null) {
                         c.close();
                     }
                 }
-                mUri = Collect.getInstance().getContentResolver()
-                        .insert(InstanceColumns.CONTENT_URI, values);
+                mUri = new InstancesDao().saveInstance(instanceBuilder.build());
             }
         }
     }

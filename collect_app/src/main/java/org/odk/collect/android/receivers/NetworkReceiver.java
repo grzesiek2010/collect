@@ -22,6 +22,7 @@ import com.google.android.gms.auth.UserRecoverableAuthException;
 import org.odk.collect.android.R;
 import org.odk.collect.android.activities.NotificationActivity;
 import org.odk.collect.android.application.Collect;
+import org.odk.collect.android.dao.InstancesDao;
 import org.odk.collect.android.listeners.InstanceUploaderListener;
 import org.odk.collect.android.preferences.PreferencesActivity;
 import org.odk.collect.android.provider.InstanceProviderAPI;
@@ -106,8 +107,8 @@ public class NetworkReceiver extends BroadcastReceiver implements InstanceUpload
                     };
 
             ArrayList<Long> toUpload = new ArrayList<Long>();
-            Cursor c = context.getContentResolver().query(InstanceColumns.CONTENT_URI, null,
-                    selection, selectionArgs, null);
+            Cursor c = new InstancesDao().getInstancesCursor(null, selection, selectionArgs, null);
+
             try {
                 if (c != null && c.getCount() > 0) {
                     c.move(-1);
@@ -206,11 +207,7 @@ public class NetworkReceiver extends BroadcastReceiver implements InstanceUpload
             {
                 Cursor results = null;
                 try {
-                    results = Collect
-                            .getInstance()
-                            .getContentResolver()
-                            .query(InstanceColumns.CONTENT_URI, null, selection.toString(),
-                                    selectionArgs, null);
+                    results = new InstancesDao().getInstancesCursor(null, selection.toString(), selectionArgs, null);
                     if (results.getCount() > 0) {
                         results.moveToPosition(-1);
                         while (results.moveToNext()) {
