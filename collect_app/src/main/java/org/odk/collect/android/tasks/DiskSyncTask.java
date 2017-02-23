@@ -23,6 +23,8 @@ import android.util.Log;
 
 import org.odk.collect.android.R;
 import org.odk.collect.android.application.Collect;
+import org.odk.collect.android.dao.FormsDao;
+import org.odk.collect.android.dto.Form;
 import org.odk.collect.android.listeners.DiskSyncListener;
 import org.odk.collect.android.provider.FormsProviderAPI.FormsColumns;
 import org.odk.collect.android.utilities.FileUtils;
@@ -100,8 +102,7 @@ public class DiskSyncTask extends AsyncTask<Void, String, String> {
                 Cursor mCursor = null;
                 // open the cursor within a try-catch block so it can always be closed.
                 try {
-                    mCursor = Collect.getInstance().getContentResolver()
-                            .query(FormsColumns.CONTENT_URI, null, null, null, null);
+                    mCursor = new FormsDao().getAllFormsCursor();
                     if (mCursor == null) {
                         Log.e(t, "[" + instance + "] Forms Content Provider returned NULL");
                         errors.append(
@@ -167,9 +168,7 @@ public class DiskSyncTask extends AsyncTask<Void, String, String> {
                     }
 
                     // update in content provider
-                    int count =
-                            Collect.getInstance().getContentResolver()
-                                    .update(updateUri, values, null, null);
+                    int count = new FormsDao().updateForm(values, null, null);
                     Log.i(t, "[" + instance + "] " + count + " records successfully updated");
                 }
                 uriToUpdate.clear();
@@ -208,8 +207,7 @@ public class DiskSyncTask extends AsyncTask<Void, String, String> {
                     try {
                         // insert failures are OK and expected if multiple
                         // DiskSync scanners are active.
-                        Collect.getInstance().getContentResolver()
-                                .insert(FormsColumns.CONTENT_URI, values);
+                        new FormsDao().saveForm(values);
                     } catch (SQLException e) {
                         Log.i(t, "[" + instance + "] " + e.toString());
                     }
@@ -228,15 +226,9 @@ public class DiskSyncTask extends AsyncTask<Void, String, String> {
 
     private boolean isAlreadyDefined(File formDefFile) {
         // first try to see if a record with this filename already exists...
-        String[] projection = {
-                FormsColumns._ID, FormsColumns.FORM_FILE_PATH
-        };
-        String[] selectionArgs = {formDefFile.getAbsolutePath()};
-        String selection = FormsColumns.FORM_FILE_PATH + "=?";
         Cursor c = null;
         try {
-            c = Collect.getInstance().getContentResolver()
-                    .query(FormsColumns.CONTENT_URI, projection, selection, selectionArgs, null);
+            c = new FormsDao().getFormsCursorForFormFilePath(formDefFile.getAbsolutePath());
             return (c.getCount() > 0);
         } finally {
             if (c != null) {

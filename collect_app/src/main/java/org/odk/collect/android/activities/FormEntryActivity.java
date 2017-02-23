@@ -69,7 +69,9 @@ import org.javarosa.form.api.FormEntryController;
 import org.javarosa.form.api.FormEntryPrompt;
 import org.odk.collect.android.R;
 import org.odk.collect.android.application.Collect;
+import org.odk.collect.android.dao.FormsDao;
 import org.odk.collect.android.dao.InstancesDao;
+import org.odk.collect.android.dto.Form;
 import org.odk.collect.android.exception.GDriveConnectionException;
 import org.odk.collect.android.exception.JavaRosaException;
 import org.odk.collect.android.listeners.AdvanceToNextListener;
@@ -405,9 +407,7 @@ public class FormEntryActivity extends Activity implements AnimationListener,
                     {
                         Cursor formCursor = null;
                         try {
-                            formCursor = getContentResolver().query(
-                                    FormsColumns.CONTENT_URI, null, selection,
-                                    selectionArgs, null);
+                            formCursor = new FormsDao().getFormsCursor(null, selection, selectionArgs, null);
                             if (formCursor.getCount() == 1) {
                                 formCursor.moveToFirst();
                                 mFormPath = formCursor
@@ -2110,9 +2110,7 @@ public class FormEntryActivity extends Activity implements AnimationListener,
                                 String selection = FormsColumns.FORM_FILE_PATH
                                         + "=?";
                                 String selectArgs[] = {mFormPath};
-                                int updated = getContentResolver().update(
-                                        FormsColumns.CONTENT_URI, values,
-                                        selection, selectArgs);
+                                int updated = new FormsDao().updateForm(values, selection, selectArgs);
                                 Log.i(t, "Updated language to: "
                                         + languages[whichButton] + " in "
                                         + updated + " rows");
@@ -2486,12 +2484,9 @@ public class FormEntryActivity extends Activity implements AnimationListener,
         if (languageTest != null) {
             String defaultLanguage = formController.getLanguage();
             String newLanguage = "";
-            String selection = FormsColumns.FORM_FILE_PATH + "=?";
-            String selectArgs[] = {mFormPath};
             Cursor c = null;
             try {
-                c = getContentResolver().query(FormsColumns.CONTENT_URI, null,
-                        selection, selectArgs, null);
+                c = new FormsDao().getFormsCursorForFormFilePath(mFormPath);
                 if (c.getCount() == 1) {
                     c.moveToFirst();
                     newLanguage = c.getString(c

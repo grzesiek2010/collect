@@ -20,9 +20,9 @@ import android.preference.PreferenceManager;
 
 import org.odk.collect.android.R;
 import org.odk.collect.android.application.Collect;
+import org.odk.collect.android.dao.FormsDao;
 import org.odk.collect.android.dao.InstancesDao;
 import org.odk.collect.android.database.ItemsetDbAdapter;
-import org.odk.collect.android.provider.FormsProviderAPI;
 import org.osmdroid.tileprovider.constants.OpenStreetMapTileProviderConstants;
 
 import java.io.File;
@@ -47,7 +47,7 @@ public class ResetUtility {
                     resetInstances();
                     break;
                 case ResetAction.RESET_FORMS:
-                    resetForms(context);
+                    resetForms();
                     break;
                 case ResetAction.RESET_LAYERS:
                     if (deleteFolderContents(Collect.OFFLINE_LAYERS)) {
@@ -89,8 +89,8 @@ public class ResetUtility {
         }
     }
 
-    private void resetForms(final Context context) {
-        context.getContentResolver().delete(FormsProviderAPI.FormsColumns.CONTENT_URI, null, null);
+    private void resetForms() {
+        new FormsDao().deleteFormsDatabase();
 
         File itemsetDbFile = new File(Collect.METADATA_PATH + File.separator + ItemsetDbAdapter.DATABASE_NAME);
 

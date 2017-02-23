@@ -24,6 +24,7 @@ import org.javarosa.xform.parse.XFormParser;
 import org.kxml2.kdom.Element;
 import org.odk.collect.android.R;
 import org.odk.collect.android.application.Collect;
+import org.odk.collect.android.dao.FormsDao;
 import org.odk.collect.android.exception.TaskCancelledException;
 import org.odk.collect.android.listeners.FormDownloaderListener;
 import org.odk.collect.android.logic.FormDetails;
@@ -235,14 +236,7 @@ public class DownloadFormsTask extends
         FileUtils.checkMediaPath(new File(mediaPath));
 
         try {
-            String[] selectionArgs = {
-                    formFile.getAbsolutePath()
-            };
-            String selection = FormsColumns.FORM_FILE_PATH + "=?";
-            cursor = Collect.getInstance()
-                    .getContentResolver()
-                    .query(FormsColumns.CONTENT_URI, null, selection, selectionArgs,
-                            null);
+            cursor = new FormsDao().getFormsCursorForFormFilePath(formFile.getAbsolutePath());
 
             isNew = cursor.getCount() <= 0;
 
@@ -271,6 +265,7 @@ public class DownloadFormsTask extends
                 uri =
                         Collect.getInstance().getContentResolver()
                                 .insert(FormsColumns.CONTENT_URI, v);
+
                 Collect.getInstance().getActivityLogger().logAction(this, "insert",
                         formFile.getAbsolutePath());
 
@@ -318,18 +313,9 @@ public class DownloadFormsTask extends
 
         // we've downloaded the file, and we may have renamed it
         // make sure it's not the same as a file we already have
-        String[] projection = {
-                FormsColumns.FORM_FILE_PATH
-        };
-        String[] selectionArgs = {
-                FileUtils.getMd5Hash(f)
-        };
-        String selection = FormsColumns.MD5_HASH + "=?";
-
         Cursor c = null;
         try {
-            c = Collect.getInstance().getContentResolver()
-                    .query(FormsColumns.CONTENT_URI, projection, selection, selectionArgs, null);
+            c = new FormsDao().getFormsCursorForMd5Hash(FileUtils.getMd5Hash(f));
             if (c.getCount() > 0) {
                 // Should be at most, 1
                 c.moveToFirst();
