@@ -258,7 +258,9 @@ public class DateWidget extends QuestionWidget {
                 .withMonthOfYear((!showCalendar && hideMonth) ? 1 : mDatePicker.getMonth() + 1)
                 .withDayOfMonth((!showCalendar && (hideMonth || hideDay)) ? 1 : mDatePicker.getDayOfMonth())
                 .withHourOfDay(0)
-                .withMinuteOfHour(0);
+                .withMinuteOfHour(0)
+                .withSecondOfMinute(0)
+                .withMillisOfSecond(0);
 
         ldt = skipDaylightSavingGapIfExists(ldt);
         return new DateData(ldt.toDate());
