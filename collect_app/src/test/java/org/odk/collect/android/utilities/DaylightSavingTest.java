@@ -68,17 +68,6 @@ public class DaylightSavingTest {
 
     @Test
     // 1 Jan 1960 at 00:00:00 clocks were turned forward to 0:15:00
-    public void testEATTimezoneWithDateWidget() {
-        TimeZone.setDefault(TimeZone.getTimeZone(EAT_TIME_ZONE));
-        DateWidget dateWidget = prepareDateWidget(1960, 0, 1);
-
-        IAnswerData answerData = dateWidget.getAnswer();
-        assertNotNull(answerData);
-        assertDate(answerData, 1960, 0, 1, 0, 15);
-    }
-
-    @Test
-    // 1 Jan 1960 at 00:00:00 clocks were turned forward to 0:15:00
     public void testEATTimezoneWithDateTimeWidget() {
         TimeZone.setDefault(TimeZone.getTimeZone(EAT_TIME_ZONE));
         DateTimeWidget dateTimeWidget = prepareDateTimeWidget(1960, 0, 1, 0, 0);
@@ -90,7 +79,7 @@ public class DaylightSavingTest {
 
     @Test
     // 1 Jan 1940 at 00:00:00 clocks were turned forward to 0:15
-    public void testEATT2TimezoneWithDateTimeWidget() {
+    public void testEAT2TimezoneWithDateTimeWidget() {
         TimeZone.setDefault(TimeZone.getTimeZone(EAT_TIME_ZONE));
         DateTimeWidget dateTimeWidget = prepareDateTimeWidget(1940, 0, 1, 0, 0);
 
@@ -111,14 +100,36 @@ public class DaylightSavingTest {
     }
 
     @Test
+    // 12 Mar 2017 at 02:00:00 clocks were turned forward to 03:00:00
+    public void testESTTimezoneWithDateWidget() {
+        TimeZone.setDefault(TimeZone.getTimeZone(EST_TIME_ZONE));
+        DateWidget dateWidget = prepareDateWidget(2017, 2, 12);
+
+        IAnswerData answerData = dateWidget.getAnswer();
+        assertNotNull(answerData);
+        assertDate(answerData, 2017, 2, 12, 0, 0);
+    }
+
+    @Test
     // 26 Mar 2017 at 02:00:00 clocks were turned forward to 03:00:00
     public void testCETTimeZoneWithDateTimeWidget() {
         TimeZone.setDefault(TimeZone.getTimeZone(CET_TIME_ZONE));
-        DateTimeWidget dateTimeWidget = prepareDateTimeWidget(2017, 2, 26, 2, 59);
+        DateTimeWidget dateTimeWidget = prepareDateTimeWidget(2017, 2, 26, 2, 0);
 
         IAnswerData answerData = dateTimeWidget.getAnswer();
         assertNotNull(answerData);
         assertDate(answerData, 2017, 2, 26, 3, 0);
+    }
+
+    @Test
+    // 26 Mar 2017 at 02:00:00 clocks were turned forward to 03:00:00
+    public void testCETTimezoneWithDateWidget() {
+        TimeZone.setDefault(TimeZone.getTimeZone(CET_TIME_ZONE));
+        DateWidget dateWidget = prepareDateWidget(2017, 2, 26);
+
+        IAnswerData answerData = dateWidget.getAnswer();
+        assertNotNull(answerData);
+        assertDate(answerData, 2017, 2, 26, 0, 0);
     }
 
     private void assertDate(IAnswerData answerData, int year, int month, int day, int hour, int minute) {
