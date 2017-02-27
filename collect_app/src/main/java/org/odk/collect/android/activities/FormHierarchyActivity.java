@@ -112,7 +112,7 @@ public class FormHierarchyActivity extends ListActivity {
             }
         });
 
-        if (getIntent().getStringExtra(ApplicationConstants.BundleKeys.FORM_MODE).equalsIgnoreCase(ApplicationConstants.FormModes.VIEW_SENT)) {
+        if (getIntent().getStringExtra(ApplicationConstants.BundleKeys.FORM_MODE.bundleKey()).equalsIgnoreCase(ApplicationConstants.FormModes.VIEW_SENT.formMode())) {
             Collect.getInstance().getFormController().stepToOuterScreenEvent();
 
             Button exitButton = (Button) findViewById(R.id.exitButton);
@@ -443,7 +443,7 @@ public class FormHierarchyActivity extends ListActivity {
                     }
                 }
                 setResult(RESULT_OK);
-                if (getIntent().getStringExtra(ApplicationConstants.BundleKeys.FORM_MODE).equalsIgnoreCase(ApplicationConstants.FormModes.EDIT_SAVED)) {
+                if (getIntent().getStringExtra(ApplicationConstants.BundleKeys.FORM_MODE.bundleKey()).equalsIgnoreCase(ApplicationConstants.FormModes.EDIT_SAVED.formMode())) {
                     finish();
                 }
                 return;

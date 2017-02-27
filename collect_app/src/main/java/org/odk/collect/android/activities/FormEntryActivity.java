@@ -910,7 +910,7 @@ public class FormEntryActivity extends Activity implements AnimationListener,
                     saveAnswersForCurrentScreen(DO_NOT_EVALUATE_CONSTRAINTS);
                 }
                 Intent i = new Intent(this, FormHierarchyActivity.class);
-                i.putExtra(ApplicationConstants.BundleKeys.FORM_MODE, ApplicationConstants.FormModes.EDIT_SAVED);
+                i.putExtra(ApplicationConstants.BundleKeys.FORM_MODE.bundleKey(), ApplicationConstants.FormModes.EDIT_SAVED.formMode());
                 startActivityForResult(i, HIERARCHY_ACTIVITY);
                 return true;
             case MENU_PREFERENCES:
@@ -2563,14 +2563,14 @@ public class FormEntryActivity extends Activity implements AnimationListener,
                 // we've just loaded a saved form, so start in the hierarchy
                 // view
                 Intent i = new Intent(this, FormHierarchyActivity.class);
-                if (reqIntent.getStringExtra(ApplicationConstants.BundleKeys.FORM_MODE).equalsIgnoreCase(ApplicationConstants.FormModes.EDIT_SAVED)) {
-                    i.putExtra(ApplicationConstants.BundleKeys.FORM_MODE, ApplicationConstants.FormModes.EDIT_SAVED);
+                if (reqIntent.getStringExtra(ApplicationConstants.BundleKeys.FORM_MODE.bundleKey()).equalsIgnoreCase(ApplicationConstants.FormModes.EDIT_SAVED.formMode())) {
+                    i.putExtra(ApplicationConstants.BundleKeys.FORM_MODE.bundleKey(), ApplicationConstants.FormModes.EDIT_SAVED.formMode());
                     startActivity(i);
                     return; // so we don't show the intro screen before jumping to
                     // the hierarchy
                 } else {
-                    if (reqIntent.getStringExtra(ApplicationConstants.BundleKeys.FORM_MODE).equalsIgnoreCase(ApplicationConstants.FormModes.VIEW_SENT)) {
-                        i.putExtra(ApplicationConstants.BundleKeys.FORM_MODE, ApplicationConstants.FormModes.VIEW_SENT);
+                    if (reqIntent.getStringExtra(ApplicationConstants.BundleKeys.FORM_MODE.bundleKey()).equalsIgnoreCase(ApplicationConstants.FormModes.VIEW_SENT.formMode())) {
+                        i.putExtra(ApplicationConstants.BundleKeys.FORM_MODE.bundleKey(), ApplicationConstants.FormModes.VIEW_SENT.formMode());
                         startActivity(i);
                     }
                     finish();
