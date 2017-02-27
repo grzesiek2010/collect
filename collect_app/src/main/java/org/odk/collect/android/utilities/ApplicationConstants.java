@@ -17,12 +17,12 @@ package org.odk.collect.android.utilities;
 
 public class ApplicationConstants {
 
-    public abstract static class BundleKeys {
-        public static final String FORM_MODE = "formMode";
+    public enum BundleKeys {
+        FORM_MODE
     }
 
-    public abstract static class FormModes {
-        public static final String EDIT_SAVED = "editSaved";
-        public static final String VIEW_SENT = "viewSent";
+    public enum FormModes {
+        EDIT_SAVED,
+        VIEW_SENT
     }
 }

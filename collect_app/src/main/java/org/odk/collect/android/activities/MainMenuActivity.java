@@ -171,9 +171,9 @@ public class MainMenuActivity extends Activity {
             @Override
             public void onClick(View v) {
                 Collect.getInstance().getActivityLogger()
-                        .logAction(this, ApplicationConstants.FormModes.EDIT_SAVED, "click");
+                        .logAction(this, ApplicationConstants.FormModes.EDIT_SAVED.toString(), "click");
                 Intent i = new Intent(getApplicationContext(), InstanceChooserList.class);
-                i.putExtra(ApplicationConstants.BundleKeys.FORM_MODE, ApplicationConstants.FormModes.EDIT_SAVED);
+                i.putExtra(ApplicationConstants.BundleKeys.FORM_MODE.toString(), ApplicationConstants.FormModes.EDIT_SAVED.toString());
                 startActivity(i);
             }
         });
@@ -197,9 +197,9 @@ public class MainMenuActivity extends Activity {
         mViewSentFormsButton.setOnClickListener(new OnClickListener() {
             @Override
             public void onClick(View v) {
-                Collect.getInstance().getActivityLogger().logAction(this, ApplicationConstants.FormModes.VIEW_SENT, "click");
+                Collect.getInstance().getActivityLogger().logAction(this, ApplicationConstants.FormModes.VIEW_SENT.toString(), "click");
                 Intent i = new Intent(getApplicationContext(), InstanceChooserList.class);
-                i.putExtra(ApplicationConstants.BundleKeys.FORM_MODE, ApplicationConstants.FormModes.VIEW_SENT);
+                i.putExtra(ApplicationConstants.BundleKeys.FORM_MODE.toString(), ApplicationConstants.FormModes.VIEW_SENT.toString());
                 startActivity(i);
             }
         });
