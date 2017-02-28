@@ -57,8 +57,6 @@ import com.google.android.gms.common.api.GoogleApiClient;
 import com.google.api.client.extensions.android.http.AndroidHttp;
 import com.google.api.client.googleapis.extensions.android.gms.auth.GoogleAccountCredential;
 import com.google.api.client.googleapis.extensions.android.gms.auth.UserRecoverableAuthIOException;
-import com.google.api.client.http.GenericUrl;
-import com.google.api.client.http.HttpResponse;
 import com.google.api.client.json.gson.GsonFactory;
 import com.google.api.services.drive.Drive.Files;
 import com.google.api.services.drive.model.FileList;
@@ -68,6 +66,7 @@ import org.apache.commons.io.FileUtils;
 import org.odk.collect.android.R;
 import org.odk.collect.android.adapters.FileArrayAdapter;
 import org.odk.collect.android.application.Collect;
+import org.odk.collect.android.google_API.GoogleDriveDao;
 import org.odk.collect.android.listeners.GoogleDriveFormDownloadListener;
 import org.odk.collect.android.listeners.TaskListener;
 import org.odk.collect.android.logic.DriveListItem;
@@ -149,11 +148,13 @@ public class GoogleDriveActivity extends ListActivity implements GoogleApiClient
 
     private static final String ROOT_KEY = "root";
 
-    private static final String FILE_LIST_KEY = "fileList";
+    public static final String FILE_LIST_KEY = "fileList";
 
-    private static final String PARENT_ID_KEY = "parentId";
+    public static final String PARENT_ID_KEY = "parentId";
 
-    private static final String CURRENT_ID_KEY = "currentDir";
+    public static final String CURRENT_ID_KEY = "currentDir";
+
+    private GoogleDriveDao mGoogleDriveDao;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -176,6 +177,8 @@ public class GoogleDriveActivity extends ListActivity implements GoogleApiClient
             showDialog(GOOGLE_USER_DIALOG);
             return;
         }
+
+        mGoogleDriveDao = new GoogleDriveDao(GoogleDriveActivity.this.getApplicationContext(), mGoogleUsername);
 
         if (savedInstanceState != null && savedInstanceState.containsKey(MY_DRIVE_KEY)) {
             // recover state on rotate
@@ -526,7 +529,7 @@ public class GoogleDriveActivity extends ListActivity implements GoogleApiClient
     }
 
     // List<com.google.api.services.drive.model.File>
-    private class RetrieveDriveFileContentsAsyncTask extends
+    public class RetrieveDriveFileContentsAsyncTask extends
             AsyncTask<String, HashMap<String, Object>, HashMap<String, Object>> {
 
         private TaskListener listener;
@@ -548,21 +551,10 @@ public class GoogleDriveActivity extends ListActivity implements GoogleApiClient
                 query = "title contains '" + params[1] + "' and trashed=false";
             }
 
-            Collection<String> collection = new ArrayList<String>();
-            collection.add(com.google.api.services.drive.DriveScopes.DRIVE);
-            GoogleAccountCredential credential = GoogleAccountCredential.usingOAuth2(
-                    GoogleDriveActivity.this.getApplicationContext(), collection);
-
-            com.google.api.services.drive.Drive service =
-                    new com.google.api.services.drive.Drive.Builder(
-                            AndroidHttp.newCompatibleTransport(), new GsonFactory(),
-                            credential).build();
-            credential.setSelectedAccountName(mGoogleUsername);
-
             if (rootId == null) {
                 com.google.api.services.drive.model.File rootfile = null;
                 try {
-                    rootfile = service.files().get(ROOT_KEY).execute();
+                    rootfile = mGoogleDriveDao.getFile(ROOT_KEY);
                 } catch (UserRecoverableAuthIOException e) {
                     startActivityForResult(e.getIntent(), COMPLETE_AUTHORIZATION_REQUEST_CODE);
                     return null;
@@ -577,7 +569,7 @@ public class GoogleDriveActivity extends ListActivity implements GoogleApiClient
             Files.List request = null;
 
             try {
-                ParentList parents = service.parents().list(currentDir).execute();
+                ParentList parents = mGoogleDriveDao.getParentList(currentDir);
                 if (parents.getItems().size() > 0) {
                     parentId = parents.getItems().get(0).getId();
                     if (parents.getItems().get(0).getIsRoot()) {
@@ -592,7 +584,7 @@ public class GoogleDriveActivity extends ListActivity implements GoogleApiClient
                     requestString = "trashed=false and sharedWithMe=true";
                 }
 
-                request = service.files().list().setQ(requestString);
+                request = mGoogleDriveDao.getList(requestString);
             } catch (IOException e1) {
                 e1.printStackTrace();
             }
@@ -600,7 +592,7 @@ public class GoogleDriveActivity extends ListActivity implements GoogleApiClient
             // If there's a query parameter, we're searching for all the files.
             if (query != null) {
                 try {
-                    request = service.files().list().setQ(query);
+                    request = mGoogleDriveDao.getList(query);
                 } catch (IOException e) {
                     // TODO Auto-generated catch block
                     e.printStackTrace();
@@ -751,7 +743,7 @@ public class GoogleDriveActivity extends ListActivity implements GoogleApiClient
                         new ArrayList<com.google.api.services.drive.model.File>();
 
                 try {
-                    request = service.files().list().setQ(requestString);
+                    request = mGoogleDriveDao.getList(requestString);
                 } catch (IOException e1) {
                     e1.printStackTrace();
                     results.put(fileItem.getName(), e1.getMessage());
@@ -779,7 +771,7 @@ public class GoogleDriveActivity extends ListActivity implements GoogleApiClient
                             new ArrayList<com.google.api.services.drive.model.File>();
 
                     try {
-                        request = service.files().list().setQ(requestString);
+                        request = mGoogleDriveDao.getList(requestString);
                         do {
                             try {
                                 FileList fa = request.execute();
@@ -804,7 +796,7 @@ public class GoogleDriveActivity extends ListActivity implements GoogleApiClient
                     }
 
                     for (com.google.api.services.drive.model.File file : mediaFileList) {
-                        InputStream is = downloadFile(service, file);
+                        InputStream is = mGoogleDriveDao.downloadFile(service, file);
 
                         File targetFile = new File(Collect.FORMS_PATH +
                                 File.separator + mediaDirName + File.separator + file.getTitle());
@@ -827,10 +819,9 @@ public class GoogleDriveActivity extends ListActivity implements GoogleApiClient
                 }
 
                 try {
-                    com.google.api.services.drive.model.File df = service.files()
-                            .get(fileItem.getDriveId()).execute();
+                    com.google.api.services.drive.model.File df = mGoogleDriveDao.getFile(fileItem);
 
-                    InputStream is = downloadFile(service, df);
+                    InputStream is = mGoogleDriveDao.downloadFile(service, df);
                     BufferedReader reader = new BufferedReader(new InputStreamReader(is));
                     FileWriter fw = new FileWriter(Collect.FORMS_PATH + File.separator
                             + fileItem.getName());
@@ -853,24 +844,6 @@ public class GoogleDriveActivity extends ListActivity implements GoogleApiClient
             }
             return results;
 
-        }
-
-        private InputStream downloadFile(com.google.api.services.drive.Drive service,
-                com.google.api.services.drive.model.File file) {
-            if (file.getDownloadUrl() != null && file.getDownloadUrl().length() > 0) {
-                try {
-                    HttpResponse resp = service.getRequestFactory()
-                            .buildGetRequest(new GenericUrl(file.getDownloadUrl())).execute();
-                    return resp.getContent();
-                } catch (IOException e) {
-                    // An error occurred.
-                    e.printStackTrace();
-                    return null;
-                }
-            } else {
-                // The file doesn't have any content stored on Drive.
-                return null;
-            }
         }
 
         @Override
