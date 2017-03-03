@@ -17,6 +17,8 @@
 package org.odk.collect.android.activities;
 
 import android.app.ListActivity;
+import android.view.Menu;
+import android.view.MenuItem;
 import android.widget.Button;
 import android.widget.ListView;
 
@@ -26,6 +28,21 @@ import org.odk.collect.android.database.ActivityLogger;
 
 abstract class AppListActivity extends ListActivity {
     protected final ActivityLogger logger = Collect.getInstance().getActivityLogger();
+
+    private static final int MENU_SORT = Menu.FIRST;
+
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        Collect.getInstance().getActivityLogger().logInstanceAction(this, "onCreateOptionsMenu", "show");
+        super.onCreateOptionsMenu(menu);
+
+        menu
+                .add(0, MENU_SORT, 0, R.string.sort_the_list)
+                .setIcon(R.drawable.ic_sort)
+                .setShowAsAction(MenuItem.SHOW_AS_ACTION_ALWAYS);
+
+        return true;
+    }
 
     protected boolean areCheckedItems() {
         return getCheckedCount() > 0;

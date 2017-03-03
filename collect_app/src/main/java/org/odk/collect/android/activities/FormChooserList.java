@@ -45,7 +45,7 @@ import org.odk.collect.android.utilities.VersionHidingCursorAdapter;
  * @author Yaw Anokwa (yanokwa@gmail.com)
  * @author Carl Hartung (carlhartung@gmail.com)
  */
-public class FormChooserList extends ListActivity implements DiskSyncListener {
+public class FormChooserList extends AppListActivity implements DiskSyncListener {
 
     private static final String t = "FormChooserList";
     private static final boolean EXIT = true;
