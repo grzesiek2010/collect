@@ -16,6 +16,7 @@ package org.odk.collect.android.activities;
 
 import android.app.AlertDialog;
 import android.content.DialogInterface;
+import android.database.Cursor;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.util.Log;
@@ -32,6 +33,9 @@ import org.odk.collect.android.listeners.DeleteInstancesListener;
 import org.odk.collect.android.provider.InstanceProviderAPI.InstanceColumns;
 import org.odk.collect.android.tasks.DeleteInstancesTask;
 
+import java.util.ArrayList;
+import java.util.List;
+
 /**
  * Responsible for displaying and deleting all the saved form instances
  * directory.
@@ -39,7 +43,7 @@ import org.odk.collect.android.tasks.DeleteInstancesTask;
  * @author Carl Hartung (carlhartung@gmail.com)
  * @author Yaw Anokwa (yanokwa@gmail.com)
  */
-public class DataManagerList extends AppListActivity implements DeleteInstancesListener {
+public class DataManagerList extends InstanceListActivity implements DeleteInstancesListener {
     private static final String t = "DataManagerList";
     private AlertDialog mAlertDialog;
     private Button mDeleteButton;
@@ -96,6 +100,11 @@ public class DataManagerList extends AppListActivity implements DeleteInstancesL
         if (getListView().getCount() == 0) {
             mToggleButton.setEnabled(false);
         }
+
+        mSortingOptions = new String[]{
+                getString(R.string.sort_by_name_asc), getString(R.string.sort_by_name_desc),
+                getString(R.string.sort_by_date_asc), getString(R.string.sort_by_date_desc)
+        };
     }
 
     @Override
@@ -146,6 +155,23 @@ public class DataManagerList extends AppListActivity implements DeleteInstancesL
             mAlertDialog.dismiss();
         }
         super.onPause();
+    }
+
+    @Override
+    protected void setupAdapter(String sortOrder) {
+        List<Integer> checkedInstances = new ArrayList();
+        for (long a : getListView().getCheckedItemIds()) {
+            checkedInstances.add((int) a);
+        }
+
+        String[] data = new String[]{InstanceColumns.DISPLAY_NAME, InstanceColumns.DISPLAY_SUBTEXT};
+        int[] view = new int[]{R.id.text1, R.id.text2};
+
+        Cursor cursor = new InstancesDao().getSavedInstancesCursor(sortOrder);
+        SimpleCursorAdapter cursorAdapter = new SimpleCursorAdapter(this,
+                R.layout.two_item_multiple_choice, cursor, data, view);
+        setListAdapter(cursorAdapter);
+        retrieveCheckedItems(checkedInstances, cursor);
     }
 
     /**

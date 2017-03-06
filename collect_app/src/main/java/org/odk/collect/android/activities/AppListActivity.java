@@ -17,19 +17,46 @@
 package org.odk.collect.android.activities;
 
 import android.app.ListActivity;
+import android.content.res.Configuration;
+import android.database.Cursor;
+import android.os.Bundle;
+import android.support.v4.widget.DrawerLayout;
+import android.support.v7.app.ActionBarDrawerToggle;
+import android.view.Gravity;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.view.View;
+import android.view.ViewGroup;
+import android.widget.AdapterView;
+import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.ListView;
+import android.widget.TextView;
 
 import org.odk.collect.android.R;
 import org.odk.collect.android.application.Collect;
 import org.odk.collect.android.database.ActivityLogger;
+import org.odk.collect.android.provider.InstanceProviderAPI;
+
+import java.util.List;
 
 abstract class AppListActivity extends ListActivity {
     protected final ActivityLogger logger = Collect.getInstance().getActivityLogger();
 
-    private static final int MENU_SORT = Menu.FIRST;
+    public static final int MENU_SORT = Menu.FIRST;
+
+    private ListView mDrawerList;
+    private DrawerLayout mDrawerLayout;
+    private ActionBarDrawerToggle mDrawerToggle;
+
+    protected String[] mSortingOptions;
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+        setupDrawer();
+        setupDrawerItems();
+    }
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
@@ -43,6 +70,125 @@ abstract class AppListActivity extends ListActivity {
 
         return true;
     }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        switch (item.getItemId()) {
+            case MENU_SORT:
+                if (mDrawerLayout.isDrawerOpen(Gravity.RIGHT)) {
+                    mDrawerLayout.closeDrawer(Gravity.RIGHT);
+                } else {
+                    mDrawerLayout.openDrawer(Gravity.RIGHT);
+                }
+                return true;
+        }
+
+        return super.onOptionsItemSelected(item);
+    }
+
+    @Override
+    protected void onPostCreate(Bundle savedInstanceState) {
+        super.onPostCreate(savedInstanceState);
+        if (mDrawerToggle != null) {
+            mDrawerToggle.syncState();
+        }
+    }
+
+    @Override
+    public void onConfigurationChanged(Configuration newConfig) {
+        super.onConfigurationChanged(newConfig);
+        if (mDrawerToggle != null) {
+            mDrawerToggle.onConfigurationChanged(newConfig);
+        }
+    }
+
+    private void setupDrawerItems() {
+        ArrayAdapter<String> adapter = new ArrayAdapter<String>(this, android.R.layout.simple_list_item_1, mSortingOptions) {
+            @Override
+            public View getView(int position, View convertView, ViewGroup parent) {
+                TextView textView = (TextView) super.getView(position, convertView, parent);
+                textView.setPadding(50, 0, 0, 0);
+                return textView;
+            }
+        };
+
+        mDrawerList.setAdapter(adapter);
+        mDrawerList.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            @Override
+            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+                switch(position) {
+                    case 0:
+                        sortByNameAsc();
+                        break;
+                    case 1:
+                        sortByNameDesc();
+                        break;
+                    case 2:
+                        sortByDateDesc();
+                        break;
+                    case 3:
+                        sortByDateAsc();
+                        break;
+                    case 4:
+                        sortByStatusAsc();
+                        break;
+                    case 5:
+                        sortByStatusDesc();
+                        break;
+                }
+                mDrawerLayout.closeDrawer(Gravity.RIGHT);
+            }
+        });
+    }
+
+    private void setupDrawer() {
+        mDrawerList = (ListView) findViewById(R.id.sortingMenu);
+        mDrawerLayout = (DrawerLayout) findViewById(R.id.drawer_layout);
+        mDrawerLayout.setDrawerLockMode(DrawerLayout.LOCK_MODE_LOCKED_CLOSED);
+        mDrawerToggle = new ActionBarDrawerToggle(this, mDrawerLayout, R.string.sorting_menu_open, R.string.sorting_menu_close) {
+            public void onDrawerOpened(View drawerView) {
+                super.onDrawerOpened(drawerView);
+                invalidateOptionsMenu();
+                mDrawerLayout.setDrawerLockMode(DrawerLayout.LOCK_MODE_UNLOCKED);
+            }
+
+            public void onDrawerClosed(View view) {
+                super.onDrawerClosed(view);
+                invalidateOptionsMenu();
+                mDrawerLayout.setDrawerLockMode(DrawerLayout.LOCK_MODE_LOCKED_CLOSED);
+            }
+        };
+
+        mDrawerToggle.setDrawerIndicatorEnabled(true);
+        mDrawerLayout.setDrawerListener(mDrawerToggle);
+    }
+
+    protected void retrieveCheckedItems(List<Integer> checkedInstances, Cursor cursor) {
+        int id = 0;
+        if (cursor != null) {
+            while (cursor.moveToNext()) {
+                int instanceId = Integer.parseInt(cursor.getString(cursor.getColumnIndex(InstanceProviderAPI.InstanceColumns._ID)));
+                if (checkedInstances.contains(instanceId)) {
+                    getListView().setItemChecked(id, true);
+                }
+                id++;
+            }
+        }
+    }
+
+    protected abstract void sortByNameAsc();
+
+    protected abstract void sortByNameDesc();
+
+    protected abstract void sortByDateAsc();
+
+    protected abstract void sortByDateDesc();
+
+    protected abstract void sortByStatusAsc();
+
+    protected abstract void sortByStatusDesc();
+
+    protected abstract void setupAdapter(String sortOrder);
 
     protected boolean areCheckedItems() {
         return getCheckedCount() > 0;

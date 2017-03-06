@@ -43,6 +43,9 @@ import org.odk.collect.android.preferences.PreferenceKeys;
 import org.odk.collect.android.provider.InstanceProviderAPI.InstanceColumns;
 import org.odk.collect.android.receivers.NetworkReceiver;
 
+import java.util.ArrayList;
+import java.util.List;
+
 /**
  * Responsible for displaying all the valid forms in the forms directory. Stores
  * the path to selected form for use by {@link MainMenuActivity}.
@@ -51,10 +54,10 @@ import org.odk.collect.android.receivers.NetworkReceiver;
  * @author Yaw Anokwa (yanokwa@gmail.com)
  */
 
-public class InstanceUploaderList extends AppListActivity implements OnLongClickListener {
+public class InstanceUploaderList extends InstanceListActivity implements OnLongClickListener {
     private static final String t = "InstanceUploaderList";
-    private static final int MENU_PREFERENCES = Menu.FIRST;
-    private static final int MENU_SHOW_UNSENT = Menu.FIRST + 1;
+    private static final int MENU_PREFERENCES = AppListActivity.MENU_SORT + 1;
+    private static final int MENU_SHOW_UNSENT = MENU_PREFERENCES + 1;
 
     private static final int INSTANCE_UPLOADER = 0;
     private static final int GOOGLE_USER_DIALOG = 1;
@@ -143,6 +146,11 @@ public class InstanceUploaderList extends AppListActivity implements OnLongClick
 
         // set title
         setTitle(getString(R.string.send_data));
+
+        mSortingOptions = new String[]{
+                getString(R.string.sort_by_name_asc), getString(R.string.sort_by_name_desc),
+                getString(R.string.sort_by_date_asc), getString(R.string.sort_by_date_desc)
+        };
     }
 
     @Override
@@ -197,6 +205,24 @@ public class InstanceUploaderList extends AppListActivity implements OnLongClick
                 .setIcon(R.drawable.ic_menu_manage)
                 .setShowAsAction(MenuItem.SHOW_AS_ACTION_NEVER);
         return true;
+    }
+
+    @Override
+    protected void setupAdapter(String sortOrder) {
+        List<Integer> checkedInstances = new ArrayList();
+        for (long a : getListView().getCheckedItemIds()) {
+            checkedInstances.add((int) a);
+        }
+
+        Cursor cursor = mInstanceDao.getFinalizedInstancesCursor(sortOrder);
+        // ToDo: Look at VCS history and examine the always true ? : for the above line
+        String[] data = new String[]{InstanceColumns.DISPLAY_NAME, InstanceColumns.DISPLAY_SUBTEXT};
+        int[] view = new int[]{R.id.text1, R.id.text2};
+
+        mCursorAdapter = new SimpleCursorAdapter(this, R.layout.two_item_multiple_choice, cursor, data, view);
+        setListAdapter(mCursorAdapter);
+
+        retrieveCheckedItems(checkedInstances, cursor);
     }
 
     @Override

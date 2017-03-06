@@ -29,7 +29,6 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import org.odk.collect.android.R;
-import org.odk.collect.android.application.Collect;
 import org.odk.collect.android.dao.FormsDao;
 import org.odk.collect.android.listeners.DeleteFormsListener;
 import org.odk.collect.android.listeners.DiskSyncListener;
@@ -38,6 +37,9 @@ import org.odk.collect.android.tasks.DeleteFormsTask;
 import org.odk.collect.android.tasks.DiskSyncTask;
 import org.odk.collect.android.utilities.VersionHidingCursorAdapter;
 
+import java.util.ArrayList;
+import java.util.List;
+
 /**
  * Responsible for displaying and deleting all the valid forms in the forms
  * directory.
@@ -45,7 +47,7 @@ import org.odk.collect.android.utilities.VersionHidingCursorAdapter;
  * @author Carl Hartung (carlhartung@gmail.com)
  * @author Yaw Anokwa (yanokwa@gmail.com)
  */
-public class FormManagerList extends AppListActivity implements DiskSyncListener,
+public class FormManagerList extends FormListActivity implements DiskSyncListener,
         DeleteFormsListener {
     private static String t = "FormManagerList";
     private static final String syncMsgKey = "syncmsgkey";
@@ -131,6 +133,11 @@ public class FormManagerList extends AppListActivity implements DiskSyncListener
             mBackgroundTasks.mDiskSyncTask.setDiskSyncListener(this);
             mBackgroundTasks.mDiskSyncTask.execute((Void[]) null);
         }
+
+        mSortingOptions = new String[]{
+                getString(R.string.sort_by_name_asc), getString(R.string.sort_by_name_desc),
+                getString(R.string.sort_by_date_asc), getString(R.string.sort_by_date_desc)
+        };
     }
 
     @Override
@@ -193,6 +200,24 @@ public class FormManagerList extends AppListActivity implements DiskSyncListener
         }
 
         super.onPause();
+    }
+
+    @Override
+    protected void setupAdapter(String sortOrder) {
+        List<Integer> checkedInstances = new ArrayList();
+        for (long a : getListView().getCheckedItemIds()) {
+            checkedInstances.add((int) a);
+        }
+
+        Cursor c = new FormsDao().getFormsCursor(sortOrder);
+        String[] data = new String[]{FormsColumns.DISPLAY_NAME, FormsColumns.DISPLAY_SUBTEXT, FormsColumns.JR_VERSION};
+        int[] view = new int[]{R.id.text1, R.id.text2, R.id.text3};
+
+        // render total instance view
+        SimpleCursorAdapter cursorAdapter = new VersionHidingCursorAdapter(FormsColumns.JR_VERSION, this,
+                R.layout.two_item_multiple_choice, c, data, view);
+        setListAdapter(cursorAdapter);
+        retrieveCheckedItems(checkedInstances, c);
     }
 
     /**
