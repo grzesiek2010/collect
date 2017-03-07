@@ -163,6 +163,20 @@ abstract class AppListActivity extends ListActivity {
         mDrawerLayout.setDrawerListener(mDrawerToggle);
     }
 
+    protected void retrieveCheckedItems(List<Integer> checkedInstances, Cursor cursor) {
+        getListView().clearChoices();
+        int id = 0;
+        if (cursor != null) {
+            while (cursor.moveToNext()) {
+                int instanceId = Integer.parseInt(cursor.getString(cursor.getColumnIndex(InstanceProviderAPI.InstanceColumns._ID)));
+                if (checkedInstances.contains(instanceId)) {
+                    getListView().setItemChecked(id, true);
+                }
+                id++;
+            }
+        }
+    }
+
     protected abstract void sortByNameAsc();
 
     protected abstract void sortByNameDesc();
