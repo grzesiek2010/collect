@@ -78,7 +78,7 @@ public class InstancesDaoTest {
 
     @Test
     public void getSavedInstancesCursorTest() {
-        Cursor cursor = mInstancesDao.getSavedInstancesCursor();
+        Cursor cursor = mInstancesDao.getSavedInstancesCursor(InstanceProviderAPI.InstanceColumns.DISPLAY_NAME + " ASC");
         List<Instance> instances = mInstancesDao.getInstancesFromCursor(cursor);
         assertEquals(5, instances.size());
 

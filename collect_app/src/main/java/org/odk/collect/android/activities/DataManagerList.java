@@ -16,6 +16,7 @@ package org.odk.collect.android.activities;
 
 import android.app.AlertDialog;
 import android.content.DialogInterface;
+import android.database.Cursor;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.util.Log;
@@ -29,8 +30,12 @@ import android.widget.Toast;
 import org.odk.collect.android.R;
 import org.odk.collect.android.dao.InstancesDao;
 import org.odk.collect.android.listeners.DeleteInstancesListener;
+import org.odk.collect.android.provider.InstanceProviderAPI;
 import org.odk.collect.android.provider.InstanceProviderAPI.InstanceColumns;
 import org.odk.collect.android.tasks.DeleteInstancesTask;
+
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * Responsible for displaying and deleting all the saved form instances
@@ -80,13 +85,7 @@ public class DataManagerList extends InstanceListActivity implements DeleteInsta
             }
         });
 
-        String[] data = new String[]{InstanceColumns.DISPLAY_NAME,
-                InstanceColumns.DISPLAY_SUBTEXT};
-        int[] view = new int[]{R.id.text1, R.id.text2};
-
-        SimpleCursorAdapter cursorAdapter = new SimpleCursorAdapter(this,
-                R.layout.two_item_multiple_choice, new InstancesDao().getSavedInstancesCursor(), data, view);
-        setListAdapter(cursorAdapter);
+        setupAdapter(InstanceProviderAPI.InstanceColumns.DISPLAY_NAME + " ASC");
         getListView().setChoiceMode(ListView.CHOICE_MODE_MULTIPLE);
         getListView().setItemsCanFocus(false);
         mDeleteButton.setEnabled(false);
@@ -96,6 +95,10 @@ public class DataManagerList extends InstanceListActivity implements DeleteInsta
         if (getListView().getCount() == 0) {
             mToggleButton.setEnabled(false);
         }
+        mSortingOptions = new String[]{
+                getString(R.string.sort_by_name_asc), getString(R.string.sort_by_name_desc),
+                getString(R.string.sort_by_date_asc), getString(R.string.sort_by_date_desc)
+        };
     }
 
     @Override
@@ -146,6 +149,23 @@ public class DataManagerList extends InstanceListActivity implements DeleteInsta
             mAlertDialog.dismiss();
         }
         super.onPause();
+    }
+
+    @Override
+    protected void setupAdapter(String sortOrder) {
+        List<Integer> checkedInstances = new ArrayList();
+        for (long a : getListView().getCheckedItemIds()) {
+            checkedInstances.add((int) a);
+        }
+
+        String[] data = new String[]{InstanceColumns.DISPLAY_NAME, InstanceColumns.DISPLAY_SUBTEXT};
+        int[] view = new int[]{R.id.text1, R.id.text2};
+
+        Cursor cursor = new InstancesDao().getSavedInstancesCursor(sortOrder);
+        SimpleCursorAdapter cursorAdapter = new SimpleCursorAdapter(this,
+                R.layout.two_item_multiple_choice, cursor, data, view);
+        setListAdapter(cursorAdapter);
+        retrieveCheckedItems(checkedInstances, cursor);
     }
 
     /**
