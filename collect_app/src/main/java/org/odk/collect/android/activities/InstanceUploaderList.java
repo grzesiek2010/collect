@@ -57,6 +57,8 @@ import java.util.List;
 
 public class InstanceUploaderList extends InstanceListActivity implements OnLongClickListener {
     private static final String t = "InstanceUploaderList";
+    private static final String SHOW_ALL_MODE = "showAllMode";
+
     private static final int MENU_PREFERENCES = AppListActivity.MENU_SORT + 1;
     private static final int MENU_SHOW_UNSENT = MENU_PREFERENCES + 1;
 
@@ -69,11 +71,17 @@ public class InstanceUploaderList extends InstanceListActivity implements OnLong
 
     private InstancesDao mInstanceDao;
 
+    private boolean mShowAllMode;
+
     @Override
     public void onCreate(Bundle savedInstanceState) {
         Log.i(t, "onCreate");
         super.onCreate(savedInstanceState);
         setContentView(R.layout.instance_uploader_list);
+
+        if (savedInstanceState != null) {
+            mShowAllMode = savedInstanceState.getBoolean(SHOW_ALL_MODE);
+        }
 
         mInstanceDao = new InstancesDao();
 
@@ -152,6 +160,12 @@ public class InstanceUploaderList extends InstanceListActivity implements OnLong
     protected void onStop() {
         logger.logOnStop(this);
         super.onStop();
+    }
+
+    @Override
+    protected void onSaveInstanceState(Bundle outState) {
+        super.onSaveInstanceState(outState);
+        outState.putBoolean(SHOW_ALL_MODE, mShowAllMode);
     }
 
     private void uploadSelectedFiles() {
@@ -262,7 +276,12 @@ public class InstanceUploaderList extends InstanceListActivity implements OnLong
             checkedInstances.add((int) a);
         }
 
-        Cursor cursor = mInstanceDao.getFinalizedInstancesCursor(sortOrder);
+        Cursor cursor;
+        if (mShowAllMode) {
+            cursor = mInstanceDao.getAllCompletedUndeletedInstancesCursor(sortOrder);
+        } else {
+            cursor = mInstanceDao.getFinalizedInstancesCursor(sortOrder);
+        }
         // ToDo: Look at VCS history and examine the always true ? : for the above line
         String[] data = new String[]{InstanceColumns.DISPLAY_NAME, InstanceColumns.DISPLAY_SUBTEXT};
         int[] view = new int[]{R.id.text1, R.id.text2};
@@ -273,6 +292,7 @@ public class InstanceUploaderList extends InstanceListActivity implements OnLong
     }
 
     private void showUnsent() {
+        mShowAllMode = false;
         Cursor c = mInstanceDao.getFinalizedInstancesCursor();
         Cursor old = mCursorAdapter.getCursor();
         try {
@@ -287,6 +307,7 @@ public class InstanceUploaderList extends InstanceListActivity implements OnLong
     }
 
     private void showAll() {
+        mShowAllMode = true;
         Cursor c = mInstanceDao.getAllCompletedUndeletedInstancesCursor();
         Cursor old = mCursorAdapter.getCursor();
         try {
