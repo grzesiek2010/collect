@@ -51,7 +51,7 @@ import org.odk.collect.android.receivers.NetworkReceiver;
  * @author Yaw Anokwa (yanokwa@gmail.com)
  */
 
-public class InstanceUploaderList extends AppListActivity implements OnLongClickListener {
+public class InstanceUploaderList extends InstanceListActivity implements OnLongClickListener {
     private static final String t = "InstanceUploaderList";
     private static final int MENU_PREFERENCES = Menu.FIRST;
     private static final int MENU_SHOW_UNSENT = Menu.FIRST + 1;

@@ -39,7 +39,7 @@ import org.odk.collect.android.tasks.DeleteInstancesTask;
  * @author Carl Hartung (carlhartung@gmail.com)
  * @author Yaw Anokwa (yanokwa@gmail.com)
  */
-public class DataManagerList extends AppListActivity implements DeleteInstancesListener {
+public class DataManagerList extends InstanceListActivity implements DeleteInstancesListener {
     private static final String t = "DataManagerList";
     private AlertDialog mAlertDialog;
     private Button mDeleteButton;

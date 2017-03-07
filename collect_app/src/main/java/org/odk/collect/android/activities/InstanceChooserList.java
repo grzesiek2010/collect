@@ -41,7 +41,7 @@ import org.odk.collect.android.utilities.ApplicationConstants;
  * @author Yaw Anokwa (yanokwa@gmail.com)
  * @author Carl Hartung (carlhartung@gmail.com)
  */
-public class InstanceChooserList extends ListActivity {
+public class InstanceChooserList extends InstanceListActivity {
 
     private static final boolean EXIT = true;
     private static final boolean DO_NOT_EXIT = false;
