@@ -48,7 +48,6 @@ import org.odk.collect.android.receivers.NetworkReceiver;
 import org.odk.collect.android.tasks.InstanceSyncTask;
 import org.odk.collect.android.utilities.ToastUtils;
 
-import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -303,24 +302,19 @@ public class InstanceUploaderList extends InstanceListActivity
 
     @Override
     protected void setupAdapter(String sortOrder) {
-        List<Integer> checkedInstances = new ArrayList();
-        for (long a : getListView().getCheckedItemIds()) {
-            checkedInstances.add((int) a);
-        }
-
+        List<Long> checkedInstances = com.google.common.primitives.Longs.asList(getListView().getCheckedItemIds());
         Cursor cursor;
         if (mShowAllMode) {
             cursor = mInstanceDao.getAllCompletedUndeletedInstancesCursor(sortOrder);
         } else {
             cursor = mInstanceDao.getFinalizedInstancesCursor(sortOrder);
         }
-        // ToDo: Look at VCS history and examine the always true ? : for the above line
         String[] data = new String[]{InstanceColumns.DISPLAY_NAME, InstanceColumns.DISPLAY_SUBTEXT};
         int[] view = new int[]{R.id.text1, R.id.text2};
 
         mCursorAdapter = new SimpleCursorAdapter(this, R.layout.two_item_multiple_choice, cursor, data, view);
         setListAdapter(mCursorAdapter);
-        retrieveCheckedItems(checkedInstances, cursor);
+        checkPreviouslyCheckedItems(checkedInstances, cursor);
     }
 
     private void showUnsent() {

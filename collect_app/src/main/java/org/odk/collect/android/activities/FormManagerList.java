@@ -37,7 +37,6 @@ import org.odk.collect.android.tasks.DiskSyncTask;
 import org.odk.collect.android.utilities.ToastUtils;
 import org.odk.collect.android.utilities.VersionHidingCursorAdapter;
 
-import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -194,11 +193,7 @@ public class FormManagerList extends FormListActivity implements DiskSyncListene
 
     @Override
     protected void setupAdapter(String sortOrder) {
-        List<Integer> checkedInstances = new ArrayList();
-        for (long a : getListView().getCheckedItemIds()) {
-            checkedInstances.add((int) a);
-        }
-
+        List<Long> checkedForms = com.google.common.primitives.Longs.asList(getListView().getCheckedItemIds());
         Cursor c = new FormsDao().getFormsCursor(sortOrder);
         String[] data = new String[]{FormsColumns.DISPLAY_NAME, FormsColumns.DISPLAY_SUBTEXT, FormsColumns.JR_VERSION};
         int[] view = new int[]{R.id.text1, R.id.text2, R.id.text3};
@@ -207,7 +202,7 @@ public class FormManagerList extends FormListActivity implements DiskSyncListene
         SimpleCursorAdapter cursorAdapter = new VersionHidingCursorAdapter(FormsColumns.JR_VERSION, this,
                 R.layout.two_item_multiple_choice, c, data, view);
         setListAdapter(cursorAdapter);
-        retrieveCheckedItems(checkedInstances, c);
+        checkPreviouslyCheckedItems(checkedForms, c);
     }
 
     /**
