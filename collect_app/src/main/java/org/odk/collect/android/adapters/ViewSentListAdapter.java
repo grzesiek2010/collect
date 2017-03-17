@@ -20,7 +20,6 @@ import android.database.Cursor;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
-import android.widget.SimpleCursorAdapter;
 import android.widget.TextView;
 
 import org.odk.collect.android.R;
@@ -32,7 +31,7 @@ import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.Locale;
 
-public class ViewSentListAdapter extends SimpleCursorAdapter {
+public class ViewSentListAdapter extends SearchableAdapter {
     private Context mContext;
 
     public ViewSentListAdapter(Context context, int layout, Cursor c, String[] from, int[] to) {

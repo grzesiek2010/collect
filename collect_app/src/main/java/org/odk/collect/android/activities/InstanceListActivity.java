@@ -1,5 +1,8 @@
 package org.odk.collect.android.activities;
 
+import android.database.Cursor;
+
+import org.odk.collect.android.dao.InstancesDao;
 import org.odk.collect.android.provider.InstanceProviderAPI.InstanceColumns;
 
 abstract class InstanceListActivity extends AppListActivity {

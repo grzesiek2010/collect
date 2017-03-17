@@ -18,6 +18,7 @@ import android.app.AlertDialog;
 import android.content.ContentUris;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.database.Cursor;
 import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Bundle;
@@ -183,9 +184,16 @@ public class FormChooserList extends FormListActivity implements DiskSyncListene
         int[] view = new int[]{
                 R.id.text1, R.id.text2, R.id.text3
         };
-        SimpleCursorAdapter instances =
-                new VersionHidingCursorAdapter(FormsColumns.JR_VERSION, this, R.layout.two_item, new FormsDao().getFormsCursor(sortOrder), data, view);
-        setListAdapter(instances);
+        Cursor cursor = new FormsDao().getFormsCursor(sortOrder);
+        mListAdapter =
+                new VersionHidingCursorAdapter(FormsColumns.JR_VERSION, this, R.layout.two_item, cursor, data, view);
+
+        setListAdapter(mListAdapter);
+    }
+
+    @Override
+    protected void filter(CharSequence charSequence) {
+        mListAdapter.changeCursor(new FormsDao().getFilteredFormsCursor(charSequence));
     }
 
     /**
