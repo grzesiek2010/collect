@@ -73,7 +73,6 @@ public class DataManagerList extends InstanceListFragment
         mDeleteButton.setOnClickListener(this);
         mToggleButton.setOnClickListener(this);
 
-        restoreSelectedSortingOrder(DATA_MANAGER_LIST_SORTING_ORDER);
         setupAdapter();
         instanceSyncTask = new InstanceSyncTask();
         instanceSyncTask.setDiskSyncListener(this);
@@ -116,7 +115,6 @@ public class DataManagerList extends InstanceListFragment
         if (mAlertDialog != null && mAlertDialog.isShowing()) {
             mAlertDialog.dismiss();
         }
-        saveSelectedSortingOrder(DATA_MANAGER_LIST_SORTING_ORDER);
         super.onPause();
     }
 
@@ -124,6 +122,11 @@ public class DataManagerList extends InstanceListFragment
     public void syncComplete(String result) {
         TextView textView = (TextView) rootView.findViewById(R.id.status_text);
         textView.setText(result);
+    }
+
+    @Override
+    protected String getSortingOrderKey() {
+        return DATA_MANAGER_LIST_SORTING_ORDER;
     }
 
     @Override

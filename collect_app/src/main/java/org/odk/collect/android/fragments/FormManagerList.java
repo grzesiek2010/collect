@@ -71,7 +71,6 @@ public class FormManagerList extends FormListFragment implements DiskSyncListene
         mDeleteButton.setOnClickListener(this);
         mToggleButton.setOnClickListener(this);
 
-        restoreSelectedSortingOrder(FORM_MANAGER_LIST_SORTING_ORDER);
         setupAdapter();
 
         if (mBackgroundTasks == null) {
@@ -116,9 +115,12 @@ public class FormManagerList extends FormListFragment implements DiskSyncListene
         if (mAlertDialog != null && mAlertDialog.isShowing()) {
             mAlertDialog.dismiss();
         }
-        saveSelectedSortingOrder(FORM_MANAGER_LIST_SORTING_ORDER);
-
         super.onPause();
+    }
+
+    @Override
+    protected String getSortingOrderKey() {
+        return FORM_MANAGER_LIST_SORTING_ORDER;
     }
 
     @Override

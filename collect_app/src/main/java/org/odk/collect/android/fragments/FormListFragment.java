@@ -55,6 +55,7 @@ public class FormListFragment extends FileManagerFragment {
     }
 
     protected String getSortingOrder() {
+        restoreSelectedSortingOrder();
         String sortOrder = FormsProviderAPI.FormsColumns.DISPLAY_NAME + " ASC";
         switch (mSelectedSortingOrder) {
             case BY_NAME_ASC:

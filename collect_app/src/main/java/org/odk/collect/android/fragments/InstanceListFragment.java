@@ -58,6 +58,7 @@ public class InstanceListFragment extends FileManagerFragment {
     }
 
     protected String getSortingOrder() {
+        restoreSelectedSortingOrder();
         String sortOrder = InstanceProviderAPI.InstanceColumns.DISPLAY_NAME + " ASC, " + InstanceProviderAPI.InstanceColumns.STATUS + " DESC";
         switch (mSelectedSortingOrder) {
             case BY_NAME_ASC:

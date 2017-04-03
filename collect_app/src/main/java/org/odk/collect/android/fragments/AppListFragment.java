@@ -197,26 +197,32 @@ abstract class AppListFragment extends ListFragment {
         switch (position) {
             case BY_NAME_ASC:
                 mSelectedSortingOrder = BY_NAME_ASC;
+                saveSelectedSortingOrder();
                 sortByNameAsc();
                 break;
             case BY_NAME_DESC:
                 mSelectedSortingOrder = BY_NAME_DESC;
+                saveSelectedSortingOrder();
                 sortByNameDesc();
                 break;
             case BY_DATE_ASC:
                 mSelectedSortingOrder = BY_DATE_ASC;
+                saveSelectedSortingOrder();
                 sortByDateDesc();
                 break;
             case BY_DATE_DESC:
                 mSelectedSortingOrder = BY_DATE_DESC;
+                saveSelectedSortingOrder();
                 sortByDateAsc();
                 break;
             case BY_STATUS_ASC:
                 mSelectedSortingOrder = BY_STATUS_ASC;
+                saveSelectedSortingOrder();
                 sortByStatusAsc();
                 break;
             case BY_STATUS_DESC:
                 mSelectedSortingOrder = BY_STATUS_DESC;
+                saveSelectedSortingOrder();
                 sortByStatusDesc();
                 break;
         }
@@ -303,6 +309,8 @@ abstract class AppListFragment extends ListFragment {
 
     protected abstract void setupAdapter();
 
+    protected abstract String getSortingOrderKey();
+
     protected boolean areCheckedItems() {
         return getCheckedCount() > 0;
     }
@@ -349,16 +357,16 @@ abstract class AppListFragment extends ListFragment {
         return getListView().getCheckedItemCount();
     }
 
-    protected void saveSelectedSortingOrder(String sortingOrderKey) {
+    private void saveSelectedSortingOrder() {
         PreferenceManager.getDefaultSharedPreferences(Collect.getInstance())
                 .edit()
-                .putInt(sortingOrderKey, mSelectedSortingOrder)
+                .putInt(getSortingOrderKey(), mSelectedSortingOrder)
                 .apply();
     }
 
-    protected void restoreSelectedSortingOrder(String sortingOrderKey) {
+    protected void restoreSelectedSortingOrder() {
         mSelectedSortingOrder = PreferenceManager
                 .getDefaultSharedPreferences(Collect.getInstance())
-                .getInt(sortingOrderKey, BY_NAME_ASC);
+                .getInt(getSortingOrderKey(), BY_NAME_ASC);
     }
 }

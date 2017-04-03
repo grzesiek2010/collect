@@ -44,7 +44,8 @@ import org.odk.collect.android.utilities.ApplicationConstants;
  * @author Carl Hartung (carlhartung@gmail.com)
  */
 public class InstanceChooserList extends InstanceListActivity implements DiskSyncListener {
-    private static final String INSTANCE_LIST_ACTIVITY_SORTING_ORDER = "instanceListActivitySortingOrder";
+    private static final String EDIT_SAVED_FORM_SORTING_ORDER = "editSavedFormSortingOrder";
+    private static final String VIEW_SENT_FORM_SORTING_ORDER = "ViewSentFormSortingOrder";
 
     private static final boolean EXIT = true;
     private static final boolean DO_NOT_EXIT = false;
@@ -68,8 +69,6 @@ public class InstanceChooserList extends InstanceListActivity implements DiskSyn
 
         setContentView(R.layout.chooser_list_layout);
 
-        String order;
-
         String formMode = getIntent().getStringExtra(ApplicationConstants.BundleKeys.FORM_MODE);
         if (formMode == null || ApplicationConstants.FormModes.EDIT_SAVED.equalsIgnoreCase(formMode)) {
             setTitle(getString(R.string.review_data));
@@ -79,16 +78,15 @@ public class InstanceChooserList extends InstanceListActivity implements DiskSyn
                     getString(R.string.sort_by_date_asc), getString(R.string.sort_by_date_desc),
                     getString(R.string.sort_by_status_asc), getString(R.string.sort_by_status_desc)
             };
-            order = InstanceProviderAPI.InstanceColumns.STATUS + " DESC, " + InstanceProviderAPI.InstanceColumns.DISPLAY_NAME + " ASC";
+            restoreSelectedSortingOrder(EDIT_SAVED_FORM_SORTING_ORDER);
         } else {
             setTitle(getString(R.string.view_sent_forms));
             mSortingOptions = new String[]{
                     getString(R.string.sort_by_name_asc), getString(R.string.sort_by_name_desc),
                     getString(R.string.sort_by_date_asc), getString(R.string.sort_by_date_desc)
             };
-            order = InstanceProviderAPI.InstanceColumns.DISPLAY_NAME + " ASC";
+            restoreSelectedSortingOrder(VIEW_SENT_FORM_SORTING_ORDER);
         }
-        restoreSelectedSortingOrder(INSTANCE_LIST_ACTIVITY_SORTING_ORDER);
         setupAdapter();
 
         instanceSyncTask = new InstanceSyncTask();
@@ -167,7 +165,11 @@ public class InstanceChooserList extends InstanceListActivity implements DiskSyn
         if (instanceSyncTask != null) {
             instanceSyncTask.setDiskSyncListener(null);
         }
-        saveSelectedSortingOrder(INSTANCE_LIST_ACTIVITY_SORTING_ORDER);
+        if (mEditMode) {
+            saveSelectedSortingOrder(EDIT_SAVED_FORM_SORTING_ORDER);
+        } else {
+            saveSelectedSortingOrder(VIEW_SENT_FORM_SORTING_ORDER);
+        }
         super.onPause();
     }
 
