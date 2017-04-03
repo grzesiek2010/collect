@@ -34,11 +34,8 @@ import org.robolectric.RobolectricTestRunner;
 import org.robolectric.RuntimeEnvironment;
 import org.robolectric.annotation.Config;
 
-import java.util.Calendar;
-import java.util.Date;
 import java.util.TimeZone;
 
-import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
 import static org.mockito.Matchers.anyString;
 import static org.mockito.Mockito.mock;
@@ -46,13 +43,13 @@ import static org.mockito.Mockito.stub;
 
 @RunWith(RobolectricTestRunner.class)
 @Config(constants = BuildConfig.class)
-/* https://github.com/opendatakit/collect/issues/356
- * Verify that the date and datetime widget skips over "daylight savings gaps".
- * This is needed on the day and time of a daylight savings transition because that date/time
- * doesn't exist.*/
+/** https://github.com/opendatakit/collect/issues/356
+ * The purpose of this test is to confirm that the app doesn't crash when we pass to {@link DateWidget}
+ * or {@link DateTimeWidget} a value that doesn't exists (DaylightSaving gap).
+ */
 public class DaylightSavingTest {
 
-    private static final String EST_TIME_ZONE = "America/Los_Angeles";
+    private static final String EAST_AFRICA_TIME_ZONE = "Africa/Nairobi";
     private static final String CET_TIME_ZONE = "Europe/Warsaw";
 
     private TimeZone mCurrentTimeZone;
@@ -68,28 +65,6 @@ public class DaylightSavingTest {
     }
 
     @Test
-    // 12 Mar 2017 at 02:00:00 clocks were turned forward to 03:00:00
-    public void testESTTimeZoneWithDateTimeWidget() {
-        TimeZone.setDefault(TimeZone.getTimeZone(EST_TIME_ZONE));
-        DateTimeWidget dateTimeWidget = prepareDateTimeWidget(2017, 2, 12, 2, 0);
-
-        IAnswerData answerData = dateTimeWidget.getAnswer();
-        assertNotNull(answerData);
-        assertDate(answerData, 2017, 2, 12, 3, 0);
-    }
-
-    @Test
-    // 12 Mar 2017 at 02:00:00 clocks were turned forward to 03:00:00
-    public void testESTTimezoneWithDateWidget() {
-        TimeZone.setDefault(TimeZone.getTimeZone(EST_TIME_ZONE));
-        DateWidget dateWidget = prepareDateWidget(2017, 2, 12);
-
-        IAnswerData answerData = dateWidget.getAnswer();
-        assertNotNull(answerData);
-        assertDate(answerData, 2017, 2, 12, 0, 0);
-    }
-
-    @Test
     // 26 Mar 2017 at 02:00:00 clocks were turned forward to 03:00:00
     public void testCETTimeZoneWithDateTimeWidget() {
         TimeZone.setDefault(TimeZone.getTimeZone(CET_TIME_ZONE));
@@ -97,30 +72,16 @@ public class DaylightSavingTest {
 
         IAnswerData answerData = dateTimeWidget.getAnswer();
         assertNotNull(answerData);
-        assertDate(answerData, 2017, 2, 26, 3, 0);
     }
 
     @Test
-    // 26 Mar 2017 at 02:00:00 clocks were turned forward to 03:00:00
+    // 1 Jan 1960 at 00:00:00 clocks were turned forward to 00:15:00
     public void testCETTimezoneWithDateWidget() {
-        TimeZone.setDefault(TimeZone.getTimeZone(CET_TIME_ZONE));
-        DateWidget dateWidget = prepareDateWidget(2017, 2, 26);
+        TimeZone.setDefault(TimeZone.getTimeZone(EAST_AFRICA_TIME_ZONE));
+        DateWidget dateWidget = prepareDateWidget(1960, 0, 1);
 
         IAnswerData answerData = dateWidget.getAnswer();
         assertNotNull(answerData);
-        assertDate(answerData, 2017, 2, 26, 0, 0);
-    }
-
-    private void assertDate(IAnswerData answerData, int year, int month, int day, int hour, int minute) {
-        Date date = (Date) answerData.getValue();
-        Calendar calendar = Calendar.getInstance();
-        calendar.setTime(date);
-
-        assertEquals(year, calendar.get(Calendar.YEAR));
-        assertEquals(month, calendar.get(Calendar.MONTH));
-        assertEquals(day, calendar.get(Calendar.DAY_OF_MONTH));
-        assertEquals(hour, calendar.get(Calendar.HOUR_OF_DAY));
-        assertEquals(minute, calendar.get(Calendar.MINUTE));
     }
 
     private DateWidget prepareDateWidget(int year, int month, int day) {
