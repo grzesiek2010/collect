@@ -69,7 +69,7 @@ abstract class AppListFragment extends ListFragment {
     protected LinkedHashSet<Long> mSelectedInstances = new LinkedHashSet<>();
     protected EditText mInputSearch;
 
-    protected static int mSelectedSortingOrder;
+    protected static int mSelectedSortingOrder = BY_NAME_ASC;
 
     // toggles to all checked or all unchecked
     // returns:
@@ -196,21 +196,27 @@ abstract class AppListFragment extends ListFragment {
         hideSearchBox();
         switch (position) {
             case BY_NAME_ASC:
+                mSelectedSortingOrder = BY_NAME_ASC;
                 sortByNameAsc();
                 break;
             case BY_NAME_DESC:
+                mSelectedSortingOrder = BY_NAME_DESC;
                 sortByNameDesc();
                 break;
             case BY_DATE_ASC:
+                mSelectedSortingOrder = BY_DATE_ASC;
                 sortByDateDesc();
                 break;
             case BY_DATE_DESC:
+                mSelectedSortingOrder = BY_DATE_DESC;
                 sortByDateAsc();
                 break;
             case BY_STATUS_ASC:
+                mSelectedSortingOrder = BY_STATUS_ASC;
                 sortByStatusAsc();
                 break;
             case BY_STATUS_DESC:
+                mSelectedSortingOrder = BY_STATUS_DESC;
                 sortByStatusDesc();
                 break;
         }
