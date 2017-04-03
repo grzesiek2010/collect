@@ -17,6 +17,7 @@ package org.odk.collect.android.fragments;
 import android.content.res.Configuration;
 import android.database.Cursor;
 import android.os.Bundle;
+import android.preference.PreferenceManager;
 import android.support.v4.app.ListFragment;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarDrawerToggle;
@@ -67,6 +68,8 @@ abstract class AppListFragment extends ListFragment {
     protected SimpleCursorAdapter mListAdapter;
     protected LinkedHashSet<Long> mSelectedInstances = new LinkedHashSet<>();
     protected EditText mInputSearch;
+
+    protected static int mSelectedSortingOrder;
 
     // toggles to all checked or all unchecked
     // returns:
@@ -338,5 +341,18 @@ abstract class AppListFragment extends ListFragment {
 
     protected int getCheckedCount() {
         return getListView().getCheckedItemCount();
+    }
+
+    protected void saveSelectedSortingOrder(String sortingOrderKey) {
+        PreferenceManager.getDefaultSharedPreferences(Collect.getInstance())
+                .edit()
+                .putInt(sortingOrderKey, mSelectedSortingOrder)
+                .apply();
+    }
+
+    protected void restoreSelectedSortingOrder(String sortingOrderKey) {
+        mSelectedSortingOrder = PreferenceManager
+                .getDefaultSharedPreferences(Collect.getInstance())
+                .getInt(sortingOrderKey, BY_NAME_ASC);
     }
 }

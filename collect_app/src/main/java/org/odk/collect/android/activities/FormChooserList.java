@@ -44,6 +44,7 @@ import org.odk.collect.android.utilities.VersionHidingCursorAdapter;
  * @author Carl Hartung (carlhartung@gmail.com)
  */
 public class FormChooserList extends FormListActivity implements DiskSyncListener {
+    private static final String FORM_CHOOSER_LIST_SORTING_ORDER = "formChooserListSortingOrder";
 
     private static final String t = "FormChooserList";
     private static final boolean EXIT = true;
@@ -68,6 +69,7 @@ public class FormChooserList extends FormListActivity implements DiskSyncListene
         setContentView(R.layout.chooser_list_layout);
         setTitle(getString(R.string.enter_data));
 
+        restoreSelectedSortingOrder(FORM_CHOOSER_LIST_SORTING_ORDER);
         setupAdapter(FormsColumns.DISPLAY_NAME + " ASC, " + FormsColumns.JR_VERSION + " DESC");
 
         if (savedInstanceState != null && savedInstanceState.containsKey(syncMsgKey)) {
@@ -147,6 +149,7 @@ public class FormChooserList extends FormListActivity implements DiskSyncListene
     @Override
     protected void onPause() {
         mDiskSyncTask.setDiskSyncListener(null);
+        saveSelectedSortingOrder(FORM_CHOOSER_LIST_SORTING_ORDER);
         super.onPause();
     }
 

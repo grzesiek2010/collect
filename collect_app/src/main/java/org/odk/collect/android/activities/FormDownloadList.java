@@ -74,6 +74,7 @@ import java.util.Set;
 public class FormDownloadList extends FormListActivity implements FormListDownloaderListener,
         FormDownloaderListener, AuthDialogUtility.AuthDialogUtilityResultListener {
     private static final String t = "RemoveFileManageList";
+    private static final String FORM_DOWNLOAD_LIST_SORTING_ORDER = "formDownloadListSortingOrder";
 
     private static final int PROGRESS_DIALOG = 1;
     private static final int AUTH_DIALOG = 2;
@@ -238,6 +239,7 @@ public class FormDownloadList extends FormListActivity implements FormListDownlo
                 new SimpleAdapter(this, mFilteredFormList, R.layout.two_item_multiple_choice, data, view);
         getListView().setChoiceMode(ListView.CHOICE_MODE_MULTIPLE);
         getListView().setItemsCanFocus(false);
+        restoreSelectedSortingOrder(FORM_DOWNLOAD_LIST_SORTING_ORDER);
         setListAdapter(mFormListAdapter);
 
         mSortingOptions = new String[]{
@@ -536,6 +538,7 @@ public class FormDownloadList extends FormListActivity implements FormListDownlo
         if (mAlertDialog != null && mAlertDialog.isShowing()) {
             mAlertDialog.dismiss();
         }
+        saveSelectedSortingOrder(FORM_DOWNLOAD_LIST_SORTING_ORDER);
         super.onPause();
     }
 

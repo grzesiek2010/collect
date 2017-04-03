@@ -50,6 +50,7 @@ import java.util.List;
 public class DataManagerList extends InstanceListFragment
         implements DeleteInstancesListener, DiskSyncListener, View.OnClickListener {
     private static final String TAG = "DataManagerList";
+    private static final String DATA_MANAGER_LIST_SORTING_ORDER = "dateManagerListSortingOrder";
     DeleteInstancesTask mDeleteInstancesTask = null;
     private AlertDialog mAlertDialog;
     private InstanceSyncTask instanceSyncTask;
@@ -72,6 +73,7 @@ public class DataManagerList extends InstanceListFragment
         mDeleteButton.setOnClickListener(this);
         mToggleButton.setOnClickListener(this);
 
+        restoreSelectedSortingOrder(DATA_MANAGER_LIST_SORTING_ORDER);
         setupAdapter(InstanceProviderAPI.InstanceColumns.DISPLAY_NAME + " ASC");
         instanceSyncTask = new InstanceSyncTask();
         instanceSyncTask.setDiskSyncListener(this);
@@ -114,6 +116,7 @@ public class DataManagerList extends InstanceListFragment
         if (mAlertDialog != null && mAlertDialog.isShowing()) {
             mAlertDialog.dismiss();
         }
+        saveSelectedSortingOrder(DATA_MANAGER_LIST_SORTING_ORDER);
         super.onPause();
     }
 

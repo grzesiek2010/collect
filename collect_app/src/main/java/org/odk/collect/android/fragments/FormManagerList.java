@@ -48,6 +48,7 @@ import java.util.List;
  */
 public class FormManagerList extends FormListFragment implements DiskSyncListener,
         DeleteFormsListener, View.OnClickListener {
+    private static final String FORM_MANAGER_LIST_SORTING_ORDER = "formManagerListSortingOrder";
     private static final String syncMsgKey = "syncmsgkey";
     private static String TAG = "FormManagerList";
     BackgroundTasks mBackgroundTasks; // handled across orientation changes
@@ -70,6 +71,7 @@ public class FormManagerList extends FormListFragment implements DiskSyncListene
         mDeleteButton.setOnClickListener(this);
         mToggleButton.setOnClickListener(this);
 
+        restoreSelectedSortingOrder(FORM_MANAGER_LIST_SORTING_ORDER);
         setupAdapter(FormsColumns.DISPLAY_NAME + " ASC, " + FormsColumns.JR_VERSION + " DESC");
 
         if (mBackgroundTasks == null) {
@@ -114,6 +116,7 @@ public class FormManagerList extends FormListFragment implements DiskSyncListene
         if (mAlertDialog != null && mAlertDialog.isShowing()) {
             mAlertDialog.dismiss();
         }
+        saveSelectedSortingOrder(FORM_MANAGER_LIST_SORTING_ORDER);
 
         super.onPause();
     }

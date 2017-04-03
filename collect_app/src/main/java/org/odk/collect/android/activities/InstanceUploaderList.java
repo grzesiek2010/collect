@@ -63,6 +63,7 @@ public class InstanceUploaderList extends InstanceListActivity
         implements OnLongClickListener, DiskSyncListener {
     private static final String t = "InstanceUploaderList";
     private static final String SHOW_ALL_MODE = "showAllMode";
+    private static final String INSTANCE_UPLOADER_LIST_SORTING_ORDER = "instanceUploaderListSortingOrder";
 
     private static final int MENU_PREFERENCES = AppListActivity.MENU_FILTER + 1;
     private static final int MENU_SHOW_UNSENT = MENU_PREFERENCES + 1;
@@ -134,6 +135,7 @@ public class InstanceUploaderList extends InstanceListActivity
         });
         toggleSelsButton.setOnLongClickListener(this);
 
+        restoreSelectedSortingOrder(INSTANCE_UPLOADER_LIST_SORTING_ORDER);
         setupAdapter(InstanceProviderAPI.InstanceColumns.DISPLAY_NAME + " ASC");
 
         getListView().setChoiceMode(ListView.CHOICE_MODE_MULTIPLE);
@@ -170,6 +172,7 @@ public class InstanceUploaderList extends InstanceListActivity
         if (instanceSyncTask != null) {
             instanceSyncTask.setDiskSyncListener(null);
         }
+        saveSelectedSortingOrder(INSTANCE_UPLOADER_LIST_SORTING_ORDER);
         super.onPause();
     }
 

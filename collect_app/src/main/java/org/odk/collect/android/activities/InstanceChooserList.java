@@ -44,6 +44,7 @@ import org.odk.collect.android.utilities.ApplicationConstants;
  * @author Carl Hartung (carlhartung@gmail.com)
  */
 public class InstanceChooserList extends InstanceListActivity implements DiskSyncListener {
+    private static final String INSTANCE_LIST_ACTIVITY_SORTING_ORDER = "instanceListActivitySortingOrder";
 
     private static final boolean EXIT = true;
     private static final boolean DO_NOT_EXIT = false;
@@ -87,6 +88,7 @@ public class InstanceChooserList extends InstanceListActivity implements DiskSyn
             };
             order = InstanceProviderAPI.InstanceColumns.DISPLAY_NAME + " ASC";
         }
+        restoreSelectedSortingOrder(INSTANCE_LIST_ACTIVITY_SORTING_ORDER);
         setupAdapter(order);
 
         instanceSyncTask = new InstanceSyncTask();
@@ -165,6 +167,7 @@ public class InstanceChooserList extends InstanceListActivity implements DiskSyn
         if (instanceSyncTask != null) {
             instanceSyncTask.setDiskSyncListener(null);
         }
+        saveSelectedSortingOrder(INSTANCE_LIST_ACTIVITY_SORTING_ORDER);
         super.onPause();
     }
 
