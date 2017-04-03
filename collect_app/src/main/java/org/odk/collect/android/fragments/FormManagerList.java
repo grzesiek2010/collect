@@ -72,7 +72,7 @@ public class FormManagerList extends FormListFragment implements DiskSyncListene
         mToggleButton.setOnClickListener(this);
 
         restoreSelectedSortingOrder(FORM_MANAGER_LIST_SORTING_ORDER);
-        setupAdapter(FormsColumns.DISPLAY_NAME + " ASC, " + FormsColumns.JR_VERSION + " DESC");
+        setupAdapter();
 
         if (mBackgroundTasks == null) {
             mBackgroundTasks = new BackgroundTasks();
@@ -122,7 +122,7 @@ public class FormManagerList extends FormListFragment implements DiskSyncListene
     }
 
     @Override
-    protected void setupAdapter(String sortOrder) {
+    protected void setupAdapter() {
         List<Long> checkedForms = new ArrayList<>();
         for (long a : getListView().getCheckedItemIds()) {
             checkedForms.add(a);
@@ -132,7 +132,7 @@ public class FormManagerList extends FormListFragment implements DiskSyncListene
 
         mListAdapter = new VersionHidingCursorAdapter(
                 FormsColumns.JR_VERSION, getActivity(),
-                R.layout.two_item_multiple_choice, new FormsDao().getFormsCursor(sortOrder), data, view);
+                R.layout.two_item_multiple_choice, new FormsDao().getFormsCursor(getSortingOrder()), data, view);
         setListAdapter(mListAdapter);
         checkPreviouslyCheckedItems();
     }

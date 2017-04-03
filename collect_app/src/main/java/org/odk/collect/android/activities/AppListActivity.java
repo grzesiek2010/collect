@@ -293,7 +293,7 @@ abstract class AppListActivity extends ListActivity {
 
     protected abstract void sortByStatusDesc();
 
-    protected abstract void setupAdapter(String sortOrder);
+    protected abstract void setupAdapter();
 
     protected boolean areCheckedItems() {
         return getCheckedCount() > 0;

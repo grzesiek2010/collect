@@ -89,7 +89,7 @@ public class InstanceChooserList extends InstanceListActivity implements DiskSyn
             order = InstanceProviderAPI.InstanceColumns.DISPLAY_NAME + " ASC";
         }
         restoreSelectedSortingOrder(INSTANCE_LIST_ACTIVITY_SORTING_ORDER);
-        setupAdapter(order);
+        setupAdapter();
 
         instanceSyncTask = new InstanceSyncTask();
         instanceSyncTask.setDiskSyncListener(this);
@@ -190,14 +190,14 @@ public class InstanceChooserList extends InstanceListActivity implements DiskSyn
     }
 
     @Override
-    protected void setupAdapter(String sortOrder) {
+    protected void setupAdapter() {
         Cursor cursor;
         InstancesDao instancesDao = new InstancesDao();
 
         if (mEditMode) {
-            cursor = instancesDao.getUnsentInstancesCursor(sortOrder);
+            cursor = instancesDao.getUnsentInstancesCursor(getSortingOrder());
         } else {
-            cursor = instancesDao.getSentInstancesCursor(sortOrder);
+            cursor = instancesDao.getSentInstancesCursor(getSortingOrder());
         }
 
         String[] data = new String[]{
