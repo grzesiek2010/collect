@@ -206,12 +206,11 @@ public class DateWidget extends QuestionWidget {
         }
         clearFocus();
 
-        LocalDateTime ldt = new LocalDateTime()
-                .withYear(mDatePicker.getYear())
-                .withMonthOfYear((!showCalendar && hideMonth) ? 1 : mDatePicker.getMonth() + 1)
-                .withDayOfMonth((!showCalendar && (hideMonth || hideDay)) ? 1 : mDatePicker.getDayOfMonth())
-                .withHourOfDay(0)
-                .withMinuteOfHour(0);
+        DateTime ldt =
+                new DateTime(mDatePicker.getYear(),
+                        (!showCalendar && hideMonth) ? 1 : mDatePicker.getMonth() + 1,
+                        (!showCalendar && (hideMonth || hideDay)) ? 1 : mDatePicker.getDayOfMonth(),
+                        0, 0);
 
         return new DateData(ldt.toDate());
     }

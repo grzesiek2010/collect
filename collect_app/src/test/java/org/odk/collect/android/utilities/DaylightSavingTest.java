@@ -34,15 +34,20 @@ import org.robolectric.RobolectricTestRunner;
 import org.robolectric.RuntimeEnvironment;
 import org.robolectric.annotation.Config;
 
+import java.sql.Time;
+import java.util.Calendar;
+import java.util.Date;
 import java.util.TimeZone;
 
+import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
 import static org.mockito.Matchers.anyString;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.stub;
 
 @RunWith(RobolectricTestRunner.class)
-@Config(constants = BuildConfig.class)
+@Config(constants = BuildConfig.class, sdk = 21, manifest = "src/main/AndroidManifest.xml",
+        packageName = "org.odk.collect")
 /** https://github.com/opendatakit/collect/issues/356
  * The purpose of this test is to confirm that the app doesn't crash when we pass to {@link DateWidget}
  * or {@link DateTimeWidget} a value that doesn't exists (DaylightSaving gap).
@@ -68,10 +73,24 @@ public class DaylightSavingTest {
     // 26 Mar 2017 at 02:00:00 clocks were turned forward to 03:00:00
     public void testCETTimeZoneWithDateTimeWidget() {
         TimeZone.setDefault(TimeZone.getTimeZone(CET_TIME_ZONE));
-        DateTimeWidget dateTimeWidget = prepareDateTimeWidget(2017, 2, 26, 2, 0);
+        assertEquals(TimeZone.getDefault(), TimeZone.getTimeZone(CET_TIME_ZONE));
+        DateTimeWidget dateTimeWidget = prepareDateTimeWidget(2017, 2, 26, 1, 30);
 
         IAnswerData answerData = dateTimeWidget.getAnswer();
+        assertDate(answerData, 2017, 2, 26, 0, 30);
         assertNotNull(answerData);
+    }
+
+    private void assertDate(IAnswerData answerData, int year, int month, int day, int hour, int minute) {
+        Date date = (Date) answerData.getValue();
+        Calendar calendar = Calendar.getInstance();
+        calendar.setTime(date);
+
+        assertEquals(year, calendar.get(Calendar.YEAR));
+        assertEquals(month, calendar.get(Calendar.MONTH));
+        assertEquals(day, calendar.get(Calendar.DAY_OF_MONTH));
+        assertEquals(hour, calendar.get(Calendar.HOUR_OF_DAY));
+        assertEquals(minute, calendar.get(Calendar.MINUTE));
     }
 
     @Test
