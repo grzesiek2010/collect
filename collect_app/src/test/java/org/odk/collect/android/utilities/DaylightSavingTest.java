@@ -42,7 +42,8 @@ import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.stub;
 
 @RunWith(RobolectricTestRunner.class)
-@Config(constants = BuildConfig.class)
+@Config(constants = BuildConfig.class, sdk = 21, manifest = "src/main/AndroidManifest.xml",
+        packageName = "org.odk.collect")
 /** https://github.com/opendatakit/collect/issues/356
  * The purpose of this test is to confirm that the app doesn't crash when we pass to {@link DateWidget}
  * or {@link DateTimeWidget} a value that doesn't exists (DaylightSaving gap).
