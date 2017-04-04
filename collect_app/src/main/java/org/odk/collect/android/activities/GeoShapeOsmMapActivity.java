@@ -18,7 +18,6 @@ import android.app.Activity;
 import android.app.AlertDialog;
 import android.content.DialogInterface;
 import android.content.Intent;
-import android.content.SharedPreferences;
 import android.graphics.Color;
 import android.graphics.Paint;
 import android.location.LocationManager;
@@ -34,12 +33,7 @@ import android.widget.Button;
 import org.odk.collect.android.R;
 import org.odk.collect.android.spatial.MapHelper;
 import org.odk.collect.android.widgets.GeoShapeWidget;
-import org.osmdroid.DefaultResourceProxyImpl;
-import org.osmdroid.bonuspack.overlays.MapEventsOverlay;
-import org.osmdroid.bonuspack.overlays.MapEventsReceiver;
-import org.osmdroid.bonuspack.overlays.Marker;
-import org.osmdroid.bonuspack.overlays.Marker.OnMarkerClickListener;
-import org.osmdroid.bonuspack.overlays.Marker.OnMarkerDragListener;
+import org.osmdroid.events.MapEventsReceiver;
 import org.osmdroid.events.MapListener;
 import org.osmdroid.events.ScrollEvent;
 import org.osmdroid.events.ZoomEvent;
@@ -47,6 +41,8 @@ import org.osmdroid.tileprovider.IRegisterReceiver;
 import org.osmdroid.util.BoundingBoxE6;
 import org.osmdroid.util.GeoPoint;
 import org.osmdroid.views.MapView;
+import org.osmdroid.views.overlay.MapEventsOverlay;
+import org.osmdroid.views.overlay.Marker;
 import org.osmdroid.views.overlay.PathOverlay;
 import org.osmdroid.views.overlay.mylocation.GpsMyLocationProvider;
 import org.osmdroid.views.overlay.mylocation.MyLocationNewOverlay;
@@ -65,7 +61,6 @@ public class GeoShapeOsmMapActivity extends Activity implements IRegisterReceive
     private MapView mMap;
     private ArrayList<Marker> map_markers = new ArrayList<Marker>();
     private PathOverlay pathOverlay;
-    public DefaultResourceProxyImpl resource_proxy;
     public int zoom_level = 3;
     public static final int stroke_width = 5;
     public String final_return_string;
@@ -96,7 +91,6 @@ public class GeoShapeOsmMapActivity extends Activity implements IRegisterReceive
         mSaveButton = (Button) findViewById(R.id.save);
         mClearButton = (Button) findViewById(R.id.clear);
 
-        resource_proxy = new DefaultResourceProxyImpl(getApplicationContext());
         mMap = (MapView) findViewById(R.id.geoshape_mapview);
         mHelper = new MapHelper(this, mMap, GeoShapeOsmMapActivity.this);
         mMap.setMultiTouchControls(true);
@@ -139,7 +133,7 @@ public class GeoShapeOsmMapActivity extends Activity implements IRegisterReceive
         GpsMyLocationProvider imlp = new GpsMyLocationProvider(this.getBaseContext());
         imlp.setLocationUpdateMinDistance(1000);
         imlp.setLocationUpdateMinTime(60000);
-        mMyLocationOverlay = new MyLocationNewOverlay(this, mMap);
+        mMyLocationOverlay = new MyLocationNewOverlay(new GpsMyLocationProvider(this), mMap);
 
 
         Intent intent = getIntent();
@@ -458,7 +452,7 @@ public class GeoShapeOsmMapActivity extends Activity implements IRegisterReceive
 
     };
 
-    private OnMarkerDragListener draglistner = new OnMarkerDragListener() {
+    private Marker.OnMarkerDragListener draglistner = new Marker.OnMarkerDragListener() {
         @Override
         public void onMarkerDragStart(Marker marker) {
 
@@ -478,7 +472,7 @@ public class GeoShapeOsmMapActivity extends Activity implements IRegisterReceive
     };
 
 
-    private OnMarkerClickListener nullmarkerlistner = new Marker.OnMarkerClickListener() {
+    private Marker.OnMarkerClickListener nullmarkerlistner = new Marker.OnMarkerClickListener() {
 
         @Override
         public boolean onMarkerClick(Marker arg0, MapView arg1) {
@@ -566,5 +560,10 @@ public class GeoShapeOsmMapActivity extends Activity implements IRegisterReceive
             zoomPointButton.setTextColor(Color.parseColor("#FF979797"));
         }
         zoomDialog.show();
+    }
+
+    @Override
+    public void destroy() {
+
     }
 }

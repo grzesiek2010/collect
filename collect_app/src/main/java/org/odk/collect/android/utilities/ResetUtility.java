@@ -61,7 +61,7 @@ public class ResetUtility {
                     }
                     break;
                 case ResetAction.RESET_OSM_DROID:
-                    if (deleteFolderContents(OpenStreetMapTileProviderConstants.TILE_PATH_BASE.getPath())) {
+                    if (deleteFolderContents(OpenStreetMapTileProviderConstants.getBasePath().getPath())) {
                         mFailedResetActions.remove(mFailedResetActions.indexOf(ResetAction.RESET_OSM_DROID));
                     }
                     break;

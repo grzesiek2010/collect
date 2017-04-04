@@ -42,8 +42,8 @@ public class OsmMBTileModuleProvider extends MapTileFileStorageProviderBase {
 
         // Call the super constructor
         super(receiverRegistrar,
-                NUMBER_OF_TILE_FILESYSTEM_THREADS,
-                TILE_FILESYSTEM_MAXIMUM_QUEUE_SIZE);
+                40,
+                40);
 
         // Initialize fields
         this.tileSource = tileSource;
@@ -97,7 +97,7 @@ public class OsmMBTileModuleProvider extends MapTileFileStorageProviderBase {
         public Drawable loadTile(final MapTileRequestState pState) {
 
             // if there's no sdcard then don't do anything
-            if (!getSdCardAvailable()) {
+            if (!isSdCardAvailable()) {
                 return null;
             }
 

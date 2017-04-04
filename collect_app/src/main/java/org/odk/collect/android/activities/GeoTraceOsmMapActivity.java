@@ -20,7 +20,6 @@ import android.content.Context;
 import android.content.DialogInterface;
 import android.content.DialogInterface.OnCancelListener;
 import android.content.Intent;
-import android.content.SharedPreferences;
 import android.graphics.Color;
 import android.graphics.Paint;
 import android.location.Location;
@@ -29,7 +28,6 @@ import android.location.LocationManager;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Looper;
-import android.preference.PreferenceManager;
 import android.provider.Settings;
 import android.support.v4.content.ContextCompat;
 import android.view.LayoutInflater;
@@ -44,15 +42,13 @@ import android.widget.Spinner;
 import org.odk.collect.android.R;
 import org.odk.collect.android.spatial.MapHelper;
 import org.odk.collect.android.widgets.GeoTraceWidget;
-import org.osmdroid.DefaultResourceProxyImpl;
-import org.osmdroid.bonuspack.overlays.Marker;
-import org.osmdroid.bonuspack.overlays.Marker.OnMarkerClickListener;
-import org.osmdroid.bonuspack.overlays.Marker.OnMarkerDragListener;
 import org.osmdroid.tileprovider.IRegisterReceiver;
 import org.osmdroid.util.BoundingBoxE6;
 import org.osmdroid.util.GeoPoint;
 import org.osmdroid.views.MapView;
+import org.osmdroid.views.overlay.Marker;
 import org.osmdroid.views.overlay.PathOverlay;
+import org.osmdroid.views.overlay.mylocation.GpsMyLocationProvider;
 import org.osmdroid.views.overlay.mylocation.MyLocationNewOverlay;
 
 import java.util.ArrayList;
@@ -71,7 +67,6 @@ public class GeoTraceOsmMapActivity extends Activity implements IRegisterReceive
     public Boolean gpsStatus = true;
     private Boolean play_check = false;
     private MapView mapView;
-    public DefaultResourceProxyImpl resource_proxy;
     public MyLocationNewOverlay mMyLocationOverlay;
     private Button mLocationButton;
     private Button mPlayButton;
@@ -115,13 +110,12 @@ public class GeoTraceOsmMapActivity extends Activity implements IRegisterReceive
         setContentView(R.layout.geotrace_osm_layout);
         setTitle(getString(R.string.geotrace_title)); // Setting title of the action
 
-        resource_proxy = new DefaultResourceProxyImpl(getApplicationContext());
         mapView = (MapView) findViewById(R.id.geotrace_mapview);
         mHelper = new MapHelper(this, mapView, GeoTraceOsmMapActivity.this);
         mapView.setMultiTouchControls(true);
         mapView.setBuiltInZoomControls(true);
         mapView.getController().setZoom(zoom_level);
-        mMyLocationOverlay = new MyLocationNewOverlay(this, mapView);
+        mMyLocationOverlay = new MyLocationNewOverlay(new GpsMyLocationProvider(this), mapView);
 
         inflater = this.getLayoutInflater();
         traceSettingsView = inflater.inflate(R.layout.geotrace_dialog, null);
@@ -361,7 +355,7 @@ public class GeoTraceOsmMapActivity extends Activity implements IRegisterReceive
     protected void onPause() {
         super.onPause();
         if (mMyLocationOverlay != null) {
-            mMyLocationOverlay.enableMyLocation();
+            mMyLocationOverlay.enableMyLocation(new GpsMyLocationProvider(this));
         }
 
 //		if(mMyLocationOverlay.getMyLocation()!= null){
@@ -706,7 +700,7 @@ public class GeoTraceOsmMapActivity extends Activity implements IRegisterReceive
         for (int i = 0; i < map_markers.size(); i++) {
             String lat = Double.toString(map_markers.get(i).getPosition().getLatitude());
             String lng = Double.toString(map_markers.get(i).getPosition().getLongitude());
-            String alt = Integer.toString(map_markers.get(i).getPosition().getAltitude());
+            String alt = Double.toString(map_markers.get(i).getPosition().getAltitude());
             String acu = map_markers.get(i).getSubDescription();
             temp_string = temp_string + lat + " " + lng + " " + alt + " " + acu + ";";
         }
@@ -723,7 +717,7 @@ public class GeoTraceOsmMapActivity extends Activity implements IRegisterReceive
         finish();
     }
 
-    private OnMarkerClickListener nullmarkerlistner = new Marker.OnMarkerClickListener() {
+    private Marker.OnMarkerClickListener nullmarkerlistner = new Marker.OnMarkerClickListener() {
 
         @Override
         public boolean onMarkerClick(Marker arg0, MapView arg1) {
@@ -746,7 +740,7 @@ public class GeoTraceOsmMapActivity extends Activity implements IRegisterReceive
     }
 
 
-    private OnMarkerDragListener draglistner = new Marker.OnMarkerDragListener() {
+    private Marker.OnMarkerDragListener draglistner = new Marker.OnMarkerDragListener() {
         @Override
         public void onMarkerDragStart(Marker marker) {
 
@@ -876,7 +870,10 @@ public class GeoTraceOsmMapActivity extends Activity implements IRegisterReceive
     @Override
     public void onLocationChanged(Location location) {
         if (mode_active) {
-            mapView.getController().setCenter(mMyLocationOverlay.getMyLocation());
+            GeoPoint geoPoint = mMyLocationOverlay.getMyLocation();
+            if (geoPoint != null) {
+                mapView.getController().setCenter(mMyLocationOverlay.getMyLocation());
+            }
         }
     }
 
@@ -892,6 +889,11 @@ public class GeoTraceOsmMapActivity extends Activity implements IRegisterReceive
 
     @Override
     public void onProviderDisabled(String provider) {
+
+    }
+
+    @Override
+    public void destroy() {
 
     }
 }
