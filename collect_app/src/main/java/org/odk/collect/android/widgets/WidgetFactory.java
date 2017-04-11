@@ -206,6 +206,7 @@ public class WidgetFactory {
                 } else {
                     questionWidget = new SelectMultiWidget(context, fep);
                 }
+                questionWidget = new RankWidget(context, fep);
                 break;
             case Constants.CONTROL_TRIGGER:
                 questionWidget = new TriggerWidget(context, fep);
