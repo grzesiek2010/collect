@@ -29,6 +29,8 @@ import android.graphics.Path;
 import android.graphics.PorterDuff;
 import android.net.Uri;
 import android.os.Bundle;
+import android.support.design.widget.FloatingActionButton;
+import android.support.v7.widget.CardView;
 import android.util.DisplayMetrics;
 import android.view.KeyEvent;
 import android.view.LayoutInflater;
@@ -36,12 +38,15 @@ import android.view.MotionEvent;
 import android.view.View;
 import android.view.Window;
 import android.view.WindowManager;
+import android.view.animation.AccelerateDecelerateInterpolator;
+import android.view.animation.OvershootInterpolator;
 import android.widget.Button;
 import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 
 import org.odk.collect.android.R;
 import org.odk.collect.android.application.Collect;
+import org.odk.collect.android.utilities.AnimateUtils;
 import org.odk.collect.android.utilities.ColorPickerDialog;
 import org.odk.collect.android.utilities.FileUtils;
 
@@ -73,10 +78,14 @@ public class DrawActivity extends Activity {
     private File output = null;
     private File savepointImage = null;
 
-    private Button btnDrawColor;
-    private Button btnFinished;
-    private Button btnReset;
-    private Button btnCancel;
+    private FloatingActionButton mFabActions;
+    private FloatingActionButton mFabSetColor;
+    private CardView mCardViewSetColor;
+    private FloatingActionButton mFabSaveAndClose;
+    private CardView mCardViewSaveAndClose;
+    private FloatingActionButton mFabClear;
+    private CardView mCardViewClear;
+
     private Paint paint;
     private Paint pointPaint;
     private int currentColor = 0xFF000000;
@@ -100,8 +109,90 @@ public class DrawActivity extends Activity {
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        setContentView(R.layout.draw_layout);
 
-        requestWindowFeature(Window.FEATURE_NO_TITLE);
+        mFabActions = (FloatingActionButton) findViewById(R.id.fab_actions);
+
+        mFabSetColor = (FloatingActionButton) findViewById(R.id.fab_set_color);
+        mCardViewSetColor = (CardView) findViewById(R.id.cv_set_color);
+
+        mFabSaveAndClose = (FloatingActionButton) findViewById(R.id.fab_save_and_close);
+        mCardViewSaveAndClose = (CardView) findViewById(R.id.cv_save_and_close);
+
+        mFabClear = (FloatingActionButton) findViewById(R.id.fab_clear);
+        mCardViewClear = (CardView) findViewById(R.id.cv_clear);
+
+        mFabActions.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                int status = Integer.parseInt(view.getTag().toString());
+                if (status == 0) {
+                    status = 1;
+                    mFabActions.animate().rotation(45).setInterpolator(new AccelerateDecelerateInterpolator())
+                            .setDuration(100).start();
+
+                    AnimateUtils.ScaleInAnimation(mFabSetColor, 50, 150, new OvershootInterpolator(), true);
+                    AnimateUtils.ScaleInAnimation(mCardViewSetColor, 50, 150, new OvershootInterpolator(), true);
+                    AnimateUtils.ScaleInAnimation(mFabSaveAndClose, 100, 150, new OvershootInterpolator(), true);
+                    AnimateUtils.ScaleInAnimation(mCardViewSaveAndClose, 100, 150, new OvershootInterpolator(), true);
+                    AnimateUtils.ScaleInAnimation(mFabClear, 150, 150, new OvershootInterpolator(), true);
+                    AnimateUtils.ScaleInAnimation(mCardViewClear, 150, 150, new OvershootInterpolator(), true);
+                } else {
+                    status = 0;
+                    mFabActions.animate().rotation(0).setInterpolator(new AccelerateDecelerateInterpolator())
+                            .setDuration(100).start();
+
+                    AnimateUtils.ScaleOutAnimation(mFabSetColor, 50, 150, new OvershootInterpolator(), true);
+                    AnimateUtils.ScaleOutAnimation(mCardViewSetColor, 50, 150, new OvershootInterpolator(), true);
+                    AnimateUtils.ScaleOutAnimation(mFabSaveAndClose, 100, 150, new OvershootInterpolator(), true);
+                    AnimateUtils.ScaleOutAnimation(mCardViewSaveAndClose, 100, 150, new OvershootInterpolator(), true);
+                    AnimateUtils.ScaleOutAnimation(mFabClear, 150, 150, new OvershootInterpolator(), true);
+                    AnimateUtils.ScaleOutAnimation(mCardViewClear, 150, 150, new OvershootInterpolator(), true);
+                }
+                view.setTag(status);
+            }
+        });
+
+        mFabSetColor.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                if (view.getVisibility() == View.VISIBLE) {
+                    mFabActions.performClick();
+                    ColorPickerDialog cpd = new ColorPickerDialog(
+                            DrawActivity.this,
+                            new ColorPickerDialog.OnColorChangedListener() {
+                                public void colorChanged(String key, int color) {
+                                    currentColor = color;
+                                    paint.setColor(color);
+                                    pointPaint.setColor(color);
+                                }
+                            }, "key", currentColor, currentColor,
+                            getString(R.string.select_drawing_color));
+                    cpd.show();
+                }
+            }
+        });
+
+        mFabSaveAndClose.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                if (view.getVisibility() == View.VISIBLE) {
+                    mFabActions.performClick();
+                    saveAndClose();
+                }
+            }
+        });
+
+        mFabClear.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                if (view.getVisibility() == View.VISIBLE) {
+                    mFabActions.performClick();
+                    reset();
+                }
+            }
+        });
+
         getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN,
                 WindowManager.LayoutParams.FLAG_FULLSCREEN);
 
@@ -168,18 +259,13 @@ public class DrawActivity extends Activity {
 
         setTitle(getString(R.string.draw_image));
 
-        LayoutInflater inflater = (LayoutInflater) getSystemService(
-                Context.LAYOUT_INFLATER_SERVICE);
-        RelativeLayout v = (RelativeLayout) inflater.inflate(
-                R.layout.draw_layout, null);
-        LinearLayout ll = (LinearLayout) v.findViewById(R.id.drawViewLayout);
+
+        LinearLayout ll = (LinearLayout) findViewById(R.id.drawViewLayout);
 
         drawView = new DrawView(this, OPTION_SIGNATURE.equals(loadOption),
                 savepointImage);
 
         ll.addView(drawView);
-
-        setContentView(v);
 
         paint = new Paint();
         paint.setAntiAlias(true);
@@ -195,77 +281,6 @@ public class DrawActivity extends Activity {
         pointPaint.setColor(currentColor);
         pointPaint.setStyle(Paint.Style.FILL_AND_STROKE);
         pointPaint.setStrokeWidth(10);
-
-        btnDrawColor = (Button) findViewById(R.id.btnSelectColor);
-        btnDrawColor.setTextColor(getInverseColor(currentColor));
-        btnDrawColor.getBackground().setColorFilter(currentColor,
-                PorterDuff.Mode.SRC_ATOP);
-        btnDrawColor.setText(getString(R.string.set_color));
-        btnDrawColor.setOnClickListener(new View.OnClickListener() {
-            public void onClick(View v) {
-                Collect.getInstance()
-                        .getActivityLogger()
-                        .logInstanceAction(
-                                DrawActivity.this,
-                                "setColorButton",
-                                "click");
-                ColorPickerDialog cpd = new ColorPickerDialog(
-                        DrawActivity.this,
-                        new ColorPickerDialog.OnColorChangedListener() {
-                            public void colorChanged(String key, int color) {
-                                btnDrawColor
-                                        .setTextColor(getInverseColor(color));
-                                btnDrawColor.getBackground().setColorFilter(
-                                        color, PorterDuff.Mode.SRC_ATOP);
-                                currentColor = color;
-                                paint.setColor(color);
-                                pointPaint.setColor(color);
-                            }
-                        }, "key", currentColor, currentColor,
-                        getString(R.string.select_drawing_color));
-                cpd.show();
-            }
-        });
-        btnFinished = (Button) findViewById(R.id.btnFinishDraw);
-        btnFinished.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                Collect.getInstance()
-                        .getActivityLogger()
-                        .logInstanceAction(
-                                DrawActivity.this,
-                                "saveAndCloseButton",
-                                "click");
-                saveAndClose();
-            }
-        });
-        btnReset = (Button) findViewById(R.id.btnResetDraw);
-        btnReset.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                Collect.getInstance()
-                        .getActivityLogger()
-                        .logInstanceAction(
-                                DrawActivity.this,
-                                "resetButton",
-                                "click");
-                reset();
-            }
-        });
-        btnCancel = (Button) findViewById(R.id.btnCancelDraw);
-        btnCancel.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                Collect.getInstance()
-                        .getActivityLogger()
-                        .logInstanceAction(
-                                DrawActivity.this,
-                                "cancelAndCloseButton",
-                                "click");
-                cancelAndClose();
-            }
-        });
-
     }
 
     private int getInverseColor(int color) {

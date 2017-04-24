@@ -112,6 +112,7 @@ the specific language governing permissions and limitations under the License.
             android:taskAffinity="" />
         <activity
             android:name=".activities.DrawActivity"
+            android:theme="@style/Theme.AppCompat.Light.NoActionBar"
             android:label="@string/app_name" />
         <activity
             android:name=".activities.OpenSourceLicensesActivity"
