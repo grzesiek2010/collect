@@ -38,11 +38,16 @@ import org.odk.collect.android.exception.JavaRosaException;
 import org.odk.collect.android.logic.FormController;
 import org.odk.collect.android.logic.HierarchyElement;
 import org.odk.collect.android.utilities.ApplicationConstants;
+import org.odk.collect.android.utilities.DateWidgetUtils;
 
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 
 import timber.log.Timber;
+
+import static org.javarosa.core.model.Constants.DATATYPE_DATE;
+import static org.javarosa.core.model.Constants.DATATYPE_DATE_TIME;
 
 public class FormHierarchyActivity extends ListActivity {
 
@@ -307,9 +312,16 @@ public class FormHierarchyActivity extends ListActivity {
                         if (!fp.isReadOnly() || (label != null && label.length() > 0)) {
                             // show the question if it is an editable field.
                             // or if it is read-only and the label is not blank.
-                            String answerDisplay = fp.getAnswerText();
+                            String answerDisplay;
+                            if (fp.getDataType() == DATATYPE_DATE_TIME) {
+                                answerDisplay = DateWidgetUtils.getDateTimeBasedOnUserLocale((Date) fp.getAnswerValue().getValue(), fp.getQuestion().getAppearanceAttr());
+                            } else if (fp.getDataType() == DATATYPE_DATE) {
+                                answerDisplay = DateWidgetUtils.getDateBasedOnUserLocale((Date) fp.getAnswerValue().getValue(), fp.getQuestion().getAppearanceAttr());
+                            } else {
+                                answerDisplay = fp.getAnswerText();
+                            }
                             formList.add(
-                                    new HierarchyElement(fp.getLongText(), fp.getAnswerText(), null,
+                                    new HierarchyElement(fp.getLongText(), answerDisplay, null,
                                             Color.WHITE, QUESTION, fp.getIndex()));
                         }
                         break;

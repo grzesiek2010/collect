@@ -66,6 +66,7 @@ public class DateWidget extends QuestionWidget {
 
         setGravity(Gravity.START);
 
+        readAppearance();
         createDateButton();
         createDateTextView();
         createDatePickerDialog();
@@ -77,7 +78,7 @@ public class DateWidget extends QuestionWidget {
         }
     }
 
-    private void hideDayFieldIfNotInFormat() {
+    private void readAppearance() {
         String appearance = mPrompt.getQuestion().getAppearanceAttr();
         if ("month-year".equals(appearance)) {
             mHideDay = true;
@@ -87,6 +88,11 @@ public class DateWidget extends QuestionWidget {
         } else if (!"no-calendar".equals(appearance)) {
             mHideDay = true;
             mShowCalendar = true;
+        }
+    }
+
+    private void hideDayFieldIfNotInFormat() {
+        if (mShowCalendar) {
             mDatePickerDialog.getDatePicker().setCalendarViewShown(true);
             CalendarView cv = mDatePickerDialog.getDatePicker().getCalendarView();
             cv.setShowWeekNumber(false);
@@ -199,7 +205,7 @@ public class DateWidget extends QuestionWidget {
     }
 
     private void setDate() {
-        mDateTextView.setText(getAnswer().getDisplayText());
+        mDateTextView.setText(DateWidgetUtils.getDateBasedOnUserLocale((Date) getAnswer().getValue(), mPrompt.getQuestion().getAppearanceAttr()));
     }
 
     private void createDatePickerDialog() {
