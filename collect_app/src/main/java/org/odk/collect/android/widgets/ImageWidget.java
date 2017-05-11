@@ -37,6 +37,7 @@ import org.javarosa.core.model.data.IAnswerData;
 import org.javarosa.core.model.data.StringData;
 import org.javarosa.form.api.FormEntryPrompt;
 import org.odk.collect.android.R;
+import org.odk.collect.android.activities.CaptureSelfieActivity;
 import org.odk.collect.android.activities.FormEntryActivity;
 import org.odk.collect.android.application.Collect;
 import org.odk.collect.android.utilities.FileUtils;
@@ -64,9 +65,12 @@ public class ImageWidget extends QuestionWidget implements IBinaryWidget {
 
     private TextView mErrorTextView;
 
+    private boolean mSelfie;
 
-    public ImageWidget(Context context, FormEntryPrompt prompt) {
+    public ImageWidget(Context context, FormEntryPrompt prompt, final boolean selfie) {
         super(context, prompt);
+
+        mSelfie = selfie;
 
         mInstanceFolder =
                 Collect.getInstance().getFormController().getInstancePath().getParent();
@@ -81,7 +85,11 @@ public class ImageWidget extends QuestionWidget implements IBinaryWidget {
         // setup capture button
         mCaptureButton = new Button(getContext());
         mCaptureButton.setId(QuestionWidget.newUniqueId());
-        mCaptureButton.setText(getContext().getString(R.string.capture_image));
+        if (selfie) {
+            mCaptureButton.setText(getContext().getString(R.string.capture_selfie_image));
+        } else {
+            mCaptureButton.setText(getContext().getString(R.string.capture_image));
+        }
         mCaptureButton.setTextSize(TypedValue.COMPLEX_UNIT_DIP, mAnswerFontsize);
         mCaptureButton.setPadding(20, 20, 20, 20);
         mCaptureButton.setEnabled(!prompt.isReadOnly());
@@ -94,22 +102,27 @@ public class ImageWidget extends QuestionWidget implements IBinaryWidget {
                 Collect.getInstance().getActivityLogger().logInstanceAction(this, "captureButton",
                         "click", mPrompt.getIndex());
                 mErrorTextView.setVisibility(View.GONE);
-                Intent i = new Intent(android.provider.MediaStore.ACTION_IMAGE_CAPTURE);
-                // We give the camera an absolute filename/path where to put the
-                // picture because of bug:
-                // http://code.google.com/p/android/issues/detail?id=1480
-                // The bug appears to be fixed in Android 2.0+, but as of feb 2,
-                // 2010, G1 phones only run 1.6. Without specifying the path the
-                // images returned by the camera in 1.6 (and earlier) are ~1/4
-                // the size. boo.
+                Collect.getInstance().getFormController()
+                        .setIndexWaitingForData(mPrompt.getIndex());
+                Intent i;
+                if (selfie) {
+                    i = new Intent(getContext(), CaptureSelfieActivity.class);
+                } else {
+                    i = new Intent(android.provider.MediaStore.ACTION_IMAGE_CAPTURE);
+                    // We give the camera an absolute filename/path where to put the
+                    // picture because of bug:
+                    // http://code.google.com/p/android/issues/detail?id=1480
+                    // The bug appears to be fixed in Android 2.0+, but as of feb 2,
+                    // 2010, G1 phones only run 1.6. Without specifying the path the
+                    // images returned by the camera in 1.6 (and earlier) are ~1/4
+                    // the size. boo.
 
-                // if this gets modified, the onActivityResult in
-                // FormEntyActivity will also need to be updated.
-                i.putExtra(android.provider.MediaStore.EXTRA_OUTPUT,
-                        Uri.fromFile(new File(Collect.TMPFILE_PATH)));
+                    // if this gets modified, the onActivityResult in
+                    // FormEntyActivity will also need to be updated.
+                    i.putExtra(android.provider.MediaStore.EXTRA_OUTPUT,
+                            Uri.fromFile(new File(Collect.TMPFILE_PATH)));
+                }
                 try {
-                    Collect.getInstance().getFormController().setIndexWaitingForData(
-                            mPrompt.getIndex());
                     ((Activity) getContext()).startActivityForResult(i,
                             FormEntryActivity.IMAGE_CAPTURE);
                 } catch (ActivityNotFoundException e) {
@@ -118,7 +131,6 @@ public class ImageWidget extends QuestionWidget implements IBinaryWidget {
                             Toast.LENGTH_SHORT).show();
                     Collect.getInstance().getFormController().setIndexWaitingForData(null);
                 }
-
             }
         });
 
@@ -243,7 +255,11 @@ public class ImageWidget extends QuestionWidget implements IBinaryWidget {
         mErrorTextView.setVisibility(View.GONE);
 
         // reset buttons
-        mCaptureButton.setText(getContext().getString(R.string.capture_image));
+        if (mSelfie) {
+            mCaptureButton.setText(getContext().getString(R.string.capture_selfie_image));
+        } else {
+            mCaptureButton.setText(getContext().getString(R.string.capture_image));
+        }
     }
 
 
