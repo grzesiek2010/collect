@@ -89,12 +89,6 @@ public class CaptureSelfieActivity extends Activity {
     }
 
     @Override
-    protected void onPause() {
-        super.onPause();
-        releaseCamera();
-    }
-
-    @Override
     protected void onResume() {
         super.onResume();
 
@@ -110,13 +104,6 @@ public class CaptureSelfieActivity extends Activity {
 
             mPreview = new CameraPreview(this, mCamera);
             preview.addView(mPreview);
-        }
-    }
-
-    private void releaseCamera() {
-        if (mCamera != null) {
-            mCamera.release();
-            mCamera = null;
         }
     }
 }

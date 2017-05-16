@@ -21,6 +21,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.net.Uri;
+import android.os.Build;
 import android.provider.MediaStore.Images;
 import android.util.TypedValue;
 import android.util.DisplayMetrics;
@@ -38,6 +39,7 @@ import org.javarosa.core.model.data.StringData;
 import org.javarosa.form.api.FormEntryPrompt;
 import org.odk.collect.android.R;
 import org.odk.collect.android.activities.CaptureSelfieActivity;
+import org.odk.collect.android.activities.CaptureSelfieActivityNewApi;
 import org.odk.collect.android.activities.FormEntryActivity;
 import org.odk.collect.android.application.Collect;
 import org.odk.collect.android.utilities.FileUtils;
@@ -106,7 +108,11 @@ public class ImageWidget extends QuestionWidget implements IBinaryWidget {
                         .setIndexWaitingForData(mPrompt.getIndex());
                 Intent i;
                 if (selfie) {
-                    i = new Intent(getContext(), CaptureSelfieActivity.class);
+                    if(Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
+                        i = new Intent(getContext(), CaptureSelfieActivityNewApi.class);
+                    } else{
+                        i = new Intent(getContext(), CaptureSelfieActivity.class);
+                    }
                 } else {
                     i = new Intent(android.provider.MediaStore.ACTION_IMAGE_CAPTURE);
                     // We give the camera an absolute filename/path where to put the
