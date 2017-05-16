@@ -58,8 +58,10 @@ import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import org.javarosa.core.model.Constants;
 import org.javarosa.core.model.FormIndex;
 import org.javarosa.core.model.data.IAnswerData;
+import org.javarosa.core.model.data.StringData;
 import org.javarosa.core.model.instance.TreeElement;
 import org.javarosa.form.api.FormEntryCaption;
 import org.javarosa.form.api.FormEntryController;
@@ -2459,6 +2461,7 @@ public class FormEntryActivity extends Activity implements AnimationListener,
         dismissDialog(PROGRESS_DIALOG);
 
         final FormController formController = task.getFormController();
+        Collect.getInstance().setFormController(formController);
         int requestCode = task.getRequestCode(); // these are bogus if
         // pendingActivityResult is
         // false
@@ -2470,7 +2473,6 @@ public class FormEntryActivity extends Activity implements AnimationListener,
         mFormLoaderTask = null;
         t.cancel(true);
         t.destroy();
-        Collect.getInstance().setFormController(formController);
         invalidateOptionsMenu();
 
         Collect.getInstance().setExternalDataManager(task.getExternalDataManager());
@@ -2569,6 +2571,8 @@ public class FormEntryActivity extends Activity implements AnimationListener,
                 }
             }
         }
+
+        handleDuplicateInstance();
 
         refreshCurrentView();
     }
@@ -2858,6 +2862,66 @@ public class FormEntryActivity extends Activity implements AnimationListener,
         Intent i = new Intent();
         i.setAction("org.odk.collect.android.FormSaved");
         this.sendBroadcast(i);
+    }
+
+    private void handleDuplicateInstance() {
+        FormController newFormController = Collect.getInstance().getFormController();
+        FormController duplicatedFormController = Collect.getInstance().getDuplicatedFormController();
+        if (duplicatedFormController != null) {
+            copyMediaFiles(duplicatedFormController.getInstancePath().getParent(), newFormController.getInstancePath().getParent());
+            renameMediaFiles(newFormController, duplicatedFormController);
+
+            Collect.getInstance().setDuplicatedFormController(null);
+        }
+
+        startActivity(new Intent(this, FormHierarchyActivity.class));
+    }
+
+    private void copyMediaFiles(String duplicatedPath, String originalPath) {
+        File file = new File(duplicatedPath);
+        for (final File mediaFile : file.listFiles()) {
+            if (!mediaFile.isDirectory() && !mediaFile.getName().endsWith(".xml")) {
+                FileUtils.copyFile(mediaFile, new File(originalPath + File.separator + mediaFile.getName()));
+            }
+        }
+    }
+
+    private void renameMediaFiles(FormController newFormController, FormController duplicatedFormController) {
+        List<FormEntryPrompt> formEntryPrompts = null;
+        try {
+            formEntryPrompts = duplicatedFormController.getAllQuestionPrompts();
+        } catch (JavaRosaException e) {
+            Timber.e(e);
+        }
+        if (formEntryPrompts != null) {
+            for (FormEntryPrompt formEntryPrompt : formEntryPrompts) {
+                try {
+                    if (formEntryPrompt.getControlType() == Constants.CONTROL_IMAGE_CHOOSE ||
+                            formEntryPrompt.getControlType() == Constants.CONTROL_AUDIO_CAPTURE ||
+                            formEntryPrompt.getControlType() == Constants.CONTROL_VIDEO_CAPTURE ||
+                            formEntryPrompt.getControlType() == Constants.CONTROL_OSM_CAPTURE) {
+
+                        String originalAnswer = formEntryPrompt.getAnswerText();
+                        if (originalAnswer != null) {
+                            String newAnswer = System.currentTimeMillis() +
+                                    originalAnswer.substring(originalAnswer.lastIndexOf("."));
+
+                            newFormController
+                                    .saveAnswer(formEntryPrompt.getIndex(), new StringData(newAnswer));
+
+                            new File(newFormController.getInstancePath().getParent() +
+                                    "/" + originalAnswer)
+                                    .renameTo(new File(newFormController.getInstancePath().getParent()
+                                            + "/" + newAnswer));
+                        }
+                    } else {
+                        newFormController.saveAnswer(formEntryPrompt.getIndex(), formEntryPrompt.getAnswerValue());
+                    }
+                } catch (JavaRosaException e) {
+                    Timber.e(e);
+                }
+            }
+        }
     }
 
     @Override

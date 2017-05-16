@@ -15,6 +15,8 @@
 package org.odk.collect.android.activities;
 
 import android.app.AlertDialog;
+import android.app.Dialog;
+import android.app.ProgressDialog;
 import android.content.ContentUris;
 import android.content.DialogInterface;
 import android.content.Intent;
@@ -23,6 +25,7 @@ import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.view.View;
+import android.widget.AdapterView;
 import android.widget.ListView;
 import android.widget.SimpleCursorAdapter;
 import android.widget.TextView;
@@ -30,12 +33,18 @@ import android.widget.TextView;
 import org.odk.collect.android.R;
 import org.odk.collect.android.adapters.ViewSentListAdapter;
 import org.odk.collect.android.application.Collect;
+import org.odk.collect.android.dao.FormsDao;
 import org.odk.collect.android.dao.InstancesDao;
 import org.odk.collect.android.listeners.DiskSyncListener;
+import org.odk.collect.android.listeners.FormLoaderListener;
+import org.odk.collect.android.provider.FormsProviderAPI;
 import org.odk.collect.android.provider.InstanceProviderAPI;
 import org.odk.collect.android.provider.InstanceProviderAPI.InstanceColumns;
+import org.odk.collect.android.tasks.FormLoaderTask;
 import org.odk.collect.android.tasks.InstanceSyncTask;
 import org.odk.collect.android.utilities.ApplicationConstants;
+
+import timber.log.Timber;
 
 /**
  * Responsible for displaying all the valid instances in the instance directory.
@@ -43,9 +52,11 @@ import org.odk.collect.android.utilities.ApplicationConstants;
  * @author Yaw Anokwa (yanokwa@gmail.com)
  * @author Carl Hartung (carlhartung@gmail.com)
  */
-public class InstanceChooserList extends InstanceListActivity implements DiskSyncListener {
+public class InstanceChooserList extends InstanceListActivity implements DiskSyncListener, AdapterView.OnItemLongClickListener, FormLoaderListener {
     private static final String INSTANCE_LIST_ACTIVITY_SORTING_ORDER = "instanceListActivitySortingOrder";
     private static final String VIEW_SENT_FORM_SORTING_ORDER = "ViewSentFormSortingOrder";
+
+    private static final int PROGRESS_DIALOG = 1;
 
     private static final boolean EXIT = true;
     private static final boolean DO_NOT_EXIT = false;
@@ -54,6 +65,11 @@ public class InstanceChooserList extends InstanceListActivity implements DiskSyn
     private InstanceSyncTask instanceSyncTask;
 
     private boolean mEditMode;
+
+    private int mDuplicatedInstanceId;
+    private int mFormId;
+
+    private FormLoaderTask mFormLoaderTask;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -90,6 +106,8 @@ public class InstanceChooserList extends InstanceListActivity implements DiskSyn
         instanceSyncTask = new InstanceSyncTask();
         instanceSyncTask.setDiskSyncListener(this);
         instanceSyncTask.execute();
+
+        getListView().setOnItemLongClickListener(this);
     }
 
     @Override
@@ -248,4 +266,121 @@ public class InstanceChooserList extends InstanceListActivity implements DiskSyn
     }
 
 
+    @Override
+    public boolean onItemLongClick(AdapterView<?> parent, View view, int position, long id) {
+        showDuplicateFormDialog(position);
+        return true;
+    }
+
+    private void showDuplicateFormDialog(final int position) {
+        mAlertDialog = new AlertDialog.Builder(this).create();
+        mAlertDialog.setTitle(getString(R.string.duplicate_form_dialog_title));
+        mAlertDialog.setMessage(getString(R.string.duplicate_form_dialog_message));
+        DialogInterface.OnClickListener dialogYesNoListener =
+                new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int i) {
+                        switch (i) {
+                            case DialogInterface.BUTTON_POSITIVE:
+                                mDuplicatedInstanceId = position;
+                                loadDuplicatedInstance();
+                                break;
+                        }
+                    }
+                };
+        mAlertDialog.setCancelable(false);
+        mAlertDialog.setButton(DialogInterface.BUTTON_POSITIVE, getString(R.string.duplicate), dialogYesNoListener);
+        mAlertDialog.setButton(DialogInterface.BUTTON_NEGATIVE, getString(R.string.cancel), dialogYesNoListener);
+        mAlertDialog.show();
+    }
+
+    private void loadDuplicatedInstance() {
+        String instancePath = null;
+        String formId = null;
+        String formFilePath = null;
+
+        Cursor cursor = (Cursor) getListAdapter().getItem(mDuplicatedInstanceId);
+        if (cursor != null) {
+            int formIdColumnIndex = cursor.getColumnIndex(InstanceColumns.JR_FORM_ID);
+            int instanceFilePathColumnIndex = cursor.getColumnIndex(InstanceColumns.INSTANCE_FILE_PATH);
+            formId = cursor.getString(formIdColumnIndex);
+            instancePath = cursor.getString(instanceFilePathColumnIndex);
+        }
+
+        Cursor c = new FormsDao().getFormsCursorForFormId(formId);
+        if (c != null) {
+            try {
+                if (c.moveToFirst()) {
+                    int formFilePathColumnIndex = c.getColumnIndex(FormsProviderAPI.FormsColumns.FORM_FILE_PATH);
+                    int formIdColumnIndex = c.getColumnIndex(FormsProviderAPI.FormsColumns._ID);
+                    formFilePath = c.getString(formFilePathColumnIndex);
+                    mFormId = c.getInt(formIdColumnIndex);
+                }
+            } finally {
+                c.close();
+            }
+        }
+
+        showDialog(PROGRESS_DIALOG);
+        mFormLoaderTask = new FormLoaderTask(instancePath, null, null);
+        mFormLoaderTask.setFormLoaderListener(this);
+        mFormLoaderTask.execute(formFilePath);
+    }
+
+    @Override
+    public void loadingComplete(FormLoaderTask task) {
+        dismissDialog(PROGRESS_DIALOG);
+        Collect.getInstance().setDuplicatedFormController(task.getFormController());
+        mFormLoaderTask.setFormLoaderListener(null);
+
+        Uri formUri = ContentUris.withAppendedId(FormsProviderAPI.FormsColumns.CONTENT_URI, mFormId);
+
+        Intent intent = new Intent(Intent.ACTION_EDIT, formUri);
+        startActivity(intent);
+    }
+
+    @Override
+    public void loadingError(String errorMsg) {
+        dismissDialog(PROGRESS_DIALOG);
+        if (errorMsg != null) {
+            createErrorDialog(errorMsg, EXIT);
+        } else {
+            createErrorDialog(getString(R.string.parse_error), EXIT);
+        }
+    }
+
+    @Override
+    public void onProgressStep(String stepMessage) {
+    }
+
+    @Override
+    protected Dialog onCreateDialog(int id) {
+        switch (id) {
+            case PROGRESS_DIALOG:
+                Timber.e("Creating PROGRESS_DIALOG");
+                ProgressDialog progressDialog = new ProgressDialog(this);
+                DialogInterface.OnClickListener loadingButtonListener =
+                        new DialogInterface.OnClickListener() {
+                            @Override
+                            public void onClick(DialogInterface dialog, int which) {
+                                dialog.dismiss();
+                                mFormLoaderTask.setFormLoaderListener(null);
+                                FormLoaderTask t = mFormLoaderTask;
+                                mFormLoaderTask = null;
+                                t.cancel(true);
+                                t.destroy();
+                                finish();
+                            }
+                        };
+                progressDialog.setIcon(android.R.drawable.ic_dialog_info);
+                progressDialog.setTitle(getString(R.string.loading_form));
+                progressDialog.setMessage(getString(R.string.please_wait));
+                progressDialog.setIndeterminate(true);
+                progressDialog.setCancelable(false);
+                progressDialog.setButton(getString(R.string.cancel_loading_form),
+                        loadingButtonListener);
+                return progressDialog;
+        }
+        return null;
+    }
 }

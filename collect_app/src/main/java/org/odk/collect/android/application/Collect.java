@@ -87,6 +87,7 @@ public class Collect extends Application {
     private CredentialsProvider credsProvider = new AgingCredentialsProvider(7 * 60 * 1000);
     private ActivityLogger mActivityLogger;
     private FormController mFormController = null;
+    private FormController mDuplicatedFormController;
     private ExternalDataManager externalDataManager;
     private Tracker mTracker;
 
@@ -167,6 +168,15 @@ public class Collect extends Application {
 
     public void setFormController(FormController controller) {
         mFormController = controller;
+    }
+
+    public FormController getDuplicatedFormController() {
+        return mDuplicatedFormController;
+    }
+
+
+    public void setDuplicatedFormController(FormController controller) {
+        mDuplicatedFormController = controller;
     }
 
     public ExternalDataManager getExternalDataManager() {

@@ -46,6 +46,7 @@ import org.odk.collect.android.views.ODKView;
 import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.Iterator;
 import java.util.LinkedHashMap;
 import java.util.List;
@@ -806,6 +807,20 @@ public class FormController {
      */
     public void setLanguage(String language) {
         mFormEntryController.setLanguage(language);
+    }
+
+    public List<FormEntryPrompt> getAllQuestionPrompts() throws JavaRosaException {
+        List<FormEntryPrompt> formEntryPrompts = new ArrayList<>();
+        int event = stepToNextScreenEvent();
+        while (event != FormEntryController.EVENT_END_OF_FORM) {
+            if (event == FormEntryController.EVENT_QUESTION ||
+                    event == FormEntryController.EVENT_GROUP ||
+                    event == FormEntryController.EVENT_REPEAT) {
+                Collections.addAll(formEntryPrompts, getQuestionPrompts());
+            }
+            event = stepToNextScreenEvent();
+        }
+        return formEntryPrompts;
     }
 
 
