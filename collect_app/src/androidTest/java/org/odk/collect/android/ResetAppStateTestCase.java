@@ -99,13 +99,6 @@ public class ResetAppStateTestCase {
     }
 
     @Test
-    public void resetLayersTest() throws IOException {
-        saveTestLayerFiles();
-        resetAppState(Collections.singletonList(ResetUtility.ResetAction.RESET_LAYERS));
-        assertFolderEmpty(Collect.OFFLINE_LAYERS);
-    }
-
-    @Test
     public void resetCacheTest() throws IOException {
         saveTestCacheFiles();
         resetAppState(Collections.singletonList(ResetUtility.ResetAction.RESET_CACHE));
@@ -196,13 +189,6 @@ public class ResetAppStateTestCase {
         assertTrue(new File(Collect.INSTANCES_PATH + "/testDir1/testFile1.xml").mkdirs());
         assertTrue(new File(Collect.INSTANCES_PATH + "/testDir2/testFile2.xml").mkdirs());
         assertTrue(new File(Collect.INSTANCES_PATH + "/testDir3").mkdirs());
-    }
-
-    private void saveTestLayerFiles() throws IOException {
-        assertTrue(new File(Collect.OFFLINE_LAYERS + "/testFile1").createNewFile());
-        assertTrue(new File(Collect.OFFLINE_LAYERS + "/testFile2").createNewFile());
-        assertTrue(new File(Collect.OFFLINE_LAYERS + "/testFile3").createNewFile());
-        assertTrue(new File(Collect.OFFLINE_LAYERS + "/testFile4").createNewFile());
     }
 
     private void saveTestCacheFiles() throws IOException {

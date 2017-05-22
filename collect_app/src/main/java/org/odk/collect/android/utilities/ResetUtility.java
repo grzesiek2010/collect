@@ -51,11 +51,6 @@ public class ResetUtility {
                 case ResetAction.RESET_FORMS:
                     resetForms();
                     break;
-                case ResetAction.RESET_LAYERS:
-                    if (deleteFolderContents(Collect.OFFLINE_LAYERS)) {
-                        failedResetActions.remove(failedResetActions.indexOf(ResetAction.RESET_LAYERS));
-                    }
-                    break;
                 case ResetAction.RESET_CACHE:
                     if (deleteFolderContents(Collect.CACHE_PATH)) {
                         failedResetActions.remove(failedResetActions.indexOf(ResetAction.RESET_CACHE));
@@ -142,8 +137,7 @@ public class ResetUtility {
         public static final int RESET_PREFERENCES = 0;
         public static final int RESET_INSTANCES = 1;
         public static final int RESET_FORMS = 2;
-        public static final int RESET_LAYERS = 3;
-        public static final int RESET_CACHE = 4;
-        public static final int RESET_OSM_DROID = 5;
+        public static final int RESET_CACHE = 3;
+        public static final int RESET_OSM_DROID = 4;
     }
 }

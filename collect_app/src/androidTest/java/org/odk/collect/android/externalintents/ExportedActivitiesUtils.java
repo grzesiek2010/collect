@@ -9,12 +9,11 @@ import static org.odk.collect.android.application.Collect.FORMS_PATH;
 import static org.odk.collect.android.application.Collect.INSTANCES_PATH;
 import static org.odk.collect.android.application.Collect.METADATA_PATH;
 import static org.odk.collect.android.application.Collect.ODK_ROOT;
-import static org.odk.collect.android.application.Collect.OFFLINE_LAYERS;
 
 class ExportedActivitiesUtils {
 
     private static final String[] DIRS = new String[]{
-            ODK_ROOT, FORMS_PATH, INSTANCES_PATH, CACHE_PATH, METADATA_PATH, OFFLINE_LAYERS
+            ODK_ROOT, FORMS_PATH, INSTANCES_PATH, CACHE_PATH, METADATA_PATH
     };
 
     static void clearDirectories() {
