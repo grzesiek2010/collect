@@ -31,6 +31,7 @@ import android.widget.TextView;
 import android.widget.TimePicker;
 
 import org.javarosa.core.model.data.IAnswerData;
+import org.javarosa.core.model.data.StringData;
 import org.javarosa.core.model.data.TimeData;
 import org.javarosa.form.api.FormEntryPrompt;
 import org.joda.time.DateTime;
@@ -78,9 +79,10 @@ public class TimeWidget extends QuestionWidget {
     @Override
     public IAnswerData getAnswer() {
         clearFocus();
-        // use picker time, convert to today's date, store as utc
-        DateTime dt = (new DateTime()).withTime(hourOfDay, minuteOfHour, 0, 0);
-        return nullAnswer ? null : new TimeData(dt.toDate());
+        String hour = String.valueOf(hourOfDay > 9 ? hourOfDay : ("0" + hourOfDay));
+        String minute = String.valueOf(minuteOfHour > 9 ? minuteOfHour : ("0" + minuteOfHour));
+
+        return nullAnswer ? null : new StringData(hour + ":" + minute);
     }
 
     @Override
@@ -164,9 +166,12 @@ public class TimeWidget extends QuestionWidget {
         if (formEntryPrompt.getAnswerValue() == null) {
             clearAnswer();
         } else {
-            DateTime dt = new DateTime(((Date) formEntryPrompt.getAnswerValue().getValue()).getTime());
-            hourOfDay = dt.getHourOfDay();
-            minuteOfHour = dt.getMinuteOfHour();
+            String answer = formEntryPrompt.getAnswerValue().getDisplayText();
+            String hour = answer.substring(0, answer.indexOf(":"));
+            String minute = answer.substring(answer.indexOf(":") + 1, answer.length());
+
+            hourOfDay = Integer.parseInt(hour);
+            minuteOfHour = Integer.parseInt(minute);
             setTimeLabel();
             timePickerDialog.updateTime(hourOfDay, minuteOfHour);
         }
