@@ -18,12 +18,13 @@ package org.odk.collect.android.activities;
 
 import android.app.Activity;
 import android.os.Bundle;
+import android.support.v7.app.AppCompatActivity;
 import android.webkit.WebSettings;
 import android.webkit.WebView;
 
 import org.odk.collect.android.R;
 
-public class OpenSourceLicensesActivity extends Activity {
+public class OpenSourceLicensesActivity extends AppCompatActivity {
     private static final String LICENSES_HTML_PATH = "file:///android_asset/open_source_licenses.html";
 
     @Override
@@ -31,10 +32,6 @@ public class OpenSourceLicensesActivity extends Activity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_open_source_licenses);
 
-        WebView webViewOpenSourceLicenses = (WebView) findViewById(R.id.web_view_open_source_licenses);
-        webViewOpenSourceLicenses.getSettings().setLoadWithOverviewMode(true);
-        webViewOpenSourceLicenses.getSettings().setUseWideViewPort(true);
-        webViewOpenSourceLicenses.getSettings().setTextSize(WebSettings.TextSize.LARGEST);
-        webViewOpenSourceLicenses.loadUrl(LICENSES_HTML_PATH);
+
     }
 }
