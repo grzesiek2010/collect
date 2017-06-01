@@ -23,4 +23,6 @@
     <issue id="LogNotTimber" severity="error" />
     <issue id="StringFormatInTimber" severity="error" />
     <issue id="ApplySharedPref" severity="error" />
+    <issue id="RtlSymmetry" severity="error" />
+    <issue id="RtlHardcoded" severity="error" />
 </lint>
