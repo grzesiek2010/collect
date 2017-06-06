@@ -158,6 +158,8 @@ public class FormEntryActivity extends AppCompatActivity implements AnimationLis
     public static final int GEOSHAPE_CAPTURE = 20;
     public static final int GEOTRACE_CAPTURE = 21;
 
+    public static final String LAST_KNOWN_FORM_INDEX = "lastKnownFormIndex";
+
     // Extra returned from gp activity
     public static final String LOCATION_RESULT = "LOCATION_RESULT";
     public static final String BEARING_RESULT = "BEARING_RESULT";
@@ -237,6 +239,8 @@ public class FormEntryActivity extends AppCompatActivity implements AnimationLis
     private boolean showNavigationButtons = false;
 
     private FormsDao formsDao;
+
+    private FormIndex lastKnownFormIndex;
 
     /**
      * Called when the activity is first created.
@@ -324,6 +328,9 @@ public class FormEntryActivity extends AppCompatActivity implements AnimationLis
             }
             if (savedInstanceState.containsKey(KEY_AUTO_SAVED)) {
                 autoSaved = savedInstanceState.getBoolean(KEY_AUTO_SAVED);
+            }
+            if (savedInstanceState.containsKey(LAST_KNOWN_FORM_INDEX)) {
+                lastKnownFormIndex = (FormIndex) savedInstanceState.getSerializable(LAST_KNOWN_FORM_INDEX);
             }
         }
 
@@ -577,6 +584,7 @@ public class FormEntryActivity extends AppCompatActivity implements AnimationLis
                 if (formController.currentPromptIsQuestion()) {
                     saveAnswersForCurrentScreen(DO_NOT_EVALUATE_CONSTRAINTS);
                 }
+                lastKnownFormIndex = formController.getFormIndex();
                 Intent i = new Intent(FormEntryActivity.this, FormHierarchyActivity.class);
                 i.putExtra(ApplicationConstants.BundleKeys.FORM_MODE, ApplicationConstants.FormModes.EDIT_SAVED);
                 startActivityForResult(i, HIERARCHY_ACTIVITY);
@@ -622,6 +630,7 @@ public class FormEntryActivity extends AppCompatActivity implements AnimationLis
         outState.putBoolean(NEWFORM, false);
         outState.putString(KEY_ERROR, errorMessage);
         outState.putBoolean(KEY_AUTO_SAVED, autoSaved);
+        outState.putSerializable(LAST_KNOWN_FORM_INDEX, formController.getFormIndex());
     }
 
     @Override
@@ -815,6 +824,10 @@ public class FormEntryActivity extends AppCompatActivity implements AnimationLis
         refreshCurrentView();
     }
 
+    private boolean advance(FormIndex currentFormIndex) {
+        return lastKnownFormIndex == null || lastKnownFormIndex.compareTo(currentFormIndex) < 1;
+    }
+
     private void saveChosenImage(Uri selectedImage) {
         // Copy file to sdcard
         String instanceFolder1 = Collect.getInstance().getFormController().getInstancePath()
@@ -889,7 +902,7 @@ public class FormEntryActivity extends AppCompatActivity implements AnimationLis
         // repeat events, and indexes in field-lists that is not the containing
         // group.
 
-        View current = createView(event, false);
+        View current = createView(event, advance(formController.getFormIndex()));
         showView(current, AnimationType.FADE);
     }
 
