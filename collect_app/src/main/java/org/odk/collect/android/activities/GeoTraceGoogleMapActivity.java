@@ -22,6 +22,7 @@ import android.graphics.Color;
 import android.location.Location;
 import android.location.LocationListener;
 import android.location.LocationManager;
+import android.media.Image;
 import android.os.Bundle;
 import android.os.Handler;
 import android.provider.Settings;
@@ -30,6 +31,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.Window;
 import android.widget.Button;
+import android.widget.ImageButton;
 import android.widget.RadioButton;
 import android.widget.RadioGroup;
 import android.widget.Spinner;
@@ -72,11 +74,11 @@ public class GeoTraceGoogleMapActivity extends FragmentActivity implements Locat
         OnMarkerDragListener, OnMapLongClickListener {
     private ScheduledExecutorService scheduler = Executors.newSingleThreadScheduledExecutor();
     private ScheduledFuture schedulerHandler;
-    private Button playButton;
-    public Button layersButton;
-    public Button clearButton;
+    private ImageButton playButton;
+    public ImageButton layersButton;
+    public ImageButton clearButton;
     private Button manualButton;
-    private Button pauseButton;
+    private ImageButton pauseButton;
     public AlertDialog.Builder builder;
     private View traceSettingsView;
     public LayoutInflater inflater;
@@ -99,7 +101,6 @@ public class GeoTraceGoogleMapActivity extends FragmentActivity implements Locat
     private PolylineOptions polylineOptions;
     private Polyline polyline;
     private ArrayList<Marker> markerArray = new ArrayList<Marker>();
-    public Button layers;
     private MapHelper helper;
 
     private AlertDialog zoomDialog;
@@ -147,7 +148,7 @@ public class GeoTraceGoogleMapActivity extends FragmentActivity implements Locat
         polylineOptions = new PolylineOptions();
         polylineOptions.color(Color.RED);
 
-        clearButton = (Button) findViewById(R.id.clear);
+        clearButton = (ImageButton) findViewById(R.id.clear);
         clearButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -163,7 +164,7 @@ public class GeoTraceGoogleMapActivity extends FragmentActivity implements Locat
         timeDelay = (Spinner) traceSettingsView.findViewById(R.id.trace_delay);
         timeDelay.setSelection(3);
         timeUnits = (Spinner) traceSettingsView.findViewById(R.id.trace_scale);
-        pauseButton = (Button) findViewById(R.id.pause);
+        pauseButton = (ImageButton) findViewById(R.id.pause);
         pauseButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(final View v) {
@@ -182,10 +183,10 @@ public class GeoTraceGoogleMapActivity extends FragmentActivity implements Locat
                 }
             }
         });
-        layersButton = (Button) findViewById(R.id.layers);
+        layersButton = (ImageButton) findViewById(R.id.layers);
 
 
-        Button saveButton = (Button) findViewById(R.id.geotrace_save);
+        ImageButton saveButton = (ImageButton) findViewById(R.id.geotrace_save);
         saveButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -196,7 +197,7 @@ public class GeoTraceGoogleMapActivity extends FragmentActivity implements Locat
                 }
             }
         });
-        playButton = (Button) findViewById(R.id.play);
+        playButton = (ImageButton) findViewById(R.id.play);
         playButton.setEnabled(false);
         playButton.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -263,15 +264,14 @@ public class GeoTraceGoogleMapActivity extends FragmentActivity implements Locat
 
         buildDialogs();
 
-        layers = (Button) findViewById(R.id.layers);
-        layers.setOnClickListener(new View.OnClickListener() {
+        layersButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 helper.showLayersDialog(GeoTraceGoogleMapActivity.this);
             }
         });
 
-        Button locationButton = (Button) findViewById(R.id.show_location);
+        ImageButton locationButton = (ImageButton) findViewById(R.id.show_location);
         locationButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {

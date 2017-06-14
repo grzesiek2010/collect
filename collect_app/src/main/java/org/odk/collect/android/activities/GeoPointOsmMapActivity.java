@@ -30,6 +30,7 @@ import android.support.v4.content.ContextCompat;
 import android.view.View;
 import android.view.Window;
 import android.widget.Button;
+import android.widget.ImageButton;
 import android.widget.TextView;
 
 import org.odk.collect.android.R;
@@ -76,7 +77,7 @@ public class GeoPointOsmMapActivity extends FragmentActivity implements Location
     private boolean captureLocation = false;
     private boolean setClear = false;
     private boolean isDragged = false;
-    private Button showLocationButton;
+    private ImageButton showLocationButton;
 
     private boolean gpsOn = false;
     private boolean networkOn = false;
@@ -167,7 +168,7 @@ public class GeoPointOsmMapActivity extends FragmentActivity implements Location
         });
 
         // Focuses on marked location
-        showLocationButton = ((Button) findViewById(R.id.show_location));
+        showLocationButton = (ImageButton) findViewById(R.id.show_location);
         showLocationButton.setVisibility(View.VISIBLE);
         showLocationButton.setEnabled(false);
         showLocationButton.setOnClickListener(new View.OnClickListener() {
@@ -216,7 +217,7 @@ public class GeoPointOsmMapActivity extends FragmentActivity implements Location
             }
         });
 
-        Button clearPointButton = (Button) findViewById(R.id.clear);
+        ImageButton clearPointButton = (ImageButton) findViewById(R.id.clear);
         clearPointButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {

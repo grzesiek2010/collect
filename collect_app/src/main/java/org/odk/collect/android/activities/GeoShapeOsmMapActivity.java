@@ -29,6 +29,7 @@ import android.support.v4.content.ContextCompat;
 import android.view.View;
 import android.view.Window;
 import android.widget.Button;
+import android.widget.ImageButton;
 
 import org.odk.collect.android.R;
 import org.odk.collect.android.spatial.MapHelper;
@@ -67,7 +68,7 @@ public class GeoShapeOsmMapActivity extends Activity implements IRegisterReceive
     public String finalReturnString;
     private MapEventsOverlay overlayEvents;
     private boolean clearButtonTest = false;
-    private Button clearButton;
+    private ImageButton clearButton;
     public Boolean gpsStatus = true;
     private Button locationButton;
     public MyLocationNewOverlay myLocationOverlay;
@@ -88,7 +89,7 @@ public class GeoShapeOsmMapActivity extends Activity implements IRegisterReceive
         setContentView(R.layout.geoshape_osm_layout);
         setTitle(getString(R.string.geoshape_title)); // Setting title of the action
         Button saveButton = (Button) findViewById(R.id.save);
-        clearButton = (Button) findViewById(R.id.clear);
+        clearButton = (ImageButton) findViewById(R.id.clear);
 
         map = (MapView) findViewById(R.id.geoshape_mapview);
         helper = new MapHelper(this, map, GeoShapeOsmMapActivity.this);
@@ -110,7 +111,7 @@ public class GeoShapeOsmMapActivity extends Activity implements IRegisterReceive
                 }
             }
         });
-        Button layersButton = (Button) findViewById(R.id.layers);
+        ImageButton layersButton = (ImageButton) findViewById(R.id.layers);
         layersButton.setOnClickListener(new View.OnClickListener() {
 
             @Override
