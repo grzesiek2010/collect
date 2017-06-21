@@ -1176,5 +1176,16 @@ public class FormController {
 
         return new InstanceMetadata(instanceId, instanceName);
     }
-
+    
+    public boolean isGroupReadOnly() {
+        boolean result = false;
+        FormIndex currentIndex = getFormIndex();
+        IFormElement element = formEntryController.getModel().getForm().getChild(
+                currentIndex);
+        if (element instanceof GroupDef) {
+            GroupDef gd = (GroupDef) element;
+            result = "true()".equals(gd.getAdditionalAttribute(null, "readonly"));
+        }
+        return result;
+    }
 }
