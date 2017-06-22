@@ -18,8 +18,13 @@ package org.odk.collect.android.widgets;
 
 import android.app.Activity;
 import android.content.Context;
+import android.util.TypedValue;
+import android.view.Gravity;
 import android.view.MotionEvent;
 import android.view.View;
+import android.view.ViewGroup;
+import android.widget.FrameLayout;
+import android.widget.LinearLayout;
 import android.widget.SeekBar;
 import android.widget.TextView;
 
@@ -77,7 +82,8 @@ public abstract class RangeWidget extends QuestionWidget {
     }
 
     private void setUpLayoutElements(View view) {
-        seekBar = (SeekBar) view.findViewById(R.id.seekBar);
+        FrameLayout seekBarContainer = (FrameLayout) view.findViewById(R.id.seekBarContainer);
+        seekBarContainer.addView(seekBar);
 
         TextView minValue = (TextView) view.findViewById(R.id.minValue);
         minValue.setText(String.valueOf(rangeStart));
@@ -176,11 +182,32 @@ public abstract class RangeWidget extends QuestionWidget {
     }
 
     private void setUpAppearance() {
-        if ("vertical".equals(getPrompt().getQuestion().getAppearanceAttr())) {
+        int width = (int) TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, 250, getResources().getDisplayMetrics());
+
+        FrameLayout.LayoutParams params = new FrameLayout.LayoutParams(width, ViewGroup.LayoutParams.WRAP_CONTENT);
+        params.gravity = Gravity.CENTER;
+
+        String appearance = getPrompt().getQuestion().getAppearanceAttr();
+        if ("no-ticks".equals(appearance)) {
+            seekBar = new SeekBar(getContext());
+            seekBar.setLayoutParams(new ViewGroup.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT));
+            view = ((Activity) getContext()).getLayoutInflater().inflate(R.layout.seek_bar_horizontal, null);
+        } else if ("vertical".equals(appearance)) {
+            seekBar = new SeekBar(getContext(), null, R.style.Widget_AppCompat_SeekBar_Discrete);
+            seekBar.setLayoutParams(params);
+            seekBar.setRotation(270);
+            view = ((Activity) getContext()).getLayoutInflater().inflate(R.layout.seek_bar_vertical, null);
+        } else if ("vertical no-ticks".equals(appearance)) {
+            seekBar = new SeekBar(getContext());
+            seekBar.setLayoutParams(params);
+            seekBar.setRotation(270);
             view = ((Activity) getContext()).getLayoutInflater().inflate(R.layout.seek_bar_vertical, null);
         } else {
+            seekBar = new SeekBar(getContext(), null, R.style.Widget_AppCompat_SeekBar_Discrete);
+            seekBar.setLayoutParams(new ViewGroup.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT));
             view = ((Activity) getContext()).getLayoutInflater().inflate(R.layout.seek_bar_horizontal, null);
         }
+
         setUpLayoutElements(view);
     }
 

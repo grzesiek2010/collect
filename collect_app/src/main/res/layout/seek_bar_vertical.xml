@@ -51,16 +51,9 @@ limitations under the License.
     </RelativeLayout>
 
     <FrameLayout
+        android:id="@+id/seekBarContainer"
         android:layout_width="wrap_content"
         android:layout_height="250dp">
-
-        <SeekBar
-            android:id="@+id/seekBar"
-            android:layout_width="250dp"
-            android:layout_height="wrap_content"
-            android:layout_gravity="center"
-            android:theme="@style/Base.Widget.AppCompat.SeekBar.Discrete"
-            android:rotation="270"/>
 
     </FrameLayout>
 </LinearLayout>

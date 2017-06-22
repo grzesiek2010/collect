@@ -27,11 +27,12 @@ limitations under the License.
         android:layout_gravity="center_horizontal"
         android:textSize="25sp" />
 
-    <SeekBar
-        android:id="@+id/seekBar"
+    <FrameLayout
+        android:id="@+id/seekBarContainer"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:theme="@style/Base.Widget.AppCompat.SeekBar.Discrete"/>
+        android:layout_height="wrap_content">
+
+    </FrameLayout>
 
     <RelativeLayout
         android:layout_width="match_parent"
