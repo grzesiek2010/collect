@@ -424,7 +424,7 @@ public final class WebUtils {
             } catch (Exception e) {
                 String error = "Parsing failed with " + e.getMessage()
                         + "while accessing " + u.toString();
-                Timber.e(e, error);
+                Timber.e(e);
                 return new DocumentFetchResult(error, 0);
             }
 
@@ -459,10 +459,9 @@ public final class WebUtils {
                 c = c.getCause();
             }
             cause = c.toString();
-            String error = "Error: " + cause + " while accessing "
-                    + u.toString();
+            String error = "Error: " + cause + " while accessing " + u.toString();
 
-            Timber.w(e, error);
+            Timber.w(error);
             return new DocumentFetchResult(error, 0);
         }
     }
