@@ -167,7 +167,7 @@ public abstract class GoogleSheetsAbstractUploader extends
             try {
                 spreadsheetId = UrlUtils.getSpreadsheetID(id);
             } catch (BadUrlException e) {
-                Timber.e(e);
+                Timber.i(e);
                 results.put(id, e.getMessage());
                 return false;
             }
@@ -192,7 +192,7 @@ public abstract class GoogleSheetsAbstractUploader extends
                         .execute();
             } catch (GoogleJsonResponseException e) {
                 String message = e.getMessage();
-                if (e.getDetails().getCode() == 403) {
+                if (e.getDetails() != null && e.getDetails().getCode() == 403) {
                     message = Collect.getInstance().getString(R.string.google_sheets_access_denied);
                 }
                 results.put(id, message);

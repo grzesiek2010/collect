@@ -72,6 +72,7 @@ public class UrlUtils {
         // now parse the url string if we have one
         final String googleHeader = "docs.google.com/spreadsheets/d/";
         String spreadsheetId;
+        urlString = null;
         if (urlString == null || urlString.length() < googleHeader.length()) {
             throw new BadUrlException(
                     Collect.getInstance().getString(R.string.invalid_sheet_id, urlString));

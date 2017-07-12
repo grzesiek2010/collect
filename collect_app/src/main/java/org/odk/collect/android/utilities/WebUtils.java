@@ -164,8 +164,7 @@ public final class WebUtils {
         }
     }
 
-    public static final void enablePreemptiveBasicAuth(
-            HttpContext localContext, String host) {
+    public static final void enablePreemptiveBasicAuth(HttpContext localContext, String host) {
         AuthCache ac = (AuthCache) localContext
                 .getAttribute(HttpClientContext.AUTH_CACHE);
         HttpHost h = new HttpHost(host);
