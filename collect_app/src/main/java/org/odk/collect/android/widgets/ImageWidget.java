@@ -67,9 +67,11 @@ public class ImageWidget extends QuestionWidget implements IBinaryWidget {
 
     private TextView errorTextView;
 
-
-    public ImageWidget(Context context, final FormEntryPrompt prompt, final boolean selfie) {
+    public ImageWidget(Context context, final FormEntryPrompt prompt, String appearance) {
         super(context, prompt);
+
+        final boolean selfie = appearance.equals("selfie");
+        final boolean noCapture = appearance.equals("no-capture");
 
         instanceFolder =
                 Collect.getInstance().getFormController().getInstancePath().getParent();
@@ -179,7 +181,7 @@ public class ImageWidget extends QuestionWidget implements IBinaryWidget {
         if (prompt.isReadOnly()) {
             captureButton.setVisibility(View.GONE);
             chooseButton.setVisibility(View.GONE);
-        } else if (selfie) {
+        } else if (selfie || noCapture) {
             chooseButton.setVisibility(View.GONE);
         }
         errorTextView.setVisibility(View.GONE);
