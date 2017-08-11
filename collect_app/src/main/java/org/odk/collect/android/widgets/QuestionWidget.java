@@ -236,6 +236,8 @@ public abstract class QuestionWidget extends RelativeLayout implements AudioPlay
 
     public abstract void setOnLongClickListener(OnLongClickListener l);
 
+    public abstract void onDestroy();
+
     /**
      * Override this to implement fling gesture suppression (e.g. for embedded WebView treatments).
      *

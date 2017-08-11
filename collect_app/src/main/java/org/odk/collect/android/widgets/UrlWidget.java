@@ -136,4 +136,7 @@ public class UrlWidget extends QuestionWidget {
         stringAnswer.cancelLongPress();
     }
 
+    public void onDestroy() {
+        getContext().unbindService(customTabHelper.getServiceConnection());
+    }
 }
