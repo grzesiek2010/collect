@@ -101,6 +101,7 @@ import org.odk.collect.android.utilities.ToastUtils;
 import org.odk.collect.android.views.ODKView;
 import org.odk.collect.android.widgets.QuestionWidget;
 import org.odk.collect.android.widgets.StringWidget;
+import org.odk.collect.android.widgets.UrlWidget;
 
 import java.io.File;
 import java.io.FileFilter;
@@ -2418,6 +2419,14 @@ public class FormEntryActivity extends AppCompatActivity implements AnimationLis
 
     @Override
     protected void onDestroy() {
+        if (currentView != null) {
+            for (QuestionWidget qw : ((ODKView) currentView).getWidgets()) {
+                if (qw instanceof UrlWidget) {
+                    ((UrlWidget) qw).onDestroy();
+                }
+            }
+        }
+
         if (formLoaderTask != null) {
             formLoaderTask.setFormLoaderListener(null);
             // We have to call cancel to terminate the thread, otherwise it
