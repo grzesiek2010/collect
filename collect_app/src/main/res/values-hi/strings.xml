@@ -170,7 +170,7 @@
   <string name="show_unsent_forms">नहीं भेजे हुए फॉर्म दिखाएं</string>
   <string name="added_on_date_at_time">EEE, MMM dd, yyyy \'पर जोड़ा\' HH:mm \'पर\' </string>
   <!--http://docs.oracle.com/javase/6/docs/api/java/text/SimpleDateFormat.html-->
-  <string name="saved_on_date_at_time">EEE, MMM dd, yyyy \' पर संरक्षित\' HH:mm \'पर\'\' </string>
+  <string name="saved_on_date_at_time">EEE, MMM dd, yyyy \' पर संरक्षित\' HH:mm \'पर\' </string>
   <!--http://docs.oracle.com/javase/6/docs/api/java/text/SimpleDateFormat.html-->
   <string name="finalized_on_date_at_time">EEE, MMM dd, yyyy \'पर फाइनल हुआ\'  HH:mm \'पर\' </string>
   <!--http://docs.oracle.com/javase/6/docs/api/java/text/SimpleDateFormat.html-->
