@@ -92,9 +92,9 @@ public class FormController {
     public static final class InstanceMetadata {
         public final String instanceId;
         public final String instanceName;
-        public final boolean audit;
+        public final Audit audit;
 
-        InstanceMetadata(String instanceId, String instanceName, boolean audit) {
+        InstanceMetadata(String instanceId, String instanceName, Audit audit) {
             this.instanceId = instanceId;
             this.instanceName = instanceName;
             this.audit = audit;
@@ -1171,7 +1171,7 @@ public class FormController {
 
         String instanceId = null;
         String instanceName = null;
-        boolean audit = false;
+        Audit audit = new Audit(false, null);
 
         if (e != null) {
             List<TreeElement> v;
@@ -1197,7 +1197,8 @@ public class FormController {
             // timing element...
             v = e.getChildrenWithName(AUDIT);
             if (v.size() == 1) {
-                audit = true;
+                StringData sa = (StringData) v.get(0).getValue();
+                audit = new Audit(true, sa != null ? (String) sa.getValue() : null);
             }
 
         }

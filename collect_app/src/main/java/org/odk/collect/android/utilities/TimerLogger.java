@@ -6,6 +6,7 @@ import android.os.SystemClock;
 
 import org.javarosa.core.model.instance.TreeReference;
 import org.javarosa.form.api.FormEntryController;
+import org.odk.collect.android.logic.Audit;
 import org.odk.collect.android.logic.FormController;
 import org.odk.collect.android.tasks.TimerSaveTask;
 
@@ -166,10 +167,11 @@ public class TimerLogger {
          * The timer logger is enabled if the meta section of the form contains a logging entry
          *      <orx:audit />
          */
-        timerEnabled = formController.getSubmissionMetadata().audit;
+        Audit audit = formController.getSubmissionMetadata().audit;
+        timerEnabled = audit.isEnabled();
 
         if (timerEnabled) {
-            filename = "audit.csv";
+            filename = audit.getOutputFileName() != null ? audit.getOutputFileName() : "audit.csv";
             if (instanceFile != null) {
                 File instanceFolder = instanceFile.getParentFile();
                 timerlogFile = new File(instanceFolder.getPath() + File.separator + filename);
