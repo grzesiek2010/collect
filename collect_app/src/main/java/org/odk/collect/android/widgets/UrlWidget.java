@@ -16,9 +16,7 @@ package org.odk.collect.android.widgets;
 
 import android.content.Context;
 import android.net.Uri;
-import android.support.customtabs.CustomTabsIntent;
 import android.support.v4.content.ContextCompat;
-import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.AppCompatTextView;
 import android.util.TypedValue;
 import android.view.View;
@@ -32,8 +30,8 @@ import org.javarosa.core.model.data.IAnswerData;
 import org.javarosa.core.model.data.StringData;
 import org.javarosa.form.api.FormEntryPrompt;
 import org.odk.collect.android.R;
-import org.odk.collect.android.activities.FormEntryActivity;
 import org.odk.collect.android.application.Collect;
+import org.odk.collect.android.utilities.CustomTabHelper;
 
 import static android.view.Gravity.CENTER;
 
@@ -49,6 +47,8 @@ public class UrlWidget extends QuestionWidget {
     private Button openUrlButton;
     private TextView stringAnswer;
 
+    private CustomTabHelper customTabHelper;
+
     public UrlWidget(final Context context, FormEntryPrompt prompt) {
         super(context, prompt);
 
@@ -63,7 +63,8 @@ public class UrlWidget extends QuestionWidget {
                                 formEntryPrompt.getIndex());
 
                 if (!isUrlEmpty(stringAnswer)) {
-                    ((FormEntryActivity) context).customTabHelper.openUri(context, uri);
+                    customTabHelper.bindCustomTabsService(getContext(), null);
+                    customTabHelper.openUri(getContext(), uri);
                 } else {
                     Toast.makeText(getContext(), "No URL set", Toast.LENGTH_SHORT).show();
                 }
@@ -89,6 +90,8 @@ public class UrlWidget extends QuestionWidget {
         answerLayout.addView(openUrlButton);
         answerLayout.addView(stringAnswer);
         addAnswerView(answerLayout);
+
+        customTabHelper = new CustomTabHelper();
     }
 
     private boolean isUrlEmpty(TextView stringAnswer) {
@@ -128,5 +131,10 @@ public class UrlWidget extends QuestionWidget {
         super.cancelLongPress();
         openUrlButton.cancelLongPress();
         stringAnswer.cancelLongPress();
+    }
+
+    protected void onDetachedFromWindow() {
+        super.onDetachedFromWindow();
+        getContext().unbindService(customTabHelper.getServiceConnection());
     }
 }
