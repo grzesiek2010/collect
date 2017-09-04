@@ -150,8 +150,7 @@ public class MediaLayout extends RelativeLayout implements OnClickListener {
     }
 
     public void setAVT(FormIndex index, String selectionDesignator, TextView text, String audioURI,
-            String imageURI, String videoURI,
-            final String bigImageURI) {
+            String imageURI, String videoURI, final String bigImageURI) {
         this.selectionDesignator = selectionDesignator;
         this.index = index;
         viewText = text;
