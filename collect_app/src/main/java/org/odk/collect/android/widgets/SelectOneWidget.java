@@ -40,44 +40,18 @@ import java.util.ArrayList;
  */
 public class SelectOneWidget extends SelectWidget implements OnCheckedChangeListener, AudioPlayListener {
 
-    private ArrayList<RadioButton> buttons;
+    protected ArrayList<RadioButton> buttons;
 
     public SelectOneWidget(Context context, FormEntryPrompt prompt) {
         super(context, prompt);
         buttons = new ArrayList<>();
 
-        String s = null;
-        if (prompt.getAnswerValue() != null) {
-            s = ((Selection) prompt.getAnswerValue().getValue()).getValue();
-        }
-
         if (items != null) {
             for (int i = 0; i < items.size(); i++) {
-                String choiceName = prompt.getSelectChoiceText(items.get(i));
-                CharSequence choiceDisplayName;
-                if (choiceName != null) {
-                    choiceDisplayName = TextUtils.textToHtml(choiceName);
-                } else {
-                    choiceDisplayName = "";
-                }
-                RadioButton r = new RadioButton(getContext());
-                r.setTextSize(TypedValue.COMPLEX_UNIT_DIP, answerFontsize);
-                r.setText(choiceDisplayName);
-                r.setMovementMethod(LinkMovementMethod.getInstance());
-                r.setTag(i);
-                r.setId(QuestionWidget.newUniqueId());
-                r.setEnabled(!prompt.isReadOnly());
-                r.setFocusable(!prompt.isReadOnly());
+                RadioButton radioButton = createRadioButton(i);
+                buttons.add(radioButton);
 
-                buttons.add(r);
-
-                if (items.get(i).getValue().equals(s)) {
-                    r.setChecked(true);
-                }
-
-                r.setOnCheckedChangeListener(this);
-
-                answerLayout.addView(createMediaLayout(i, r));
+                answerLayout.addView(createMediaLayout(i, radioButton));
             }
         }
 
@@ -151,5 +125,37 @@ public class SelectOneWidget extends SelectWidget implements OnCheckedChangeList
         for (RadioButton button : this.buttons) {
             button.cancelLongPress();
         }
+    }
+
+    protected RadioButton createRadioButton(int index) {
+        String s = null;
+        if (getPrompt().getAnswerValue() != null) {
+            s = ((Selection) getPrompt().getAnswerValue().getValue()).getValue();
+        }
+
+        String choiceName = getPrompt().getSelectChoiceText(items.get(index));
+        CharSequence choiceDisplayName;
+        if (choiceName != null) {
+            choiceDisplayName = TextUtils.textToHtml(choiceName);
+        } else {
+            choiceDisplayName = "";
+        }
+
+        RadioButton r = new RadioButton(getContext());
+        r.setTextSize(TypedValue.COMPLEX_UNIT_DIP, answerFontsize);
+        r.setText(choiceDisplayName);
+        r.setMovementMethod(LinkMovementMethod.getInstance());
+        r.setTag(index);
+        r.setId(QuestionWidget.newUniqueId());
+        r.setEnabled(!getPrompt().isReadOnly());
+        r.setFocusable(!getPrompt().isReadOnly());
+
+        if (items.get(index).getValue().equals(s)) {
+            r.setChecked(true);
+        }
+
+        r.setOnCheckedChangeListener(this);
+
+        return r;
     }
 }
