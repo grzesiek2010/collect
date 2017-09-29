@@ -30,10 +30,10 @@ public class FormEntryPromptUtils {
         String text;
         if (data instanceof DateTimeData) {
             text = DateTimeUtils.getDateTimeBasedOnUserLocale((Date) data.getValue(),
-                    fep.getQuestion().getAppearanceAttr(), true);
+                    fep.getQuestion().getAppearanceAttr().contains("month-year") || fep.getQuestion().getAppearanceAttr().contains("year"), fep.getQuestion().getAppearanceAttr().contains("year"), true);
         } else if (data instanceof DateData) {
             text = DateTimeUtils.getDateTimeBasedOnUserLocale((Date) data.getValue(),
-                    fep.getQuestion().getAppearanceAttr(), false);
+                    fep.getQuestion().getAppearanceAttr().contains("month-year") || fep.getQuestion().getAppearanceAttr().contains("year"), fep.getQuestion().getAppearanceAttr().contains("year"), false);
         } else {
             text = fep.getAnswerText();
         }

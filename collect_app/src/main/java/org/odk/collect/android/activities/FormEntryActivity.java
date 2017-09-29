@@ -84,7 +84,7 @@ import org.odk.collect.android.dao.InstancesDao;
 import org.odk.collect.android.exception.GDriveConnectionException;
 import org.odk.collect.android.exception.JavaRosaException;
 import org.odk.collect.android.external.ExternalDataManager;
-import org.odk.collect.android.fragments.dialogs.EthiopianCalendarDialog;
+import org.odk.collect.android.fragments.dialogs.CustomDatePickerDialog;
 import org.odk.collect.android.fragments.dialogs.NumberPickerDialog;
 import org.odk.collect.android.listeners.AdvanceToNextListener;
 import org.odk.collect.android.listeners.FormLoaderListener;
@@ -142,7 +142,7 @@ import static org.odk.collect.android.utilities.ApplicationConstants.XML_OPENROS
 public class FormEntryActivity extends AppCompatActivity implements AnimationListener,
         FormLoaderListener, FormSavedListener, AdvanceToNextListener,
         OnGestureListener, SavePointListener, NumberPickerDialog.NumberPickerListener,
-        EthiopianCalendarDialog.EthiopianCalendarDialogListener {
+        CustomDatePickerDialog.CustomDatePickerDialogListener {
 
     // save with every swipe forward or back. Timings indicate this takes .25
     // seconds.

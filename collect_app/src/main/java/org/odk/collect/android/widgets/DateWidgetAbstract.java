@@ -26,14 +26,12 @@ public abstract class DateWidgetAbstract extends QuestionWidget {
     protected boolean nullAnswer;
     protected boolean hideDay;
     protected boolean hideMonth;
+    protected boolean showCalendar;
 
     public DateWidgetAbstract(Context context, FormEntryPrompt p) {
         super(context, p);
-
         setGravity(Gravity.START);
-
         createWidget();
-        addViews();
     }
 
     @Override
@@ -45,8 +43,8 @@ public abstract class DateWidgetAbstract extends QuestionWidget {
         } else {
             LocalDateTime ldt = new LocalDateTime()
                     .withYear(year)
-                    .withMonthOfYear(hideMonth ? 1 : month)
-                    .withDayOfMonth((hideMonth || hideDay) ? 1 : day)
+                    .withMonthOfYear(month)
+                    .withDayOfMonth(day)
                     .withHourOfDay(0)
                     .withMinuteOfHour(0);
             return new DateData(ldt.toDate());
@@ -80,9 +78,25 @@ public abstract class DateWidgetAbstract extends QuestionWidget {
         dateTextView.cancelLongPress();
     }
 
+    private void readAppearance() {
+        String appearance = formEntryPrompt.getQuestion().getAppearanceAttr();
+        if (appearance != null) {
+            if (appearance.contains("month-year")) {
+                hideDay = true;
+            } else if (appearance.contains("year")) {
+                hideDay = true;
+                hideMonth = true;
+            } else if (!appearance.contains("no-calendar")) {
+                showCalendar = true;
+            }
+        }
+    }
+
     protected void createWidget() {
         createDateButton();
         createDateTextView();
+        readAppearance();
+        addViews();
     }
 
     private void createDateButton() {
@@ -105,4 +119,18 @@ public abstract class DateWidgetAbstract extends QuestionWidget {
         linearLayout.addView(dateTextView);
         addAnswerView(linearLayout);
     }
+
+    public boolean isDayHidden() {
+        return hideDay;
+    }
+
+    public boolean isMonthHidden() {
+        return hideMonth;
+    }
+
+    public boolean isNullAnswer() {
+        return nullAnswer;
+    }
+
+    protected abstract void setDateLabel();
 }

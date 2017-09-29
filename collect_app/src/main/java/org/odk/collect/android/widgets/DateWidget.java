@@ -49,25 +49,30 @@ import static android.content.Context.ACCESSIBILITY_SERVICE;
 public class DateWidget extends DateWidgetAbstract {
     private DatePickerDialog datePickerDialog;
 
-    private boolean showCalendar;
-
     public DateWidget(Context context, FormEntryPrompt prompt) {
         super(context, prompt);
     }
 
-    private void readAppearance() {
-        String appearance = formEntryPrompt.getQuestion().getAppearanceAttr();
-        if ("month-year".equals(appearance)) {
-            hideDay = true;
-        } else if ("year".equals(appearance)) {
-            hideDay = true;
-            hideMonth = true;
-        } else if (!"no-calendar".equals(appearance)) {
-            showCalendar = true;
-        }
+    @Override
+    protected void createWidget() {
+        super.createWidget();
+        dateButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if (nullAnswer) {
+                    setDateToCurrent();
+                } else {
+                    datePickerDialog.updateDate(year, hideMonth ? 0 : month - 1, hideDay ? 1 : day);
+                }
+                datePickerDialog.show();
+            }
+        });
+
+        createDatePickerDialog();
+        adjustAppearance();
     }
 
-    protected void hideDayFieldIfNotInFormat() {
+    private void adjustAppearance() {
         if (hideDay) {
             datePickerDialog.getDatePicker().findViewById(
                     Resources.getSystem().getIdentifier("day", "id", "android"))
@@ -81,31 +86,10 @@ public class DateWidget extends DateWidgetAbstract {
     }
 
     @Override
-    protected void createWidget() {
-        super.createWidget();
-        dateButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                if (nullAnswer) {
-                    setDateToCurrent();
-                } else {
-                    datePickerDialog.updateDate(year, month - 1, day);
-                }
-                datePickerDialog.show();
-            }
-        });
-
-        readAppearance();
-        createDatePickerDialog();
-        hideDayFieldIfNotInFormat();
-    }
-
-    public void setDateLabel() {
+    protected void setDateLabel() {
         nullAnswer = false;
-        String test = DateTimeUtils.getDateTimeBasedOnUserLocale(
-                (Date) getAnswer().getValue(), formEntryPrompt.getQuestion().getAppearanceAttr(), false);
         dateTextView.setText(DateTimeUtils.getDateTimeBasedOnUserLocale(
-                (Date) getAnswer().getValue(), formEntryPrompt.getQuestion().getAppearanceAttr(), false));
+                (Date) getAnswer().getValue(), hideDay, hideMonth, false));
     }
 
     private int getTheme() {
@@ -122,7 +106,7 @@ public class DateWidget extends DateWidgetAbstract {
         return theme;
     }
 
-    protected void createDatePickerDialog() {
+    private void createDatePickerDialog() {
         datePickerDialog = new CustomDatePickerDialog(getContext(), getTheme(),
                 new DatePickerDialog.OnDateSetListener() {
                     @Override
@@ -159,14 +143,6 @@ public class DateWidget extends DateWidgetAbstract {
         return ((AccessibilityManager) getContext().getSystemService(ACCESSIBILITY_SERVICE)).isTouchExplorationEnabled();
     }
 
-    public boolean isDayHidden() {
-        return hideDay;
-    }
-
-    public boolean isMonthHidden() {
-        return hideMonth;
-    }
-
     public int getYear() {
         return datePickerDialog.getDatePicker().getYear();
     }
@@ -179,15 +155,11 @@ public class DateWidget extends DateWidgetAbstract {
         return datePickerDialog.getDatePicker().getDayOfMonth();
     }
 
-    public boolean isNullAnswer() {
-        return nullAnswer;
-    }
-
     public void setDateToCurrent() {
         DateTime dt = new DateTime();
         year = dt.getYear();
-        month = dt.getMonthOfYear();
-        day = dt.getDayOfMonth();
+        month = hideMonth ? 0 : dt.getMonthOfYear();
+        day = hideDay ? 1 : dt.getDayOfMonth();
         datePickerDialog.updateDate(year, month - 1, day);
     }
 
