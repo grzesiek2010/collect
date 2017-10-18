@@ -405,6 +405,25 @@ public abstract class QuestionWidget
         return textView;
     }
 
+    protected ImageView getAnswerImageView(Bitmap bitmap) {
+        final QuestionWidget questionWidget = this;
+        ImageView imageView = new ImageView(getContext());
+        imageView.setId(ViewIds.generateViewId());
+        imageView.setPadding(10, 10, 10, 10);
+        imageView.setAdjustViewBounds(true);
+        imageView.setImageBitmap(bitmap);
+        imageView.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if (questionWidget instanceof PictureWidget) {
+                    ((PictureWidget) questionWidget).onPictureClick();
+                }
+            }
+        });
+
+        return imageView;
+    }
+
     /**
      * It's needed only for external choices. Everything works well and
      * out of the box when we use internal choices instead

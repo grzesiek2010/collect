@@ -53,7 +53,7 @@ import static org.odk.collect.android.utilities.ApplicationConstants.RequestCode
  *
  * @author BehrAtherton@gmail.com
  */
-public class SignatureWidget extends QuestionWidget implements FileWidget {
+public class SignatureWidget extends QuestionWidget implements PictureWidget {
 
     private Button signButton;
     private String binaryName;
@@ -104,39 +104,30 @@ public class SignatureWidget extends QuestionWidget implements FileWidget {
 
         // Only add the imageView if the user has signed
         if (binaryName != null) {
-            imageView = new ImageView(getContext());
-            imageView.setId(ViewIds.generateViewId());
             DisplayMetrics metrics = context.getResources().getDisplayMetrics();
             int screenWidth = metrics.widthPixels;
             int screenHeight = metrics.heightPixels;
 
             File f = new File(instanceFolder + File.separator + binaryName);
 
+            Bitmap bmp = null;
             if (f.exists()) {
-                Bitmap bmp = FileUtils.getBitmapScaledToDisplay(f, screenHeight, screenWidth);
+                bmp = FileUtils.getBitmapScaledToDisplay(f, screenHeight, screenWidth);
                 if (bmp == null) {
                     errorTextView.setVisibility(View.VISIBLE);
                 }
-                imageView.setImageBitmap(bmp);
-            } else {
-                imageView.setImageBitmap(null);
             }
 
-            imageView.setPadding(10, 10, 10, 10);
-            imageView.setAdjustViewBounds(true);
-            imageView.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    Collect.getInstance().getActivityLogger().logInstanceAction(this, "viewImage",
-                            "click", formEntryPrompt.getIndex());
-                    launchSignatureActivity();
-                }
-            });
-
+            imageView = getAnswerImageView(bmp);
             answerLayout.addView(imageView);
         }
         addAnswerView(answerLayout);
 
+    }
+
+    @Override
+    public void onPictureClick() {
+        launchSignatureActivity();
     }
 
     private void launchSignatureActivity() {
