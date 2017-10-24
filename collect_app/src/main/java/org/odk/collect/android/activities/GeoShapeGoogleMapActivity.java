@@ -15,14 +15,17 @@
 package org.odk.collect.android.activities;
 
 import android.app.AlertDialog;
+import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.graphics.Color;
+import android.location.Geocoder;
 import android.location.Location;
 import android.os.Bundle;
 import android.os.Handler;
 import android.provider.Settings;
 import android.support.v4.app.FragmentActivity;
+import android.util.Log;
 import android.view.View;
 import android.view.Window;
 import android.widget.Button;
@@ -43,15 +46,25 @@ import com.google.android.gms.maps.model.MarkerOptions;
 import com.google.android.gms.maps.model.Polygon;
 import com.google.android.gms.maps.model.PolygonOptions;
 
+import org.json.JSONArray;
+import org.json.JSONException;
+import org.json.JSONObject;
 import org.odk.collect.android.R;
 import org.odk.collect.android.application.Collect;
 import org.odk.collect.android.location.LocationClient;
 import org.odk.collect.android.location.LocationClients;
 import org.odk.collect.android.spatial.MapHelper;
+import org.odk.collect.android.tasks.ElevationReader;
 import org.odk.collect.android.utilities.ToastUtils;
 import org.odk.collect.android.widgets.GeoShapeWidget;
 
+import java.io.BufferedReader;
+import java.io.IOException;
+import java.io.InputStreamReader;
+import java.net.URL;
 import java.util.ArrayList;
+
+import javax.net.ssl.HttpsURLConnection;
 
 /**
  * Version of the GeoShapeGoogleMapActivity that uses the new Maps v2 API and Fragments to enable
@@ -261,9 +274,9 @@ public class GeoShapeGoogleMapActivity extends FragmentActivity implements Locat
             for (int i = 0; i < markerArray.size(); i++) {
                 String lat = Double.toString(markerArray.get(i).getPosition().latitude);
                 String lng = Double.toString(markerArray.get(i).getPosition().longitude);
-                String alt = "0.0";
+                String alt = markerArray.get(i).getSnippet();
                 String acu = "0.0";
-                tempString = tempString + lat + " " + lng + " " + alt + " " + acu + ";";
+                tempString = tempString + lat + " " + lng + " " + (alt != null ? alt : "0.0") + " " + acu + ";";
             }
         }
         return tempString;
@@ -292,18 +305,24 @@ public class GeoShapeGoogleMapActivity extends FragmentActivity implements Locat
     }
 
     @Override
-    public void onMapLongClick(LatLng latLng) {
-        MarkerOptions markerOptions = new MarkerOptions().position(latLng).draggable(true);
-        Marker marker = map.addMarker(markerOptions);
-        markerArray.add(marker);
+    public void onMapLongClick(final LatLng latLng) {
+        new ElevationReader(this, new ElevationReader.AsyncResponse() {
+            @Override
+            public void processFinish(String output) {
+                MarkerOptions markerOptions = new MarkerOptions().position(latLng).draggable(true);
+                Marker marker = map.addMarker(markerOptions);
+                marker.setSnippet(output);
+                markerArray.add(marker);
 
-        if (polygon == null) {
-            clearButton.setEnabled(true);
-            polygonOptions.add(latLng);
-            polygon = map.addPolygon(polygonOptions);
-        } else {
-            update_polygon();
-        }
+                if (polygon == null) {
+                    clearButton.setEnabled(true);
+                    polygonOptions.add(latLng);
+                    polygon = map.addPolygon(polygonOptions);
+                } else {
+                    update_polygon();
+                }
+            }
+        }).execute(latLng);
     }
 
     @Override
