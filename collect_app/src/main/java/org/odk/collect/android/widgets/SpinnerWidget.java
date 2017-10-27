@@ -26,6 +26,7 @@ import android.view.inputmethod.InputMethodManager;
 import android.widget.AdapterView;
 import android.widget.AdapterView.OnItemSelectedListener;
 import android.widget.ArrayAdapter;
+import android.widget.LinearLayout;
 import android.widget.Spinner;
 import android.widget.TextView;
 
@@ -226,6 +227,9 @@ public class SpinnerWidget extends QuestionWidget implements MultiChoiceWidget {
             } else {
                 tv.setTextColor(ContextCompat.getColor(context, R.color.primaryTextColor));
             }
+
+            tv.setSingleLine(false);
+            tv.setLayoutParams(new LinearLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT));
 
             return convertView;
         }
