@@ -23,6 +23,7 @@ import android.view.View;
 import com.google.android.gms.analytics.GoogleAnalytics;
 
 import org.odk.collect.android.R;
+import org.odk.collect.android.application.Collect;
 
 import static org.odk.collect.android.preferences.PreferenceKeys.KEY_ANALYTICS;
 
@@ -54,14 +55,19 @@ public class IdentityPreferences extends BasePreferenceFragment {
         final CheckBoxPreference analyticsPreference = (CheckBoxPreference) findPreference(KEY_ANALYTICS);
 
         if (analyticsPreference != null) {
-            analyticsPreference.setOnPreferenceClickListener(new Preference.OnPreferenceClickListener() {
-                @Override
-                public boolean onPreferenceClick(Preference preference) {
-                    GoogleAnalytics googleAnalytics = GoogleAnalytics.getInstance(getActivity().getApplicationContext());
-                    googleAnalytics.setAppOptOut(!analyticsPreference.isChecked());
-                    return true;
-                }
-            });
+            if (Collect.getInstance().isODKCollectReleaseBuild()) {
+                analyticsPreference.setOnPreferenceClickListener(new Preference.OnPreferenceClickListener() {
+                    @Override
+                    public boolean onPreferenceClick(Preference preference) {
+                        GoogleAnalytics googleAnalytics = GoogleAnalytics.getInstance(getActivity().getApplicationContext());
+                        googleAnalytics.setAppOptOut(!analyticsPreference.isChecked());
+                        return true;
+                    }
+                });
+            } else {
+                analyticsPreference.setChecked(false);
+                analyticsPreference.setEnabled(false);
+            }
         }
     }
 }

@@ -273,7 +273,7 @@ public class Collect extends Application {
         initProperties();
 
         AuthDialogUtility.setWebCredentialsFromPreferences();
-        if (BuildConfig.BUILD_TYPE.equals("odkCollectRelease")) {
+        if (isODKCollectReleaseBuild()) {
             Timber.plant(new CrashReportingTree());
         } else {
             Timber.plant(new NotLoggingTree());
@@ -325,6 +325,10 @@ public class Collect extends Application {
                 FirebaseCrash.report(t);
             }
         }
+    }
+
+    public boolean isODKCollectReleaseBuild() {
+        return BuildConfig.BUILD_TYPE.equals("odkCollectRelease");
     }
 
     public void initProperties() {
