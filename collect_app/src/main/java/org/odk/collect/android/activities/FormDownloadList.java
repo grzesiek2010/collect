@@ -33,9 +33,9 @@ import android.view.View.OnClickListener;
 import android.widget.AdapterView;
 import android.widget.Button;
 import android.widget.ListView;
-import android.widget.SimpleAdapter;
 
 import org.odk.collect.android.R;
+import org.odk.collect.android.adapters.FormDownloadListAdapter;
 import org.odk.collect.android.application.Collect;
 import org.odk.collect.android.dao.FormsDao;
 import org.odk.collect.android.listeners.FormDownloaderListener;
@@ -89,11 +89,11 @@ public class FormDownloadList extends FormListActivity implements FormListDownlo
     private static final String FORMLIST = "formlist";
     private static final String SELECTED_FORMS = "selectedForms";
 
-    private static final String FORMNAME = "formname";
+    public static final String FORMNAME = "formname";
     private static final String FORMDETAIL_KEY = "formdetailkey";
-    private static final String FORMID_DISPLAY = "formiddisplay";
+    public static final String FORMID_DISPLAY = "formiddisplay";
 
-    private static final String FORM_ID_KEY = "formid";
+    public static final String FORM_ID_KEY = "formid";
     private static final String FORM_VERSION_KEY = "formversion";
 
     private String alertMsg;
@@ -109,7 +109,6 @@ public class FormDownloadList extends FormListActivity implements FormListDownlo
     private Button toggleButton;
 
     private HashMap<String, FormDetails> formNamesAndURLs = new HashMap<String, FormDetails>();
-    private SimpleAdapter formListAdapter;
     private ArrayList<HashMap<String, String>> formList;
     private ArrayList<HashMap<String, String>> filteredFormList = new ArrayList<>();
     private LinkedHashSet<String> selectedForms = new LinkedHashSet<>();
@@ -235,18 +234,9 @@ public class FormDownloadList extends FormListActivity implements FormListDownlo
             downloadFormList();
         }
 
-        String[] data = new String[]{
-                FORMNAME, FORMID_DISPLAY, FORMDETAIL_KEY
-        };
-        int[] view = new int[]{
-                R.id.text1, R.id.text2
-        };
-
-        formListAdapter =
-                new SimpleAdapter(this, filteredFormList, R.layout.two_item_multiple_choice, data, view);
         listView.setChoiceMode(ListView.CHOICE_MODE_MULTIPLE);
         listView.setItemsCanFocus(false);
-        listView.setAdapter(formListAdapter);
+        listView.setAdapter(new FormDownloadListAdapter(this, filteredFormList, formNamesAndURLs));
 
         sortingOptions = new String[]{
                 getString(R.string.sort_by_name_asc), getString(R.string.sort_by_name_desc)
@@ -443,7 +433,7 @@ public class FormDownloadList extends FormListActivity implements FormListDownlo
             filteredFormList.addAll(formList);
         }
         sortList();
-        formListAdapter.notifyDataSetChanged();
+        listView.setAdapter(new FormDownloadListAdapter(this, filteredFormList, formNamesAndURLs));
 
         checkPreviouslyCheckedItems();
     }
@@ -685,7 +675,6 @@ public class FormDownloadList extends FormListActivity implements FormListDownlo
             filteredFormList.addAll(formList);
             updateAdapter();
             selectSupersededForms();
-            formListAdapter.notifyDataSetChanged();
             downloadButton.setEnabled(listView.getCheckedItemCount() > 0);
             toggleButtonLabel(toggleButton, listView);
         }

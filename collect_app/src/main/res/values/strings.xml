@@ -553,4 +553,5 @@
     <string name="coptic_month_mesori">Mesori</string>
     <string name="coptic_month_pi_kogi_enavot">Pi Kogi Enavot</string>
     <string name="multiple_media_folders_detected_notification">More than one media folder detected, please remove one and try again</string>
+    <string name="newer_version_of_this_form_is_available">A newer version of this form is available!</string>
 </resources>

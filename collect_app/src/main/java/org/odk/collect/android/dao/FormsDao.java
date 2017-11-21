@@ -68,6 +68,24 @@ public class FormsDao {
         return getFormsCursor(null, selection, selectionArgs, null);
     }
 
+    public Integer getFormVersionForFormId(String formId) {
+        Integer formVersion = null;
+        Cursor cursor = getFormsCursorForFormId(formId);
+
+        if (cursor != null) {
+            try {
+                if (cursor.moveToFirst()) {
+                    int formVersionColumnIndex = cursor.getColumnIndex(FormsProviderAPI.FormsColumns.JR_VERSION);
+                    formVersion = Integer.valueOf(cursor.getString(formVersionColumnIndex));
+                }
+            } finally {
+                cursor.close();
+            }
+        }
+
+        return formVersion;
+    }
+
     public Cursor getFormsCursorForFormFilePath(String formFIlePath) {
         String selection = FormsProviderAPI.FormsColumns.FORM_FILE_PATH + "=?";
         String[] selectionArgs = {formFIlePath};
