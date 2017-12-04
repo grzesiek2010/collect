@@ -76,14 +76,6 @@ public class DownloadFormsTask extends
 
     private FormsDao formsDao;
 
-    private static final String NAMESPACE_OPENROSA_ORG_XFORMS_XFORMS_MANIFEST =
-            "http://openrosa.org/xforms/xformsManifest";
-
-    private boolean isXformsManifestNamespacedElement(Element e) {
-        return e.getNamespace().equalsIgnoreCase(NAMESPACE_OPENROSA_ORG_XFORMS_XFORMS_MANIFEST);
-    }
-
-
     @Override
     protected HashMap<FormDetails, String> doInBackground(ArrayList<FormDetails>... values) {
         ArrayList<FormDetails> toDownload = values[0];
@@ -621,7 +613,7 @@ public class DownloadFormsTask extends
             return errMessage;
         }
         String namespace = manifestElement.getNamespace();
-        if (!isXformsManifestNamespacedElement(manifestElement)) {
+        if (!FileUtils.isXformsManifestNamespacedElement(manifestElement)) {
             errMessage += Collect.getInstance().getString(R.string.root_namespace_error, namespace);
             Timber.e(errMessage);
             return errMessage;
@@ -633,7 +625,7 @@ public class DownloadFormsTask extends
                 continue;
             }
             Element mediaFileElement = manifestElement.getElement(i);
-            if (!isXformsManifestNamespacedElement(mediaFileElement)) {
+            if (!FileUtils.isXformsManifestNamespacedElement(mediaFileElement)) {
                 // someone else's extension?
                 continue;
             }
@@ -650,7 +642,7 @@ public class DownloadFormsTask extends
                         continue;
                     }
                     Element child = mediaFileElement.getElement(j);
-                    if (!isXformsManifestNamespacedElement(child)) {
+                    if (!FileUtils.isXformsManifestNamespacedElement(child)) {
                         // someone else's extension?
                         continue;
                     }

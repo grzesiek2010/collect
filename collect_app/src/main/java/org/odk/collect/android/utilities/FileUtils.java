@@ -39,7 +39,10 @@ import java.net.URLConnection;
 import java.nio.channels.FileChannel;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
+import java.util.ArrayList;
+import java.util.Collections;
 import java.util.HashMap;
+import java.util.List;
 
 import timber.log.Timber;
 
@@ -408,6 +411,10 @@ public class FileUtils {
         return pathNoExtension + "-media";
     }
 
+    public static String constructMediaPathForFormName(String formName) {
+        return formName + "-media";
+    }
+
     /**
      * @param mediaDir the media folder
      */
@@ -495,5 +502,15 @@ public class FileUtils {
         }
 
         return bitmap;
+    }
+
+    public static  boolean isXformsManifestNamespacedElement(Element e) {
+        return e.getNamespace().equalsIgnoreCase("http://openrosa.org/xforms/xformsManifest");
+    }
+
+    public static List<File> getAllMediaFiles(String mediaFilesDir) {
+        List<File> mediaFiles = new ArrayList<>();
+        Collections.addAll(mediaFiles, new File(mediaFilesDir).listFiles());
+        return mediaFiles;
     }
 }

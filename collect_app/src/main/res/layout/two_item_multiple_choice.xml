@@ -51,29 +51,14 @@ the specific language governing permissions and limitations under the License. -
             android:textAppearance="?android:attr/textAppearanceSmall"
             tools:text="text2" />
 
-        <LinearLayout
+        <TextView
             android:id="@+id/update_warning"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:orientation="horizontal"
+            android:textColor="#4CAF50"
             android:layout_below="@+id/text2"
-            android:visibility="gone">
-
-            <ImageView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_gravity="center_vertical"
-                android:background="@drawable/ic_warning"/>
-
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:paddingLeft="5dp"
-                android:paddingStart="5dp"
-                android:textColor="@android:color/holo_red_dark"
-                android:text="@string/newer_version_of_this_form_is_available"/>
-
-        </LinearLayout>
+            android:visibility="gone"
+            android:text="@string/newer_version_of_this_form_is_available"/>
 
         <CheckBox
             android:id="@+id/checkbox"

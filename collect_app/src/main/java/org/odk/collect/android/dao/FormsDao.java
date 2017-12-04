@@ -76,7 +76,7 @@ public class FormsDao {
             try {
                 if (cursor.moveToFirst()) {
                     int formVersionColumnIndex = cursor.getColumnIndex(FormsProviderAPI.FormsColumns.JR_VERSION);
-                    formVersion = Integer.valueOf(cursor.getString(formVersionColumnIndex));
+                    formVersion = cursor.getString(formVersionColumnIndex) == null ? null : Integer.valueOf(cursor.getString(formVersionColumnIndex));
                 }
             } finally {
                 cursor.close();
@@ -84,6 +84,24 @@ public class FormsDao {
         }
 
         return formVersion;
+    }
+
+    public String getFormMediaPathForFormId(String formId) {
+        String formMediaPath = null;
+        Cursor cursor = getFormsCursorForFormId(formId);
+
+        if (cursor != null) {
+            try {
+                if (cursor.moveToFirst()) {
+                    int formMediaPathColumnIndex = cursor.getColumnIndex(FormsProviderAPI.FormsColumns.FORM_MEDIA_PATH);
+                    formMediaPath = cursor.getString(formMediaPathColumnIndex);
+                }
+            } finally {
+                cursor.close();
+            }
+        }
+
+        return formMediaPath;
     }
 
     public Cursor getFormsCursorForFormFilePath(String formFIlePath) {

@@ -23,11 +23,9 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
 import android.widget.CheckBox;
-import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import org.odk.collect.android.R;
-import org.odk.collect.android.dao.FormsDao;
 import org.odk.collect.android.logic.FormDetails;
 
 import java.util.ArrayList;
@@ -51,7 +49,7 @@ public class FormDownloadListAdapter extends ArrayAdapter {
     private class ViewHolder {
         TextView text1;
         TextView text2;
-        LinearLayout updateWarning;
+        TextView updateWarning;
         CheckBox checkBox;
     }
 
@@ -65,7 +63,7 @@ public class FormDownloadListAdapter extends ArrayAdapter {
 
             holder.text1 = (TextView) row.findViewById(R.id.text1);
             holder.text2 = (TextView) row.findViewById(R.id.text2);
-            holder.updateWarning = (LinearLayout) row.findViewById(R.id.update_warning);
+            holder.updateWarning = (TextView) row.findViewById(R.id.update_warning);
             holder.checkBox = (CheckBox) row.findViewById(R.id.checkbox);
             row.setTag(holder);
         } else {
@@ -75,23 +73,15 @@ public class FormDownloadListAdapter extends ArrayAdapter {
         holder.text1.setText(filteredFormList.get(position).get(FORMNAME));
         holder.text2.setText(filteredFormList.get(position).get(FORMID_DISPLAY));
 
-        if (isNewerFormAvailable(position)) {
-            holder.updateWarning.setVisibility(View.VISIBLE);
-        } else {
-            holder.updateWarning.setVisibility(View.GONE);
-        }
+        boolean isNewerFormVersionAvailable = formNamesAndURLs.get(filteredFormList.get(position).get(FORM_ID_KEY)).isNewerFormVersionAvailable;
+        boolean areNewerMediaFilesAvailable = formNamesAndURLs.get(filteredFormList.get(position).get(FORM_ID_KEY)).areNewerMediaFilesAvailable;
 
+        holder.updateWarning.setVisibility(isNewerFormVersionAvailable || areNewerMediaFilesAvailable ? View.VISIBLE : View.GONE);
+        if (isNewerFormVersionAvailable) {
+            holder.updateWarning.setText(R.string.newer_version_of_this_form_is_available);
+        } else if (areNewerMediaFilesAvailable) {
+            holder.updateWarning.setText(R.string.newer_versions_of_media_files_are_available);
+        }
         return row;
-    }
-
-    private boolean isNewerFormAvailable(int position) {
-        String formId = filteredFormList.get(position).get(FORM_ID_KEY);
-        String formVersion = formNamesAndURLs.get(formId).formVersion;
-        if (formVersion != null) {
-            Integer formVersionFromDatabase = new FormsDao().getFormVersionForFormId(formId);
-            return formVersionFromDatabase != null && Integer.parseInt(formVersion) > formVersionFromDatabase;
-
-        }
-        return false;
     }
 }
