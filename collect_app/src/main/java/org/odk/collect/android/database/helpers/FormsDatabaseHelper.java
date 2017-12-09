@@ -22,7 +22,6 @@ import android.database.sqlite.SQLiteOpenHelper;
 
 import org.odk.collect.android.application.Collect;
 import org.odk.collect.android.database.DatabaseContext;
-import org.odk.collect.android.provider.FormsProviderAPI;
 import org.odk.collect.android.utilities.CustomSQLiteQueryBuilder;
 
 import timber.log.Timber;
@@ -132,7 +131,7 @@ public class FormsDatabaseHelper extends SQLiteOpenHelper {
             db.execSQL("INSERT INTO "
                     + TEMP_FORMS_TABLE_NAME
                     + " ("
-                    + FormsProviderAPI.FormsColumns._ID
+                    + _ID
                     + ", "
                     + DISPLAY_NAME
                     + ", "
@@ -160,7 +159,7 @@ public class FormsDatabaseHelper extends SQLiteOpenHelper {
                     : (BASE64_RSA_PUBLIC_KEY + ", "))
                     + JRCACHE_FILE_PATH
                     + ") SELECT "
-                    + FormsProviderAPI.FormsColumns._ID
+                    + _ID
                     + ", "
                     + DISPLAY_NAME
                     + ", "
@@ -199,7 +198,7 @@ public class FormsDatabaseHelper extends SQLiteOpenHelper {
             db.execSQL("INSERT INTO "
                     + FORMS_TABLE_NAME
                     + " ("
-                    + FormsProviderAPI.FormsColumns._ID
+                    + _ID
                     + ", "
                     + DISPLAY_NAME
                     + ", "
@@ -220,7 +219,7 @@ public class FormsDatabaseHelper extends SQLiteOpenHelper {
                     + JR_VERSION + ", "
                     + BASE64_RSA_PUBLIC_KEY + ", "
                     + JRCACHE_FILE_PATH + ") SELECT "
-                    + FormsProviderAPI.FormsColumns._ID + ", "
+                    + _ID + ", "
                     + DISPLAY_NAME
                     + ", "
                     + DISPLAY_SUBTEXT
