@@ -27,6 +27,9 @@ import org.odk.collect.android.provider.FormsProviderAPI;
 import java.util.ArrayList;
 import java.util.List;
 
+import static org.odk.collect.android.provider.FormsProviderAPI.FormsColumns.JR_FORM_ID;
+import static org.odk.collect.android.provider.FormsProviderAPI.FormsColumns.JR_VERSION;
+
 /**
  * This class is used to encapsulate all access to the forms.db
  * For more information about this pattern go to https://en.wikipedia.org/wiki/Data_access_object
@@ -62,7 +65,7 @@ public class FormsDao {
     }
 
     public Cursor getFormsCursorForFormId(String formId) {
-        String selection = FormsProviderAPI.FormsColumns.JR_FORM_ID + "=?";
+        String selection = JR_FORM_ID + "=?";
         String[] selectionArgs = {formId};
 
         return getFormsCursor(null, selection, selectionArgs, null);
@@ -97,15 +100,57 @@ public class FormsDao {
         Collect.getInstance().getContentResolver().delete(FormsProviderAPI.FormsColumns.CONTENT_URI, selection, idsToDelete);
     }
 
+    private void deleteForm(String selection, String[] selectionArgs) {
+        Collect.getInstance().getContentResolver().delete(FormsProviderAPI.FormsColumns.CONTENT_URI, selection, selectionArgs);
+    }
+
     public Uri saveForm(ContentValues values) {
+        String formId = values.getAsString(JR_FORM_ID);
+        String version = values.getAsString(JR_VERSION);
+
+        String selection;
+        String[] selectionArgs;
+
+        if (version == null) {
+            selectionArgs = new String[]{formId};
+            selection = JR_FORM_ID + "=? AND "
+                    + JR_VERSION + " IS NULL";
+        } else {
+            selectionArgs = new String[]{formId, version};
+            selection = JR_FORM_ID + "=? AND "
+                    + JR_VERSION + "=?";
+        }
+
+        // This is an equivalent for UNIQUE ON CONFLICT REPLACE which won't work in our database
+        // since we allow to store null values in FormsProviderAPI.FormsColumns.JR_VERSION
+        deleteForm(selection, selectionArgs);
+
         return Collect.getInstance().getContentResolver().insert(FormsProviderAPI.FormsColumns.CONTENT_URI, values);
     }
 
-    public int updateForm(ContentValues values) {
-        return updateForm(values, null, null);
-    }
-
     public int updateForm(ContentValues values, String where, String[] whereArgs) {
+        String formId = values.getAsString(JR_FORM_ID);
+        String version = values.getAsString(JR_VERSION);
+
+        String selection;
+        String[] selectionArgs;
+
+        if (version == null) {
+            selectionArgs = new String[]{formId};
+            selection = JR_FORM_ID + "!=? AND "
+                    + JR_VERSION + " IS NULL";
+        } else {
+            selectionArgs = new String[]{formId, version};
+            selection = JR_FORM_ID + "!=? AND "
+                    + JR_VERSION + "=?";
+        }
+
+        // This is an equivalent for UNIQUE ON CONFLICT REPLACE which won't work in our database
+        // since we allow to store null values in FormsProviderAPI.FormsColumns.JR_VERSION
+        if (getFormsCursor(selection, selectionArgs).getCount() > 0) {
+            return 0;
+        }
+
         return Collect.getInstance().getContentResolver().update(FormsProviderAPI.FormsColumns.CONTENT_URI, values, where, whereArgs);
     }
 
@@ -116,8 +161,8 @@ public class FormsDao {
                 while (cursor.moveToNext()) {
                     int displayNameColumnIndex = cursor.getColumnIndex(FormsProviderAPI.FormsColumns.DISPLAY_NAME);
                     int descriptionColumnIndex = cursor.getColumnIndex(FormsProviderAPI.FormsColumns.DESCRIPTION);
-                    int jrFormIdColumnIndex = cursor.getColumnIndex(FormsProviderAPI.FormsColumns.JR_FORM_ID);
-                    int jrVersionColumnIndex = cursor.getColumnIndex(FormsProviderAPI.FormsColumns.JR_VERSION);
+                    int jrFormIdColumnIndex = cursor.getColumnIndex(JR_FORM_ID);
+                    int jrVersionColumnIndex = cursor.getColumnIndex(JR_VERSION);
                     int formFilePathColumnIndex = cursor.getColumnIndex(FormsProviderAPI.FormsColumns.FORM_FILE_PATH);
                     int submissionUriColumnIndex = cursor.getColumnIndex(FormsProviderAPI.FormsColumns.SUBMISSION_URI);
                     int base64RSAPublicKeyColumnIndex = cursor.getColumnIndex(FormsProviderAPI.FormsColumns.BASE64_RSA_PUBLIC_KEY);
@@ -157,8 +202,8 @@ public class FormsDao {
         ContentValues values = new ContentValues();
         values.put(FormsProviderAPI.FormsColumns.DISPLAY_NAME, form.getDisplayName());
         values.put(FormsProviderAPI.FormsColumns.DESCRIPTION, form.getDescription());
-        values.put(FormsProviderAPI.FormsColumns.JR_FORM_ID, form.getJrFormId());
-        values.put(FormsProviderAPI.FormsColumns.JR_VERSION, form.getJrVersion());
+        values.put(JR_FORM_ID, form.getJrFormId());
+        values.put(JR_VERSION, form.getJrVersion());
         values.put(FormsProviderAPI.FormsColumns.FORM_FILE_PATH, form.getFormFilePath());
         values.put(FormsProviderAPI.FormsColumns.SUBMISSION_URI, form.getSubmissionUri());
         values.put(FormsProviderAPI.FormsColumns.BASE64_RSA_PUBLIC_KEY, form.getBASE64RSAPublicKey());
