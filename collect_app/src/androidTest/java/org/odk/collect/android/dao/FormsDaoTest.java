@@ -168,7 +168,7 @@ public class FormsDaoTest {
         Form form = new Form.Builder()
                 .displayName("Widgets")
                 .displaySubtext("Added on Wed, Feb 22, 2017 at 17:55")
-                .jrFormId("Widgets2")
+                .jrFormId("N_Biggest")
                 .date(1487782554846L)
                 .formMediaPath(Collect.FORMS_PATH + "/Widgets-media")
                 .formFilePath(Collect.FORMS_PATH + "/Widgets.xml")
@@ -177,6 +177,18 @@ public class FormsDaoTest {
 
         String where = FormsProviderAPI.FormsColumns.DISPLAY_NAME + "=?";
         String[] whereArgs = {"Widgets"};
+        assertEquals(formsDao.updateForm(formsDao.getValuesFromFormObject(form), where, whereArgs), 0);
+
+        form = new Form.Builder()
+                .displayName("Widgets")
+                .displaySubtext("Added on Wed, Feb 22, 2017 at 17:55")
+                .jrFormId("Widgets2")
+                .date(1487782554846L)
+                .formMediaPath(Collect.FORMS_PATH + "/Widgets-media")
+                .formFilePath(Collect.FORMS_PATH + "/Widgets.xml")
+                .jrCacheFilePath(Collect.ODK_ROOT + "/.cache/0eacc6333449e66826326eb5fcc75749.formdef")
+                .build();
+
         assertEquals(formsDao.updateForm(formsDao.getValuesFromFormObject(form), where, whereArgs), 1);
 
         cursor = formsDao.getFormsCursorForFormFilePath(Collect.FORMS_PATH + "/Widgets.xml");
@@ -185,6 +197,31 @@ public class FormsDaoTest {
 
         assertEquals("Widgets", forms.get(0).getDisplayName());
         assertEquals("Widgets2", forms.get(0).getJrFormId());
+    }
+
+    @Test
+    public void saveFormTest() {
+        Cursor cursor = formsDao.getFormsCursorForFormId("Widgets");
+        List<Form> forms = formsDao.getFormsFromCursor(cursor);
+        assertEquals(1, forms.size());
+        assertEquals("Added on Wed, Feb 22, 2017 at 17:55", forms.get(0).getDisplaySubtext());
+
+        Form form = new Form.Builder()
+                .displayName("Widgets")
+                .displaySubtext("Added on Wed, Dec 10, 2017 at 12:00")
+                .jrFormId("Widgets")
+                .date(1512903600000L)
+                .formMediaPath(Collect.FORMS_PATH + "/Widgets-media")
+                .formFilePath(Collect.FORMS_PATH + "/Widgets.xml")
+                .jrCacheFilePath(Collect.ODK_ROOT + "/.cache/0eacc6333449e66826326eb5fcc75749.formdef")
+                .build();
+
+        formsDao.saveForm(formsDao.getValuesFromFormObject(form));
+
+        cursor = formsDao.getFormsCursorForFormId("Widgets");
+        forms = formsDao.getFormsFromCursor(cursor);
+        assertEquals(1, forms.size());
+        assertEquals("Added on Wed, Dec 10, 2017 at 12:00", forms.get(0).getDisplaySubtext());
     }
 
     private void fillDatabase() throws IOException {
