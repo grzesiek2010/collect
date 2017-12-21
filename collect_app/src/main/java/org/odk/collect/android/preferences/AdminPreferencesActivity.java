@@ -15,13 +15,16 @@
 package org.odk.collect.android.preferences;
 
 import android.content.Context;
+import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
 
 import org.odk.collect.android.R;
 import org.odk.collect.android.activities.CollectAbstractActivity;
+import org.odk.collect.android.activities.MainMenuActivity;
 import org.odk.collect.android.fragments.dialogs.MovingBackwardsDialog;
+import org.odk.collect.android.fragments.dialogs.ResetSettingsResultDialog;
 
 import java.io.File;
 import java.io.FileOutputStream;
@@ -37,7 +40,7 @@ import timber.log.Timber;
  * @author Thomas Smyth, Sassafras Tech Collective (tom@sassafrastech.com; constraint behavior
  *         option)
  */
-public class AdminPreferencesActivity extends CollectAbstractActivity implements MovingBackwardsDialog.MovingBackwardsDialogListener {
+public class AdminPreferencesActivity extends CollectAbstractActivity implements MovingBackwardsDialog.MovingBackwardsDialogListener, ResetSettingsResultDialog.ResetSettingsResultDialogListener {
     public static final String ADMIN_PREFERENCES = "admin_prefs";
     public static final String TAG = "AdminPreferencesFragment";
 
@@ -88,5 +91,13 @@ public class AdminPreferencesActivity extends CollectAbstractActivity implements
     public void preventOtherWaysOfEditingForm() {
         AdminPreferencesFragment fragment = (AdminPreferencesFragment) getFragmentManager().findFragmentByTag(TAG);
         fragment.preventOtherWaysOfEditingForm();
+    }
+
+    @Override
+    public void onDialogClose() {
+        Intent intent = new Intent(this, MainMenuActivity.class);
+        startActivity(intent);
+        overridePendingTransition(0, 0);
+        finishAffinity();
     }
 }

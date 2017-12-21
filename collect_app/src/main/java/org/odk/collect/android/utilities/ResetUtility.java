@@ -79,6 +79,8 @@ public class ResetUtility {
         boolean deletedSettingsFile = !new File(Collect.ODK_ROOT + "/collect.settings").exists()
                 || (new File(Collect.ODK_ROOT + "/collect.settings").delete());
 
+        new LocaleHelper().updateLocale(Collect.getInstance());
+
         if (deletedSettingsFolderContest && deletedSettingsFile) {
             failedResetActions.remove(failedResetActions.indexOf(ResetAction.RESET_PREFERENCES));
         }
