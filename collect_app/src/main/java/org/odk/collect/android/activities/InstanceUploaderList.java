@@ -112,6 +112,7 @@ public class InstanceUploaderList extends InstanceListActivity
                         // items selected
                         uploadSelectedFiles();
                         InstanceUploaderList.this.listView.clearChoices();
+                        uploadButton.setEnabled(false);
                     } else {
                         // no items selected
                         ToastUtils.showLongToast(R.string.noselect_error);
