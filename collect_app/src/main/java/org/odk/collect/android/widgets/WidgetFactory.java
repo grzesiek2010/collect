@@ -203,7 +203,7 @@ public class WidgetFactory {
                 } else if (appearance.contains("search") || appearance.contains("autocomplete")) {
                     questionWidget = new SelectOneSearchWidget(context, fep);
                 } else if (appearance.startsWith("image-map")) {
-                    questionWidget = new ImageMapWidget(context, fep);
+                    questionWidget = new SelectOneImageMapWidget(context, fep);
                 } else {
                     questionWidget = new SelectOneWidget(context, fep);
                 }
@@ -236,6 +236,8 @@ public class WidgetFactory {
                     questionWidget = new LabelWidget(context, fep);
                 } else if (appearance.contains("autocomplete")) {
                     questionWidget = new SelectMultipleAutocompleteWidget(context, fep);
+                } else if (appearance.startsWith("image-map")) {
+                    questionWidget = new SelectMultiImageMapWidget(context, fep);
                 } else {
                     questionWidget = new SelectMultiWidget(context, fep);
                 }

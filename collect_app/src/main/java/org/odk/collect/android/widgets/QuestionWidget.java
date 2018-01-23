@@ -152,7 +152,7 @@ public abstract class QuestionWidget
             questionText.setVisibility(GONE);
         }
 
-        String imageURI = prompt.getImageText();
+        String imageURI = this instanceof SelectOneImageMapWidget || this instanceof SelectMultiImageMapWidget ? null : prompt.getImageText();
         String audioURI = prompt.getAudioText();
         String videoURI = prompt.getSpecialFormQuestionText("video");
 
