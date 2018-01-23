@@ -202,6 +202,8 @@ public class WidgetFactory {
                     questionWidget = new LabelWidget(context, fep);
                 } else if (appearance.contains("search") || appearance.contains("autocomplete")) {
                     questionWidget = new SelectOneSearchWidget(context, fep);
+                } else if (appearance.startsWith("image-map")) {
+                    questionWidget = new ImageMapWidget(context, fep);
                 } else {
                     questionWidget = new SelectOneWidget(context, fep);
                 }
