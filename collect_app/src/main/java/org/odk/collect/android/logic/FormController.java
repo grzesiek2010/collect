@@ -399,7 +399,7 @@ public class FormController {
                 // no group
                 return false;
             }
-            FormEntryCaption grp = captions[captions.length - 2];
+            FormEntryCaption grp = captions[0];
             return groupIsFieldList(grp.getIndex());
         } else if (event == FormEntryController.EVENT_GROUP) {
             return groupIsFieldList(index);
@@ -510,11 +510,7 @@ public class FormController {
         FormIndex idxChild =
                 formEntryController.getModel().incrementIndex(
                         getFormIndex(), true); // descend into group
-        for (int i = 0; i < gd.getChildren().size(); i++) {
-            indicies.add(idxChild);
-            // don't descend
-            idxChild = formEntryController.getModel().incrementIndex(idxChild, false);
-        }
+        indicies = getTest(gd, idxChild);
 
         // jump to the end of the group
         formEntryController.jumpToIndex(indicies.get(indicies.size() - 1));
@@ -845,11 +841,7 @@ public class FormController {
                 }
             }
 
-            for (int i = 0; i < gd.getChildren().size(); i++) {
-                indicies.add(idxChild);
-                // don't descend
-                idxChild = formEntryController.getModel().incrementIndex(idxChild, false);
-            }
+            indicies.addAll(getTest(gd, idxChild));
 
             // we only display relevant questions
             ArrayList<FormEntryPrompt> questionList = new ArrayList<FormEntryPrompt>();
@@ -878,6 +870,25 @@ public class FormController {
         }
 
         return questions;
+    }
+
+    private ArrayList getTest(GroupDef gd, FormIndex idxChild) {
+        ArrayList<FormIndex> indicies = new ArrayList<FormIndex>();
+        for (int i = 0; i < gd.getChildren().size(); i++) {
+            if (getEvent(idxChild) == FormEntryController.EVENT_GROUP) {
+                IFormElement nestedElement = formEntryController.getModel().getForm().getChild(idxChild);
+                if (nestedElement instanceof GroupDef) {
+                    indicies.addAll(getTest((GroupDef) nestedElement,
+                            formEntryController.getModel().incrementIndex(idxChild, true)));
+                }
+            } else {
+                indicies.add(idxChild);
+                // don't descend
+                idxChild = formEntryController.getModel().incrementIndex(idxChild, false);
+            }
+        }
+
+        return indicies;
     }
 
 
