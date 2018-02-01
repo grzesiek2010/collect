@@ -64,9 +64,6 @@ public class AnnotateWidget extends AbstractImageWidget implements BaseImageWidg
     private Button chooseButton;
     private Button annotateButton;
 
-    @Nullable
-    private ImageView imageView;
-
     private String binaryName;
 
     private TextView errorTextView;

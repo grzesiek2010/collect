@@ -59,9 +59,6 @@ public class SignatureWidget extends AbstractImageWidget implements BaseImageWid
     private Button signButton;
     private String binaryName;
 
-    @Nullable
-    private ImageView imageView;
-
     private TextView errorTextView;
 
     public SignatureWidget(Context context, FormEntryPrompt prompt) {

@@ -17,10 +17,15 @@
 package org.odk.collect.android.widgets;
 
 import android.content.Context;
+import android.support.annotation.Nullable;
+import android.widget.ImageView;
 
 import org.javarosa.form.api.FormEntryPrompt;
 
 public abstract class AbstractImageWidget extends QuestionWidget {
+    @Nullable
+    protected ImageView imageView;
+
     public AbstractImageWidget(Context context, FormEntryPrompt prompt) {
         super(context, prompt);
     }

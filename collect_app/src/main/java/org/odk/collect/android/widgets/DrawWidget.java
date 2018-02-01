@@ -61,9 +61,6 @@ public class DrawWidget extends AbstractImageWidget implements BaseImageWidget {
     private Button drawButton;
     private String binaryName;
 
-    @Nullable
-    private ImageView imageView;
-
     private TextView errorTextView;
 
     public DrawWidget(Context context, FormEntryPrompt prompt) {
