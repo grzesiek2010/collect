@@ -56,7 +56,7 @@ import static org.odk.collect.android.utilities.ApplicationConstants.RequestCode
  * @author BehrAtherton@gmail.com
  */
 @SuppressLint("ViewConstructor")
-public class DrawWidget extends QuestionWidget implements BaseImageWidget {
+public class DrawWidget extends AbstractImageWidget implements BaseImageWidget {
 
     private Button drawButton;
     private String binaryName;

@@ -57,7 +57,7 @@ import static org.odk.collect.android.utilities.ApplicationConstants.RequestCode
  * @author Carl Hartung (carlhartung@gmail.com)
  * @author Yaw Anokwa (yanokwa@gmail.com)
  */
-public class ImageWidget extends QuestionWidget implements BaseImageWidget {
+public class ImageWidget extends AbstractImageWidget implements BaseImageWidget {
 
     private Button captureButton;
     private Button chooseButton;

@@ -54,7 +54,7 @@ import static org.odk.collect.android.utilities.ApplicationConstants.RequestCode
  *
  * @author BehrAtherton@gmail.com
  */
-public class SignatureWidget extends QuestionWidget implements BaseImageWidget {
+public class SignatureWidget extends AbstractImageWidget implements BaseImageWidget {
 
     private Button signButton;
     private String binaryName;

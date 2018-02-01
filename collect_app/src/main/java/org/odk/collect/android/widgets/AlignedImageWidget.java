@@ -61,7 +61,7 @@ import static org.odk.collect.android.utilities.ApplicationConstants.RequestCode
  * @author Mitchell Tyler Lee
  */
 @SuppressLint("ViewConstructor")
-public class AlignedImageWidget extends QuestionWidget implements BaseImageWidget {
+public class AlignedImageWidget extends AbstractImageWidget implements BaseImageWidget {
     private static final String ODK_CAMERA_TAKE_PICTURE_INTENT_COMPONENT =
             "org.opendatakit.camera.TakePicture";
 
