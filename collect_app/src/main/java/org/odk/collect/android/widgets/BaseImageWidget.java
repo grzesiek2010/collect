@@ -70,7 +70,7 @@ public abstract class BaseImageWidget extends QuestionWidget implements FileWidg
         // remove the file
         deleteFile();
         if (imageView != null) {
-            imageView.setImageBitmap(null);
+            imageView.setImageDrawable(null);
         }
 
         errorTextView.setVisibility(View.GONE);
