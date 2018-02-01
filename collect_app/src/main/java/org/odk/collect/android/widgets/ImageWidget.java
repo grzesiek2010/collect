@@ -173,9 +173,6 @@ public class ImageWidget extends BaseImageWidget {
         super.cancelLongPress();
         captureButton.cancelLongPress();
         chooseButton.cancelLongPress();
-        if (imageView != null) {
-            imageView.cancelLongPress();
-        }
     }
 
     @Override

@@ -154,9 +154,6 @@ public class DrawWidget extends BaseImageWidget {
     public void cancelLongPress() {
         super.cancelLongPress();
         drawButton.cancelLongPress();
-        if (imageView != null) {
-            imageView.cancelLongPress();
-        }
     }
 
     @Override

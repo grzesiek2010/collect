@@ -194,9 +194,6 @@ public class AnnotateWidget extends BaseImageWidget {
         captureButton.cancelLongPress();
         chooseButton.cancelLongPress();
         annotateButton.cancelLongPress();
-        if (imageView != null) {
-            imageView.cancelLongPress();
-        }
     }
 
     @Override

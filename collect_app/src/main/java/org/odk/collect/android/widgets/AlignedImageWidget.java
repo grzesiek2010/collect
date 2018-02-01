@@ -185,9 +185,6 @@ public class AlignedImageWidget extends BaseImageWidget {
         super.cancelLongPress();
         captureButton.cancelLongPress();
         chooseButton.cancelLongPress();
-        if (imageView != null) {
-            imageView.cancelLongPress();
-        }
     }
 
     @Override

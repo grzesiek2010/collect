@@ -149,9 +149,6 @@ public class SignatureWidget extends BaseImageWidget {
     public void cancelLongPress() {
         super.cancelLongPress();
         signButton.cancelLongPress();
-        if (imageView != null) {
-            imageView.cancelLongPress();
-        }
     }
 
     @Override

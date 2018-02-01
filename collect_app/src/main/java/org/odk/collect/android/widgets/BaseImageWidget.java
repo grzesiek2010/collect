@@ -128,5 +128,13 @@ public abstract class BaseImageWidget extends QuestionWidget implements FileWidg
         }
     }
 
+    @Override
+    public void cancelLongPress() {
+        super.cancelLongPress();
+        if (imageView != null) {
+            imageView.cancelLongPress();
+        }
+    }
+
     protected abstract void onImageClick();
 }
