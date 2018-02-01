@@ -174,40 +174,6 @@ public class AlignedImageWidget extends BaseImageWidget {
     }
 
     @Override
-    public void setBinaryData(Object newImageObj) {
-        // you are replacing an answer. delete the previous image using the
-        // content provider.
-        if (binaryName != null) {
-            deleteFile();
-        }
-
-        File newImage = (File) newImageObj;
-        if (newImage.exists()) {
-            // Add the new image to the Media content provider so that the
-            // viewing is fast in Android 2.0+
-            ContentValues values = new ContentValues(6);
-            values.put(Images.Media.TITLE, newImage.getName());
-            values.put(Images.Media.DISPLAY_NAME, newImage.getName());
-            values.put(Images.Media.DATE_TAKEN, System.currentTimeMillis());
-            values.put(Images.Media.MIME_TYPE, "image/jpeg");
-            values.put(Images.Media.DATA, newImage.getAbsolutePath());
-
-            Uri imageURI = getContext().getContentResolver().insert(
-                    Images.Media.EXTERNAL_CONTENT_URI, values);
-
-            if (imageURI != null) {
-                Timber.i("Inserting image returned uri = %s", imageURI.toString());
-            }
-
-            binaryName = newImage.getName();
-            Timber.i("Setting current answer to %s", newImage.getName());
-
-        } else {
-            Timber.e("NO IMAGE EXISTS at: %s", newImage.getAbsolutePath());
-        }
-    }
-
-    @Override
     public void setFocus(Context context) {
         // Hide the soft keyboard if it's showing.
         InputMethodManager inputManager =

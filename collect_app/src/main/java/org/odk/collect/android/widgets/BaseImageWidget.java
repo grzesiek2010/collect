@@ -16,7 +16,10 @@
 
 package org.odk.collect.android.widgets;
 
+import android.content.ContentValues;
 import android.content.Context;
+import android.net.Uri;
+import android.provider.MediaStore;
 import android.support.annotation.Nullable;
 import android.view.View;
 import android.widget.ImageView;
@@ -73,6 +76,39 @@ public abstract class BaseImageWidget extends QuestionWidget implements FileWidg
         int del = MediaUtils.deleteImageFileFromMediaProvider(
                 getInstanceFolder() + File.separator + name);
         Timber.i("Deleted %d rows from media content provider", del);
+    }
+
+    @Override
+    public void setBinaryData(Object newImageObj) {
+        // you are replacing an answer. delete the previous image using the
+        // content provider.
+        if (binaryName != null) {
+            deleteFile();
+        }
+
+        File newImage = (File) newImageObj;
+        if (newImage.exists()) {
+            // Add the new image to the Media content provider so that the
+            // viewing is fast in Android 2.0+
+            ContentValues values = new ContentValues(6);
+            values.put(MediaStore.Images.Media.TITLE, newImage.getName());
+            values.put(MediaStore.Images.Media.DISPLAY_NAME, newImage.getName());
+            values.put(MediaStore.Images.Media.DATE_TAKEN, System.currentTimeMillis());
+            values.put(MediaStore.Images.Media.MIME_TYPE, "image/jpeg");
+            values.put(MediaStore.Images.Media.DATA, newImage.getAbsolutePath());
+
+            Uri imageURI = getContext().getContentResolver().insert(
+                    MediaStore.Images.Media.EXTERNAL_CONTENT_URI, values);
+
+            if (imageURI != null) {
+                Timber.i("Inserting image returned uri = %s", imageURI.toString());
+            }
+
+            binaryName = newImage.getName();
+            Timber.i("Setting current answer to %s", newImage.getName());
+        } else {
+            Timber.e("NO IMAGE EXISTS at: %s", newImage.getAbsolutePath());
+        }
     }
 
     protected abstract void onImageClick();
