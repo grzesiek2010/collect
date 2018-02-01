@@ -49,12 +49,11 @@ public abstract class BaseImageWidget extends QuestionWidget implements FileWidg
     public BaseImageWidget(Context context, FormEntryPrompt prompt) {
         super(context, prompt);
 
-        errorTextView = new TextView(context);
-        errorTextView.setId(ViewIds.generateViewId());
-        errorTextView.setText(R.string.selected_invalid_image);
-
-        answerLayout = new LinearLayout(getContext());
-        answerLayout.setOrientation(LinearLayout.VERTICAL);
+        setUpLayout();
+        // retrieve answer from data model and update ui
+        binaryName = prompt.getAnswerText();
+        setUpBinary();
+        addAnswerView(answerLayout);
     }
 
     @Override
@@ -122,7 +121,6 @@ public abstract class BaseImageWidget extends QuestionWidget implements FileWidg
         }
     }
 
-
     @Override
     public void setFocus(Context context) {
         // Hide the soft keyboard if it's showing.
@@ -147,4 +145,15 @@ public abstract class BaseImageWidget extends QuestionWidget implements FileWidg
     }
 
     protected abstract void onImageClick();
+
+    protected void setUpLayout() {
+        errorTextView = new TextView(getContext());
+        errorTextView.setId(ViewIds.generateViewId());
+        errorTextView.setText(R.string.selected_invalid_image);
+
+        answerLayout = new LinearLayout(getContext());
+        answerLayout.setOrientation(LinearLayout.VERTICAL);
+    }
+
+    protected abstract void setUpBinary();
 }

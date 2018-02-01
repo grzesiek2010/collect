@@ -25,7 +25,6 @@ import android.net.Uri;
 import android.util.DisplayMetrics;
 import android.view.View;
 import android.widget.Button;
-import android.widget.LinearLayout;
 import android.widget.Toast;
 
 import org.javarosa.form.api.FormEntryPrompt;
@@ -72,63 +71,6 @@ public class AlignedImageWidget extends BaseImageWidget {
 
     public AlignedImageWidget(Context context, FormEntryPrompt prompt) {
         super(context, prompt);
-
-        String appearance = prompt.getAppearanceHint();
-        String alignments = appearance.substring(appearance.indexOf(':') + 1);
-        String[] splits = alignments.split(" ");
-        if (splits.length != 6) {
-            Timber.w("Only have %d alignment values", splits.length);
-        }
-        for (int i = 0; i < 6; ++i) {
-            if (splits.length <= i) {
-                iarray[i] = 0;
-            } else {
-                iarray[i] = Integer.parseInt(splits[i]);
-            }
-        }
-
-        instanceFolder = getInstanceFolder();
-
-        captureButton = getSimpleButton(getContext().getString(R.string.capture_image), R.id.capture_image);
-        captureButton.setEnabled(!prompt.isReadOnly());
-
-        chooseButton = getSimpleButton(getContext().getString(R.string.choose_image), R.id.choose_image);
-        chooseButton.setEnabled(!prompt.isReadOnly());
-
-        answerLayout.addView(captureButton);
-        answerLayout.addView(chooseButton);
-        answerLayout.addView(errorTextView);
-
-        // and hide the capture and choose button if read-only
-        if (prompt.isReadOnly()) {
-            captureButton.setVisibility(View.GONE);
-            chooseButton.setVisibility(View.GONE);
-        }
-        errorTextView.setVisibility(View.GONE);
-
-        // retrieve answer from data model and update ui
-        binaryName = prompt.getAnswerText();
-
-        // Only add the imageView if the user has taken a picture
-        if (binaryName != null) {
-            DisplayMetrics metrics = context.getResources().getDisplayMetrics();
-            int screenWidth = metrics.widthPixels;
-            int screenHeight = metrics.heightPixels;
-
-            File f = new File(instanceFolder + File.separator + binaryName);
-
-            Bitmap bmp = null;
-            if (f.exists()) {
-                bmp = FileUtils.getBitmapScaledToDisplay(f, screenHeight, screenWidth);
-                if (bmp == null) {
-                    errorTextView.setVisibility(View.VISIBLE);
-                }
-            }
-
-            imageView = getAnswerImageView(bmp);
-            answerLayout.addView(imageView);
-        }
-        addAnswerView(answerLayout);
     }
 
     @Override
@@ -149,6 +91,66 @@ public class AlignedImageWidget extends BaseImageWidget {
                                 "view image"),
                         Toast.LENGTH_SHORT).show();
             }
+        }
+    }
+
+    @Override
+    protected void setUpLayout() {
+        super.setUpLayout();
+        String appearance = getFormEntryPrompt().getAppearanceHint();
+        String alignments = appearance.substring(appearance.indexOf(':') + 1);
+        String[] splits = alignments.split(" ");
+        if (splits.length != 6) {
+            Timber.w("Only have %d alignment values", splits.length);
+        }
+        for (int i = 0; i < 6; ++i) {
+            if (splits.length <= i) {
+                iarray[i] = 0;
+            } else {
+                iarray[i] = Integer.parseInt(splits[i]);
+            }
+        }
+
+        instanceFolder = getInstanceFolder();
+
+        captureButton = getSimpleButton(getContext().getString(R.string.capture_image), R.id.capture_image);
+        captureButton.setEnabled(!getFormEntryPrompt().isReadOnly());
+
+        chooseButton = getSimpleButton(getContext().getString(R.string.choose_image), R.id.choose_image);
+        chooseButton.setEnabled(!getFormEntryPrompt().isReadOnly());
+
+        answerLayout.addView(captureButton);
+        answerLayout.addView(chooseButton);
+        answerLayout.addView(errorTextView);
+
+        // and hide the capture and choose button if read-only
+        if (getFormEntryPrompt().isReadOnly()) {
+            captureButton.setVisibility(View.GONE);
+            chooseButton.setVisibility(View.GONE);
+        }
+        errorTextView.setVisibility(View.GONE);
+    }
+
+    @Override
+    protected void setUpBinary() {
+        // Only add the imageView if the user has taken a picture
+        if (binaryName != null) {
+            DisplayMetrics metrics = getContext().getResources().getDisplayMetrics();
+            int screenWidth = metrics.widthPixels;
+            int screenHeight = metrics.heightPixels;
+
+            File f = new File(instanceFolder + File.separator + binaryName);
+
+            Bitmap bmp = null;
+            if (f.exists()) {
+                bmp = FileUtils.getBitmapScaledToDisplay(f, screenHeight, screenWidth);
+                if (bmp == null) {
+                    errorTextView.setVisibility(View.VISIBLE);
+                }
+            }
+
+            imageView = getAnswerImageView(bmp);
+            answerLayout.addView(imageView);
         }
     }
 

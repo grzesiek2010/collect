@@ -24,7 +24,6 @@ import android.net.Uri;
 import android.util.DisplayMetrics;
 import android.view.View;
 import android.widget.Button;
-import android.widget.LinearLayout;
 import android.widget.Toast;
 
 import org.javarosa.form.api.FormEntryPrompt;
@@ -49,9 +48,22 @@ public class DrawWidget extends BaseImageWidget {
 
     public DrawWidget(Context context, FormEntryPrompt prompt) {
         super(context, prompt);
+    }
 
+    @Override
+    public void onImageClick() {
+        Collect.getInstance()
+                .getActivityLogger()
+                .logInstanceAction(this, "viewImage", "click",
+                        getFormEntryPrompt().getIndex());
+        launchDrawActivity();
+    }
+
+    @Override
+    protected void setUpLayout() {
+        super.setUpLayout();
         drawButton = getSimpleButton(getContext().getString(R.string.draw_image));
-        drawButton.setEnabled(!prompt.isReadOnly());
+        drawButton.setEnabled(!getFormEntryPrompt().isReadOnly());
 
         answerLayout.addView(drawButton);
         answerLayout.addView(errorTextView);
@@ -60,13 +72,13 @@ public class DrawWidget extends BaseImageWidget {
             drawButton.setVisibility(View.GONE);
         }
         errorTextView.setVisibility(View.GONE);
+    }
 
-        // retrieve answer from data model and update ui
-        binaryName = prompt.getAnswerText();
-
+    @Override
+    protected void setUpBinary() {
         // Only add the imageView if the user has signed
         if (binaryName != null) {
-            DisplayMetrics metrics = context.getResources().getDisplayMetrics();
+            DisplayMetrics metrics = getContext().getResources().getDisplayMetrics();
             int screenWidth = metrics.widthPixels;
             int screenHeight = metrics.heightPixels;
 
@@ -84,16 +96,6 @@ public class DrawWidget extends BaseImageWidget {
             imageView = getAnswerImageView(bmp);
             answerLayout.addView(imageView);
         }
-        addAnswerView(answerLayout);
-    }
-
-    @Override
-    public void onImageClick() {
-        Collect.getInstance()
-                .getActivityLogger()
-                .logInstanceAction(this, "viewImage", "click",
-                        getFormEntryPrompt().getIndex());
-        launchDrawActivity();
     }
 
     private void launchDrawActivity() {

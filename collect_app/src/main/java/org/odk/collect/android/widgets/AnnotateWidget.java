@@ -24,7 +24,6 @@ import android.net.Uri;
 import android.util.DisplayMetrics;
 import android.view.View;
 import android.widget.Button;
-import android.widget.LinearLayout;
 import android.widget.Toast;
 
 import org.javarosa.form.api.FormEntryPrompt;
@@ -55,12 +54,25 @@ public class AnnotateWidget extends BaseImageWidget {
 
     public AnnotateWidget(Context context, FormEntryPrompt prompt) {
         super(context, prompt);
+    }
 
+    @Override
+    public void onImageClick() {
+        Collect.getInstance()
+                .getActivityLogger()
+                .logInstanceAction(this, "viewImage", "click",
+                        getFormEntryPrompt().getIndex());
+        launchAnnotateActivity();
+    }
+
+    @Override
+    protected void setUpLayout() {
+        super.setUpLayout();
         captureButton = getSimpleButton(getContext().getString(R.string.capture_image), R.id.capture_image);
-        captureButton.setEnabled(!prompt.isReadOnly());
+        captureButton.setEnabled(!getFormEntryPrompt().isReadOnly());
 
         chooseButton = getSimpleButton(getContext().getString(R.string.choose_image), R.id.choose_image);
-        chooseButton.setEnabled(!prompt.isReadOnly());
+        chooseButton.setEnabled(!getFormEntryPrompt().isReadOnly());
 
         annotateButton = getSimpleButton(getContext().getString(R.string.markup_image), R.id.markup_image);
         annotateButton.setEnabled(false);
@@ -81,22 +93,22 @@ public class AnnotateWidget extends BaseImageWidget {
         answerLayout.addView(errorTextView);
 
         // and hide the capture, choose and annotate button if read-only
-        if (prompt.isReadOnly()) {
+        if (getFormEntryPrompt().isReadOnly()) {
             captureButton.setVisibility(View.GONE);
             chooseButton.setVisibility(View.GONE);
             annotateButton.setVisibility(View.GONE);
         }
         errorTextView.setVisibility(View.GONE);
+    }
 
-        // retrieve answer from data model and update ui
-        binaryName = prompt.getAnswerText();
-
+    @Override
+    protected void setUpBinary() {
         // Only add the imageView if the user has taken a picture
         if (binaryName != null) {
-            if (!prompt.isReadOnly()) {
+            if (!getFormEntryPrompt().isReadOnly()) {
                 annotateButton.setEnabled(true);
             }
-            DisplayMetrics metrics = context.getResources().getDisplayMetrics();
+            DisplayMetrics metrics = getContext().getResources().getDisplayMetrics();
             int screenWidth = metrics.widthPixels;
             int screenHeight = metrics.heightPixels;
 
@@ -115,16 +127,6 @@ public class AnnotateWidget extends BaseImageWidget {
             imageView = getAnswerImageView(bmp);
             answerLayout.addView(imageView);
         }
-        addAnswerView(answerLayout);
-    }
-
-    @Override
-    public void onImageClick() {
-        Collect.getInstance()
-                .getActivityLogger()
-                .logInstanceAction(this, "viewImage", "click",
-                        getFormEntryPrompt().getIndex());
-        launchAnnotateActivity();
     }
 
     private void launchAnnotateActivity() {

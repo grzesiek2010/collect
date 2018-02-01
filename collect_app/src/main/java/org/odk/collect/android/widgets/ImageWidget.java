@@ -24,7 +24,6 @@ import android.os.Build;
 import android.util.DisplayMetrics;
 import android.view.View;
 import android.widget.Button;
-import android.widget.LinearLayout;
 import android.widget.Toast;
 
 import org.javarosa.form.api.FormEntryPrompt;
@@ -57,19 +56,44 @@ public class ImageWidget extends BaseImageWidget {
     public ImageWidget(Context context, final FormEntryPrompt prompt, final boolean selfie) {
         super(context, prompt);
         this.selfie = selfie;
+    }
 
+    @Override
+    public void onImageClick() {
+        Collect.getInstance().getActivityLogger().logInstanceAction(this, "viewButton",
+                "click", getFormEntryPrompt().getIndex());
+        Intent i = new Intent("android.intent.action.VIEW");
+        Uri uri = MediaUtils.getImageUriFromMediaProvider(
+                getInstanceFolder() + File.separator + binaryName);
+        if (uri != null) {
+            Timber.i("setting view path to: %s", uri.toString());
+            i.setDataAndType(uri, "image/*");
+            try {
+                getContext().startActivity(i);
+            } catch (ActivityNotFoundException e) {
+                Toast.makeText(getContext(),
+                        getContext().getString(R.string.activity_not_found,
+                                "view image"),
+                        Toast.LENGTH_SHORT).show();
+            }
+        }
+    }
+
+    @Override
+    protected void setUpLayout() {
+        super.setUpLayout();
         captureButton = getSimpleButton(getContext().getString(R.string.capture_image), R.id.capture_image);
-        captureButton.setEnabled(!prompt.isReadOnly());
-      
+        captureButton.setEnabled(!getFormEntryPrompt().isReadOnly());
+
         chooseButton = getSimpleButton(getContext().getString(R.string.choose_image), R.id.choose_image);
-        chooseButton.setEnabled(!prompt.isReadOnly());
+        chooseButton.setEnabled(!getFormEntryPrompt().isReadOnly());
 
         answerLayout.addView(captureButton);
         answerLayout.addView(chooseButton);
         answerLayout.addView(errorTextView);
 
         // and hide the capture and choose button if read-only
-        if (prompt.isReadOnly()) {
+        if (getFormEntryPrompt().isReadOnly()) {
             captureButton.setVisibility(View.GONE);
             chooseButton.setVisibility(View.GONE);
         } else if (selfie) {
@@ -93,13 +117,13 @@ public class ImageWidget extends BaseImageWidget {
             }
 
         }
+    }
 
-        // retrieve answer from data model and update ui
-        binaryName = prompt.getAnswerText();
-
+    @Override
+    protected void setUpBinary() {
         // Only add the imageView if the user has taken a picture
         if (binaryName != null) {
-            DisplayMetrics metrics = context.getResources().getDisplayMetrics();
+            DisplayMetrics metrics = getContext().getResources().getDisplayMetrics();
             int screenWidth = metrics.widthPixels;
             int screenHeight = metrics.heightPixels;
 
@@ -115,28 +139,6 @@ public class ImageWidget extends BaseImageWidget {
 
             imageView = getAnswerImageView(bmp);
             answerLayout.addView(imageView);
-        }
-        addAnswerView(answerLayout);
-    }
-
-    @Override
-    public void onImageClick() {
-        Collect.getInstance().getActivityLogger().logInstanceAction(this, "viewButton",
-                "click", getFormEntryPrompt().getIndex());
-        Intent i = new Intent("android.intent.action.VIEW");
-        Uri uri = MediaUtils.getImageUriFromMediaProvider(
-                getInstanceFolder() + File.separator + binaryName);
-        if (uri != null) {
-            Timber.i("setting view path to: %s", uri.toString());
-            i.setDataAndType(uri, "image/*");
-            try {
-                getContext().startActivity(i);
-            } catch (ActivityNotFoundException e) {
-                Toast.makeText(getContext(),
-                        getContext().getString(R.string.activity_not_found,
-                                "view image"),
-                        Toast.LENGTH_SHORT).show();
-            }
         }
     }
 

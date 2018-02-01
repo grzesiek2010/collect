@@ -23,7 +23,6 @@ import android.net.Uri;
 import android.util.DisplayMetrics;
 import android.view.View;
 import android.widget.Button;
-import android.widget.LinearLayout;
 import android.widget.Toast;
 
 import org.javarosa.form.api.FormEntryPrompt;
@@ -47,25 +46,36 @@ public class SignatureWidget extends BaseImageWidget {
 
     public SignatureWidget(Context context, FormEntryPrompt prompt) {
         super(context, prompt);
+    }
 
+    @Override
+    public void onImageClick() {
+        Collect.getInstance().getActivityLogger().logInstanceAction(this, "viewImage",
+                "click", getFormEntryPrompt().getIndex());
+        launchSignatureActivity();
+    }
+
+    @Override
+    protected void setUpLayout() {
+        super.setUpLayout();
         signButton = getSimpleButton(getContext().getString(R.string.sign_button));
-        signButton.setEnabled(!prompt.isReadOnly());
+        signButton.setEnabled(!getFormEntryPrompt().isReadOnly());
 
         answerLayout.addView(signButton);
         answerLayout.addView(errorTextView);
 
         // and hide the sign button if read-only
-        if (prompt.isReadOnly()) {
+        if (getFormEntryPrompt().isReadOnly()) {
             signButton.setVisibility(View.GONE);
         }
         errorTextView.setVisibility(View.GONE);
+    }
 
-        // retrieve answer from data model and update ui
-        binaryName = prompt.getAnswerText();
-
+    @Override
+    protected void setUpBinary() {
         // Only add the imageView if the user has signed
         if (binaryName != null) {
-            DisplayMetrics metrics = context.getResources().getDisplayMetrics();
+            DisplayMetrics metrics = getContext().getResources().getDisplayMetrics();
             int screenWidth = metrics.widthPixels;
             int screenHeight = metrics.heightPixels;
 
@@ -82,14 +92,6 @@ public class SignatureWidget extends BaseImageWidget {
             imageView = getAnswerImageView(bmp);
             answerLayout.addView(imageView);
         }
-        addAnswerView(answerLayout);
-    }
-
-    @Override
-    public void onImageClick() {
-        Collect.getInstance().getActivityLogger().logInstanceAction(this, "viewImage",
-                "click", getFormEntryPrompt().getIndex());
-        launchSignatureActivity();
     }
 
     private void launchSignatureActivity() {
