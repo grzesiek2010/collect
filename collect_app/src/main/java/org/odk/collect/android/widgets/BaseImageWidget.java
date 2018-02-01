@@ -29,7 +29,6 @@ import android.widget.TextView;
 import org.javarosa.core.model.data.IAnswerData;
 import org.javarosa.core.model.data.StringData;
 import org.javarosa.form.api.FormEntryPrompt;
-import org.odk.collect.android.R;
 import org.odk.collect.android.utilities.MediaUtils;
 import org.odk.collect.android.widgets.interfaces.FileWidget;
 
