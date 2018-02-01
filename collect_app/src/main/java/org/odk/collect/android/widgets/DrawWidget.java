@@ -139,14 +139,7 @@ public class DrawWidget extends BaseImageWidget {
 
     @Override
     public void clearAnswer() {
-        // remove the file
-        deleteFile();
-        if (imageView != null) {
-            imageView.setImageBitmap(null);
-        }
-
-        errorTextView.setVisibility(View.GONE);
-
+        super.clearAnswer();
         // reset buttons
         drawButton.setText(getContext().getString(R.string.draw_image));
     }

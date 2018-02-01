@@ -171,13 +171,7 @@ public class AnnotateWidget extends BaseImageWidget {
 
     @Override
     public void clearAnswer() {
-        // remove the file
-        deleteFile();
-        if (imageView != null) {
-            imageView.setImageBitmap(null);
-        }
-
-        errorTextView.setVisibility(View.GONE);
+        super.clearAnswer();
         if (!getFormEntryPrompt().isReadOnly()) {
             annotateButton.setEnabled(false);
         }

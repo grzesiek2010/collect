@@ -18,12 +18,14 @@ package org.odk.collect.android.widgets;
 
 import android.content.Context;
 import android.support.annotation.Nullable;
+import android.view.View;
 import android.widget.ImageView;
 import android.widget.TextView;
 
 import org.javarosa.core.model.data.IAnswerData;
 import org.javarosa.core.model.data.StringData;
 import org.javarosa.form.api.FormEntryPrompt;
+import org.odk.collect.android.R;
 import org.odk.collect.android.utilities.MediaUtils;
 import org.odk.collect.android.widgets.interfaces.FileWidget;
 
@@ -48,6 +50,17 @@ public abstract class BaseImageWidget extends QuestionWidget implements FileWidg
         } else {
             return null;
         }
+    }
+
+    @Override
+    public void clearAnswer() {
+        // remove the file
+        deleteFile();
+        if (imageView != null) {
+            imageView.setImageBitmap(null);
+        }
+
+        errorTextView.setVisibility(View.GONE);
     }
 
     @Override
