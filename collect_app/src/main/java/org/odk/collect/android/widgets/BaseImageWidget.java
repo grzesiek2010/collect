@@ -29,7 +29,9 @@ import android.widget.TextView;
 import org.javarosa.core.model.data.IAnswerData;
 import org.javarosa.core.model.data.StringData;
 import org.javarosa.form.api.FormEntryPrompt;
+import org.odk.collect.android.R;
 import org.odk.collect.android.utilities.MediaUtils;
+import org.odk.collect.android.utilities.ViewIds;
 import org.odk.collect.android.widgets.interfaces.FileWidget;
 
 import java.io.File;
@@ -44,6 +46,10 @@ public abstract class BaseImageWidget extends QuestionWidget implements FileWidg
 
     public BaseImageWidget(Context context, FormEntryPrompt prompt) {
         super(context, prompt);
+
+        errorTextView = new TextView(context);
+        errorTextView.setId(ViewIds.generateViewId());
+        errorTextView.setText(R.string.selected_invalid_image);
     }
 
     @Override

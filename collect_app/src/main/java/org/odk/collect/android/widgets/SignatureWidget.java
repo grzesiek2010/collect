@@ -24,7 +24,6 @@ import android.util.DisplayMetrics;
 import android.view.View;
 import android.widget.Button;
 import android.widget.LinearLayout;
-import android.widget.TextView;
 import android.widget.Toast;
 
 import org.javarosa.form.api.FormEntryPrompt;
@@ -32,7 +31,6 @@ import org.odk.collect.android.R;
 import org.odk.collect.android.activities.DrawActivity;
 import org.odk.collect.android.application.Collect;
 import org.odk.collect.android.utilities.FileUtils;
-import org.odk.collect.android.utilities.ViewIds;
 
 import java.io.File;
 
@@ -49,10 +47,6 @@ public class SignatureWidget extends BaseImageWidget {
 
     public SignatureWidget(Context context, FormEntryPrompt prompt) {
         super(context, prompt);
-
-        errorTextView = new TextView(context);
-        errorTextView.setId(ViewIds.generateViewId());
-        errorTextView.setText(R.string.selected_invalid_image);
 
         signButton = getSimpleButton(getContext().getString(R.string.sign_button));
         signButton.setEnabled(!prompt.isReadOnly());

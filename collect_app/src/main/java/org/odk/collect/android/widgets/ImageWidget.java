@@ -25,7 +25,6 @@ import android.util.DisplayMetrics;
 import android.view.View;
 import android.widget.Button;
 import android.widget.LinearLayout;
-import android.widget.TextView;
 import android.widget.Toast;
 
 import org.javarosa.form.api.FormEntryPrompt;
@@ -35,7 +34,6 @@ import org.odk.collect.android.activities.CaptureSelfieActivityNewApi;
 import org.odk.collect.android.application.Collect;
 import org.odk.collect.android.utilities.FileUtils;
 import org.odk.collect.android.utilities.MediaUtils;
-import org.odk.collect.android.utilities.ViewIds;
 
 import java.io.File;
 
@@ -59,10 +57,6 @@ public class ImageWidget extends BaseImageWidget {
     public ImageWidget(Context context, final FormEntryPrompt prompt, final boolean selfie) {
         super(context, prompt);
         this.selfie = selfie;
-
-        errorTextView = new TextView(context);
-        errorTextView.setId(ViewIds.generateViewId());
-        errorTextView.setText(R.string.selected_invalid_image);
 
         captureButton = getSimpleButton(getContext().getString(R.string.capture_image), R.id.capture_image);
         captureButton.setEnabled(!prompt.isReadOnly());
