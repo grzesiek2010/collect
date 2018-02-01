@@ -24,12 +24,10 @@ import android.content.Intent;
 import android.graphics.Bitmap;
 import android.net.Uri;
 import android.provider.MediaStore.Images;
-import android.support.annotation.Nullable;
 import android.util.DisplayMetrics;
 import android.view.View;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.Button;
-import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -42,7 +40,6 @@ import org.odk.collect.android.application.Collect;
 import org.odk.collect.android.utilities.FileUtils;
 import org.odk.collect.android.utilities.MediaUtils;
 import org.odk.collect.android.utilities.ViewIds;
-import org.odk.collect.android.widgets.interfaces.BaseImageWidget;
 
 import java.io.File;
 
@@ -61,7 +58,7 @@ import static org.odk.collect.android.utilities.ApplicationConstants.RequestCode
  * @author Mitchell Tyler Lee
  */
 @SuppressLint("ViewConstructor")
-public class AlignedImageWidget extends AbstractImageWidget implements BaseImageWidget {
+public class AlignedImageWidget extends BaseImageWidget {
     private static final String ODK_CAMERA_TAKE_PICTURE_INTENT_COMPONENT =
             "org.opendatakit.camera.TakePicture";
 
@@ -167,18 +164,6 @@ public class AlignedImageWidget extends AbstractImageWidget implements BaseImage
                         Toast.LENGTH_SHORT).show();
             }
         }
-    }
-
-    @Override
-    public void deleteFile() {
-        // get the file path and delete the file
-        String name = binaryName;
-        // clean up variables
-        binaryName = null;
-        // delete from media provider
-        int del = MediaUtils.deleteImageFileFromMediaProvider(
-                instanceFolder + File.separator + name);
-        Timber.i("Deleted %d rows from media content provider", del);
     }
 
     @Override

@@ -22,14 +22,34 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import org.javarosa.form.api.FormEntryPrompt;
+import org.odk.collect.android.utilities.MediaUtils;
+import org.odk.collect.android.widgets.interfaces.FileWidget;
 
-public abstract class AbstractImageWidget extends QuestionWidget {
+import java.io.File;
+
+import timber.log.Timber;
+
+public abstract class BaseImageWidget extends QuestionWidget implements FileWidget {
     @Nullable
     protected ImageView imageView;
     protected String binaryName;
     protected TextView errorTextView;
 
-    public AbstractImageWidget(Context context, FormEntryPrompt prompt) {
+    public BaseImageWidget(Context context, FormEntryPrompt prompt) {
         super(context, prompt);
     }
+
+    @Override
+    public void deleteFile() {
+        // get the file path and delete the file
+        String name = binaryName;
+        // clean up variables
+        binaryName = null;
+        // delete from media provider
+        int del = MediaUtils.deleteImageFileFromMediaProvider(
+                getInstanceFolder() + File.separator + name);
+        Timber.i("Deleted %d rows from media content provider", del);
+    }
+
+    protected abstract void onImageClick();
 }
