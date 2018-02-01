@@ -181,15 +181,6 @@ public class AlignedImageWidget extends BaseImageWidget {
     }
 
     @Override
-    public IAnswerData getAnswer() {
-        if (binaryName != null) {
-            return new StringData(binaryName);
-        } else {
-            return null;
-        }
-    }
-
-    @Override
     public void setBinaryData(Object newImageObj) {
         // you are replacing an answer. delete the previous image using the
         // content provider.
