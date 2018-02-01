@@ -51,9 +51,6 @@ public class SignatureWidget extends BaseImageWidget {
         signButton = getSimpleButton(getContext().getString(R.string.sign_button));
         signButton.setEnabled(!prompt.isReadOnly());
 
-        // finish complex layout
-        LinearLayout answerLayout = new LinearLayout(getContext());
-        answerLayout.setOrientation(LinearLayout.VERTICAL);
         answerLayout.addView(signButton);
         answerLayout.addView(errorTextView);
 

@@ -75,10 +75,6 @@ public class AnnotateWidget extends BaseImageWidget {
             }
         });
 
-        // finish complex layout
-        LinearLayout answerLayout = new LinearLayout(getContext());
-        answerLayout.setOrientation(LinearLayout.VERTICAL);
-
         answerLayout.addView(captureButton);
         answerLayout.addView(chooseButton);
         answerLayout.addView(annotateButton);

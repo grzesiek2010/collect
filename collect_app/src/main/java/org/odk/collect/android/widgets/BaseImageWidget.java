@@ -24,6 +24,7 @@ import android.support.annotation.Nullable;
 import android.view.View;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import org.javarosa.core.model.data.IAnswerData;
@@ -43,6 +44,7 @@ public abstract class BaseImageWidget extends QuestionWidget implements FileWidg
     protected ImageView imageView;
     protected String binaryName;
     protected TextView errorTextView;
+    protected LinearLayout answerLayout;
 
     public BaseImageWidget(Context context, FormEntryPrompt prompt) {
         super(context, prompt);
@@ -50,6 +52,9 @@ public abstract class BaseImageWidget extends QuestionWidget implements FileWidg
         errorTextView = new TextView(context);
         errorTextView.setId(ViewIds.generateViewId());
         errorTextView.setText(R.string.selected_invalid_image);
+
+        answerLayout = new LinearLayout(getContext());
+        answerLayout.setOrientation(LinearLayout.VERTICAL);
     }
 
     @Override

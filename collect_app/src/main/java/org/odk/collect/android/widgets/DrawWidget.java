@@ -53,9 +53,6 @@ public class DrawWidget extends BaseImageWidget {
         drawButton = getSimpleButton(getContext().getString(R.string.draw_image));
         drawButton.setEnabled(!prompt.isReadOnly());
 
-        // finish complex layout
-        LinearLayout answerLayout = new LinearLayout(getContext());
-        answerLayout.setOrientation(LinearLayout.VERTICAL);
         answerLayout.addView(drawButton);
         answerLayout.addView(errorTextView);
 
