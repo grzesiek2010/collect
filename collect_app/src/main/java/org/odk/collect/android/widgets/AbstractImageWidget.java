@@ -19,6 +19,7 @@ package org.odk.collect.android.widgets;
 import android.content.Context;
 import android.support.annotation.Nullable;
 import android.widget.ImageView;
+import android.widget.TextView;
 
 import org.javarosa.form.api.FormEntryPrompt;
 
@@ -26,6 +27,7 @@ public abstract class AbstractImageWidget extends QuestionWidget {
     @Nullable
     protected ImageView imageView;
     protected String binaryName;
+    protected TextView errorTextView;
 
     public AbstractImageWidget(Context context, FormEntryPrompt prompt) {
         super(context, prompt);

@@ -58,8 +58,6 @@ public class SignatureWidget extends AbstractImageWidget implements BaseImageWid
 
     private Button signButton;
 
-    private TextView errorTextView;
-
     public SignatureWidget(Context context, FormEntryPrompt prompt) {
         super(context, prompt);
 

@@ -64,8 +64,6 @@ public class AnnotateWidget extends AbstractImageWidget implements BaseImageWidg
     private Button chooseButton;
     private Button annotateButton;
 
-    private TextView errorTextView;
-
     private int screenOrientation;
 
     public AnnotateWidget(Context context, FormEntryPrompt prompt) {

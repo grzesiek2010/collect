@@ -62,8 +62,6 @@ public class ImageWidget extends AbstractImageWidget implements BaseImageWidget 
     private Button captureButton;
     private Button chooseButton;
 
-    private TextView errorTextView;
-
     private boolean selfie;
 
     public ImageWidget(Context context, final FormEntryPrompt prompt, final boolean selfie) {

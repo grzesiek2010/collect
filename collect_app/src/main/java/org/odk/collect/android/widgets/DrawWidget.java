@@ -60,8 +60,6 @@ public class DrawWidget extends AbstractImageWidget implements BaseImageWidget {
 
     private Button drawButton;
 
-    private TextView errorTextView;
-
     public DrawWidget(Context context, FormEntryPrompt prompt) {
         super(context, prompt);
 

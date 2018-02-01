@@ -77,9 +77,7 @@ public class AlignedImageWidget extends AbstractImageWidget implements BaseImage
     private Button chooseButton;
 
     private String instanceFolder;
-
-    private TextView errorTextView;
-
+    
     private int[] iarray = new int[6];
 
     public AlignedImageWidget(Context context, FormEntryPrompt prompt) {
