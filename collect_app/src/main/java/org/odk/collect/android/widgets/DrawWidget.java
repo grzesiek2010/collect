@@ -147,9 +147,7 @@ public class DrawWidget extends BaseImageWidget {
     @Override
     public void setOnLongClickListener(OnLongClickListener l) {
         drawButton.setOnLongClickListener(l);
-        if (imageView != null) {
-            imageView.setOnLongClickListener(l);
-        }
+        super.setOnLongClickListener(l);
     }
 
     @Override

@@ -142,9 +142,7 @@ public class SignatureWidget extends BaseImageWidget {
     @Override
     public void setOnLongClickListener(OnLongClickListener l) {
         signButton.setOnLongClickListener(l);
-        if (imageView != null) {
-            imageView.setOnLongClickListener(l);
-        }
+        super.setOnLongClickListener(l);
     }
 
     @Override

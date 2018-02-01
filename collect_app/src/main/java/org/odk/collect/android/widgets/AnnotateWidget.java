@@ -185,9 +185,7 @@ public class AnnotateWidget extends BaseImageWidget {
         captureButton.setOnLongClickListener(l);
         chooseButton.setOnLongClickListener(l);
         annotateButton.setOnLongClickListener(l);
-        if (imageView != null) {
-            imageView.setOnLongClickListener(l);
-        }
+        super.setOnLongClickListener(l);
     }
 
     @Override

@@ -177,9 +177,7 @@ public class AlignedImageWidget extends BaseImageWidget {
     public void setOnLongClickListener(OnLongClickListener l) {
         captureButton.setOnLongClickListener(l);
         chooseButton.setOnLongClickListener(l);
-        if (imageView != null) {
-            imageView.setOnLongClickListener(l);
-        }
+        super.setOnLongClickListener(l);
     }
 
     @Override

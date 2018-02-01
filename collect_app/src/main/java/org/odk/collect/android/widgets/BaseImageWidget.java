@@ -121,5 +121,12 @@ public abstract class BaseImageWidget extends QuestionWidget implements FileWidg
         inputManager.hideSoftInputFromWindow(this.getWindowToken(), 0);
     }
 
+    @Override
+    public void setOnLongClickListener(OnLongClickListener l) {
+        if (imageView != null) {
+            imageView.setOnLongClickListener(l);
+        }
+    }
+
     protected abstract void onImageClick();
 }
