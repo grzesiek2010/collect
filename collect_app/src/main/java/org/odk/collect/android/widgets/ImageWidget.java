@@ -62,8 +62,6 @@ public class ImageWidget extends AbstractImageWidget implements BaseImageWidget 
     private Button captureButton;
     private Button chooseButton;
 
-    private String binaryName;
-
     private TextView errorTextView;
 
     private boolean selfie;

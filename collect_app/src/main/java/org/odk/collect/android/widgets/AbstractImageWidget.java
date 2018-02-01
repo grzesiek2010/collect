@@ -25,6 +25,7 @@ import org.javarosa.form.api.FormEntryPrompt;
 public abstract class AbstractImageWidget extends QuestionWidget {
     @Nullable
     protected ImageView imageView;
+    protected String binaryName;
 
     public AbstractImageWidget(Context context, FormEntryPrompt prompt) {
         super(context, prompt);

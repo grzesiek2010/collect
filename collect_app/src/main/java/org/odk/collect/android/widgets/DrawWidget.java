@@ -59,7 +59,6 @@ import static org.odk.collect.android.utilities.ApplicationConstants.RequestCode
 public class DrawWidget extends AbstractImageWidget implements BaseImageWidget {
 
     private Button drawButton;
-    private String binaryName;
 
     private TextView errorTextView;
 

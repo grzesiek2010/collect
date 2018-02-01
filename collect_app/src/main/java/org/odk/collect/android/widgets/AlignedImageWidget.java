@@ -76,8 +76,6 @@ public class AlignedImageWidget extends AbstractImageWidget implements BaseImage
     private Button captureButton;
     private Button chooseButton;
 
-    private String binaryName;
-
     private String instanceFolder;
 
     private TextView errorTextView;
