@@ -6,6 +6,7 @@ import android.os.Build;
 import org.joda.time.DateTime;
 import org.joda.time.DateTimeZone;
 import org.joda.time.LocalDateTime;
+import org.joda.time.chrono.BuddhistChronology;
 import org.joda.time.chrono.CopticChronology;
 import org.joda.time.chrono.EthiopicChronology;
 import org.joda.time.chrono.IslamicChronology;
@@ -50,9 +51,12 @@ public class DateTimeUtils {
         } else if (datePickerDetails.isCopticType()) {
             customDate = new DateTime(date).withChronology(CopticChronology.getInstance());
             monthArray = context.getResources().getStringArray(R.array.coptic_months);
-        } else {
+        } else if (datePickerDetails.isIslamicType()) {
             customDate = new DateTime(date).withChronology(IslamicChronology.getInstance());
             monthArray = context.getResources().getStringArray(R.array.islamic_months);
+        } else {
+            customDate = new DateTime(date).withChronology(BuddhistChronology.getInstance());
+            monthArray = context.getResources().getStringArray(R.array.buddhist_months);
         }
 
         String day = datePickerDetails.isSpinnerMode() ? customDate.getDayOfMonth() + " " : "";
@@ -107,6 +111,9 @@ public class DateTimeUtils {
                 datePickerMode = DatePickerDetails.DatePickerMode.SPINNERS;
             } else if (appearance.contains("islamic")) {
                 datePickerType = DatePickerDetails.DatePickerType.ISLAMIC;
+                datePickerMode = DatePickerDetails.DatePickerMode.SPINNERS;
+            } else if (appearance.contains("buddhist")) {
+                datePickerType = DatePickerDetails.DatePickerType.BUDDHIST;
                 datePickerMode = DatePickerDetails.DatePickerMode.SPINNERS;
             } else if (appearance.contains("no-calendar")) {
                 datePickerMode = DatePickerDetails.DatePickerMode.SPINNERS;

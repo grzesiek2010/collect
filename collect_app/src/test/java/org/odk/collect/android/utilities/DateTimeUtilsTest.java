@@ -47,6 +47,9 @@ public class DateTimeUtilsTest {
     private DatePickerDetails islamic;
     private DatePickerDetails islamicMonthYear;
     private DatePickerDetails islamicYear;
+    private DatePickerDetails buddhist;
+    private DatePickerDetails buddhistMonthYear;
+    private DatePickerDetails buddhistYear;
 
     @Before
     public void setUp() {
@@ -63,6 +66,9 @@ public class DateTimeUtilsTest {
         islamic = new DatePickerDetails(DatePickerDetails.DatePickerType.ISLAMIC, DatePickerDetails.DatePickerMode.SPINNERS);
         islamicMonthYear = new DatePickerDetails(DatePickerDetails.DatePickerType.ISLAMIC, DatePickerDetails.DatePickerMode.MONTH_YEAR);
         islamicYear = new DatePickerDetails(DatePickerDetails.DatePickerType.ISLAMIC, DatePickerDetails.DatePickerMode.YEAR);
+        buddhist = new DatePickerDetails(DatePickerDetails.DatePickerType.BUDDHIST, DatePickerDetails.DatePickerMode.SPINNERS);
+        buddhistMonthYear = new DatePickerDetails(DatePickerDetails.DatePickerType.BUDDHIST, DatePickerDetails.DatePickerMode.MONTH_YEAR);
+        buddhistYear = new DatePickerDetails(DatePickerDetails.DatePickerType.BUDDHIST, DatePickerDetails.DatePickerMode.YEAR);
     }
 
     @Test
@@ -128,5 +134,16 @@ public class DateTimeUtilsTest {
         assertEquals(islamicYear, DateTimeUtils.getDatePickerDetails(appearance));
         appearance = "year islamic";
         assertEquals(islamicYear, DateTimeUtils.getDatePickerDetails(appearance));
+
+        appearance = "buddhist";
+        assertEquals(buddhist, DateTimeUtils.getDatePickerDetails(appearance));
+        appearance = "Buddhist month-year";
+        assertEquals(buddhistMonthYear, DateTimeUtils.getDatePickerDetails(appearance));
+        appearance = "month-year buddhist";
+        assertEquals(buddhistMonthYear, DateTimeUtils.getDatePickerDetails(appearance));
+        appearance = "Buddhist year";
+        assertEquals(buddhistYear, DateTimeUtils.getDatePickerDetails(appearance));
+        appearance = "year buddhist";
+        assertEquals(buddhistYear, DateTimeUtils.getDatePickerDetails(appearance));
     }
 }
