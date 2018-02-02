@@ -67,7 +67,7 @@ public class AlignedImageWidget extends BaseImageWidget {
 
     private String instanceFolder;
     
-    private int[] iarray = new int[6];
+    private int[] iarray;
 
     public AlignedImageWidget(Context context, FormEntryPrompt prompt) {
         super(context, prompt);
@@ -103,6 +103,7 @@ public class AlignedImageWidget extends BaseImageWidget {
         if (splits.length != 6) {
             Timber.w("Only have %d alignment values", splits.length);
         }
+        iarray = new int[6];
         for (int i = 0; i < 6; ++i) {
             if (splits.length <= i) {
                 iarray[i] = 0;
