@@ -220,60 +220,31 @@ public class VideoWidget extends QuestionWidget implements FileWidget {
     }
 
     @Override
-    public void setBinaryData(Object binaryuri) {
-        if (binaryuri == null || !(binaryuri instanceof Uri)) {
-            Timber.w("AudioWidget's setBinaryData must receive a Uri object.");
-            return;
-        }
+    public void setBinaryData(Object newFile) {
 
-        // get the file path and create a copy in the instance folder
-        Uri uri = (Uri) binaryuri;
+        File file = (File) newFile;
 
-        String sourcePath = getSourcePathFromUri(uri);
-        String destinationPath = getDestinationPathFromSourcePath(sourcePath);
-
-        File source = fileUtil.getFileAtPath(sourcePath);
-        File newVideo = fileUtil.getFileAtPath(destinationPath);
-
-        fileUtil.copyFile(source, newVideo);
-
-        if (newVideo.exists()) {
-            // Add the copy to the content provier
-            ContentValues values = new ContentValues(6);
-            values.put(Video.Media.TITLE, newVideo.getName());
-            values.put(Video.Media.DISPLAY_NAME, newVideo.getName());
-            values.put(Video.Media.DATE_ADDED, System.currentTimeMillis());
-            values.put(Video.Media.DATA, newVideo.getAbsolutePath());
-
+        if (file.exists()) {
             MediaManager
                     .INSTANCE
-                    .replaceRecentFileForQuestion(getFormEntryPrompt().getIndex().toString(), newVideo.getAbsolutePath());
-
-            Uri videoURI = getContext().getContentResolver().insert(
-                    Video.Media.EXTERNAL_CONTENT_URI, values);
-
-            if (videoURI != null) {
-                Timber.i("Inserting VIDEO returned uri = %s", videoURI.toString());
-            }
-
+                    .replaceRecentFileForQuestion(getFormEntryPrompt().getIndex().toString(), file.getAbsolutePath());
         } else {
             Timber.e("Inserting Video file FAILED");
         }
         // you are replacing an answer. remove the media.
-        if (binaryName != null && !binaryName.equals(newVideo.getName())) {
+        if (binaryName != null && !binaryName.equals(file.getName())) {
             deleteFile();
         }
 
-        binaryName = newVideo.getName();
+        binaryName = file.getName();
 
         // Need to have this ugly code to account for
         // a bug in the Nexus 7 on 4.3 not returning the mediaUri in the data
         // of the intent - uri in this case is a file
         if (NEXUS7.equals(MODEL) && Build.VERSION.SDK_INT == 18) {
-            File fileToDelete = new File(uri.getPath());
-            int delCount = fileToDelete.delete() ? 1 : 0;
+            int delCount = file.delete() ? 1 : 0;
 
-            Timber.i("Deleting original capture of file: %s count: %d", uri.toString(), delCount);
+            Timber.i("Deleting original capture of file: %s count: %d", file.getPath(), delCount);
         }
     }
 

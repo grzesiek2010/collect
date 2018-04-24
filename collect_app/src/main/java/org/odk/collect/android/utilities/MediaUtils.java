@@ -28,6 +28,7 @@ import android.provider.MediaStore;
 import android.provider.MediaStore.Audio;
 import android.provider.MediaStore.Images;
 import android.provider.MediaStore.Video;
+import android.provider.OpenableColumns;
 
 import org.apache.commons.io.IOUtils;
 import org.odk.collect.android.application.Collect;
@@ -618,8 +619,7 @@ public class MediaUtils {
      * @return Whether the Uri authority is Google Drive.
      */
     public static boolean isGoogleDriveDocument(Uri uri) {
-        return "com.google.android.apps.docs.storage".equals(uri.getAuthority())
-                || uri.getAuthority().startsWith("com.google.android.apps.photos.content");
+        return uri.getAuthority().startsWith("com.google.android.apps");
     }
 
     /**
@@ -653,6 +653,23 @@ public class MediaUtils {
                 cursor.close();
             }
         }
+        return null;
+    }
+
+    public static String getFileNameFromUri(Uri uri) {
+        Cursor cursor = Collect.getInstance().getContentResolver()
+                .query(uri, null, null, null, null, null);
+
+        try {
+            if (cursor != null && cursor.moveToFirst()) {
+                return cursor.getString(cursor.getColumnIndex(OpenableColumns.DISPLAY_NAME));
+            }
+        } finally {
+            if (cursor != null) {
+                cursor.close();
+            }
+        }
+
         return null;
     }
 }

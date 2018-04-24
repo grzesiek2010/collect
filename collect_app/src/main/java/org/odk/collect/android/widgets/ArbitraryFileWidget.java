@@ -33,10 +33,13 @@ import org.javarosa.core.model.data.StringData;
 import org.javarosa.form.api.FormEntryPrompt;
 import org.odk.collect.android.R;
 import org.odk.collect.android.activities.FormEntryActivity;
+import org.odk.collect.android.application.Collect;
+import org.odk.collect.android.exception.GDriveConnectionException;
 import org.odk.collect.android.utilities.ApplicationConstants;
 import org.odk.collect.android.utilities.FileUtil;
 import org.odk.collect.android.utilities.MediaManager;
 import org.odk.collect.android.utilities.MediaUtil;
+import org.odk.collect.android.utilities.MediaUtils;
 import org.odk.collect.android.widgets.interfaces.FileWidget;
 
 import java.io.File;
@@ -102,11 +105,15 @@ public class ArbitraryFileWidget extends QuestionWidget implements FileWidget {
 
         Uri uri = (Uri) binaryuri;
 
-        // get the file path and create a copy in the instance folder
-        String sourcePath = getSourcePathFromUri(uri);
-        String destinationPath = getDestinationPathFromSourcePath(sourcePath);
+        String destinationPath = Collect.getInstance().getFormController().getInstanceFile().getParent() + File.separator + MediaUtils.getFileNameFromUri(uri);
 
-        File source = fileUtil.getFileAtPath(sourcePath);
+        File source = null;
+        try {
+            source = MediaUtils.getFileFromUri(getContext(), uri, MediaStore.Files.FileColumns.DATA);
+        } catch (GDriveConnectionException e) {
+            e.printStackTrace();
+        }
+        ;
         File newFile = fileUtil.getFileAtPath(destinationPath);
 
         fileUtil.copyFile(source, newFile);

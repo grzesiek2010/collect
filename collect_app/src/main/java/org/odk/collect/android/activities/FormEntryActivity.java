@@ -711,17 +711,12 @@ public class FormEntryActivity extends AppCompatActivity implements AnimationLis
                 }
                 saveAnswersForCurrentScreen(DO_NOT_EVALUATE_CONSTRAINTS);
                 break;
+            case RequestCodes.ARBITRARY_FILE_CHOOSER:
+            case RequestCodes.AUDIO_CHOOSER:
+            case RequestCodes.VIDEO_CHOOSER:
             case RequestCodes.IMAGE_CHOOSER:
-                /*
-                 * We have a saved image somewhere, but we really want it to be in:
-                 * /sdcard/odk/instances/[current instnace]/something.jpg so we move
-                 * it there before inserting it into the content provider. Once the
-                 * android image capture bug gets fixed, (read, we move on from
-                 * Android 1.6) we want to handle images the audio and video
-                 */
-
                 showDialog(SAVING_IMAGE_DIALOG);
-                Runnable runnable = () -> saveChosenImage(intent.getData());
+                Runnable runnable = () -> saveChosenFile(intent.getData(), requestCode);
                 new Thread(runnable).start();
 
                 break;
@@ -740,11 +735,6 @@ public class FormEntryActivity extends AppCompatActivity implements AnimationLis
                 }
                 break;
 
-            case RequestCodes.ARBITRARY_FILE_CHOOSER:
-            case RequestCodes.AUDIO_CHOOSER:
-            case RequestCodes.VIDEO_CHOOSER:
-                saveFileAnswer(intent.getData());
-                break;
             case RequestCodes.LOCATION_CAPTURE:
                 String sl = intent.getStringExtra(LOCATION_RESULT);
                 if (getCurrentViewIfODKView() != null) {
@@ -782,22 +772,24 @@ public class FormEntryActivity extends AppCompatActivity implements AnimationLis
         refreshCurrentView();
     }
 
-    private void saveChosenImage(Uri selectedImage) {
+    private void saveChosenFile(Uri selectedImage, int requestCode) {
         // Copy file to sdcard
-        String instanceFolder1 = getFormController().getInstanceFile().getParent();
-        String destImagePath = instanceFolder1 + File.separator + System.currentTimeMillis() + ".jpg";
+        String instanceFolder = getFormController().getInstanceFile().getParent();
+        String destImagePath = instanceFolder + File.separator + MediaUtils.getFileNameFromUri(selectedImage);
 
-        File chosenImage;
+        File chosenFile;
         try {
-            chosenImage = MediaUtils.getFileFromUri(this, selectedImage, Images.Media.DATA);
-            if (chosenImage != null) {
-                final File newImage = new File(destImagePath);
-                FileUtils.copyFile(chosenImage, newImage);
-                ImageConverter.execute(newImage.getPath(), getWidgetWaitingForBinaryData(), this);
+            chosenFile = MediaUtils.getFileFromUri(this, selectedImage, Images.Media.DATA);
+            if (chosenFile != null) {
+                final File newFile = new File(destImagePath);
+                FileUtils.copyFile(chosenFile, newFile);
+                if (requestCode == RequestCodes.IMAGE_CHOOSER) {
+                    ImageConverter.execute(newFile.getPath(), getWidgetWaitingForBinaryData(), this);
+                }
                 runOnUiThread(() -> {
                     dismissDialog(SAVING_IMAGE_DIALOG);
                     if (getCurrentViewIfODKView() != null) {
-                        getCurrentViewIfODKView().setBinaryData(newImage);
+                        getCurrentViewIfODKView().setBinaryData(newFile);
                     }
                     saveAnswersForCurrentScreen(DO_NOT_EVALUATE_CONSTRAINTS);
                     refreshCurrentView();

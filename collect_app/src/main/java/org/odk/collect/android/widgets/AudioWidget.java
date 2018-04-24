@@ -135,49 +135,21 @@ public class AudioWidget extends QuestionWidget implements FileWidget {
     }
 
     @Override
-    public void setBinaryData(Object binaryuri) {
-        if (binaryuri == null || !(binaryuri instanceof Uri)) {
-            Timber.w("AudioWidget's setBinaryData must receive a Uri object.");
-            return;
-        }
+    public void setBinaryData(Object newFile) {
+        File file = (File) newFile;
 
-        Uri uri = (Uri) binaryuri;
-
-        // get the file path and create a copy in the instance folder
-        String sourcePath = getSourcePathFromUri(uri);
-        String destinationPath = getDestinationPathFromSourcePath(sourcePath);
-
-        File source = fileUtil.getFileAtPath(sourcePath);
-        File newAudio = fileUtil.getFileAtPath(destinationPath);
-
-        fileUtil.copyFile(source, newAudio);
-
-        if (newAudio.exists()) {
-            // Add the copy to the content provier
-            ContentValues values = new ContentValues(6);
-            values.put(Audio.Media.TITLE, newAudio.getName());
-            values.put(Audio.Media.DISPLAY_NAME, newAudio.getName());
-            values.put(Audio.Media.DATE_ADDED, System.currentTimeMillis());
-            values.put(Audio.Media.DATA, newAudio.getAbsolutePath());
-
+        if (file.exists()) {
             MediaManager
                     .INSTANCE
-                    .replaceRecentFileForQuestion(getFormEntryPrompt().getIndex().toString(), newAudio.getAbsolutePath());
-
-            Uri audioURI = getContext().getContentResolver().insert(
-                    Audio.Media.EXTERNAL_CONTENT_URI, values);
-
-            if (audioURI != null) {
-                Timber.i("Inserting AUDIO returned uri = %s", audioURI.toString());
-            }
+                    .replaceRecentFileForQuestion(getFormEntryPrompt().getIndex().toString(), file.getAbsolutePath());
 
             // when replacing an answer. remove the current media.
-            if (binaryName != null && !binaryName.equals(newAudio.getName())) {
+            if (binaryName != null && !binaryName.equals(file.getName())) {
                 deleteFile();
             }
 
-            binaryName = newAudio.getName();
-            Timber.i("Setting current answer to %s", newAudio.getName());
+            binaryName = file.getName();
+            Timber.i("Setting current answer to %s", file.getName());
         } else {
             Timber.e("Inserting Audio file FAILED");
         }
