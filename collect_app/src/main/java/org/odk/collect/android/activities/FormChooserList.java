@@ -245,7 +245,7 @@ public class FormChooserList extends FormListActivity implements
     @Override
     public void onLoadFinished(@NonNull Loader<Cursor> loader, Cursor cursor) {
         hideProgressBarIfAllowed();
-        listAdapter.changeCursor(FormUtils.hideOldForms(cursor));
+        listAdapter.changeCursor(FormUtils.removeOldForms(cursor));
     }
 
     @Override

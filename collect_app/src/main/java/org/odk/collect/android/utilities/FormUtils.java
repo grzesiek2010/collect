@@ -36,7 +36,7 @@ public class FormUtils {
      * Keep only newest form versions, that means if you have more than one form with given formId
      * and version number, only the newest one should be displayed.
      */
-    public static Cursor hideOldForms(Cursor cursor) {
+    public static Cursor removeOldForms(Cursor cursor) {
         List<Form> forms = new FormsDao().getFormsFromCursor(cursor);
 
         MatrixCursor filteredCursor = new MatrixCursor(
@@ -50,7 +50,7 @@ public class FormUtils {
         );
 
         for (Form form : forms) {
-            if (newestFormVersion(forms, form)) {
+            if (isThisFormTheNewestOne(forms, form)) {
                 filteredCursor.addRow(new Object[] {
                         form.getId(),
                         form.getDisplayName(),
@@ -65,7 +65,7 @@ public class FormUtils {
         return filteredCursor;
     }
 
-    private static boolean newestFormVersion(List<Form> forms, Form formForChecking) {
+    private static boolean isThisFormTheNewestOne(List<Form> forms, Form formForChecking) {
         for (Form form : forms) {
             if (form.getJrFormId().equals(formForChecking.getJrFormId()) && !form.equals(formForChecking)) {
                 if (getFormVersion(form) > getFormVersion(formForChecking)

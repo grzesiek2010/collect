@@ -41,14 +41,14 @@ public class FormUtilsTest {
      * we should get only the newest one (by {@value org.odk.collect.android.provider.FormsProviderAPI.FormsColumns#DATE}).
      */
     @Test
-    public void hideOldFormsTest1() {
+    public void removeOldFormsTest1() {
         MatrixCursor cursor = getCursor();
         cursor.addRow(new Object[] {1, "Form1", null, "form1", null, null, null, null, null, null, 1526367600000L, null, null, null, null, null, null});
         cursor.addRow(new Object[] {2, "Form1", null, "form1", null, null, null, null, null, null, 1526371200000L, null, null, null, null, null, null});
         cursor.addRow(new Object[] {3, "Form1", null, "form1", null, null, null, null, null, null, 1526368200000L, null, null, null, null, null, null});
         cursor.addRow(new Object[] {4, "Form2", null, "form2", null, null, null, null, null, null, 1526375400000L, null, null, null, null, null, null});
 
-        Cursor filteredCursor = FormUtils.hideOldForms(cursor);
+        Cursor filteredCursor = FormUtils.removeOldForms(cursor);
 
         assertNotNull(filteredCursor);
         assertEquals(2, filteredCursor.getCount());
@@ -66,14 +66,14 @@ public class FormUtilsTest {
      * we should get only the one with the highest {@value org.odk.collect.android.provider.FormsProviderAPI.FormsColumns#JR_VERSION}.
      */
     @Test
-    public void hideOldFormsTest2() {
+    public void removeOldFormsTest2() {
         MatrixCursor cursor = getCursor();
         cursor.addRow(new Object[] {1, "Form1", null, "form1", 3, null, null, null, null, null, 1526367600000L, null, null, null, null, null, null});
         cursor.addRow(new Object[] {2, "Form1", null, "form1", 2, null, null, null, null, null, 1526371200000L, null, null, null, null, null, null});
         cursor.addRow(new Object[] {3, "Form1", null, "form1", 1, null, null, null, null, null, 1526368200000L, null, null, null, null, null, null});
         cursor.addRow(new Object[] {4, "Form2", null, "form2", 1, null, null, null, null, null, 1526375400000L, null, null, null, null, null, null});
 
-        Cursor filteredCursor = FormUtils.hideOldForms(cursor);
+        Cursor filteredCursor = FormUtils.removeOldForms(cursor);
 
         assertNotNull(filteredCursor);
         assertEquals(2, filteredCursor.getCount());
@@ -93,14 +93,14 @@ public class FormUtilsTest {
      * is treated as "-1" value.
      */
     @Test
-    public void hideOldFormsTest3() {
+    public void removeOldFormsTest3() {
         MatrixCursor cursor = getCursor();
         cursor.addRow(new Object[] {1, "Form1", null, "form1", null, null, null, null, null, null, 1526367600000L, null, null, null, null, null, null});
         cursor.addRow(new Object[] {2, "Form1", null, "form1", null, null, null, null, null, null, 1526371200000L, null, null, null, null, null, null});
         cursor.addRow(new Object[] {3, "Form1", null, "form1", 1, null, null, null, null, null, 1526368200000L, null, null, null, null, null, null});
         cursor.addRow(new Object[] {4, "Form2", null, "form2", 1, null, null, null, null, null, 1526375400000L, null, null, null, null, null, null});
 
-        Cursor filteredCursor = FormUtils.hideOldForms(cursor);
+        Cursor filteredCursor = FormUtils.removeOldForms(cursor);
 
         assertNotNull(filteredCursor);
         assertEquals(2, filteredCursor.getCount());
