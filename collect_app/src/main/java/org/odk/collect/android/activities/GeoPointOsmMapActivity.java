@@ -22,7 +22,7 @@ import android.location.Location;
 import android.os.Bundle;
 import android.os.Handler;
 import android.provider.Settings;
-import android.support.v4.content.ContextCompat;
+import android.support.v7.content.res.AppCompatResources;
 import android.view.View;
 import android.view.Window;
 import android.widget.Button;
@@ -129,7 +129,7 @@ public class GeoPointOsmMapActivity extends CollectAbstractActivity implements L
         }
 
         marker = new Marker(map);
-        marker.setIcon(ContextCompat.getDrawable(getApplicationContext(), R.drawable.ic_place));
+        marker.setIcon(AppCompatResources.getDrawable(getApplicationContext(), R.drawable.ic_place));
         myLocationOverlay = new MyLocationNewOverlay(map);
 
         handler.postDelayed(new Runnable() {
@@ -485,7 +485,7 @@ public class GeoPointOsmMapActivity extends CollectAbstractActivity implements L
         showLocationButton.setEnabled(true);
         map.invalidate();
         marker.setPosition(geoPoint);
-        marker.setIcon(ContextCompat.getDrawable(getApplicationContext(), R.drawable.ic_place));
+        marker.setIcon(AppCompatResources.getDrawable(getApplicationContext(), R.drawable.ic_place));
         marker.setDraggable(true);
         latLng = geoPoint;
         isDragged = true;

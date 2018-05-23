@@ -15,8 +15,7 @@
 
 package org.odk.collect.android.activities;
 
-
-import android.support.v4.content.ContextCompat;
+import android.support.v7.content.res.AppCompatResources;
 import android.view.KeyEvent;
 import android.view.View;
 import android.widget.AdapterView;
@@ -53,7 +52,7 @@ public class EditFormHierarchyActivity extends FormHierarchyActivity {
                 for (int i = 0; i < children.size(); i++) {
                     formList.remove(position + 1);
                 }
-                h.setIcon(ContextCompat.getDrawable(getApplicationContext(), R.drawable.expander_ic_minimized));
+                h.setIcon(AppCompatResources.getDrawable(getApplicationContext(), R.drawable.expander_ic_minimized));
                 break;
             case COLLAPSED:
                 Collect.getInstance().getActivityLogger().logInstanceAction(this, "onListItemClick",
@@ -65,7 +64,7 @@ public class EditFormHierarchyActivity extends FormHierarchyActivity {
                     formList.add(position + 1 + i, children1.get(i));
 
                 }
-                h.setIcon(ContextCompat.getDrawable(getApplicationContext(), R.drawable.expander_ic_maximized));
+                h.setIcon(AppCompatResources.getDrawable(getApplicationContext(), R.drawable.expander_ic_maximized));
                 break;
             case QUESTION:
                 Collect.getInstance().getActivityLogger().logInstanceAction(this, "onListItemClick",

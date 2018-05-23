@@ -18,7 +18,7 @@ package org.odk.collect.android.adapters;
 
 import android.content.Context;
 import android.graphics.drawable.Drawable;
-import android.support.v4.content.ContextCompat;
+import android.support.v7.content.res.AppCompatResources;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -68,11 +68,11 @@ public class FileArrayAdapter extends ArrayAdapter<DriveListItem> {
             }
 
             if (item.getType() == DriveListItem.FILE) {
-                Drawable d = ContextCompat.getDrawable(getContext(), R.drawable.ic_file_download);
+                Drawable d = AppCompatResources.getDrawable(getContext(), R.drawable.ic_file_download);
                 imageView.setImageDrawable(d);
                 checkBox.setVisibility(View.VISIBLE);
             } else {
-                Drawable d = ContextCompat.getDrawable(getContext(), R.drawable.ic_folder);
+                Drawable d = AppCompatResources.getDrawable(getContext(), R.drawable.ic_folder);
                 imageView.setImageDrawable(d);
                 checkBox.setVisibility(View.GONE);
             }

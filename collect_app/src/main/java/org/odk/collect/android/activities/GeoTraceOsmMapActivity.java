@@ -25,7 +25,7 @@ import android.os.Bundle;
 import android.os.Handler;
 import android.os.Looper;
 import android.provider.Settings;
-import android.support.v4.content.ContextCompat;
+import android.support.v7.content.res.AppCompatResources;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -57,7 +57,6 @@ import java.util.concurrent.Executors;
 import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.ScheduledFuture;
 import java.util.concurrent.TimeUnit;
-
 
 public class GeoTraceOsmMapActivity extends CollectAbstractActivity implements IRegisterReceiver,
         LocationListener, LocationClient.LocationClientListener {
@@ -393,7 +392,7 @@ public class GeoTraceOsmMapActivity extends CollectAbstractActivity implements I
             marker.setOnMarkerClickListener(nullMarkerListener);
             marker.setDraggable(true);
             marker.setOnMarkerDragListener(dragListener);
-            marker.setIcon(ContextCompat.getDrawable(getApplicationContext(), R.drawable.ic_place));
+            marker.setIcon(AppCompatResources.getDrawable(getApplicationContext(), R.drawable.ic_place));
             marker.setAnchor(Marker.ANCHOR_CENTER, Marker.ANCHOR_BOTTOM);
             mapMarkers.add(marker);
             List<GeoPoint> points = polyline.getPoints();
@@ -639,7 +638,7 @@ public class GeoTraceOsmMapActivity extends CollectAbstractActivity implements I
             Float lastKnownAccuracy =
                     myLocationOverlay.getMyLocationProvider().getLastKnownLocation().getAccuracy();
             myLocationOverlay.getMyLocationProvider().getLastKnownLocation().getAccuracy();
-            marker.setIcon(ContextCompat.getDrawable(getApplicationContext(), R.drawable.ic_place));
+            marker.setIcon(AppCompatResources.getDrawable(getApplicationContext(), R.drawable.ic_place));
             marker.setSubDescription(Float.toString(lastKnownAccuracy));
             marker.setAnchor(Marker.ANCHOR_CENTER, Marker.ANCHOR_BOTTOM);
             marker.setDraggable(true);

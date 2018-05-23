@@ -17,7 +17,7 @@ package org.odk.collect.android.activities;
 import android.app.AlertDialog;
 import android.content.DialogInterface;
 import android.os.Bundle;
-import android.support.v4.content.ContextCompat;
+import android.support.v7.content.res.AppCompatResources;
 import android.support.v7.widget.Toolbar;
 import android.view.View;
 import android.view.View.OnClickListener;
@@ -338,7 +338,7 @@ public abstract class FormHierarchyActivity extends CollectAbstractActivity impl
                         if (fc.getMultiplicity() == 0) {
                             // Display the repeat header for the group.
                             HierarchyElement group =
-                                    new HierarchyElement(getLabel(fc), null, ContextCompat
+                                    new HierarchyElement(getLabel(fc), null, AppCompatResources
                                             .getDrawable(getApplicationContext(), R.drawable.expander_ic_minimized),
                                             COLLAPSED, fc.getIndex());
                             formList.add(group);
