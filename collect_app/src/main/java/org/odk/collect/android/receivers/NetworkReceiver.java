@@ -19,6 +19,7 @@ import org.odk.collect.android.dao.FormsDao;
 import org.odk.collect.android.dao.InstancesDao;
 import org.odk.collect.android.tasks.ServerPollingJob;
 import org.odk.collect.android.utilities.IconUtils;
+import org.odk.collect.android.utilities.InstanceUploderUtils;
 import org.odk.collect.android.utilities.gdrive.GoogleAccountsManager;
 import org.odk.collect.android.listeners.InstanceUploaderListener;
 import org.odk.collect.android.preferences.GeneralSharedPreferences;
@@ -31,6 +32,7 @@ import org.odk.collect.android.utilities.WebUtils;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Iterator;
+import java.util.Map;
 import java.util.Set;
 
 import static org.odk.collect.android.provider.FormsProviderAPI.FormsColumns.AUTO_SEND;
@@ -188,10 +190,10 @@ public class NetworkReceiver extends BroadcastReceiver implements InstanceUpload
         }
         running = false;
 
-        StringBuilder message = new StringBuilder();
+        String message;
 
         if (result == null) {
-            message.append(Collect.getInstance().getString(R.string.odk_auth_auth_fail));
+            message = Collect.getInstance().getString(R.string.odk_auth_auth_fail);
         } else {
             StringBuilder selection = new StringBuilder();
             Set<String> keys = result.keySet();
@@ -208,28 +210,7 @@ public class NetworkReceiver extends BroadcastReceiver implements InstanceUpload
                 }
             }
 
-            Cursor results = null;
-            try {
-                results = new InstancesDao().getInstancesCursor(selection.toString(), selectionArgs);
-                if (results.getCount() > 0) {
-                    results.moveToPosition(-1);
-                    while (results.moveToNext()) {
-                        String name = results.getString(results
-                                .getColumnIndex(InstanceColumns.DISPLAY_NAME));
-                        String id = results.getString(results
-                                .getColumnIndex(InstanceColumns._ID));
-                        message
-                                .append(name)
-                                .append(" - ")
-                                .append(result.get(id))
-                                .append("\n\n");
-                    }
-                }
-            } finally {
-                if (results != null) {
-                    results.close();
-                }
-            }
+            message = InstanceUploderUtils.getUploadResultMessage(new InstancesDao().getInstancesCursor(selection.toString(), selectionArgs), result);
         }
 
         Intent notifyIntent = new Intent(Collect.getInstance(), NotificationActivity.class);
@@ -244,12 +225,27 @@ public class NetworkReceiver extends BroadcastReceiver implements InstanceUpload
                 .setSmallIcon(IconUtils.getNotificationAppIcon())
                 .setContentTitle(Collect.getInstance().getString(R.string.odk_auto_note))
                 .setContentIntent(pendingNotify)
-                .setContentText(message.toString().trim())
+                .setContentText(getContentText(result))
                 .setAutoCancel(true);
 
         NotificationManager notificationManager = (NotificationManager) Collect.getInstance()
                 .getSystemService(Context.NOTIFICATION_SERVICE);
         notificationManager.notify(1328974928, builder.build());
+    }
+
+    private String getContentText(HashMap<String, String> result) {
+        return allFormsDownloadedSuccessfully(result)
+                ? Collect.getInstance().getString(R.string.success)
+                : Collect.getInstance().getString(R.string.failures);
+    }
+
+    private boolean allFormsDownloadedSuccessfully(HashMap<String, String> result) {
+        for (Map.Entry<String, String> item : result.entrySet()) {
+            if (!item.getValue().equals(Collect.getInstance().getString(R.string.success))) {
+                return false;
+            }
+        }
+        return true;
     }
 
     @Override
