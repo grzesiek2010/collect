@@ -12,6 +12,8 @@ import android.support.v7.app.AlertDialog;
 import com.karumi.dexter.Dexter;
 import com.karumi.dexter.MultiplePermissionsReport;
 import com.karumi.dexter.PermissionToken;
+import com.karumi.dexter.listener.PermissionDeniedResponse;
+import com.karumi.dexter.listener.PermissionGrantedResponse;
 import com.karumi.dexter.listener.PermissionRequest;
 import com.karumi.dexter.listener.multi.MultiplePermissionsListener;
 
@@ -88,36 +90,37 @@ public class PermissionUtils {
                 .check();
     }
 
-    public static void requestCameraPermissions(@NonNull Activity activity, @NonNull PermissionListener action) {
-        MultiplePermissionsListener multiplePermissionsListener = new MultiplePermissionsListener() {
+    public static void requestCameraPermission(@NonNull Activity activity, @NonNull PermissionListener action) {
+        com.karumi.dexter.listener.single.PermissionListener permissionListener = new com.karumi.dexter.listener.single.PermissionListener() {
             @Override
-            public void onPermissionsChecked(MultiplePermissionsReport report) {
-                if (report.areAllPermissionsGranted()) {
-                    action.granted();
-                } else {
-                    AlertDialog.Builder builder = new AlertDialog.Builder(activity, R.style.Theme_AppCompat_Light_Dialog);
-
-                    builder.setTitle(R.string.camera_runtime_permission_denied_title)
-                            .setMessage(R.string.camera_runtime_permission_denied_desc)
-                            .setPositiveButton(android.R.string.ok, (dialogInterface, i) -> {
-                                action.denied();
-                            })
-                            .setCancelable(false)
-                            .setIcon(R.drawable.ic_photo_camera)
-                            .show();
-                }
+            public void onPermissionGranted(PermissionGrantedResponse response) {
+                action.granted();
             }
 
             @Override
-            public void onPermissionRationaleShouldBeShown(List<PermissionRequest> permissions, PermissionToken token) {
+            public void onPermissionDenied(PermissionDeniedResponse response) {
+                AlertDialog.Builder builder = new AlertDialog.Builder(activity, R.style.Theme_AppCompat_Light_Dialog);
+
+                builder.setTitle(R.string.camera_runtime_permission_denied_title)
+                        .setMessage(R.string.camera_runtime_permission_denied_desc)
+                        .setPositiveButton(android.R.string.ok, (dialogInterface, i) -> {
+                            action.denied();
+                        })
+                        .setCancelable(false)
+                        .setIcon(R.drawable.ic_photo_camera)
+                        .show();
+            }
+
+            @Override
+            public void onPermissionRationaleShouldBeShown(PermissionRequest permission, PermissionToken token) {
                 token.continuePermissionRequest();
             }
         };
 
         Dexter.withActivity(activity)
-                .withPermissions(
+                .withPermission(
                         Manifest.permission.CAMERA
-                ).withListener(multiplePermissionsListener)
+                ).withListener(permissionListener)
                 .withErrorListener(error -> {
                     Timber.i(error.name());
                 })

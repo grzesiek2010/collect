@@ -59,7 +59,7 @@ import timber.log.Timber;
 
 import static android.os.Build.MODEL;
 import static org.odk.collect.android.utilities.ApplicationConstants.RequestCodes;
-import static org.odk.collect.android.utilities.PermissionUtils.requestCameraPermissions;
+import static org.odk.collect.android.utilities.PermissionUtils.requestCameraPermission;
 
 /**
  * Widget that allows user to take pictures, sounds or video and add them to the
@@ -336,7 +336,7 @@ public class VideoWidget extends QuestionWidget implements FileWidget {
     public void onButtonClick(int id) {
         switch (id) {
             case R.id.capture_video:
-                requestCameraPermissions((FormEntryActivity) getContext(), new PermissionListener() {
+                requestCameraPermission((FormEntryActivity) getContext(), new PermissionListener() {
                     @Override
                     public void granted() {
                         captureVideo();

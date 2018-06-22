@@ -72,7 +72,7 @@ import static android.view.View.GONE;
 import static android.view.View.VISIBLE;
 import static org.odk.collect.android.preferences.AdminKeys.KEY_ADMIN_PW;
 import static org.odk.collect.android.preferences.PreferenceKeys.KEY_PASSWORD;
-import static org.odk.collect.android.utilities.PermissionUtils.requestCameraPermissions;
+import static org.odk.collect.android.utilities.PermissionUtils.requestCameraPermission;
 import static org.odk.collect.android.utilities.QRCodeUtils.QR_CODE_FILEPATH;
 
 public class ShowQRCodeFragment extends Fragment {
@@ -153,7 +153,7 @@ public class ShowQRCodeFragment extends Fragment {
 
     @OnClick(R.id.btnScan)
     void scanButtonClicked() {
-        requestCameraPermissions(getActivity(), new PermissionListener() {
+        requestCameraPermission(getActivity(), new PermissionListener() {
             @Override
             public void granted() {
                 IntentIntegrator.forFragment(ShowQRCodeFragment.this)
