@@ -40,10 +40,12 @@ import com.google.zxing.integration.android.IntentIntegrator;
 import com.google.zxing.integration.android.IntentResult;
 
 import org.odk.collect.android.R;
+import org.odk.collect.android.activities.FormEntryActivity;
 import org.odk.collect.android.activities.MainMenuActivity;
 import org.odk.collect.android.activities.ScannerWithFlashlightActivity;
 import org.odk.collect.android.application.Collect;
 import org.odk.collect.android.listeners.ActionListener;
+import org.odk.collect.android.listeners.PermissionListener;
 import org.odk.collect.android.preferences.AdminPreferencesActivity;
 import org.odk.collect.android.utilities.CompressionUtils;
 import org.odk.collect.android.utilities.LocaleHelper;
@@ -71,6 +73,7 @@ import static android.view.View.GONE;
 import static android.view.View.VISIBLE;
 import static org.odk.collect.android.preferences.AdminKeys.KEY_ADMIN_PW;
 import static org.odk.collect.android.preferences.PreferenceKeys.KEY_PASSWORD;
+import static org.odk.collect.android.utilities.PermissionUtils.requestCameraPermissions;
 import static org.odk.collect.android.utilities.QRCodeUtils.QR_CODE_FILEPATH;
 
 
@@ -152,13 +155,23 @@ public class ShowQRCodeFragment extends Fragment {
 
     @OnClick(R.id.btnScan)
     void scanButtonClicked() {
-        IntentIntegrator.forFragment(this)
-                .setCaptureActivity(ScannerWithFlashlightActivity.class)
-                .setBeepEnabled(true)
-                .setDesiredBarcodeFormats(IntentIntegrator.QR_CODE_TYPES)
-                .setOrientationLocked(false)
-                .setPrompt(getString(R.string.qrcode_scanner_prompt))
-                .initiateScan();
+        Fragment fragment = this;
+        requestCameraPermissions(getActivity(), new PermissionListener() {
+            @Override
+            public void granted() {
+                IntentIntegrator.forFragment(fragment)
+                        .setCaptureActivity(ScannerWithFlashlightActivity.class)
+                        .setBeepEnabled(true)
+                        .setDesiredBarcodeFormats(IntentIntegrator.QR_CODE_TYPES)
+                        .setOrientationLocked(false)
+                        .setPrompt(getString(R.string.qrcode_scanner_prompt))
+                        .initiateScan();
+            }
+
+            @Override
+            public void denied() {
+            }
+        });
     }
 
     @OnClick(R.id.btnSelect)

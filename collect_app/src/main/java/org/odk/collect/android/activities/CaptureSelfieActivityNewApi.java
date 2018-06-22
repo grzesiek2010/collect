@@ -33,12 +33,21 @@ import org.odk.collect.android.utilities.ToastUtils;
 
 import timber.log.Timber;
 
+import static org.odk.collect.android.utilities.PermissionUtils.checkIfCameraPermissionGranted;
+
 @TargetApi(Build.VERSION_CODES.LOLLIPOP)
 public class CaptureSelfieActivityNewApi extends CollectAbstractActivity {
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+
+        if (!checkIfCameraPermissionGranted(this)) {
+            Timber.i("Camera permission is required for this content provider to function.");
+            finish();
+            return;
+        }
+
         requestWindowFeature(Window.FEATURE_NO_TITLE);
         getWindow().setFlags(WindowManager
                 .LayoutParams.FLAG_FULLSCREEN, WindowManager.LayoutParams.FLAG_FULLSCREEN);
