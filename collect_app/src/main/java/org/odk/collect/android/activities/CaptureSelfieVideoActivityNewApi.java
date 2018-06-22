@@ -26,12 +26,23 @@ import org.odk.collect.android.R;
 import org.odk.collect.android.fragments.Camera2VideoFragment;
 import org.odk.collect.android.utilities.ToastUtils;
 
+import timber.log.Timber;
+
+import static org.odk.collect.android.utilities.PermissionUtils.checkIfCameraPermissionGranted;
+
 @TargetApi(Build.VERSION_CODES.LOLLIPOP)
 public class CaptureSelfieVideoActivityNewApi extends Activity {
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+
+        if (!checkIfCameraPermissionGranted(this)) {
+            Timber.i("Camera permission is required for this content provider to function.");
+            finish();
+            return;
+        }
+
         setContentView(R.layout.activity_capture_selfie_video_new_api);
         if (null == savedInstanceState) {
             getFragmentManager().beginTransaction()
