@@ -43,7 +43,6 @@ public class CaptureSelfieActivity extends CollectAbstractActivity {
         super.onCreate(savedInstanceState);
 
         if (!checkIfCameraPermissionGranted(this)) {
-            Timber.i("Camera permission is required for this content provider to function.");
             finish();
             return;
         }
