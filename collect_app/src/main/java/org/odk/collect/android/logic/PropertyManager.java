@@ -61,7 +61,7 @@ public class PropertyManager implements IPropertyManager {
     private static final String SCHEME_IMEI         = "imei";
     private static final String SCHEME_MAC          = "mac";
 
-    private final Map<String, String> properties = new HashMap<>();
+    private static final Map<String, String> properties = new HashMap<>();
 
     public String getName() {
         return "Property Manager";
@@ -81,15 +81,28 @@ public class PropertyManager implements IPropertyManager {
         Timber.i("calling constructor");
 
         try {
-            // Device-defined properties
+            initDeviceDefinedPrefs(context);
+            initUserDefinedPrefs(context);
+        } catch (SecurityException e) {
+            Timber.e(e);
+        }
+    }
+
+    private void initDeviceDefinedPrefs(Context context) {
+        try {
             TelephonyManager telMgr = (TelephonyManager) context.getSystemService(Context.TELEPHONY_SERVICE);
             IdAndPrefix idp = findDeviceId(context, telMgr);
             putProperty(PROPMGR_DEVICE_ID,     idp.prefix,          idp.id);
             putProperty(PROPMGR_PHONE_NUMBER,  SCHEME_TEL,          telMgr.getLine1Number());
             putProperty(PROPMGR_SUBSCRIBER_ID, SCHEME_IMSI,         telMgr.getSubscriberId());
             putProperty(PROPMGR_SIM_SERIAL,    SCHEME_SIMSERIAL,    telMgr.getSimSerialNumber());
+        } catch (SecurityException e) {
+            Timber.e(e);
+        }
+    }
 
-            // User-defined properties. Will replace any above with the same PROPMGR_ name.
+    public static void initUserDefinedPrefs(Context context) {
+        try {
             SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(context);
             initUserDefined(prefs, KEY_METADATA_USERNAME,    PROPMGR_USERNAME,      SCHEME_USERNAME);
             initUserDefined(prefs, KEY_METADATA_PHONENUMBER, PROPMGR_PHONE_NUMBER,  SCHEME_TEL);
@@ -142,12 +155,12 @@ public class PropertyManager implements IPropertyManager {
      * @param propName the name of the property to set
      * @param scheme the scheme for the associated “with URI” property
      */
-    private void initUserDefined(SharedPreferences preferences, String prefKey,
+    private static void initUserDefined(SharedPreferences preferences, String prefKey,
                                  String propName, String scheme) {
         putProperty(propName, scheme, preferences.getString(prefKey, null));
     }
 
-    public void putProperty(String propName, String scheme, String value) {
+    public static void putProperty(String propName, String scheme, String value) {
         if (value != null) {
             properties.put(propName, value);
             properties.put(withUri(propName), scheme + ":" + value);
