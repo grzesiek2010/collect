@@ -44,6 +44,7 @@ import org.odk.collect.android.activities.MainMenuActivity;
 import org.odk.collect.android.activities.ScannerWithFlashlightActivity;
 import org.odk.collect.android.application.Collect;
 import org.odk.collect.android.listeners.ActionListener;
+import org.odk.collect.android.logic.PropertyManager;
 import org.odk.collect.android.preferences.AdminPreferencesActivity;
 import org.odk.collect.android.utilities.CompressionUtils;
 import org.odk.collect.android.utilities.LocaleHelper;
@@ -251,6 +252,7 @@ public class ShowQRCodeFragment extends Fragment {
                 getActivity().finish();
                 final LocaleHelper localeHelper = new LocaleHelper();
                 localeHelper.updateLocale(getActivity());
+                PropertyManager.initUserDefinedPrefs(getActivity());
                 MainMenuActivity.startActivityAndCloseAllOthers(getActivity());
             }
 
