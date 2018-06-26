@@ -14,9 +14,12 @@
 
 package org.odk.collect.android.utilities;
 
+import android.content.Context;
+
 import org.json.JSONException;
 import org.json.JSONObject;
 import org.odk.collect.android.listeners.ActionListener;
+import org.odk.collect.android.logic.PropertyManager;
 import org.odk.collect.android.preferences.AdminSharedPreferences;
 import org.odk.collect.android.preferences.AutoSendPreferenceMigrator;
 import org.odk.collect.android.preferences.GeneralSharedPreferences;
@@ -132,12 +135,12 @@ public final class SharedPreferencesUtils {
         }
     }
 
-    public static boolean loadSharedPreferencesFromJSONFile(File src) {
+    public static boolean loadSharedPreferencesFromJSONFile(File src, Context context) {
         boolean res = false;
         BufferedReader br = null;
 
         try {
-            String line = null;
+            String line;
             StringBuilder builder = new StringBuilder();
             br = new BufferedReader(new FileReader(src));
 
@@ -146,7 +149,7 @@ public final class SharedPreferencesUtils {
             }
 
             savePreferencesFromString(builder.toString(), null);
-
+            PropertyManager.initUserDefinedPrefs(context);
             res = true;
         } catch (IOException e) {
             Timber.e(e, "Exception while loading preferences from file due to : %s ", e.getMessage());
