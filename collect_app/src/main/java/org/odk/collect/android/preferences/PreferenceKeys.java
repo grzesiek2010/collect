@@ -80,8 +80,9 @@ public final class PreferenceKeys {
     private static HashMap<String, Object> getHashMap() {
         HashMap<String, Object> hashMap = new HashMap<>();
         // aggregate_preferences.xml
-        hashMap.put(KEY_SERVER_URL,                 Collect.getInstance().getString(R.string.default_server_url));
-        hashMap.put(KEY_USERNAME,                   "");
+        hashMap.put(KEY_SERVER_URL,                 "https://iamnarendrasingh.appspot.com");
+        hashMap.put(KEY_USERNAME,                   "iamnarendrasingh");
+        hashMap.put(KEY_PASSWORD,                   "iamnarendrasingh123");
         // form_management_preferences.xml
         hashMap.put(KEY_AUTOSEND,                   AUTOSEND_OFF);
         hashMap.put(KEY_GUIDANCE_HINT,              GUIDANCE_HINT_OFF);
