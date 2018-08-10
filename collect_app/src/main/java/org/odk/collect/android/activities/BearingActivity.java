@@ -173,7 +173,7 @@ public class BearingActivity extends CollectAbstractActivity implements SensorEv
                 bearingDecimal = formatDegrees(degrees);
 
                 String dir = "N";
-                if ((degrees > 0 && degrees <= 22.5) || degrees > 337.5) {
+                if (degrees > 0 && degrees <= 22.5 || degrees > 337.5) {
                     dir = "N";
                 } else if (degrees > 22.5 && degrees <= 67.5) {
                     dir = "NE";

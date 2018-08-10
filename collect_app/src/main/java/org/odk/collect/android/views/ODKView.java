@@ -116,9 +116,9 @@ public class ODKView extends ScrollView implements OnLongClickListener {
                 final String buttonText;
                 final String errorString;
                 String v = c.getSpecialFormQuestionText("buttonText");
-                buttonText = (v != null) ? v : context.getString(R.string.launch_app);
+                buttonText = v != null ? v : context.getString(R.string.launch_app);
                 v = c.getSpecialFormQuestionText("noAppErrorString");
-                errorString = (v != null) ? v : context.getString(R.string.no_app);
+                errorString = v != null ? v : context.getString(R.string.no_app);
 
                 TableLayout.LayoutParams params = new TableLayout.LayoutParams();
                 params.setMargins(7, 5, 7, 5);

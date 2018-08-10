@@ -162,8 +162,8 @@ public class FormsDatabaseHelper extends SQLiteOpenHelper {
                     + ", "
                     + JR_VERSION
                     + ", "
-                    + ((oldVersion != 3) ? ""
-                    : (BASE64_RSA_PUBLIC_KEY + ", "))
+                    + (oldVersion != 3 ? ""
+                    : BASE64_RSA_PUBLIC_KEY + ", ")
                     + JRCACHE_FILE_PATH
                     + ") SELECT "
                     + _ID
@@ -194,8 +194,8 @@ public class FormsDatabaseHelper extends SQLiteOpenHelper {
                     + "CAST("
                     + MODEL_VERSION
                     + " AS TEXT) ELSE NULL END, "
-                    + ((oldVersion != 3) ? ""
-                    : (BASE64_RSA_PUBLIC_KEY + ", "))
+                    + (oldVersion != 3 ? ""
+                    : BASE64_RSA_PUBLIC_KEY + ", ")
                     + JRCACHE_FILE_PATH + " FROM "
                     + FORMS_TABLE_NAME);
 

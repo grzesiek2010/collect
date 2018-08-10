@@ -47,7 +47,7 @@ public class ProgressBar extends FrameLayout {
 
     public void setProgressPercent(int progress, boolean animate) {
         mainLayout.post(() -> {
-            int progressWidth = (progress / 100) * divider.getMeasuredWidth();
+            int progressWidth = progress / 100 * divider.getMeasuredWidth();
 
             if (animate) {
                 ValueAnimator anim = ValueAnimator.ofInt(progressBar.getMeasuredWidth(), progressWidth);

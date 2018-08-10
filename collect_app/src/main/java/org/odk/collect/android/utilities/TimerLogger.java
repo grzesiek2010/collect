@@ -302,7 +302,7 @@ public class TimerLogger {
             surveyOpenElapsedTime = SystemClock.elapsedRealtime();
         }
 
-        return surveyOpenTime + (SystemClock.elapsedRealtime() - surveyOpenElapsedTime);
+        return surveyOpenTime + SystemClock.elapsedRealtime() - surveyOpenElapsedTime;
     }
 
 }

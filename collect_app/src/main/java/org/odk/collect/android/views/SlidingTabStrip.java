@@ -86,9 +86,9 @@ class SlidingTabStrip extends LinearLayout {
      */
     private static int blendColors(int color1, int color2, float ratio) {
         final float inverseRation = 1f - ratio;
-        float r = (Color.red(color1) * ratio) + (Color.red(color2) * inverseRation);
-        float g = (Color.green(color1) * ratio) + (Color.green(color2) * inverseRation);
-        float b = (Color.blue(color1) * ratio) + (Color.blue(color2) * inverseRation);
+        float r = Color.red(color1) * ratio + Color.red(color2) * inverseRation;
+        float g = Color.green(color1) * ratio + Color.green(color2) * inverseRation;
+        float b = Color.blue(color1) * ratio + Color.blue(color2) * inverseRation;
         return Color.rgb((int) r, (int) g, (int) b);
     }
 
@@ -125,7 +125,7 @@ class SlidingTabStrip extends LinearLayout {
             int right = selectedTitle.getRight();
             int color = tabColorizer.getIndicatorColor(selectedPosition);
 
-            if (selectionOffset > 0f && selectedPosition < (getChildCount() - 1)) {
+            if (selectionOffset > 0f && selectedPosition < getChildCount() - 1) {
                 int nextColor = tabColorizer.getIndicatorColor(selectedPosition + 1);
                 if (color != nextColor) {
                     color = blendColors(nextColor, color, selectionOffset);

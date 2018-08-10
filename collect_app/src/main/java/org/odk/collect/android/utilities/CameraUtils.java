@@ -107,7 +107,7 @@ public class CameraUtils {
 
     public static String getVideoFilePath(Context context) {
         final File dir = context.getExternalFilesDir(null);
-        return (dir == null ? "" : (dir.getAbsolutePath() + "/"))
+        return (dir == null ? "" : dir.getAbsolutePath() + "/")
                 + System.currentTimeMillis() + ".mp4";
     }
 }

@@ -121,7 +121,7 @@ public class ExPrinterWidget extends QuestionWidget implements BinaryWidget {
         super(context, prompt);
 
         String v = getFormEntryPrompt().getSpecialFormQuestionText("buttonText");
-        String buttonText = (v != null) ? v : context.getString(R.string.launch_printer);
+        String buttonText = v != null ? v : context.getString(R.string.launch_printer);
         launchIntentButton = getSimpleButton(buttonText);
 
         if (prompt.isReadOnly()) {
@@ -225,11 +225,11 @@ public class ExPrinterWidget extends QuestionWidget implements BinaryWidget {
     public void onButtonClick(int buttonId) {
         String appearance = getFormEntryPrompt().getAppearanceHint();
         String[] attrs = appearance.split(":");
-        final String intentName = (attrs.length < 2 || attrs[1].length() == 0)
+        final String intentName = attrs.length < 2 || attrs[1].length() == 0
                 ? "org.opendatakit.sensors.ZebraPrinter" : attrs[1];
         final String errorString;
         String v = getFormEntryPrompt().getSpecialFormQuestionText("noPrinterErrorString");
-        errorString = (v != null) ? v : getContext().getString(R.string.no_printer);
+        errorString = v != null ? v : getContext().getString(R.string.no_printer);
         try {
             waitForData();
             firePrintingActivity(intentName);

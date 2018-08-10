@@ -449,7 +449,7 @@ public class FormEntryActivity extends CollectAbstractActivity implements Animat
                 createErrorDialog(getString(
                         R.string.parent_form_not_present,
                         jrFormId)
-                                + ((jrVersion == null) ? ""
+                                + (jrVersion == null ? ""
                                 : "\n"
                                 + getString(R.string.version)
                                 + " "
@@ -1030,7 +1030,7 @@ public class FormEntryActivity extends CollectAbstractActivity implements Animat
         FormController formController = getFormController();
 
         useability = (boolean) AdminSharedPreferences.getInstance().get(AdminKeys.KEY_CHANGE_LANGUAGE)
-                && (formController != null)
+                && formController != null
                 && formController.getLanguages() != null
                 && formController.getLanguages().length > 1;
 
@@ -1261,7 +1261,7 @@ public class FormEntryActivity extends CollectAbstractActivity implements Animat
                     public CharSequence filter(CharSequence source, int start,
                                                int end, Spanned dest, int dstart, int dend) {
                         for (int i = start; i < end; i++) {
-                            if (Character.getType((source.charAt(i))) == Character.CONTROL) {
+                            if (Character.getType(source.charAt(i)) == Character.CONTROL) {
                                 return "";
                             }
                         }
@@ -1381,8 +1381,8 @@ public class FormEntryActivity extends CollectAbstractActivity implements Animat
                             .getGroupsForCurrentIndex();
                     odkView = new ODKView(this, prompts, groups, advancingPage);
                     Timber.i("Created view for group %s %s",
-                            (groups.length > 0 ? groups[groups.length - 1].getLongText() : "[top]"),
-                            (prompts.length > 0 ? prompts[0].getQuestionText() : "[no question]"));
+                            groups.length > 0 ? groups[groups.length - 1].getLongText() : "[top]",
+                            prompts.length > 0 ? prompts[0].getQuestionText() : "[no question]");
                 } catch (RuntimeException e) {
                     Timber.e(e);
                     // this is badness to avoid a crash.
@@ -1520,7 +1520,7 @@ public class FormEntryActivity extends CollectAbstractActivity implements Animat
                 case FormEntryController.EVENT_QUESTION:
                 case FormEntryController.EVENT_GROUP:
                     // create a savepoint
-                    if ((++viewCount) % SAVEPOINT_INTERVAL == 0) {
+                    if (++viewCount % SAVEPOINT_INTERVAL == 0) {
                         nonblockingCreateSavePointData();
                     }
                     next = createView(event, true);
@@ -1581,7 +1581,7 @@ public class FormEntryActivity extends CollectAbstractActivity implements Animat
                         if (event == FormEntryController.EVENT_GROUP
                                 || event == FormEntryController.EVENT_QUESTION) {
                             // create savepoint
-                            if ((++viewCount) % SAVEPOINT_INTERVAL == 0) {
+                            if (++viewCount % SAVEPOINT_INTERVAL == 0) {
                                 nonblockingCreateSavePointData();
                             }
                         }
@@ -2013,7 +2013,7 @@ public class FormEntryActivity extends CollectAbstractActivity implements Animat
         String title;
         {
             FormController formController = getFormController();
-            title = (formController == null) ? null : formController.getFormTitle();
+            title = formController == null ? null : formController.getFormTitle();
             if (title == null) {
                 title = getString(R.string.no_form_loaded);
             }
@@ -2782,8 +2782,8 @@ public class FormEntryActivity extends CollectAbstractActivity implements Animat
                 return false;
             }
 
-            if ((Math.abs(e1.getX() - e2.getX()) > xpixellimit && Math.abs(e1
-                    .getY() - e2.getY()) < ypixellimit)
+            if (Math.abs(e1.getX() - e2.getX()) > xpixellimit && Math.abs(e1
+                    .getY() - e2.getY()) < ypixellimit
                     || Math.abs(e1.getX() - e2.getX()) > xpixellimit * 2) {
                 beenSwiped = true;
                 if (velocityX > 0) {

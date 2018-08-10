@@ -61,7 +61,7 @@ public class CompressionUtils {
         String base64String = Base64.encodeBase64String(output);
         Timber.i("Original : %d", data.length());
         Timber.i("Compressed : %d", base64String.length());
-        Timber.i("Compression ratio : %2f", ((data.length() * 1.0) / base64String.length()) * 100);
+        Timber.i("Compression ratio : %2f", data.length() * 1.0 / base64String.length() * 100);
         return base64String;
     }
 

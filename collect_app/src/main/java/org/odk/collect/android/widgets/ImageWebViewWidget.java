@@ -135,7 +135,7 @@ public class ImageWebViewWidget extends QuestionWidget implements FileWidget {
         DisplayMetrics metrics = getContext().getResources().getDisplayMetrics();
         int screenWidth = metrics.widthPixels;
 
-        return f.exists() ? ("<img align=\"middle\" src=\"file:///"
+        return f.exists() ? "<img align=\"middle\" src=\"file:///"
                 + f.getAbsolutePath()
                 +
                 // Appending the time stamp to the filename is a hack to prevent
@@ -143,7 +143,7 @@ public class ImageWebViewWidget extends QuestionWidget implements FileWidget {
                 "?"
                 + new Date().getTime()
                 + "\" width=\""
-                + Integer.toString(screenWidth - 10) + "\" >")
+                + Integer.toString(screenWidth - 10) + "\" >"
                 : "";
     }
 

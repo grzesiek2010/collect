@@ -139,7 +139,7 @@ public class ExStringWidget extends QuestionWidget implements BinaryWidget {
         }
 
         String v = getFormEntryPrompt().getSpecialFormQuestionText("buttonText");
-        String buttonText = (v != null) ? v : context.getString(R.string.launch_app);
+        String buttonText = v != null ? v : context.getString(R.string.launch_app);
 
         launchIntentButton = getSimpleButton(buttonText);
         launchIntentButton.setEnabled(!getFormEntryPrompt().isReadOnly());
@@ -243,7 +243,7 @@ public class ExStringWidget extends QuestionWidget implements BinaryWidget {
         final Map<String, String> exParams = ExternalAppsUtils.extractParameters(exSpec);
         final String errorString;
         String v = getFormEntryPrompt().getSpecialFormQuestionText("noAppErrorString");
-        errorString = (v != null) ? v : getContext().getString(R.string.no_app);
+        errorString = v != null ? v : getContext().getString(R.string.no_app);
 
         Intent i = new Intent(intentName);
 

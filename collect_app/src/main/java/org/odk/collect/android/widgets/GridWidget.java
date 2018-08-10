@@ -136,8 +136,8 @@ public class GridWidget extends QuestionWidget implements MultiChoiceWidget {
         int screenHeight = metrics.heightPixels;
 
         if (numColumns > 0) {
-            resizeWidth = ((screenWidth - 2 * HORIZONTAL_PADDING - SCROLL_WIDTH
-                    - (IMAGE_PADDING + SPACING) * (numColumns + 1)) / numColumns);
+            resizeWidth = (screenWidth - 2 * HORIZONTAL_PADDING - SCROLL_WIDTH
+                    - (IMAGE_PADDING + SPACING) * (numColumns + 1)) / numColumns;
         }
 
         if (prompt.isReadOnly()) {
@@ -190,7 +190,7 @@ public class GridWidget extends QuestionWidget implements MultiChoiceWidget {
                             ImageView imageView = (ImageView) imageViews[i];
 
                             if (numColumns > 0) {
-                                int resizeHeight = (b.getHeight() * resizeWidth) / b.getWidth();
+                                int resizeHeight = b.getHeight() * resizeWidth / b.getWidth();
                                 b = Bitmap.createScaledBitmap(b, resizeWidth, resizeHeight, false);
                             }
 
@@ -293,7 +293,7 @@ public class GridWidget extends QuestionWidget implements MultiChoiceWidget {
                 // background color accordingly
                 for (int i = 0; i < selected.length; i++) {
                     // if we have an audio handler, be sure audio is stopped.
-                    if (selected[i] && (audioHandlers[i] != null)) {
+                    if (selected[i] && audioHandlers[i] != null) {
                         stopAudio();
                     }
                     selected[i] = false;

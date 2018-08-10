@@ -229,7 +229,7 @@ public class DownloadFormListUtils {
                     }
                 }
                 formList.put(formId, new FormDetails(formName, downloadUrl, manifestUrl, formId,
-                        (version != null) ? version : majorMinorVersion, hash,
+                        version != null ? version : majorMinorVersion, hash,
                         manifestFile != null ? manifestFile.getHash() : null,
                         isNewerFormVersionAvailable, areNewerMediaFilesAvailable));
             }

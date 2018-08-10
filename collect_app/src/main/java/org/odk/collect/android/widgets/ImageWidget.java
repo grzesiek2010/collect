@@ -147,8 +147,8 @@ public class ImageWidget extends BaseImageWidget {
         if (getFormEntryPrompt().isReadOnly()) {
             captureButton.setVisibility(View.GONE);
             chooseButton.setVisibility(View.GONE);
-        } else if (selfie || ((appearance != null
-                && appearance.toLowerCase(Locale.ENGLISH).contains("new")))) {
+        } else if (selfie || appearance != null
+                && appearance.toLowerCase(Locale.ENGLISH).contains("new")) {
             chooseButton.setVisibility(View.GONE);
         }
     }

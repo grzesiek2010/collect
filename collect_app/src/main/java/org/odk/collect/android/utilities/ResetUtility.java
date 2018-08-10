@@ -79,7 +79,7 @@ public class ResetUtility {
                 || deleteFolderContents(Collect.SETTINGS);
 
         boolean deletedSettingsFile = !new File(Collect.ODK_ROOT + "/collect.settings").exists()
-                || (new File(Collect.ODK_ROOT + "/collect.settings").delete());
+                || new File(Collect.ODK_ROOT + "/collect.settings").delete();
         
         new LocaleHelper().updateLocale(context);
 

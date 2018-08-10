@@ -239,7 +239,7 @@ public class GeoShapeOsmMapActivity extends CollectAbstractActivity implements I
         clearButtonTest = true;
         String s = str.replace("; ", ";");
         String[] sa = s.split(";");
-        for (int i = 0; i < (sa.length - 1); i++) {
+        for (int i = 0; i < sa.length - 1; i++) {
             String[] sp = sa[i].split(" ");
             double[] gp = new double[4];
             String lat = sp[0].replace(" ", "");

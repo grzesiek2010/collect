@@ -199,8 +199,8 @@ public class FileUtils {
             options.inPurgeable = true;
             bitmap = getBitmap(file.getAbsolutePath(), options);
 
-            double heightScale = ((double) (options.outHeight)) / screenHeight;
-            double widthScale = ((double) options.outWidth) / screenWidth;
+            double heightScale = (double) options.outHeight / screenHeight;
+            double widthScale = (double) options.outWidth / screenWidth;
             scale = Math.max(widthScale, heightScale);
 
             double newHeight = Math.ceil(options.outHeight / scale);
@@ -348,8 +348,8 @@ public class FileUtils {
                         version);
             }
 
-            fields.put(FORMID, (id == null) ? cur.getNamespace() : id);
-            fields.put(VERSION, (version == null) ? null : version);
+            fields.put(FORMID, id == null ? cur.getNamespace() : id);
+            fields.put(VERSION, version == null ? null : version);
         } else {
             throw new IllegalStateException(xmlFile.getAbsolutePath() + " could not be parsed");
         }
@@ -361,7 +361,7 @@ public class FileUtils {
 
             fields.put(SUBMISSIONURI, submission.getAttributeValue(null, "action"));
             fields.put(BASE64_RSA_PUBLIC_KEY,
-                    (base64RsaPublicKey == null || base64RsaPublicKey.trim().length() == 0)
+                    base64RsaPublicKey == null || base64RsaPublicKey.trim().length() == 0
                             ? null : base64RsaPublicKey.trim());
             fields.put(AUTO_DELETE, autoDelete);
             fields.put(AUTO_SEND, autoSend);

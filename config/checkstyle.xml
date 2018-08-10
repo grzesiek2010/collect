@@ -246,6 +246,7 @@
         <module name="CovariantEquals" />
         <module name="EmptyStatement" />
         <module name="EqualsHashCode" />
+        <module name="UnnecessaryParentheses" />
         <module name="IllegalInstantiation" />
         <module name="InterfaceIsType" />
         <!--<module name="MethodLength" />-->

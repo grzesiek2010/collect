@@ -127,7 +127,7 @@ public class InstanceGoogleSheetsUploader extends InstanceUploader {
 
                 StringBuilder selectionBuf = new StringBuilder(InstanceColumns._ID + " IN (");
                 String[] selectionArgs = new String[high - low];
-                for (int i = 0; i < (high - low); i++) {
+                for (int i = 0; i < high - low; i++) {
                     if (i > 0) {
                         selectionBuf.append(',');
                     }
@@ -545,7 +545,7 @@ public class InstanceGoogleSheetsUploader extends InstanceUploader {
         for (int i = 0; i < element.getNumChildren(); ++i) {
             TreeElement current = element.getChildAt(i);
             // avoid duplicated elements https://github.com/opendatakit/javarosa/issues/248
-            if ((prior != null) && (prior.getName().equals(current.getName()))) {
+            if (prior != null && prior.getName().equals(current.getName())) {
                 prior = current;
             } else {
                 switch (current.getDataType()) {

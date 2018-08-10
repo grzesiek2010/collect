@@ -348,7 +348,7 @@ public class Collect extends Application implements HasActivityInjector {
         PropertyManager mgr = new PropertyManager(this);
 
         // Use the server username by default if the metadata username is not defined
-        if ((mgr.getSingularProperty(PROPMGR_USERNAME) == null || mgr.getSingularProperty(PROPMGR_USERNAME).isEmpty())) {
+        if (mgr.getSingularProperty(PROPMGR_USERNAME) == null || mgr.getSingularProperty(PROPMGR_USERNAME).isEmpty()) {
             mgr.putProperty(PROPMGR_USERNAME, SCHEME_USERNAME, (String) GeneralSharedPreferences.getInstance().get(KEY_USERNAME));
         }
 
@@ -365,7 +365,7 @@ public class Collect extends Application implements HasActivityInjector {
     // Preventing multiple clicks, using threshold of 1000 ms
     public static boolean allowClick() {
         long elapsedRealtime = SystemClock.elapsedRealtime();
-        boolean allowClick = (lastClickTime == 0 || lastClickTime == elapsedRealtime) // just for tests
+        boolean allowClick = lastClickTime == 0 || lastClickTime == elapsedRealtime // just for tests
                 || elapsedRealtime - lastClickTime > 1000;
         if (allowClick) {
             lastClickTime = elapsedRealtime;

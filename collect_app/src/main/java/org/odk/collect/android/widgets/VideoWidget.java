@@ -294,8 +294,8 @@ public class VideoWidget extends QuestionWidget implements FileWidget {
         if (getFormEntryPrompt().isReadOnly()) {
             captureButton.setVisibility(View.GONE);
             chooseButton.setVisibility(View.GONE);
-        } else if (selfie || (getFormEntryPrompt().getAppearanceHint() != null
-                && getFormEntryPrompt().getAppearanceHint().toLowerCase(Locale.ENGLISH).contains("new"))) {
+        } else if (selfie || getFormEntryPrompt().getAppearanceHint() != null
+                && getFormEntryPrompt().getAppearanceHint().toLowerCase(Locale.ENGLISH).contains("new")) {
             chooseButton.setVisibility(View.GONE);
         }
     }

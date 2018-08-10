@@ -5,7 +5,7 @@ public class SmsProgress {
     private double completedCount;
 
     public double getPercentage() {
-        return (completedCount / totalCount) * 100;
+        return completedCount / totalCount * 100;
     }
 
     public double getTotalCount() {

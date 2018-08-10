@@ -605,12 +605,12 @@ public class FormDownloadList extends FormListActivity implements FormListDownlo
                 String formDetailsKey = ids.get(i);
                 FormDetails details = formNamesAndURLs.get(formDetailsKey);
 
-                if (!displayOnlyUpdatedForms || (details.isNewerFormVersionAvailable() || details.areNewerMediaFilesAvailable())) {
+                if (!displayOnlyUpdatedForms || details.isNewerFormVersionAvailable() || details.areNewerMediaFilesAvailable()) {
                     HashMap<String, String> item = new HashMap<String, String>();
                     item.put(FORMNAME, details.getFormName());
                     item.put(FORMID_DISPLAY,
-                            ((details.getFormVersion() == null) ? "" : (getString(R.string.version) + " "
-                                    + details.getFormVersion() + " ")) + "ID: " + details.getFormID());
+                            (details.getFormVersion() == null ? "" : getString(R.string.version) + " "
+                                    + details.getFormVersion() + " ") + "ID: " + details.getFormID());
                     item.put(FORMDETAIL_KEY, formDetailsKey);
                     item.put(FORM_ID_KEY, details.getFormID());
                     item.put(FORM_VERSION_KEY, details.getFormVersion());
@@ -701,8 +701,8 @@ public class FormDownloadList extends FormListActivity implements FormListDownlo
         StringBuilder b = new StringBuilder();
         for (FormDetails k : keys) {
             b.append(k.getFormName() + " ("
-                    + ((k.getFormVersion() != null)
-                    ? (Collect.getInstance().getString(R.string.version) + ": " + k.getFormVersion() + " ")
+                    + (k.getFormVersion() != null
+                    ? Collect.getInstance().getString(R.string.version) + ": " + k.getFormVersion() + " "
                     : "") + "ID: " + k.getFormID() + ") - " + result.get(k));
             b.append("\n\n");
         }

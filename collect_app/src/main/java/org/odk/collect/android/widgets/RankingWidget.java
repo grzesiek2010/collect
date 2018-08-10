@@ -187,7 +187,7 @@ public class RankingWidget extends QuestionWidget implements BinaryWidget {
                         .append(savedItems.indexOf(item) + 1)
                         .append(". ")
                         .append(getFormEntryPrompt().getSelectChoiceText(item));
-                if ((savedItems.size() - 1) > savedItems.indexOf(item)) {
+                if (savedItems.size() - 1 > savedItems.indexOf(item)) {
                     answerText.append('\n');
                 }
             }

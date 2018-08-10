@@ -99,7 +99,7 @@ public abstract class AbstractSelectOneWidget extends SelectTextWidget
         int i = getCheckedId();
 
         return i == -1 ? null :
-                (this instanceof ItemsetWidget ? new StringData(items.get(i).getValue()) : new SelectOneData(new Selection(items.get(i))));
+                this instanceof ItemsetWidget ? new StringData(items.get(i).getValue()) : new SelectOneData(new Selection(items.get(i)));
     }
 
     public int getCheckedId() {

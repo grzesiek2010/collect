@@ -153,7 +153,7 @@ public abstract class FormHierarchyActivity extends CollectAbstractActivity {
 
     private boolean shouldScrollToTheGivenIndex(FormIndex formIndex, FormController formController) {
         return startIndex.equals(formIndex)
-                || (formController.indexIsInFieldList(startIndex) && formIndex.toString().startsWith(startIndex.toString()));
+                || formController.indexIsInFieldList(startIndex) && formIndex.toString().startsWith(startIndex.toString());
     }
 
     @Override
@@ -271,7 +271,7 @@ public abstract class FormHierarchyActivity extends CollectAbstractActivity {
                 String currentRef = formController.getFormIndex().getReference().toString(true);
 
                 // retrieve the current group
-                String curGroup = (repeatGroupRef == null) ? contextGroupRef : repeatGroupRef;
+                String curGroup = repeatGroupRef == null ? contextGroupRef : repeatGroupRef;
 
                 if (!currentRef.startsWith(curGroup)) {
                     // We have left the current group
@@ -297,7 +297,7 @@ public abstract class FormHierarchyActivity extends CollectAbstractActivity {
 
                         FormEntryPrompt fp = formController.getQuestionPrompt();
                         String label = getLabel(fp);
-                        if (!fp.isReadOnly() || (label != null && label.length() > 0)) {
+                        if (!fp.isReadOnly() || label != null && label.length() > 0) {
                             // show the question if it is an editable field.
                             // or if it is read-only and the label is not blank.
                             String answerDisplay = FormEntryPromptUtils.getAnswerText(fp, this, formController);

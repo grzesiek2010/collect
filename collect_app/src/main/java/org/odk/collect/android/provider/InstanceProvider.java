@@ -257,7 +257,7 @@ public class InstanceProvider extends ContentProvider {
                                         del.getColumnIndex(InstanceColumns.INSTANCE_FILE_PATH));
                                 Collect.getInstance().getActivityLogger().logAction(this, "delete",
                                         instanceFile);
-                                File instanceDir = (new File(instanceFile)).getParentFile();
+                                File instanceDir = new File(instanceFile).getParentFile();
                                 deleteAllFilesInDirectory(instanceDir);
                             } while (del.moveToNext());
                         }
@@ -284,7 +284,7 @@ public class InstanceProvider extends ContentProvider {
                                         c.getColumnIndex(InstanceColumns.INSTANCE_FILE_PATH));
                                 Collect.getInstance().getActivityLogger().logAction(this, "delete",
                                         instanceFile);
-                                File instanceDir = (new File(instanceFile)).getParentFile();
+                                File instanceDir = new File(instanceFile).getParentFile();
                                 deleteAllFilesInDirectory(instanceDir);
                             } while (c.moveToNext());
                         }
@@ -305,7 +305,7 @@ public class InstanceProvider extends ContentProvider {
                         if (whereArgs == null || whereArgs.length == 0) {
                             newWhereArgs = new String[] {instanceId};
                         } else {
-                            newWhereArgs = new String[(whereArgs.length + 1)];
+                            newWhereArgs = new String[whereArgs.length + 1];
                             newWhereArgs[0] = instanceId;
                             System.arraycopy(whereArgs, 0, newWhereArgs, 1, whereArgs.length);
                         }
@@ -379,7 +379,7 @@ public class InstanceProvider extends ContentProvider {
                     if (whereArgs == null || whereArgs.length == 0) {
                         newWhereArgs = new String[] {instanceId};
                     } else {
-                        newWhereArgs = new String[(whereArgs.length + 1)];
+                        newWhereArgs = new String[whereArgs.length + 1];
                         newWhereArgs[0] = instanceId;
                         System.arraycopy(whereArgs, 0, newWhereArgs, 1, whereArgs.length);
                     }

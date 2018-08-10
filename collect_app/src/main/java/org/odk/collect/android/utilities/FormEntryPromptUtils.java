@@ -56,7 +56,7 @@ public class FormEntryPromptUtils {
                 }
                 answerText.append(fep.getSelectItemText(value));
 
-                if ((values.size() - 1) > values.indexOf(value)) {
+                if (values.size() - 1 > values.indexOf(value)) {
                     answerText.append(", ");
                 }
             }

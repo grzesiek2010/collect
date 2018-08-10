@@ -475,7 +475,7 @@ public class FormLoaderTask extends AsyncTask<String, String, FormLoaderTask.FEC
     }
 
     public FormController getFormController() {
-        return (data != null) ? data.getController() : null;
+        return data != null ? data.getController() : null;
     }
 
     public ExternalDataManager getExternalDataManager() {
@@ -483,7 +483,7 @@ public class FormLoaderTask extends AsyncTask<String, String, FormLoaderTask.FEC
     }
 
     public boolean hasUsedSavepoint() {
-        return (data != null) && data.hasUsedSavepoint();
+        return data != null && data.hasUsedSavepoint();
     }
 
     public void destroy() {
