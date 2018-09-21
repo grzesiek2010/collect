@@ -58,6 +58,7 @@
         <module name="AvoidStarImport" />
         <module name="OneTopLevelClass" />
         <module name="NoLineWrap" />
+        <module name="AvoidNestedBlocks" />
         <module name="EmptyBlock">
             <property name="option" value="TEXT" />
             <property name="tokens"

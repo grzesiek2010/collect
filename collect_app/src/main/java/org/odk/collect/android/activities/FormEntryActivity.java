@@ -2016,12 +2016,10 @@ public class FormEntryActivity extends CollectAbstractActivity implements Animat
      */
     private void createQuitDialog() {
         String title;
-        {
-            FormController formController = getFormController();
-            title = (formController == null) ? null : formController.getFormTitle();
-            if (title == null) {
-                title = getString(R.string.no_form_loaded);
-            }
+        FormController formController = getFormController();
+        title = (formController == null) ? null : formController.getFormTitle();
+        if (title == null) {
+            title = getString(R.string.no_form_loaded);
         }
 
         List<IconMenuItem> items;

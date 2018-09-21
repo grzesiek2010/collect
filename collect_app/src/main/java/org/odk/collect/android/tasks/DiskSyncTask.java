@@ -70,17 +70,15 @@ public class DiskSyncTask extends AsyncTask<Void, String, String> {
                 // Step 1: assemble the candidate form files
                 //         discard files beginning with "."
                 //         discard files not ending with ".xml" or ".xhtml"
-                {
-                    File[] formDefs = formDir.listFiles();
-                    for (File addMe : formDefs) {
-                        // Ignore invisible files that start with periods.
-                        if (!addMe.getName().startsWith(".")
-                                && (addMe.getName().endsWith(".xml") || addMe.getName().endsWith(
-                                ".xhtml"))) {
-                            formsToAdd.add(addMe);
-                        } else {
-                            Timber.i("[%d] Ignoring: %s", instance, addMe.getAbsolutePath());
-                        }
+                File[] formDefs = formDir.listFiles();
+                for (File addMe : formDefs) {
+                    // Ignore invisible files that start with periods.
+                    if (!addMe.getName().startsWith(".")
+                            && (addMe.getName().endsWith(".xml") || addMe.getName().endsWith(
+                            ".xhtml"))) {
+                        formsToAdd.add(addMe);
+                    } else {
+                        Timber.i("[%d] Ignoring: %s", instance, addMe.getAbsolutePath());
                     }
                 }
 

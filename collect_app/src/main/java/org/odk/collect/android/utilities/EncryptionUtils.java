@@ -542,11 +542,9 @@ public class EncryptionUtils {
 
         c = d.createElement(XML_OPENROSA_NAMESPACE, META);
         c.setPrefix("orx", XML_OPENROSA_NAMESPACE);
-        {
-            Element instanceTag = d.createElement(XML_OPENROSA_NAMESPACE, INSTANCE_ID);
-            instanceTag.addChild(0, Node.TEXT, formInfo.instanceMetadata.instanceId);
-            c.addChild(0, Node.ELEMENT, instanceTag);
-        }
+        Element instanceTag = d.createElement(XML_OPENROSA_NAMESPACE, INSTANCE_ID);
+        instanceTag.addChild(0, Node.TEXT, formInfo.instanceMetadata.instanceId);
+        c.addChild(0, Node.ELEMENT, instanceTag);
         e.addChild(idx++, Node.ELEMENT, c);
         e.addChild(idx++, Node.IGNORABLE_WHITESPACE, NEW_LINE);
 

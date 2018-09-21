@@ -279,11 +279,10 @@ public class Camera2Fragment extends Fragment
 
         private void process(CaptureResult result) {
             switch (state) {
-                case STATE_PREVIEW: {
+                case STATE_PREVIEW:
                     // We have nothing to do when the camera preview is working normally.
                     break;
-                }
-                case STATE_WAITING_LOCK: {
+                case STATE_WAITING_LOCK:
                     Integer afState = result.get(CaptureResult.CONTROL_AF_STATE);
                     if (!autoFocusSupported || afState == null) {
                         captureStillPicture();
@@ -300,8 +299,7 @@ public class Camera2Fragment extends Fragment
                         }
                     }
                     break;
-                }
-                case STATE_WAITING_PRECAPTURE: {
+                case STATE_WAITING_PRECAPTURE:
                     // CONTROL_AE_STATE can be null on some devices
                     Integer aeState = result.get(CaptureResult.CONTROL_AE_STATE);
                     if (aeState == null
@@ -310,8 +308,7 @@ public class Camera2Fragment extends Fragment
                         state = STATE_WAITING_NON_PRECAPTURE;
                     }
                     break;
-                }
-                case STATE_WAITING_NON_PRECAPTURE: {
+                case STATE_WAITING_NON_PRECAPTURE:
                     // CONTROL_AE_STATE can be null on some devices
                     Integer aeState = result.get(CaptureResult.CONTROL_AE_STATE);
                     if (aeState == null || aeState != CaptureResult.CONTROL_AE_STATE_PRECAPTURE) {
@@ -319,7 +316,6 @@ public class Camera2Fragment extends Fragment
                         captureStillPicture();
                     }
                     break;
-                }
             }
         }
 
@@ -820,11 +816,10 @@ public class Camera2Fragment extends Fragment
     @Override
     public void onClick(View view) {
         switch (view.getId()) {
-            case R.id.texture: {
+            case R.id.texture:
                 textureView.setClickable(false);
                 takePicture();
                 break;
-            }
         }
     }
 

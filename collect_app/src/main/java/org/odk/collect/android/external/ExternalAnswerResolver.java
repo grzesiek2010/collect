@@ -76,7 +76,7 @@ public class ExternalAnswerResolver extends DefaultAnswerResolver {
                         Selection selection = selectChoice.selection();
 
                         switch (questionDef.getControlType()) {
-                            case Constants.CONTROL_SELECT_ONE: {
+                            case Constants.CONTROL_SELECT_ONE:
                                 if (selectChoiceValue.equals(textVal)) {
                                     // This means that the user selected a static selection.
                                     //
@@ -92,8 +92,7 @@ public class ExternalAnswerResolver extends DefaultAnswerResolver {
                                     }
                                 }
                                 break;
-                            }
-                            case Constants.CONTROL_SELECT_MULTI: {
+                            case Constants.CONTROL_SELECT_MULTI:
                                 // we should search in a potential comma-separated string of
                                 // values for a match
                                 // copied from org.javarosa.xform.util.XFormAnswerDataParser
@@ -116,16 +115,14 @@ public class ExternalAnswerResolver extends DefaultAnswerResolver {
                                     }
                                 }
                                 break;
-                            }
-                            default: {
+                            default:
                                 // There is a bug if we get here, so let's throw an Exception
                                 throw createBugRuntimeException(treeElement, textVal);
-                            }
                         }
 
                     } else {
                         switch (questionDef.getControlType()) {
-                            case Constants.CONTROL_SELECT_ONE: {
+                            case Constants.CONTROL_SELECT_ONE:
                                 // the default implementation will search for the "textVal"
                                 // (saved answer) inside the static choices.
                                 // Since we know that there isn't such, we just wrap the textVal
@@ -138,8 +135,7 @@ public class ExternalAnswerResolver extends DefaultAnswerResolver {
                                         false);
                                 customSelectChoice.setIndex(index);
                                 return new SelectOneData(customSelectChoice.selection());
-                            }
-                            case Constants.CONTROL_SELECT_MULTI: {
+                            case Constants.CONTROL_SELECT_MULTI:
                                 // we should create multiple selections and add them to the pile
                                 List<SelectChoice> customSelectChoices = createCustomSelectChoices(
                                         textVal);
@@ -148,11 +144,9 @@ public class ExternalAnswerResolver extends DefaultAnswerResolver {
                                     customSelections.add(customSelectChoice.selection());
                                 }
                                 return new SelectMultiData(customSelections);
-                            }
-                            default: {
+                            default:
                                 // There is a bug if we get here, so let's throw an Exception
                                 throw createBugRuntimeException(treeElement, textVal);
-                            }
                         }
 
                     }
