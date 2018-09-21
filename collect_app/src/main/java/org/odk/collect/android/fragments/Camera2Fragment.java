@@ -278,10 +278,8 @@ public class Camera2Fragment extends Fragment
             = new CameraCaptureSession.CaptureCallback() {
 
         private void process(CaptureResult result) {
+            Integer aeState = result.get(CaptureResult.CONTROL_AE_STATE);;
             switch (state) {
-                case STATE_PREVIEW:
-                    // We have nothing to do when the camera preview is working normally.
-                    break;
                 case STATE_WAITING_LOCK:
                     Integer afState = result.get(CaptureResult.CONTROL_AF_STATE);
                     if (!autoFocusSupported || afState == null) {
@@ -289,7 +287,6 @@ public class Camera2Fragment extends Fragment
                     } else if (CaptureResult.CONTROL_AF_STATE_FOCUSED_LOCKED == afState
                             || CaptureResult.CONTROL_AF_STATE_NOT_FOCUSED_LOCKED == afState) {
                         // CONTROL_AE_STATE can be null on some devices
-                        Integer aeState = result.get(CaptureResult.CONTROL_AE_STATE);
                         if (aeState == null
                                 || aeState == CaptureResult.CONTROL_AE_STATE_CONVERGED) {
                             state = STATE_PICTURE_TAKEN;
@@ -301,7 +298,6 @@ public class Camera2Fragment extends Fragment
                     break;
                 case STATE_WAITING_PRECAPTURE:
                     // CONTROL_AE_STATE can be null on some devices
-                    Integer aeState = result.get(CaptureResult.CONTROL_AE_STATE);
                     if (aeState == null
                             || aeState == CaptureResult.CONTROL_AE_STATE_PRECAPTURE
                             || aeState == CaptureRequest.CONTROL_AE_STATE_FLASH_REQUIRED) {
@@ -310,7 +306,6 @@ public class Camera2Fragment extends Fragment
                     break;
                 case STATE_WAITING_NON_PRECAPTURE:
                     // CONTROL_AE_STATE can be null on some devices
-                    Integer aeState = result.get(CaptureResult.CONTROL_AE_STATE);
                     if (aeState == null || aeState != CaptureResult.CONTROL_AE_STATE_PRECAPTURE) {
                         state = STATE_PICTURE_TAKEN;
                         captureStillPicture();

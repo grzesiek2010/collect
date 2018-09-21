@@ -140,8 +140,8 @@ public class ExternalAnswerResolver extends DefaultAnswerResolver {
                                 List<SelectChoice> customSelectChoices = createCustomSelectChoices(
                                         textVal);
                                 List<Selection> customSelections = new ArrayList<Selection>();
-                                for (SelectChoice customSelectChoice : customSelectChoices) {
-                                    customSelections.add(customSelectChoice.selection());
+                                for (SelectChoice choice : customSelectChoices) {
+                                    customSelections.add(choice.selection());
                                 }
                                 return new SelectMultiData(customSelections);
                             default:
