@@ -84,6 +84,8 @@ public class WidgetFactory {
                             questionWidget = new CopticDateWidget(context, fep);
                         } else if (appearance.contains("islamic")) {
                             questionWidget = new IslamicDateWidget(context, fep);
+                        } else if (appearance.contains("burmese")) {
+                            questionWidget = new BurmeseDateWidget(context, fep);
                         } else {
                             questionWidget = new DateWidget(context, fep);
                         }

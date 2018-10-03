@@ -17,6 +17,9 @@ import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.Locale;
 
+import mmcalendar.MyanmarDate;
+import mmcalendar.MyanmarDateConverter;
+
 public class DateTimeUtils {
 
     private DateTimeUtils() {
@@ -111,6 +114,9 @@ public class DateTimeUtils {
                 datePickerMode = DatePickerDetails.DatePickerMode.SPINNERS;
             } else if (appearance.contains("islamic")) {
                 datePickerType = DatePickerDetails.DatePickerType.ISLAMIC;
+                datePickerMode = DatePickerDetails.DatePickerMode.SPINNERS;
+            } else if (appearance.contains("burmese")) {
+                datePickerType = DatePickerDetails.DatePickerType.BURMESE;
                 datePickerMode = DatePickerDetails.DatePickerMode.SPINNERS;
             } else if (appearance.contains("no-calendar")) {
                 datePickerMode = DatePickerDetails.DatePickerMode.SPINNERS;
