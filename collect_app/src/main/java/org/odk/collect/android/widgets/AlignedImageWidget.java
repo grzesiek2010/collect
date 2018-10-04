@@ -43,6 +43,7 @@ import static org.odk.collect.android.utilities.PermissionUtils.requestCameraPer
  * @author Mitchell Tyler Lee
  */
 @SuppressLint("ViewConstructor")
+@Deprecated
 public class AlignedImageWidget extends BaseImageWidget {
     private static final String ODK_CAMERA_TAKE_PICTURE_INTENT_COMPONENT =
             "org.opendatakit.camera.TakePicture";

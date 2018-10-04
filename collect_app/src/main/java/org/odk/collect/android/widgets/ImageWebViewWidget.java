@@ -62,6 +62,7 @@ import static org.odk.collect.android.utilities.PermissionUtils.requestCameraPer
  * @author Yaw Anokwa (yanokwa@gmail.com)
  */
 @SuppressLint("ViewConstructor")
+@Deprecated
 public class ImageWebViewWidget extends QuestionWidget implements FileWidget {
 
     private final Button captureButton;
