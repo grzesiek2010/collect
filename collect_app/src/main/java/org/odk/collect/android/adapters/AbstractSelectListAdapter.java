@@ -115,7 +115,9 @@ public abstract class AbstractSelectListAdapter extends RecyclerView.Adapter<Abs
         }
 
         void bind(final int index) {
-            widget.addMediaFromChoice(mediaLayout, index, setUpButton(index));
+            if (index < filteredItems.size()) {
+                widget.addMediaFromChoice(mediaLayout, index, setUpButton(index));
+            }
         }
     }
 }
