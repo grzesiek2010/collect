@@ -22,6 +22,8 @@ import bikramsambat.BikramSambatDate;
 import bikramsambat.BsCalendar;
 import bikramsambat.BsException;
 import bikramsambat.BsGregorianDate;
+import mmcalendar.MyanmarDate;
+import mmcalendar.MyanmarDateConverter;
 import timber.log.Timber;
 
 public class DateTimeUtils {
@@ -64,9 +66,12 @@ public class DateTimeUtils {
         } else if (datePickerDetails.isIslamicType()) {
             customDate = new DateTime(date).withChronology(IslamicChronology.getInstance());
             monthArray = context.getResources().getStringArray(R.array.islamic_months);
-        } else {
+        } else if (datePickerDetails.isNepaliType()) {
             customDate = new DateTime(date);
             monthArray = BsCalendar.MONTH_NAMES.toArray(new String[BsCalendar.MONTH_NAMES.size()]);
+        } else {
+            customDate = new DateTime(date);
+            monthArray = context.getResources().getStringArray(R.array.myanmar_months);
         }
         String customDateText = "";
 
@@ -90,6 +95,19 @@ public class DateTimeUtils {
                 }
             } catch (BsException e) {
                 Timber.e(e);
+            }
+        } else if (datePickerDetails.isMyanmarType()) {
+            Calendar calendar = Calendar.getInstance();
+            calendar.setTime(date);
+            MyanmarDate myanmarDate = MyanmarDateConverter.convert(calendar);
+            String day = datePickerDetails.isSpinnerMode() ? myanmarDate.getMonthDay() + " " : "";
+            String month = datePickerDetails.isSpinnerMode()
+                            || datePickerDetails.isMonthYearMode()
+                            ? monthArray[myanmarDate.getMonth() - 1] + " " : "";
+            if (containsTime) {
+                customDateText = day + month + myanmarDate.getYearInt() + ", " + df.format(customDate.toDate());
+            } else {
+                customDateText = day + month + myanmarDate.getYearInt();
             }
         } else {
             String day = datePickerDetails.isSpinnerMode() ? customDate.getDayOfMonth() + " " : "";
@@ -146,6 +164,9 @@ public class DateTimeUtils {
                 datePickerMode = DatePickerDetails.DatePickerMode.SPINNERS;
             } else if (appearance.contains("nepali")) {
                 datePickerType = DatePickerDetails.DatePickerType.NEPALI;
+                datePickerMode = DatePickerDetails.DatePickerMode.SPINNERS;
+            } else if (appearance.contains("myanmar")) {
+                datePickerType = DatePickerDetails.DatePickerType.MYANMAR;
                 datePickerMode = DatePickerDetails.DatePickerMode.SPINNERS;
             } else if (appearance.contains("no-calendar")) {
                 datePickerMode = DatePickerDetails.DatePickerMode.SPINNERS;
