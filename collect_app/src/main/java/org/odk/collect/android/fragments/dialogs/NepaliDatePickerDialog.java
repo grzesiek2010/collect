@@ -20,8 +20,6 @@ import org.javarosa.core.model.FormIndex;
 import org.joda.time.LocalDateTime;
 import org.odk.collect.android.logic.DatePickerDetails;
 
-import java.util.Arrays;
-
 import bikramsambat.BikramSambatDate;
 import bikramsambat.BsCalendar;
 import bikramsambat.BsException;
@@ -49,7 +47,7 @@ public class NepaliDatePickerDialog extends CustomDatePickerDialog {
 
     @Override
     protected void updateDays() {
-        BikramSambatDate bikramSambatDate = new BikramSambatDate(getYear(), Arrays.asList(monthsArray).indexOf(getMonth()), getDay());
+        BikramSambatDate bikramSambatDate = new BikramSambatDate(getYear(), getMonth(), getDay());
         int daysInMonth = 0;
         try {
             daysInMonth = BsCalendar.getInstance().daysInMonth(bikramSambatDate.year, bikramSambatDate.month);
@@ -63,7 +61,7 @@ public class NepaliDatePickerDialog extends CustomDatePickerDialog {
     protected LocalDateTime getOriginalDate() {
         BsGregorianDate bsGregorianDate = null;
         try {
-            bsGregorianDate = BsCalendar.getInstance().toGreg(new BikramSambatDate(getYear(), Arrays.asList(monthsArray).indexOf(getMonth()) + 1, getDay()));
+            bsGregorianDate = BsCalendar.getInstance().toGreg(new BikramSambatDate(getYear(), getMonth() + 1, getDay()));
         } catch (BsException e) {
             Timber.e(e);
         }

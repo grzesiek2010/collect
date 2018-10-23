@@ -22,8 +22,6 @@ import org.odk.collect.android.R;
 import org.odk.collect.android.logic.DatePickerDetails;
 import org.odk.collect.android.utilities.DateTimeUtils;
 
-import java.util.Arrays;
-
 import mmcalendar.MyanmarDate;
 import mmcalendar.MyanmarDateConverter;
 import mmcalendar.MyanmarDateKernel;
@@ -81,6 +79,6 @@ public class MyanmarDatePickerDialog extends CustomDatePickerDialog {
     }
 
     private MyanmarDate getCurrentMyanmarDate() {
-        return MyanmarDateKernel.j2m(MyanmarDateKernel.m2j(getYear(), Arrays.asList(monthsArray).indexOf(getMonth()), getDay()));
+        return MyanmarDateKernel.j2m(MyanmarDateKernel.m2j(getYear(), getMonth(), getDay()));
     }
 }

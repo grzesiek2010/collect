@@ -213,8 +213,8 @@ public abstract class CustomDatePickerDialog extends DialogFragment {
         return dayPicker.getValue();
     }
 
-    public String getMonth() {
-        return monthPicker.getDisplayedValues()[monthPicker.getValue()];
+    public int getMonth() {
+        return monthPicker.getValue();
     }
 
     public int getYear() {

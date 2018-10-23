@@ -23,8 +23,6 @@ import org.odk.collect.android.R;
 import org.odk.collect.android.logic.DatePickerDetails;
 import org.odk.collect.android.utilities.DateTimeUtils;
 
-import java.util.Arrays;
-
 public class IslamicDatePickerDialog extends CustomDatePickerDialog {
 
     private static final int MIN_SUPPORTED_YEAR = 1318; //1900 in Gregorian calendar
@@ -75,7 +73,7 @@ public class IslamicDatePickerDialog extends CustomDatePickerDialog {
 
     private LocalDateTime getCurrentIslamicDate() {
         int islamicDay = getDay();
-        int islamicMonth = Arrays.asList(monthsArray).indexOf(getMonth());
+        int islamicMonth = getMonth();
         int islamicYear = getYear();
 
         LocalDateTime islamicDate = new LocalDateTime(islamicYear, islamicMonth + 1, 1, 0, 0, 0, 0, IslamicChronology.getInstance());

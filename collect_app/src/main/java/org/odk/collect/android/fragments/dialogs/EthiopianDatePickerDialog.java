@@ -23,8 +23,6 @@ import org.odk.collect.android.R;
 import org.odk.collect.android.logic.DatePickerDetails;
 import org.odk.collect.android.utilities.DateTimeUtils;
 
-import java.util.Arrays;
-
 /**
  * @author Grzegorz Orczykowski (gorczykowski@soldevelo.com)
  * @author Aurelio Di Pasquale (aurelio.dipasquale@unibas.ch)
@@ -78,7 +76,7 @@ public class EthiopianDatePickerDialog extends CustomDatePickerDialog {
 
     private LocalDateTime getCurrentEthiopianDate() {
         int ethiopianDay = getDay();
-        int ethiopianMonth = Arrays.asList(monthsArray).indexOf(getMonth());
+        int ethiopianMonth = getMonth();
         int ethiopianYear = getYear();
 
         LocalDateTime ethiopianDate = new LocalDateTime(ethiopianYear, ethiopianMonth + 1, 1, 0, 0, 0, 0, EthiopicChronology.getInstance());
