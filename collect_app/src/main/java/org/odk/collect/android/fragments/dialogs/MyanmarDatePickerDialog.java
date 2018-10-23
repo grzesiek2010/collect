@@ -18,10 +18,13 @@ package org.odk.collect.android.fragments.dialogs;
 
 import org.javarosa.core.model.FormIndex;
 import org.joda.time.LocalDateTime;
-import org.odk.collect.android.R;
 import org.odk.collect.android.logic.DatePickerDetails;
 import org.odk.collect.android.utilities.DateTimeUtils;
 
+import java.util.List;
+
+import mmcalendar.Language;
+import mmcalendar.LanguageCatalog;
 import mmcalendar.MyanmarDate;
 import mmcalendar.MyanmarDateConverter;
 import mmcalendar.MyanmarDateKernel;
@@ -31,8 +34,6 @@ import mmcalendar.WesternDateConverter;
 public class MyanmarDatePickerDialog extends CustomDatePickerDialog {
     private static final int MIN_SUPPORTED_YEAR = 1261; //1900 in Gregorian calendar
     private static final int MAX_SUPPORTED_YEAR = 1461; //2100 in Gregorian calendar
-
-    private String[] monthsArray;
 
     public static MyanmarDatePickerDialog newInstance(FormIndex formIndex, LocalDateTime date, DatePickerDetails datePickerDetails) {
         MyanmarDatePickerDialog dialog = new MyanmarDatePickerDialog();
@@ -44,7 +45,6 @@ public class MyanmarDatePickerDialog extends CustomDatePickerDialog {
     @Override
     public void onResume() {
         super.onResume();
-        monthsArray = getResources().getStringArray(R.array.myanmar_months);
         setUpValues();
     }
 
@@ -69,13 +69,22 @@ public class MyanmarDatePickerDialog extends CustomDatePickerDialog {
                 localDateTime.getMonthOfYear(), localDateTime.getDayOfMonth(), localDateTime.getHourOfDay(),
                 localDateTime.getMinuteOfHour(), localDateTime.getSecondOfMinute());
         setUpDayPicker(myanmarDate.getMonthDay(), myanmarDate.getMonthLength());
-        setUpMonthPicker(myanmarDate.getMonth(), monthsArray);
+
+        setUpMonthPicker(myanmarDate.getMonth(), getMonthsArray(myanmarDate.getYearInt(), myanmarDate.getMonth()));
         setUpYearPicker(myanmarDate.getYearInt(), MIN_SUPPORTED_YEAR, MAX_SUPPORTED_YEAR);
     }
 
     private void setUpValues() {
         setUpDatePicker();
         updateGregorianDateLabel();
+    }
+
+    private String[] getMonthsArray(int year, int month) {
+        LanguageCatalog languageCatalog = LanguageCatalog.getInstance();
+        languageCatalog.setLanguage(Language.MYANMAR);
+        List<String> monthList
+                = MyanmarDateKernel.getMyanmarMonth(year, month).getMonthNameList(languageCatalog);
+        return monthList.toArray(new String[monthList.size()]);
     }
 
     private MyanmarDate getCurrentMyanmarDate() {
