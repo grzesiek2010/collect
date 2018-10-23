@@ -210,7 +210,8 @@ dependencies {
         exclude group: 'org.apache.httpcomponents'
     }
 
-    implementation 'bikramsambat:bikram-sambat:1.0.0'
+    implementation "bikramsambat:bikram-sambat:1.0.0" // used to support Bikram Sambat calendar
+    implementation "com.github.chanmratekoko:myanmar-calendar:1.0.6.RC2" // used to support Myanmar calendar
     implementation "com.evernote:android-job:1.2.5"
     implementation "com.rarepebble:colorpicker:2.3.1"
     implementation "commons-io:commons-io:2.6"
@@ -236,7 +237,6 @@ dependencies {
     implementation "com.google.zxing:core:3.3.0"
     implementation "com.journeyapps:zxing-android-embedded:3.5.0"
     implementation "net.danlew:android.joda:2.9.9"
-    implementation 'com.github.chanmratekoko:myanmar-calendar:1.0.5.RELEASE'
 
     // Real LeakCanary for debug builds only: notifications, analysis, etc
     debugImplementation "com.squareup.leakcanary:leakcanary-android:${rootProject.leakyCanaryVersion}"
