@@ -25,4 +25,16 @@ the specific language governing permissions and limitations under the License. -
     <string name="every_24_hours_value" translatable="false">every_24_hours</string>
     <string name="app_theme_light" translatable="false">light_theme</string>
     <string name="app_theme_dark" translatable="false">dark_theme</string>
+    <string name="myanmar_month_1" translatable="false">တန်ခူး</string>
+    <string name="myanmar_month_2" translatable="false">ကဆုန်</string>
+    <string name="myanmar_month_3" translatable="false">နယုန်</string>
+    <string name="myanmar_month_4" translatable="false">ဝါဆို</string>
+    <string name="myanmar_month_5" translatable="false">ဝါခေါင်</string>
+    <string name="myanmar_month_6" translatable="false">တော်သလင်း</string>
+    <string name="myanmar_month_7" translatable="false">သီတင်းကျွတ်</string>
+    <string name="myanmar_month_8" translatable="false">တန်ဆောင်မုန်း</string>
+    <string name="myanmar_month_9" translatable="false">နတ်တော်</string>
+    <string name="myanmar_month_10" translatable="false">ပြာသို</string>
+    <string name="myanmar_month_11" translatable="false">တပို့တွဲ</string>
+    <string name="myanmar_month_12" translatable="false">တပေါင်း</string>
 </resources>
