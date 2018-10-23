@@ -18,7 +18,6 @@ package org.odk.collect.android.fragments.dialogs;
 
 import android.app.Dialog;
 import android.content.Context;
-import android.content.DialogInterface;
 import android.os.Bundle;
 import android.support.v4.app.DialogFragment;
 import android.support.v7.app.AlertDialog;
@@ -90,23 +89,15 @@ public abstract class CustomDatePickerDialog extends DialogFragment {
         return new AlertDialog.Builder(getActivity())
                 .setTitle(R.string.select_date)
                 .setView(R.layout.custom_date_picker_dialog)
-                .setPositiveButton(R.string.ok, new DialogInterface.OnClickListener() {
-                    @Override
-                    public void onClick(DialogInterface dialog, int id) {
-                        FormController formController = Collect.getInstance().getFormController();
-                        if (formController != null) {
-                            formController.setIndexWaitingForData(formIndex);
-                        }
-                        listener.onDateChanged(getDateAsGregorian(getOriginalDate()));
-                        dismiss();
+                .setPositiveButton(R.string.ok, (dialog, id) -> {
+                    FormController formController = Collect.getInstance().getFormController();
+                    if (formController != null) {
+                        formController.setIndexWaitingForData(formIndex);
                     }
+                    listener.onDateChanged(getDateAsGregorian(getOriginalDate()));
+                    dismiss();
                 })
-                .setNegativeButton(R.string.cancel, new DialogInterface.OnClickListener() {
-                    @Override
-                    public void onClick(DialogInterface dialog, int id) {
-                        dismiss();
-                    }
-                })
+                .setNegativeButton(R.string.cancel, (dialog, id) -> dismiss())
                 .create();
     }
 
@@ -128,27 +119,16 @@ public abstract class CustomDatePickerDialog extends DialogFragment {
 
     private void setUpPickers() {
         dayPicker = getDialog().findViewById(R.id.day_picker);
-        dayPicker.setOnValueChangedListener(new NumberPicker.OnValueChangeListener() {
-            @Override
-            public void onValueChange(NumberPicker picker, int oldVal, int newVal) {
-                updateGregorianDateLabel();
-            }
-        });
+        dayPicker.setOnValueChangedListener((picker, oldVal, newVal) -> updateGregorianDateLabel());
         monthPicker = getDialog().findViewById(R.id.month_picker);
-        monthPicker.setOnValueChangedListener(new NumberPicker.OnValueChangeListener() {
-            @Override
-            public void onValueChange(NumberPicker picker, int oldVal, int newVal) {
-                updateDays();
-                updateGregorianDateLabel();
-            }
+        monthPicker.setOnValueChangedListener((picker, oldVal, newVal) -> {
+            updateDays();
+            updateGregorianDateLabel();
         });
         yearPicker = getDialog().findViewById(R.id.year_picker);
-        yearPicker.setOnValueChangedListener(new NumberPicker.OnValueChangeListener() {
-            @Override
-            public void onValueChange(NumberPicker picker, int oldVal, int newVal) {
-                updateDays();
-                updateGregorianDateLabel();
-            }
+        yearPicker.setOnValueChangedListener((picker, oldVal, newVal) -> {
+            updateDays();
+            updateGregorianDateLabel();
         });
 
         hidePickersIfNeeded();
