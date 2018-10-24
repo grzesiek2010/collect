@@ -21,6 +21,7 @@ import org.joda.time.LocalDateTime;
 import org.odk.collect.android.logic.DatePickerDetails;
 import org.odk.collect.android.utilities.DateTimeUtils;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import mmcalendar.Language;
@@ -70,7 +71,7 @@ public class MyanmarDatePickerDialog extends CustomDatePickerDialog {
                 localDateTime.getMinuteOfHour(), localDateTime.getSecondOfMinute());
         setUpDayPicker(myanmarDate.getMonthDay(), myanmarDate.getMonthLength());
 
-        setUpMonthPicker(myanmarDate.getMonth(), getMonthsArray(myanmarDate.getYearInt(), myanmarDate.getMonth()));
+        setUpMonthPicker(myanmarDate.getMonth(), getMonthsArray(myanmarDate.getYearInt()));
         setUpYearPicker(myanmarDate.getYearInt(), MIN_SUPPORTED_YEAR, MAX_SUPPORTED_YEAR);
     }
 
@@ -79,11 +80,18 @@ public class MyanmarDatePickerDialog extends CustomDatePickerDialog {
         updateGregorianDateLabel();
     }
 
-    private String[] getMonthsArray(int year, int month) {
+    private String[] getMonthsArray(int year) {
         LanguageCatalog languageCatalog = LanguageCatalog.getInstance();
         languageCatalog.setLanguage(Language.MYANMAR);
-        List<String> monthList
-                = MyanmarDateKernel.getMyanmarMonth(year, month).getMonthNameList(languageCatalog);
+        List<String> monthList = new ArrayList<>();
+
+        MyanmarDate myanmarDate = MyanmarDateKernel.j2m(MyanmarDateKernel.m2j(year, 0, 1));
+        monthList.add(myanmarDate.getMonthName(languageCatalog));
+
+        for (int i = 1; i < MyanmarDateKernel.getMyanmarMonth(myanmarDate.getYearInt(), myanmarDate.getMonth()).getMonthNameList().size(); i++) {
+            myanmarDate = MyanmarDateKernel.j2m(MyanmarDateKernel.m2j(year, i, 1));
+            monthList.add(myanmarDate.getMonthName(languageCatalog));
+        }
         return monthList.toArray(new String[monthList.size()]);
     }
 

@@ -103,7 +103,7 @@ public class DateTimeUtils {
             String day = datePickerDetails.isSpinnerMode() ? myanmarDate.getMonthDay() + " " : "";
             String month = datePickerDetails.isSpinnerMode()
                             || datePickerDetails.isMonthYearMode()
-                            ? monthArray[myanmarDate.getMonth() - 1] + " " : "";
+                            ? monthArray[myanmarDate.getMonth()] + " " : "";
             if (containsTime) {
                 customDateText = day + month + myanmarDate.getYearInt() + ", " + df.format(customDate.toDate());
             } else {
