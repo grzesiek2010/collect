@@ -15,7 +15,6 @@
 package org.odk.collect.android.upload;
 
 import android.annotation.SuppressLint;
-import android.app.NotificationManager;
 import android.app.PendingIntent;
 import android.content.Context;
 import android.content.Intent;
@@ -25,7 +24,6 @@ import android.net.NetworkInfo;
 import android.net.Uri;
 import android.os.Environment;
 import android.support.annotation.NonNull;
-import android.support.v4.app.NotificationCompat;
 
 import com.google.android.gms.analytics.HitBuilders;
 
@@ -39,7 +37,7 @@ import org.odk.collect.android.dto.Instance;
 import org.odk.collect.android.exception.MultipleFoldersFoundException;
 import org.odk.collect.android.http.HttpClientConnection;
 import org.odk.collect.android.logic.PropertyManager;
-import org.odk.collect.android.utilities.IconUtils;
+import org.odk.collect.android.utilities.NotificationUtils;
 import org.odk.collect.android.utilities.PermissionUtils;
 import org.odk.collect.android.utilities.WebCredentialsUtils;
 import org.odk.collect.android.utilities.InstanceUploaderUtils;
@@ -304,16 +302,11 @@ public class AutoSendWorker extends Worker {
         PendingIntent pendingNotify = PendingIntent.getActivity(Collect.getInstance(), FORMS_UPLOADED_NOTIFICATION,
                 notifyIntent, PendingIntent.FLAG_UPDATE_CURRENT);
 
-        NotificationCompat.Builder builder = new NotificationCompat.Builder(Collect.getInstance())
-                .setSmallIcon(IconUtils.getNotificationAppIcon())
-                .setContentTitle(Collect.getInstance().getString(R.string.odk_auto_note))
-                .setContentIntent(pendingNotify)
-                .setContentText(anyFailure ? Collect.getInstance().getString(R.string.failures)
-                        : Collect.getInstance().getString(R.string.success))
-                .setAutoCancel(true);
-
-        NotificationManager notificationManager = (NotificationManager) Collect.getInstance()
-                .getSystemService(Context.NOTIFICATION_SERVICE);
-        notificationManager.notify(AUTO_SEND_RESULT_NOTIFICATION_ID, builder.build());
+        NotificationUtils.showNotification(
+                pendingNotify,
+                AUTO_SEND_RESULT_NOTIFICATION_ID,
+                R.string.odk_auto_note,
+                anyFailure ? Collect.getInstance().getString(R.string.failures)
+                        : Collect.getInstance().getString(R.string.success));
     }
 }

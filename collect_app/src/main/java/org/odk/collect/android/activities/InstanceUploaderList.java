@@ -16,10 +16,8 @@ package org.odk.collect.android.activities;
 
 import android.app.AlertDialog;
 import android.arch.lifecycle.LiveData;
-import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
-import android.content.IntentFilter;
 import android.database.Cursor;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
@@ -49,10 +47,7 @@ import org.odk.collect.android.preferences.GeneralSharedPreferences;
 import org.odk.collect.android.preferences.PreferencesActivity;
 import org.odk.collect.android.preferences.Transport;
 import org.odk.collect.android.tasks.InstanceSyncTask;
-import org.odk.collect.android.tasks.sms.SmsNotificationReceiver;
 import org.odk.collect.android.tasks.sms.SmsService;
-import org.odk.collect.android.tasks.sms.contracts.SmsSubmissionManagerContract;
-import org.odk.collect.android.tasks.sms.models.SmsSubmission;
 import org.odk.collect.android.upload.AutoSendWorker;
 import org.odk.collect.android.utilities.PlayServicesUtil;
 import org.odk.collect.android.utilities.ToastUtils;
@@ -71,7 +66,6 @@ import timber.log.Timber;
 
 import static org.odk.collect.android.preferences.GeneralKeys.KEY_PROTOCOL;
 import static org.odk.collect.android.preferences.GeneralKeys.KEY_SUBMISSION_TRANSPORT_TYPE;
-import static org.odk.collect.android.tasks.sms.SmsSender.SMS_INSTANCE_ID;
 import static org.odk.collect.android.utilities.PermissionUtils.finishAllActivities;
 import static org.odk.collect.android.utilities.PermissionUtils.requestReadPhoneStatePermission;
 import static org.odk.collect.android.utilities.PermissionUtils.requestSendSMSAndReadPhoneStatePermissions;
@@ -110,23 +104,8 @@ public class InstanceUploaderList extends InstanceListActivity implements
     // observer
     private boolean autoSendOngoing = true;
 
-    private final BroadcastReceiver smsForegroundReceiver = new BroadcastReceiver() {
-        @Override
-        public void onReceive(Context context, Intent intent) {
-            //Stops the notification from being sent to others that are listening for this broadcast.
-            abortBroadcast();
-
-            //deletes submission since the app is in the foreground and the NotificationReceiver won't be triggered.
-            if (intent.hasExtra(SMS_INSTANCE_ID)) {
-                deleteIfSubmissionCompleted(intent.getStringExtra(SMS_INSTANCE_ID));
-            }
-        }
-    };
-
     @Inject
     SmsService smsService;
-    @Inject
-    SmsSubmissionManagerContract smsSubmissionManager;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -288,12 +267,6 @@ public class InstanceUploaderList extends InstanceListActivity implements
         }
         super.onResume();
 
-        IntentFilter filter = new IntentFilter(SmsNotificationReceiver.SMS_NOTIFICATION_ACTION);
-        // The default priority is 0. Positive values will be before
-        // the default, lower values will be after it.
-        filter.setPriority(1);
-
-        registerReceiver(smsForegroundReceiver, filter);
         setupUploadButtons();
     }
 
@@ -303,8 +276,6 @@ public class InstanceUploaderList extends InstanceListActivity implements
             instanceSyncTask.setDiskSyncListener(null);
         }
         super.onPause();
-
-        unregisterReceiver(smsForegroundReceiver);
     }
 
     @Override
@@ -532,13 +503,6 @@ public class InstanceUploaderList extends InstanceListActivity implements
 
         if (listAdapter != null) {
             ((InstanceUploaderAdapter) listAdapter).onDestroy();
-        }
-    }
-
-    private void deleteIfSubmissionCompleted(String instanceId) {
-        SmsSubmission model = smsSubmissionManager.getSubmissionModel(instanceId);
-        if (model.isSubmissionComplete()) {
-            smsSubmissionManager.forgetSubmission(model.getInstanceId());
         }
     }
 }
