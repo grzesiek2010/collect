@@ -21,6 +21,7 @@ import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.database.Cursor;
+import android.location.Location;
 import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Bundle;
@@ -35,6 +36,7 @@ import android.text.InputFilter;
 import android.text.Spanned;
 import android.text.TextWatcher;
 import android.util.DisplayMetrics;
+import android.util.Log;
 import android.view.ContextMenu;
 import android.view.ContextMenu.ContextMenuInfo;
 import android.view.GestureDetector;
@@ -93,6 +95,9 @@ import org.odk.collect.android.listeners.FormLoaderListener;
 import org.odk.collect.android.listeners.FormSavedListener;
 import org.odk.collect.android.listeners.PermissionListener;
 import org.odk.collect.android.listeners.SavePointListener;
+import org.odk.collect.android.location.client.GoogleLocationClient;
+import org.odk.collect.android.location.client.LocationClient;
+import org.odk.collect.android.logic.Audit;
 import org.odk.collect.android.logic.FormController;
 import org.odk.collect.android.logic.FormController.FailedConstraint;
 import org.odk.collect.android.logic.FormInfo;
@@ -172,7 +177,8 @@ public class FormEntryActivity extends CollectAbstractActivity implements Animat
         DependencyProvider<ActivityAvailability>,
         CustomDatePickerDialog.CustomDatePickerDialogListener,
         RankingWidgetDialog.RankingListener,
-        SaveFormIndexTask.SaveFormIndexListener {
+        SaveFormIndexTask.SaveFormIndexListener, com.google.android.gms.location.LocationListener,
+        LocationClient.LocationClientListener {
 
     // save with every swipe forward or back. Timings indicate this takes .25
     // seconds.
@@ -275,6 +281,26 @@ public class FormEntryActivity extends CollectAbstractActivity implements Animat
         this.doSwipe = doSwipe;
     }
 
+    @Override
+    public void onLocationChanged(Location location) {
+        Log.i("QWERTY", "Lat " + location.getLatitude() + " long: " + location.getLongitude());
+    }
+
+    @Override
+    public void onClientStart() {
+        googleLocationClient.requestLocationUpdates(this);
+    }
+
+    @Override
+    public void onClientStartFailure() {
+
+    }
+
+    @Override
+    public void onClientStop() {
+
+    }
+
     enum AnimationType {
         LEFT, RIGHT, FADE
     }
@@ -282,6 +308,8 @@ public class FormEntryActivity extends CollectAbstractActivity implements Animat
     private boolean showNavigationButtons;
 
     private Bundle state;
+
+    private GoogleLocationClient googleLocationClient;
 
     @NonNull
     private ActivityAvailability activityAvailability = new ActivityAvailability(this);
@@ -1370,6 +1398,11 @@ public class FormEntryActivity extends CollectAbstractActivity implements Animat
         return handled; // this is always true
     }
 
+    @Override
+    public void onPointerCaptureChanged(boolean hasCapture) {
+
+    }
+
     /**
      * Determines what should be displayed on the screen. Possible options are:
      * a question, an ask repeat dialog, or the submit screen. Also saves
@@ -2121,6 +2154,32 @@ public class FormEntryActivity extends CollectAbstractActivity implements Animat
     }
 
     @Override
+    protected void onStart() {
+        super.onStart();
+        setUpLocationClient();
+    }
+
+    @Override
+    protected void onStop() {
+        googleLocationClient.stop();
+        super.onStop();
+    }
+
+    private void setUpLocationClient() {
+        FormController formController = getFormController();
+        if (formController != null && formController.getSubmissionMetadata() != null) {
+            Audit audit = formController.getSubmissionMetadata().audit;
+            if (audit != null && audit.collectLocationCoordinates()) {
+                googleLocationClient = new GoogleLocationClient(this);
+                googleLocationClient.setListener(this);
+                googleLocationClient.setPriority(audit.getLocationPriority());
+                googleLocationClient.setUpdateIntervals((long) audit.getLocationInterval() * 1000, (long) audit.getLocationInterval() * 1000);
+                googleLocationClient.start();
+            }
+        }
+    }
+
+    @Override
     protected void onResume() {
         super.onResume();
 
@@ -2419,7 +2478,7 @@ public class FormEntryActivity extends CollectAbstractActivity implements Animat
                         formController.getTimerLogger().logTimerEvent(TimerLogger.EventTypes.FORM_RESUME, 0, null, false, true);
                     }
                 }
-
+                setUpLocationClient();
                 refreshCurrentView();
             }
         } else {
