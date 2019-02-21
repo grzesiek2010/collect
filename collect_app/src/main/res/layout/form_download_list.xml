@@ -13,11 +13,11 @@ WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. See the
 License for the specific language governing permissions and limitations under
 the License.
 -->
-<RelativeLayout
-        xmlns:android="http://schemas.android.com/apk/res/android"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:orientation="vertical">
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:orientation="vertical">
 
     <include layout="@layout/toolbar"/>
 
@@ -36,7 +36,7 @@ the License.
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
                 android:orientation="vertical"
-                android:layout_above="@+id/buttonholder">
+                android:layout_above="@+id/bottom_navigation">
 
             <ListView
                     android:id="@android:id/list"
@@ -56,45 +56,18 @@ the License.
 
         </LinearLayout>
 
-        <LinearLayout
-                android:id="@+id/buttonholder"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_alignParentBottom="true"
-                android:orientation="horizontal"
-                android:weightSum="3">
-
-            <Button
-                    android:id="@+id/toggle_button"
-                    android:layout_width="0dp"
-                    android:layout_height="match_parent"
-                    android:layout_weight="1"
-                    android:padding="12dp"
-                    android:text="@string/select_all"
-                    android:textAllCaps="false"
-                    android:textSize="16sp"/>
-
-            <Button
-                    android:id="@+id/refresh_button"
-                    android:layout_width="0dp"
-                    android:layout_height="match_parent"
-                    android:layout_weight="1"
-                    android:padding="12dp"
-                    android:text="@string/refresh"
-                    android:textAllCaps="false"
-                    android:textSize="16sp"/>
-
-            <Button
-                    android:id="@+id/add_button"
-                    android:layout_width="0dp"
-                    android:layout_height="match_parent"
-                    android:layout_weight="1"
-                    android:padding="12dp"
-                    android:text="@string/download"
-                    android:textAllCaps="false"
-                    android:textSize="16sp"/>
-
-        </LinearLayout>
+        <android.support.design.widget.BottomNavigationView
+            android:id="@+id/bottom_navigation"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_alignParentBottom="true"
+            android:visibility="gone"
+            android:background="?colorPrimary"
+            app:itemTextAppearanceActive="@style/TextAppearance.MaterialComponents.Body2"
+            app:itemTextAppearanceInactive="@style/TextAppearance.MaterialComponents.Body2"
+            app:itemTextColor="?menuItemColor"
+            app:itemIconTint="?menuItemColor"
+            app:menu="@menu/form_download_menu" />
 
     </RelativeLayout>
 

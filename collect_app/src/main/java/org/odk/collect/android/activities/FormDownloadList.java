@@ -28,11 +28,10 @@ import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
+import android.support.design.widget.BottomNavigationView;
 import android.util.SparseBooleanArray;
 import android.view.View;
-import android.view.View.OnClickListener;
 import android.widget.AdapterView;
-import android.widget.Button;
 import android.widget.ListView;
 
 import org.odk.collect.android.R;
@@ -122,11 +121,9 @@ public class FormDownloadList extends FormListActivity implements FormListDownlo
     private AlertDialog alertDialog;
     private ProgressDialog progressDialog;
     private ProgressDialog cancelDialog;
-    private Button downloadButton;
 
     private DownloadFormListTask downloadFormListTask;
     private DownloadFormsTask downloadFormsTask;
-    private Button toggleButton;
 
     private HashMap<String, FormDetails> formNamesAndURLs = new HashMap<String, FormDetails>();
     private ArrayList<HashMap<String, String>> formList;
@@ -148,6 +145,8 @@ public class FormDownloadList extends FormListActivity implements FormListDownlo
     private String password;
     private ArrayList<String> formsFound;
     private HashMap<String, Boolean> formResult;
+
+    private BottomNavigationView bottomNavigationView;
 
     @Inject
     WebCredentialsUtils webCredentialsUtils;
@@ -216,41 +215,34 @@ public class FormDownloadList extends FormListActivity implements FormListDownlo
 
         alertMsg = getString(R.string.please_wait);
 
-        downloadButton = findViewById(R.id.add_button);
-        downloadButton.setEnabled(listView.getCheckedItemCount() > 0);
-        downloadButton.setOnClickListener(new OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                downloadSelectedFiles();
-            }
-        });
-
-        toggleButton = findViewById(R.id.toggle_button);
-        toggleButton.setEnabled(false);
-        toggleButton.setOnClickListener(new OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                downloadButton.setEnabled(toggleChecked(listView));
-                toggleButtonLabel(toggleButton, listView);
-                selectedForms.clear();
-                if (listView.getCheckedItemCount() == listView.getCount()) {
-                    for (HashMap<String, String> map : formList) {
-                        selectedForms.add(map.get(FORMDETAIL_KEY));
+        bottomNavigationView = findViewById(R.id.bottom_navigation);
+        bottomNavigationView.setOnNavigationItemSelectedListener(
+                item -> {
+                    switch (item.getItemId()) {
+                        case R.id.toggle:
+                            bottomNavigationView.getMenu().getItem(2).setEnabled(toggleChecked(listView));
+                            toggleButtonLabel(bottomNavigationView.getMenu().getItem(0), listView);
+                            selectedForms.clear();
+                            if (listView.getCheckedItemCount() == listView.getCount()) {
+                                for (HashMap<String, String> map : formList) {
+                                    selectedForms.add(map.get(FORMDETAIL_KEY));
+                                }
+                            }
+                            break;
+                        case R.id.refresh:
+                            formList.clear();
+                            updateAdapter();
+                            clearChoices();
+                            downloadFormList();
+                            break;
+                        case R.id.download_selected:
+                            downloadSelectedFiles();
+                            break;
                     }
-                }
-            }
-        });
+                    return true;
+                });
 
-        Button refreshButton = findViewById(R.id.refresh_button);
-        refreshButton.setOnClickListener(new OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                formList.clear();
-                updateAdapter();
-                clearChoices();
-                downloadFormList();
-            }
-        });
+        bottomNavigationView.getMenu().getItem(2).setEnabled(listView.getCheckedItemCount() > 0);
 
         if (savedInstanceState != null) {
             // If the screen has rotated, the hashmap with the form ids and urls is passed here.
@@ -263,7 +255,7 @@ public class FormDownloadList extends FormListActivity implements FormListDownlo
             // how many items we've selected
             // Android should keep track of this, but broken on rotate...
             if (savedInstanceState.containsKey(BUNDLE_SELECTED_COUNT)) {
-                downloadButton.setEnabled(savedInstanceState.getInt(BUNDLE_SELECTED_COUNT) > 0);
+                bottomNavigationView.getMenu().getItem(2).setEnabled(savedInstanceState.getInt(BUNDLE_SELECTED_COUNT) > 0);
             }
 
             // to restore alert dialog.
@@ -339,17 +331,19 @@ public class FormDownloadList extends FormListActivity implements FormListDownlo
         sortingOptions = new String[]{
                 getString(R.string.sort_by_name_asc), getString(R.string.sort_by_name_desc)
         };
+
+        bottomNavigationView.setVisibility(formList.isEmpty() ? View.GONE : View.VISIBLE);
     }
 
     private void clearChoices() {
         listView.clearChoices();
-        downloadButton.setEnabled(false);
+        bottomNavigationView.getMenu().getItem(2).setEnabled(false);
     }
 
     @Override
     public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-        toggleButtonLabel(toggleButton, listView);
-        downloadButton.setEnabled(listView.getCheckedItemCount() > 0);
+        toggleButtonLabel(bottomNavigationView.getMenu().getItem(0), listView);
+        bottomNavigationView.getMenu().getItem(2).setEnabled(listView.getCheckedItemCount() > 0);
 
         if (listView.isItemChecked(position)) {
             selectedForms.add(((HashMap<String, String>) listView.getAdapter().getItem(position)).get(FORMDETAIL_KEY));
@@ -406,7 +400,6 @@ public class FormDownloadList extends FormListActivity implements FormListDownlo
     @Override
     protected void onRestoreInstanceState(Bundle state) {
         super.onRestoreInstanceState(state);
-        toggleButtonLabel(toggleButton, listView);
         updateAdapter();
     }
 
@@ -523,9 +516,9 @@ public class FormDownloadList extends FormListActivity implements FormListDownlo
             formDownloadListAdapter.setFromIdsToDetails(formNamesAndURLs);
             formDownloadListAdapter.notifyDataSetChanged();
         }
-        toggleButton.setEnabled(!filteredFormList.isEmpty());
+        bottomNavigationView.getMenu().getItem(0).setEnabled(!filteredFormList.isEmpty());
         checkPreviouslyCheckedItems();
-        toggleButtonLabel(toggleButton, listView);
+        toggleButtonLabel(bottomNavigationView.getMenu().getItem(0), listView);
     }
 
     @Override
@@ -743,9 +736,13 @@ public class FormDownloadList extends FormListActivity implements FormListDownlo
             filteredFormList.addAll(formList);
             updateAdapter();
             selectSupersededForms();
-            downloadButton.setEnabled(listView.getCheckedItemCount() > 0);
-            toggleButton.setEnabled(listView.getCount() > 0);
-            toggleButtonLabel(toggleButton, listView);
+
+            if (listView.getCount() > 0) {
+                bottomNavigationView.setVisibility(View.VISIBLE);
+                bottomNavigationView.getMenu().getItem(2).setEnabled(listView.getCheckedItemCount() > 0);
+                bottomNavigationView.getMenu().getItem(0).setEnabled(listView.getCount() > 0);
+                toggleButtonLabel(bottomNavigationView.getMenu().getItem(0), listView);
+            }
 
             if (isDownloadOnlyMode) {
                 //1. First check if all form IDS could be found on the server - Register forms that could not be found
