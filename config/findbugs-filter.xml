@@ -173,9 +173,6 @@
         <Bug pattern="NS_NON_SHORT_CIRCUIT" />
     </Match>
     <Match>
-        <Bug pattern="RI_REDUNDANT_INTERFACES" />
-    </Match>
-    <Match>
         <Bug pattern="Warnings_STYLE" />
     </Match>
     <Match>
