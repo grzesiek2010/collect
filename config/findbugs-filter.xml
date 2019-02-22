@@ -167,9 +167,6 @@
         <Bug pattern="NS_NON_SHORT_CIRCUIT" />
     </Match>
     <Match>
-        <Bug pattern="Warnings_STYLE" />
-    </Match>
-    <Match>
         <Bug pattern="FE_FLOATING_POINT_EQUALITY" />
     </Match>
 </FindBugsFilter>
