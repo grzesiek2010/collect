@@ -26,6 +26,7 @@ import android.support.annotation.Nullable;
 import android.support.annotation.VisibleForTesting;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentActivity;
+import android.util.SparseArray;
 
 import com.google.android.gms.location.LocationListener;
 import com.google.android.gms.maps.CameraUpdate;
@@ -45,9 +46,7 @@ import org.odk.collect.android.location.client.LocationClients;
 import org.odk.collect.android.utilities.ToastUtils;
 
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 
 import edu.umd.cs.findbugs.annotations.SuppressFBWarnings;
 import timber.log.Timber;
@@ -70,7 +69,7 @@ public class GoogleMapFragment extends SupportMapFragment implements
     protected MapPoint lastLocationFix;
     protected String lastLocationProvider;
     protected int nextFeatureId = 1;
-    protected Map<Integer, MapFeature> features = new HashMap<>();
+    protected SparseArray<MapFeature> features = new SparseArray<>();
     protected AlertDialog gpsErrorDialog;
     protected boolean gpsLocationEnabled;
 
@@ -392,9 +391,9 @@ public class GoogleMapFragment extends SupportMapFragment implements
 
     /** Finds the feature to which the given marker belongs. */
     protected int findFeature(Marker marker) {
-        for (int featureId : features.keySet()) {
-            if (features.get(featureId).ownsMarker(marker)) {
-                return featureId;
+        for(int i = 0; i < features.size(); i++) {
+            if (features.valueAt(i).ownsMarker(marker)) {
+                return features.keyAt(i);
             }
         }
         return -1;  // not found

@@ -30,6 +30,7 @@ import android.support.annotation.VisibleForTesting;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentActivity;
 import android.support.v4.content.ContextCompat;
+import android.util.SparseArray;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -53,9 +54,7 @@ import org.osmdroid.views.overlay.Polyline;
 import org.osmdroid.views.overlay.mylocation.MyLocationNewOverlay;
 
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 
 import timber.log.Timber;
 
@@ -74,7 +73,7 @@ public class OsmMapFragment extends Fragment implements MapFragment,
     protected MyLocationNewOverlay myLocationOverlay;
     protected LocationClient locationClient;
     protected int nextFeatureId = 1;
-    protected Map<Integer, MapFeature> features = new HashMap<>();
+    protected SparseArray<MapFeature> features = new SparseArray<>();
     protected AlertDialog gpsErrorDialog;
     protected boolean gpsLocationEnabled;
     protected IGeoPoint lastMapCenter;
@@ -442,9 +441,9 @@ public class OsmMapFragment extends Fragment implements MapFragment,
 
     /** Finds the feature to which the given marker belongs. */
     protected int findFeature(Marker marker) {
-        for (int featureId : features.keySet()) {
-            if (features.get(featureId).ownsMarker(marker)) {
-                return featureId;
+        for(int i = 0; i < features.size(); i++) {
+            if (features.valueAt(i).ownsMarker(marker)) {
+                return features.keyAt(i);
             }
         }
         return -1;  // not found
