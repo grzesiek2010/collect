@@ -290,7 +290,7 @@ public class DownloadFormListUtils {
                     }
                     String downloadUrl = child.getAttributeValue(null, "url");
                     downloadUrl = downloadUrl.trim();
-                    if (downloadUrl != null && downloadUrl.length() == 0) {
+                    if (downloadUrl.length() == 0) {
                         downloadUrl = null;
                     }
                     if (downloadUrl == null || formName == null) {
