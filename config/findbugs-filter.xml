@@ -164,9 +164,6 @@
         <Bug pattern="PZLA_PREFER_ZERO_LENGTH_ARRAYS" />
     </Match>
     <Match>
-        <Bug pattern="NS_NON_SHORT_CIRCUIT" />
-    </Match>
-    <Match>
         <Bug pattern="FE_FLOATING_POINT_EQUALITY" />
     </Match>
 </FindBugsFilter>
