@@ -22,6 +22,7 @@ import android.support.v7.widget.DividerItemDecoration;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
+import android.util.Pair;
 import android.view.View;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -45,6 +46,7 @@ import org.odk.collect.android.utilities.DialogUtils;
 import org.odk.collect.android.utilities.FormEntryPromptUtils;
 import org.odk.collect.android.views.ODKView;
 
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -95,6 +97,7 @@ public class FormHierarchyActivity extends CollectAbstractActivity {
      */
     private FormIndex repeatGroupPickerIndex;
     private static final String REPEAT_GROUP_PICKER_INDEX_KEY = "REPEAT_GROUP_PICKER_INDEX_KEY";
+    private static final String NAVIGATION_PATH_KEY = "NAVIGATION_PATH_KEY";
 
     /**
      * The index of the question or the field list the FormController was set to when the hierarchy
@@ -122,6 +125,9 @@ public class FormHierarchyActivity extends CollectAbstractActivity {
     protected Button jumpBeginningButton;
     protected Button jumpEndButton;
     protected RecyclerView recyclerView;
+
+    // List<Pair<FormIndex, isRepeatGroupPicker>>
+    private List<Pair<FormIndex, Boolean>> navigationPath = new ArrayList<>();
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -184,12 +190,14 @@ public class FormHierarchyActivity extends CollectAbstractActivity {
     @Override
     public void onSaveInstanceState(Bundle outState) {
         outState.putSerializable(REPEAT_GROUP_PICKER_INDEX_KEY, repeatGroupPickerIndex);
+        outState.putSerializable(NAVIGATION_PATH_KEY, (Serializable) navigationPath);
         super.onSaveInstanceState(outState);
     }
 
     private void restoreInstanceState(Bundle state) {
         if (state != null) {
             repeatGroupPickerIndex = (FormIndex) state.getSerializable(REPEAT_GROUP_PICKER_INDEX_KEY);
+            navigationPath = (List<Pair<FormIndex, Boolean>>) state.getSerializable(NAVIGATION_PATH_KEY);
         }
     }
 
@@ -698,6 +706,7 @@ public class FormHierarchyActivity extends CollectAbstractActivity {
                     refreshView();
                 }
             }
+            updateNavigationPath();
         } catch (Exception e) {
             Timber.e(e);
             createErrorDialog(e.getMessage());
@@ -767,19 +776,57 @@ public class FormHierarchyActivity extends CollectAbstractActivity {
         finish();
     }
 
-    /**
-     * When the device back button is pressed, go back to the previous activity, NOT the previous
-     * level in the hierarchy as the "Go Up" button does.
-     */
     @Override
     public void onBackPressed() {
         FormController formController = Collect.getInstance().getFormController();
-        if (formController != null) {
-            formController.getAuditEventLogger().exitView();
-            formController.jumpToIndex(startIndex);
-        }
 
-        onBackPressedWithoutLogger();
+        if (navigationPath.size() > 1 && formController != null) {
+            Pair<FormIndex, Boolean> currentIndex = navigationPath.get(navigationPath.size() - 1);
+            Pair<FormIndex, Boolean> previousIndex = navigationPath.get(navigationPath.size() - 2);
+
+            if (navigateUp(currentIndex, previousIndex)) {
+                repeatGroupPickerIndex = currentIndex.second ? currentIndex.first : null;
+                goUpLevel();
+            } else {
+                repeatGroupPickerIndex = previousIndex.second ? previousIndex.first : null;
+                if (!previousIndex.second) {
+                    Collect.getInstance().getFormController().jumpToIndex(previousIndex.first);
+                }
+                refreshView();
+            }
+        } else {
+            if (formController != null) {
+                formController.getAuditEventLogger().exitView();
+                formController.jumpToIndex(startIndex);
+            }
+
+            onBackPressedWithoutLogger();
+        }
+    }
+
+    private void updateNavigationPath() {
+        FormIndex index = repeatGroupPickerIndex != null ? repeatGroupPickerIndex : currentIndex;
+
+        Pair<FormIndex, Boolean> currentIndex = navigationPath.isEmpty() ? null : navigationPath.get(navigationPath.size() - 1);
+        Pair<FormIndex, Boolean> previousIndex = navigationPath.size() < 2 ? null : navigationPath.get(navigationPath.size() - 2);
+        Pair<FormIndex, Boolean> newIndex = new Pair<>(index, repeatGroupPickerIndex != null);
+
+        if (previousIndex != null && areIndexesDuplicated(previousIndex.first, newIndex.first)) {
+            navigationPath.remove(currentIndex);
+        } else if (currentIndex == null || !currentIndex.equals(newIndex)) {
+            navigationPath.add(newIndex);
+        }
+    }
+
+    private boolean areIndexesDuplicated(FormIndex firstIndex, FormIndex secondIndex) {
+        return firstIndex.equals(secondIndex)
+                || (firstIndex.getDepth() == secondIndex.getDepth()
+                && FormController.getLastLevel(firstIndex).getLocalIndex() == FormController.getLastLevel(secondIndex).getLocalIndex());
+    }
+
+    private boolean navigateUp(Pair<FormIndex, Boolean> currentIndex, Pair<FormIndex, Boolean> previousIndex) {
+        return previousIndex.first.compareTo(currentIndex.first) < 0
+                || (previousIndex.first.compareTo(currentIndex.first) == 0 && previousIndex.second);
     }
 
     protected void onBackPressedWithoutLogger() {

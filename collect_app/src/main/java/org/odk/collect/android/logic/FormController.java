@@ -1256,4 +1256,10 @@ public class FormController {
         return (ByteArrayPayload) serializer.createSerializedPayload(dataModel);
     }
 
+    public static FormIndex getLastLevel(FormIndex formIndex) {
+        if (formIndex.getNextLevel() != null) {
+            return getLastLevel(formIndex.getNextLevel());
+        }
+        return formIndex;
+    }
 }
