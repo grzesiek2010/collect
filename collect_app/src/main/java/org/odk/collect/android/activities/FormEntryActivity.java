@@ -783,21 +783,23 @@ public class FormEntryActivity extends CollectAbstractActivity implements Animat
                 ImageConverter.execute(Collect.TMPFILE_PATH, getWidgetWaitingForBinaryData(), this);
                 File fi = new File(Collect.TMPFILE_PATH);
 
-                String instanceFolder = formController.getInstanceFile()
-                        .getParent();
-                String s = instanceFolder + File.separator + System.currentTimeMillis() + ".jpg";
+                if (formController.getInstanceFile() != null) {
+                    String instanceFolder = formController.getInstanceFile()
+                            .getParent();
+                    String s = instanceFolder + File.separator + System.currentTimeMillis() + ".jpg";
 
-                File nf = new File(s);
-                if (!fi.renameTo(nf)) {
-                    Timber.e("Failed to rename %s", fi.getAbsolutePath());
-                } else {
-                    Timber.i("Renamed %s to %s", fi.getAbsolutePath(), nf.getAbsolutePath());
-                }
+                    File nf = new File(s);
+                    if (!fi.renameTo(nf)) {
+                        Timber.e("Failed to rename %s", fi.getAbsolutePath());
+                    } else {
+                        Timber.i("Renamed %s to %s", fi.getAbsolutePath(), nf.getAbsolutePath());
+                    }
 
-                if (getCurrentViewIfODKView() != null) {
-                    getCurrentViewIfODKView().setBinaryData(nf);
+                    if (getCurrentViewIfODKView() != null) {
+                        getCurrentViewIfODKView().setBinaryData(nf);
+                    }
+                    saveAnswersForCurrentScreen(DO_NOT_EVALUATE_CONSTRAINTS);
                 }
-                saveAnswersForCurrentScreen(DO_NOT_EVALUATE_CONSTRAINTS);
                 break;
             case RequestCodes.ALIGNED_IMAGE:
                 /*
@@ -808,20 +810,22 @@ public class FormEntryActivity extends CollectAbstractActivity implements Animat
                 String path = intent
                         .getStringExtra(android.provider.MediaStore.EXTRA_OUTPUT);
                 fi = new File(path);
-                instanceFolder = formController.getInstanceFile().getParent();
-                s = instanceFolder + File.separator + System.currentTimeMillis() + ".jpg";
+                if (formController.getInstanceFile() != null) {
+                    String instanceFolder = formController.getInstanceFile().getParent();
+                    String s = instanceFolder + File.separator + System.currentTimeMillis() + ".jpg";
 
-                nf = new File(s);
-                if (!fi.renameTo(nf)) {
-                    Timber.e("Failed to rename %s", fi.getAbsolutePath());
-                } else {
-                    Timber.i("Renamed %s to %s", fi.getAbsolutePath(), nf.getAbsolutePath());
-                }
+                    File nf = new File(s);
+                    if (!fi.renameTo(nf)) {
+                        Timber.e("Failed to rename %s", fi.getAbsolutePath());
+                    } else {
+                        Timber.i("Renamed %s to %s", fi.getAbsolutePath(), nf.getAbsolutePath());
+                    }
 
-                if (getCurrentViewIfODKView() != null) {
-                    getCurrentViewIfODKView().setBinaryData(nf);
+                    if (getCurrentViewIfODKView() != null) {
+                        getCurrentViewIfODKView().setBinaryData(nf);
+                    }
+                    saveAnswersForCurrentScreen(DO_NOT_EVALUATE_CONSTRAINTS);
                 }
-                saveAnswersForCurrentScreen(DO_NOT_EVALUATE_CONSTRAINTS);
                 break;
             case RequestCodes.ARBITRARY_FILE_CHOOSER:
             case RequestCodes.AUDIO_CHOOSER:
@@ -850,7 +854,7 @@ public class FormEntryActivity extends CollectAbstractActivity implements Animat
                   Let's test it here and then we can use the same code in other places if it works well.
                  */
                 Uri mediaUri = intent.getData();
-                if (mediaUri != null) {
+                if (mediaUri != null && formController.getInstanceFile() != null) {
                     String filePath =
                             formController.getInstanceFile().getParent()
                                     + File.separator
