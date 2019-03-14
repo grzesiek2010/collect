@@ -67,6 +67,7 @@ public class GoogleDriveActivity extends FormListActivity implements View.OnClic
     private static final String DRIVE_DOWNLOAD_LIST_SORTING_ORDER = "driveDownloadListSortingOrder";
     public static final int AUTHORIZATION_REQUEST_CODE = 4322;
     private static final int PROGRESS_DIALOG = 1;
+    private static final int READING_FILES_DIALOG = 2;
     private static final int GOOGLE_USER_DIALOG = 3;
     private static final String MY_DRIVE_KEY = "mydrive";
     private static final String PATH_KEY = "path";
@@ -346,6 +347,20 @@ public class GoogleDriveActivity extends FormListActivity implements View.OnClic
                 progressDialog.setCancelable(false);
                 progressDialog.setButton(getString(R.string.cancel), loadingButtonListener);
                 return progressDialog;
+            case READING_FILES_DIALOG:
+                ProgressDialog readingFilesDialog = new ProgressDialog(this);
+                readingFilesDialog.setMessage(getString(R.string.reading_files));
+                readingFilesDialog.setIndeterminate(true);
+                readingFilesDialog.setProgressStyle(ProgressDialog.STYLE_SPINNER);
+                readingFilesDialog.setCancelable(false);
+                readingFilesDialog.setButton(getString(R.string.cancel), new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        retrieveDriveFileContentsAsyncTask.cancel(true);
+                        retrieveDriveFileContentsAsyncTask = null;
+                    }
+                });
+                return readingFilesDialog;
             case GOOGLE_USER_DIALOG:
                 AlertDialog.Builder gudBuilder = new AlertDialog.Builder(this);
 
@@ -416,6 +431,7 @@ public class GoogleDriveActivity extends FormListActivity implements View.OnClic
 
     @Override
     public void taskComplete(HashMap<String, Object> results) {
+        dismissDialog(READING_FILES_DIALOG);
         rootButton.setEnabled(true);
         downloadButton.setEnabled(!toDownload.isEmpty());
         setProgressBarIndeterminateVisibility(false);
@@ -510,8 +526,8 @@ public class GoogleDriveActivity extends FormListActivity implements View.OnClic
             retrieveDriveFileContentsAsyncTask.execute(dir, query);
         } else {
             retrieveDriveFileContentsAsyncTask.execute(dir);
-
         }
+        showDialog(READING_FILES_DIALOG);
     }
 
     public void listFiles(String dir) {
