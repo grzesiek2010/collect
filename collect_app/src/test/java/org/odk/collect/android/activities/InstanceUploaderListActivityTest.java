@@ -11,6 +11,7 @@ import com.google.android.gms.analytics.Tracker;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
+import org.odk.collect.android.BaseRobolectricTest;
 import org.odk.collect.android.R;
 import org.odk.collect.android.listeners.PermissionListener;
 import org.odk.collect.android.utilities.PermissionUtils;
@@ -29,7 +30,7 @@ import static org.odk.collect.android.support.RobolectricHelpers.overrideAppDepe
 import static org.robolectric.Shadows.shadowOf;
 
 @RunWith(RobolectricTestRunner.class)
-public class InstanceUploaderListActivityTest {
+public class InstanceUploaderListActivityTest extends BaseRobolectricTest {
 
     Tracker tracker;
 

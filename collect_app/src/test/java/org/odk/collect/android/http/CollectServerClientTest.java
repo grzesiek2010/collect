@@ -3,6 +3,7 @@ package org.odk.collect.android.http;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
+import org.odk.collect.android.BaseRobolectricTest;
 import org.odk.collect.android.http.mock.MockHttpClientConnection;
 import org.odk.collect.android.http.mock.MockHttpClientConnectionError;
 import org.odk.collect.android.utilities.DocumentFetchResult;
@@ -14,7 +15,7 @@ import static junit.framework.Assert.assertNull;
 import static junit.framework.Assert.assertTrue;
 
 @RunWith(RobolectricTestRunner.class)
-public class CollectServerClientTest {
+public class CollectServerClientTest extends BaseRobolectricTest {
 
     static final String URL_STRING = "http://testurl";
 

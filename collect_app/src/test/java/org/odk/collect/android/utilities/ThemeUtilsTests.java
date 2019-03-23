@@ -6,6 +6,7 @@ import android.content.res.TypedArray;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
+import org.odk.collect.android.BaseRobolectricTest;
 import org.odk.collect.android.R;
 import org.odk.collect.android.activities.MainMenuActivity;
 import org.odk.collect.android.preferences.GeneralSharedPreferences;
@@ -21,7 +22,7 @@ import static org.odk.collect.android.preferences.GeneralKeys.KEY_APP_THEME;
  */
 
 @RunWith(RobolectricTestRunner.class)
-public class ThemeUtilsTests {
+public class ThemeUtilsTests extends BaseRobolectricTest {
 
     private final int[] attrs;
     private ThemeUtils themeUtils;

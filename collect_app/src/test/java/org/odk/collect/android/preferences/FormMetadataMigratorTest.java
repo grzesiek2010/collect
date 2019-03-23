@@ -7,6 +7,7 @@ import android.preference.PreferenceManager;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
+import org.odk.collect.android.BaseRobolectricTest;
 import org.odk.collect.android.application.Collect;
 import org.robolectric.RobolectricTestRunner;
 
@@ -30,7 +31,7 @@ import static org.odk.collect.android.preferences.GeneralKeys.KEY_USERNAME;
 
 /** Tests the FormMetadataFragment */
 @RunWith(RobolectricTestRunner.class)
-public class FormMetadataMigratorTest {
+public class FormMetadataMigratorTest extends BaseRobolectricTest {
 
     private SharedPreferences sharedPreferences;
     private final PrintStream printStream = System.out;

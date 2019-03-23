@@ -5,6 +5,7 @@ import android.preference.PreferenceManager;
 
 import org.junit.Test;
 import org.junit.runner.RunWith;
+import org.odk.collect.android.BaseRobolectricTest;
 import org.odk.collect.android.R;
 import org.robolectric.Robolectric;
 import org.robolectric.RobolectricTestRunner;
@@ -16,7 +17,7 @@ import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
 
 @RunWith(RobolectricTestRunner.class)
-public class AggregatePreferencesAdderTest {
+public class AggregatePreferencesAdderTest extends BaseRobolectricTest {
 
     @Test
     public void whenPreferencesAreAdded_returnsTrue() {

@@ -3,6 +3,7 @@ package org.odk.collect.android.preferences;
 import org.json.JSONObject;
 import org.junit.Test;
 import org.junit.runner.RunWith;
+import org.odk.collect.android.BaseRobolectricTest;
 import org.odk.collect.android.listeners.ActionListener;
 import org.robolectric.RobolectricTestRunner;
 
@@ -14,7 +15,7 @@ import static org.odk.collect.android.preferences.GeneralKeys.KEY_PASSWORD;
 import static org.odk.collect.android.preferences.GeneralKeys.KEY_SERVER_URL;
 
 @RunWith(RobolectricTestRunner.class)
-public class PreferenceSaverTest {
+public class PreferenceSaverTest extends BaseRobolectricTest {
 
     @Test
     public void fromJSON_whenPreferencesAreValid_savesIncludedGeneralKeys_andResetsMissingGeneralKeys() throws Exception {

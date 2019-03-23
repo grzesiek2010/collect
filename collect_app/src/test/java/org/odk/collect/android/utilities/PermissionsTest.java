@@ -4,6 +4,7 @@ import org.hamcrest.Description;
 import org.hamcrest.StringDescription;
 import org.junit.Test;
 import org.junit.runner.RunWith;
+import org.odk.collect.android.BaseRobolectricTest;
 import org.robolectric.RobolectricTestRunner;
 import org.robolectric.manifest.AndroidManifest;
 import org.robolectric.res.Fs;
@@ -14,7 +15,7 @@ import java.util.List;
  * Test for checking permissions in {@link AndroidManifest}
  */
 @RunWith(RobolectricTestRunner.class)
-public class PermissionsTest {
+public class PermissionsTest extends BaseRobolectricTest {
 
     @Test
     public void permissionCheck() {

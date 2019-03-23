@@ -5,6 +5,7 @@ import android.content.Intent;
 import org.junit.Assert;
 import org.junit.Test;
 import org.junit.runner.RunWith;
+import org.odk.collect.android.BaseRobolectricTest;
 import org.odk.collect.android.tasks.sms.SmsSentBroadcastReceiver;
 import org.robolectric.RobolectricTestRunner;
 import org.robolectric.shadows.ShadowApplication;
@@ -14,7 +15,7 @@ import java.util.List;
 import static org.odk.collect.android.tasks.sms.SmsSender.SMS_SEND_ACTION;
 
 @RunWith(RobolectricTestRunner.class)
-public class SmsSentBroadcastReceiverTest {
+public class SmsSentBroadcastReceiverTest extends BaseRobolectricTest {
 
     @Test
     public void testBroadcastReceiverRegistered() {

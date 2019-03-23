@@ -18,9 +18,10 @@ package org.odk.collect.android.location.activities;
 
 import android.location.Location;
 
+import org.odk.collect.android.BaseRobolectricTest;
 import org.robolectric.shadows.ShadowApplication;
 
-public abstract class BaseGeoActivityTest {
+public abstract class BaseGeoActivityTest extends BaseRobolectricTest {
     public void setUp() throws Exception {
         ShadowApplication.getInstance().grantPermissions("android.permission.ACCESS_FINE_LOCATION");
         ShadowApplication.getInstance().grantPermissions("android.permission.ACCESS_COARSE_LOCATION");

@@ -21,6 +21,7 @@ import android.content.res.Configuration;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 import android.os.Environment;
+import android.os.StrictMode;
 import android.os.SystemClock;
 import android.preference.PreferenceManager;
 import android.support.annotation.Nullable;
@@ -256,6 +257,7 @@ public class Collect extends Application {
         }
 
         setupLeakCanary();
+        setupStrictMode();
     }
 
     private void setupDagger() {
@@ -271,6 +273,25 @@ public class Collect extends Application {
             return RefWatcher.DISABLED;
         }
         return LeakCanary.install(this);
+    }
+
+    /**
+     * Crashes the app along with the log if any of the policy is detected when running app
+     * in {@link BuildConfig#DEBUG} mode
+     */
+    protected void setupStrictMode() {
+        StrictMode.setThreadPolicy(new StrictMode.ThreadPolicy.Builder()
+                .detectAll()
+                .penaltyLog()
+                .penaltyDeath()
+                .build());
+
+        StrictMode.setVmPolicy(new StrictMode.VmPolicy.Builder()
+                .detectLeakedSqlLiteObjects()
+                .detectLeakedClosableObjects()
+                .penaltyLog()
+                .penaltyDeath()
+                .build());
     }
 
     @Override

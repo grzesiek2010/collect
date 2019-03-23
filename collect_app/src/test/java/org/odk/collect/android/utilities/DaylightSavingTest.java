@@ -27,6 +27,7 @@ import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
+import org.odk.collect.android.BaseRobolectricTest;
 import org.odk.collect.android.widgets.DateTimeWidget;
 import org.odk.collect.android.widgets.DateWidget;
 import org.odk.collect.android.widgets.TimeWidget;
@@ -46,7 +47,7 @@ import static org.mockito.Mockito.when;
  * This is needed on the day and time of a daylight savings transition because that date/time
  * doesn't exist.
  * In this test we set time to daylight saving gap and check if any crash occur*/
-public class DaylightSavingTest {
+public class DaylightSavingTest extends BaseRobolectricTest {
 
     private static final String EAT_IME_ZONE = "Africa/Nairobi";
     private static final String CET_TIME_ZONE = "Europe/Warsaw";

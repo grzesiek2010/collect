@@ -9,6 +9,7 @@ import org.junit.runner.RunWith;
 import org.mockito.Mock;
 import org.mockito.junit.MockitoJUnit;
 import org.mockito.junit.MockitoRule;
+import org.odk.collect.android.BaseRobolectricTest;
 import org.robolectric.RobolectricTestRunner;
 
 import javax.annotation.OverridingMethodsMustInvokeSuper;
@@ -16,7 +17,7 @@ import javax.annotation.OverridingMethodsMustInvokeSuper;
 import static org.mockito.Mockito.when;
 
 @RunWith(RobolectricTestRunner.class)
-public abstract class WidgetTest {
+public abstract class WidgetTest extends BaseRobolectricTest {
 
     @Rule
     public MockitoRule rule = MockitoJUnit.rule();

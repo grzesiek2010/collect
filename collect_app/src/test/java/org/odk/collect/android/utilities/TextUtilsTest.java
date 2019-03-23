@@ -3,12 +3,13 @@ package org.odk.collect.android.utilities;
 import org.junit.Assert;
 import org.junit.Test;
 import org.junit.runner.RunWith;
+import org.odk.collect.android.BaseRobolectricTest;
 import org.robolectric.RobolectricTestRunner;
 
 import static org.junit.Assert.assertEquals;
 
 @RunWith(RobolectricTestRunner.class)
-public class TextUtilsTest {
+public class TextUtilsTest extends BaseRobolectricTest {
 
     /**
      * Should return null if provided with null and not throw a NPE.

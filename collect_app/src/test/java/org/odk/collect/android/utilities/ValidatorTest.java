@@ -18,13 +18,14 @@ package org.odk.collect.android.utilities;
 
 import org.junit.Test;
 import org.junit.runner.RunWith;
+import org.odk.collect.android.BaseRobolectricTest;
 import org.robolectric.RobolectricTestRunner;
 
 import static junit.framework.Assert.assertFalse;
 import static junit.framework.Assert.assertTrue;
 
 @RunWith(RobolectricTestRunner.class)
-public class ValidatorTest {
+public class ValidatorTest extends BaseRobolectricTest {
 
     @Test
     public void emailValidationTestCase() {

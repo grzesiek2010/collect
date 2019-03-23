@@ -7,6 +7,7 @@ import android.preference.Preference;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
+import org.odk.collect.android.BaseRobolectricTest;
 import org.robolectric.Robolectric;
 import org.robolectric.RobolectricTestRunner;
 
@@ -20,7 +21,7 @@ import static org.junit.Assert.assertTrue;
  * Tests for Admin Preferences
  */
 @RunWith(RobolectricTestRunner.class)
-public class AdminPreferencesActivityTest {
+public class AdminPreferencesActivityTest extends BaseRobolectricTest {
 
     private AdminPreferencesFragment adminPreferencesFragment;
     private SharedPreferences sharedPreferences;

@@ -9,6 +9,7 @@ import android.widget.Button;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
+import org.odk.collect.android.BaseRobolectricTest;
 import org.odk.collect.android.R;
 import org.odk.collect.android.preferences.PreferencesActivity;
 import org.robolectric.Robolectric;
@@ -24,7 +25,7 @@ import static org.robolectric.Shadows.shadowOf;
  * Unit test for checking {@link Button}'s behaviour  in {@link MainMenuActivity}
  */
 @RunWith(RobolectricTestRunner.class)
-public class MainActivityTest {
+public class MainActivityTest extends BaseRobolectricTest {
     private MainMenuActivity mainMenuActivity;
 
     /**

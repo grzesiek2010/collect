@@ -10,6 +10,7 @@ import com.google.zxing.WriterException;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
+import org.odk.collect.android.BaseRobolectricTest;
 import org.odk.collect.android.application.Collect;
 import org.odk.collect.android.preferences.GeneralSharedPreferences;
 import org.robolectric.RobolectricTestRunner;
@@ -33,7 +34,7 @@ import static org.odk.collect.android.utilities.QRCodeUtils.MD5_CACHE_PATH;
 import static org.odk.collect.android.utilities.QRCodeUtils.QR_CODE_FILEPATH;
 
 @RunWith(RobolectricTestRunner.class)
-public class QRCodeUtilsTest {
+public class QRCodeUtilsTest extends BaseRobolectricTest {
 
     private final File savedQrCodeImage = new File(QR_CODE_FILEPATH);
     private final File md5File = new File(MD5_CACHE_PATH);

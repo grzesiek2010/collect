@@ -21,6 +21,7 @@ import org.joda.time.LocalDateTime;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
+import org.odk.collect.android.BaseRobolectricTest;
 import org.odk.collect.android.logic.DatePickerDetails;
 import org.robolectric.RobolectricTestRunner;
 
@@ -29,7 +30,7 @@ import java.util.TimeZone;
 import static org.junit.Assert.assertEquals;
 
 @RunWith(RobolectricTestRunner.class)
-public class DateTimeUtilsTest {
+public class DateTimeUtilsTest extends BaseRobolectricTest {
 
     private DatePickerDetails gregorian;
     private DatePickerDetails gregorianSpinners;
