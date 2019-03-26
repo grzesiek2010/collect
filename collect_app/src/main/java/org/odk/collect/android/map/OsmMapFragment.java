@@ -117,6 +117,7 @@ public class OsmMapFragment extends Fragment implements MapFragment,
         myLocationOverlay.setDrawAccuracyEnabled(true);
         Bitmap crosshairs = IconUtils.getBitmap(getActivity(), R.drawable.ic_crosshairs);
         myLocationOverlay.setDirectionArrow(crosshairs, crosshairs);
+        myLocationOverlay.setPersonHotspot(crosshairs.getWidth() / 2, crosshairs.getHeight() / 2);
 
         locationClient = LocationClients.clientForContext(getActivity());
         locationClient.setListener(this);
