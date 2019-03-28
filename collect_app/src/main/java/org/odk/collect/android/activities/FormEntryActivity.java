@@ -56,7 +56,6 @@ import android.view.animation.AnimationUtils;
 import android.widget.AdapterView;
 import android.widget.CheckBox;
 import android.widget.EditText;
-import android.widget.ImageButton;
 import android.widget.LinearLayout;
 import android.widget.ListView;
 import android.widget.RelativeLayout;
@@ -262,8 +261,8 @@ public class FormEntryActivity extends CollectAbstractActivity implements Animat
     private FormLoaderTask formLoaderTask;
     private SaveToDiskTask saveToDiskTask;
 
-    private ImageButton nextButton;
-    private ImageButton backButton;
+    private TextView nextButton;
+    private TextView backButton;
 
     private ODKView odkView;
     private boolean doSwipe = true;
@@ -2152,8 +2151,7 @@ public class FormEntryActivity extends CollectAbstractActivity implements Animat
 
         String navigation = (String) GeneralSharedPreferences.getInstance().get(GeneralKeys.KEY_NAVIGATION);
         showNavigationButtons = navigation.contains(GeneralKeys.NAVIGATION_BUTTONS);
-        backButton.setVisibility(showNavigationButtons ? View.VISIBLE : View.GONE);
-        nextButton.setVisibility(showNavigationButtons ? View.VISIBLE : View.GONE);
+        findViewById(R.id.buttonholder).setVisibility(showNavigationButtons ? View.VISIBLE : View.GONE);
 
         if (errorMessage != null) {
             if (alertDialog != null && !alertDialog.isShowing()) {

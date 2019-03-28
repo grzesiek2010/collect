@@ -37,34 +37,48 @@ the License.
         android:layout_below="@id/toolbar"
         android:orientation="horizontal"/>
 
+    <ImageView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:src="@drawable/shadow_up"
+        android:layout_above="@+id/buttonholder"/>
+
     <LinearLayout
         android:id="@+id/buttonholder"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:gravity="center_vertical"
         android:layout_alignParentBottom="true"
-        android:orientation="horizontal"
-        android:paddingBottom="0dip"
-        android:paddingEnd="4dip"
-        android:paddingLeft="4dip"
-        android:paddingRight="4dip"
-        android:paddingStart="4dip"
-        android:paddingTop="4dip">
+        android:background="?colorPrimary"
+        android:orientation="horizontal">
 
-        <ImageButton
+        <TextView
             android:id="@+id/form_back_button"
-            android:layout_width="0dip"
-            android:layout_height="50dip"
-            android:layout_weight="1"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
             android:contentDescription="@string/form_backward"
-            android:src="@drawable/navigate_back_button"/>
+            android:text="@string/back"
+            android:textAppearance="@style/Base.TextAppearance.AppCompat.Subhead"
+            android:textStyle="bold"
+            android:padding="10dp"
+            android:drawableLeft="@drawable/navigate_back_button"
+            android:drawableStart="@drawable/navigate_back_button" />
 
-        <ImageButton
+        <View
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight="1" />
+
+        <TextView
             android:id="@+id/form_forward_button"
-            android:layout_width="0dip"
-            android:layout_height="50dip"
-            android:layout_weight="1"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
             android:contentDescription="@string/form_forward"
-            android:src="@drawable/navigate_forward_button"/>
+            android:text="@string/next"
+            android:textAppearance="@style/Base.TextAppearance.AppCompat.Subhead"
+            android:textStyle="bold"
+            android:padding="15dp"
+            android:drawableRight="@drawable/navigate_forward_button"
+            android:drawableEnd="@drawable/navigate_forward_button" />
     </LinearLayout>
-
 </RelativeLayout>
