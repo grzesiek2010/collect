@@ -14,8 +14,6 @@
 
 package org.odk.collect.android.activities;
 
-import android.app.Activity;
-import android.app.AlertDialog;
 import android.app.Dialog;
 import android.content.DialogInterface;
 import android.content.Intent;
@@ -26,6 +24,8 @@ import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
 import android.preference.PreferenceManager;
+import android.support.v7.app.AlertDialog;
+import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.text.InputType;
 import android.view.LayoutInflater;
@@ -49,8 +49,8 @@ import org.odk.collect.android.preferences.AdminKeys;
 import org.odk.collect.android.preferences.AdminPreferencesActivity;
 import org.odk.collect.android.preferences.AdminSharedPreferences;
 import org.odk.collect.android.preferences.AutoSendPreferenceMigrator;
-import org.odk.collect.android.preferences.GeneralSharedPreferences;
 import org.odk.collect.android.preferences.GeneralKeys;
+import org.odk.collect.android.preferences.GeneralSharedPreferences;
 import org.odk.collect.android.preferences.PreferencesActivity;
 import org.odk.collect.android.preferences.Transport;
 import org.odk.collect.android.provider.InstanceProviderAPI.InstanceColumns;
@@ -91,7 +91,7 @@ public class MainMenuActivity extends CollectAbstractActivity {
     private Button getFormsButton;
     private View reviewSpacer;
     private View getFormsSpacer;
-    private AlertDialog alertDialog;
+    private android.support.v7.app.AlertDialog alertDialog;
     private SharedPreferences adminPreferences;
     private int completedCount;
     private int savedCount;
@@ -104,7 +104,7 @@ public class MainMenuActivity extends CollectAbstractActivity {
 
     // private static boolean DO_NOT_EXIT = false;
 
-    public static void startActivityAndCloseAllOthers(Activity activity) {
+    public static void startActivityAndCloseAllOthers(AppCompatActivity activity) {
         activity.startActivity(new Intent(activity, MainMenuActivity.class));
         activity.overridePendingTransition(0, 0);
         activity.finishAffinity();
@@ -442,7 +442,7 @@ public class MainMenuActivity extends CollectAbstractActivity {
     }
 
     private void createErrorDialog(String errorMsg, final boolean shouldExit) {
-        alertDialog = new AlertDialog.Builder(this).create();
+        alertDialog = new android.support.v7.app.AlertDialog.Builder(this).create();
         alertDialog.setIcon(android.R.drawable.ic_dialog_info);
         alertDialog.setMessage(errorMsg);
         DialogInterface.OnClickListener errorListener = new DialogInterface.OnClickListener() {
@@ -467,8 +467,8 @@ public class MainMenuActivity extends CollectAbstractActivity {
         switch (id) {
             case PASSWORD_DIALOG:
 
-                AlertDialog.Builder builder = new AlertDialog.Builder(this);
-                final AlertDialog passwordDialog = builder.create();
+                android.support.v7.app.AlertDialog.Builder builder = new android.support.v7.app.AlertDialog.Builder(this);
+                final android.support.v7.app.AlertDialog passwordDialog = builder.create();
                 passwordDialog.setTitle(getString(R.string.enter_admin_password));
                 LayoutInflater inflater = this.getLayoutInflater();
                 View dialogView = inflater.inflate(R.layout.dialogbox_layout, null);
@@ -485,7 +485,7 @@ public class MainMenuActivity extends CollectAbstractActivity {
                         }
                     }
                 });
-                passwordDialog.setButton(AlertDialog.BUTTON_POSITIVE,
+                passwordDialog.setButton(android.support.v7.app.AlertDialog.BUTTON_POSITIVE,
                         getString(R.string.ok),
                         new DialogInterface.OnClickListener() {
                             public void onClick(DialogInterface dialog,
@@ -657,7 +657,7 @@ public class MainMenuActivity extends CollectAbstractActivity {
         if (Transport.Internet != Transport.fromPreference(GeneralSharedPreferences.getInstance().get(KEY_SUBMISSION_TRANSPORT_TYPE))) {
             GeneralSharedPreferences.getInstance().save(KEY_SUBMISSION_TRANSPORT_TYPE, getString(R.string.transport_type_value_internet));
 
-            AlertDialog.Builder builder = new AlertDialog.Builder(this);
+            android.support.v7.app.AlertDialog.Builder builder = new android.support.v7.app.AlertDialog.Builder(this);
             builder
                     .setTitle(R.string.sms_feature_disabled_dialog_title)
                     .setMessage(R.string.sms_feature_disabled_dialog_message)

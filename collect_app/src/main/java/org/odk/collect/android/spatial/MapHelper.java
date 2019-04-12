@@ -20,13 +20,13 @@ package org.odk.collect.android.spatial;
  * @author jonnordling@gmail.com
  */
 
-import android.app.AlertDialog;
 import android.content.Context;
 import android.content.SharedPreferences;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.graphics.Color;
 import android.preference.PreferenceManager;
+import android.support.v7.app.AlertDialog;
 
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.model.TileOverlay;
@@ -218,7 +218,7 @@ public class MapHelper {
     }
 
     public void showLayersDialog() {
-        AlertDialog.Builder layerDialod = new AlertDialog.Builder(context);
+        AlertDialog.Builder layerDialod = new android.support.v7.app.AlertDialog.Builder(context);
         layerDialod.setTitle(context.getString(R.string.select_offline_layer));
         layerDialod.setSingleChoiceItems(offilineOverlays,
                 selectedLayer, (dialog, item) -> {

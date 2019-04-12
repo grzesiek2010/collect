@@ -22,6 +22,7 @@ import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.pm.ConfigurationInfo;
 import android.preference.PreferenceManager;
+import android.support.v7.app.AppCompatActivity;
 import android.view.View;
 import android.widget.Button;
 import android.widget.LinearLayout;
@@ -288,7 +289,7 @@ public class GeoPointWidget extends QuestionWidget implements BinaryWidget {
     }
 
     private void startGeoPoint() {
-        Activity activity = (Activity) getContext();
+        AppCompatActivity activity = (AppCompatActivity) getContext();
         if (mapSDK.equals(GOOGLE_MAP_KEY) &&
             !PlayServicesUtil.isGooglePlayServicesAvailable(activity)) {
             PlayServicesUtil.showGooglePlayServicesAvailabilityErrorDialog(activity);

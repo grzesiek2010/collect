@@ -14,14 +14,14 @@
 
 package org.odk.collect.android.preferences;
 
-import android.app.AlertDialog;
-import android.app.Fragment;
 import android.content.DialogInterface;
 import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.preference.CheckBoxPreference;
 import android.preference.Preference;
 import android.support.annotation.Nullable;
+import android.support.v4.app.Fragment;
+import android.support.v7.app.AlertDialog;
 import android.text.InputType;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -75,7 +75,7 @@ public class AdminPreferencesFragment extends BasePreferenceFragment implements 
     @Override
     public boolean onPreferenceClick(Preference preference) {
 
-        Fragment fragment = null;
+        android.support.v4.app.Fragment fragment = null;
 
         switch (preference.getKey()) {
 
@@ -149,7 +149,7 @@ public class AdminPreferencesFragment extends BasePreferenceFragment implements 
         }
 
         if (fragment != null) {
-            getActivity().getFragmentManager().beginTransaction()
+            getActivity().getSupportFragmentManager().beginTransaction()
                     .replace(android.R.id.content, fragment)
                     .addToBackStack(null)
                     .commit();

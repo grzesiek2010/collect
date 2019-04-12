@@ -14,7 +14,6 @@
 
 package org.odk.collect.android.activities;
 
-import android.app.AlertDialog;
 import android.app.ProgressDialog;
 import android.arch.lifecycle.ViewModelProviders;
 import android.content.Context;
@@ -28,6 +27,7 @@ import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
+import android.support.v7.app.AlertDialog;
 import android.util.SparseBooleanArray;
 import android.view.View;
 import android.view.View.OnClickListener;
@@ -99,7 +99,7 @@ public class FormDownloadList extends FormListActivity implements FormListDownlo
     public static final String FORM_ID_KEY = "formid";
     private static final String FORM_VERSION_KEY = "formversion";
 
-    private AlertDialog alertDialog;
+    private android.support.v7.app.AlertDialog alertDialog;
     private ProgressDialog progressDialog;
     private ProgressDialog cancelDialog;
     private Button downloadButton;

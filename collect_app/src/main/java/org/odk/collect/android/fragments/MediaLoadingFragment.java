@@ -1,11 +1,11 @@
 package org.odk.collect.android.fragments;
 
 import android.app.Activity;
-import android.app.Fragment;
 import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
+import android.support.v4.app.Fragment;
 
 import org.odk.collect.android.activities.FormEntryActivity;
 import org.odk.collect.android.tasks.MediaLoadingTask;

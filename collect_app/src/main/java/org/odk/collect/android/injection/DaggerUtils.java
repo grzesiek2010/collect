@@ -14,7 +14,7 @@
 
 package org.odk.collect.android.injection;
 
-import android.app.Activity;
+import android.support.v7.app.AppCompatActivity;
 
 import org.odk.collect.android.application.Collect;
 import org.odk.collect.android.injection.config.AppDependencyComponent;
@@ -23,7 +23,7 @@ public class DaggerUtils {
 
     private DaggerUtils() {}
 
-    public static AppDependencyComponent getComponent(Activity activity) {
+    public static AppDependencyComponent getComponent(AppCompatActivity activity) {
         return ((Collect) activity.getApplication()).getComponent();
     }
 }

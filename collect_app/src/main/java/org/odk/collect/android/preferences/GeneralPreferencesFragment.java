@@ -79,7 +79,7 @@ public class GeneralPreferencesFragment extends BasePreferenceFragment implement
                 break;
         }
         if (basePreferenceFragment != null) {
-            getActivity().getFragmentManager()
+            getActivity().getSupportFragmentManager()
                     .beginTransaction()
                     .replace(android.R.id.content, basePreferenceFragment)
                     .addToBackStack(null)

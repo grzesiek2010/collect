@@ -1,8 +1,8 @@
 package org.odk.collect.android.utilities;
 
-import android.app.Activity;
 import android.app.Dialog;
 import android.content.Context;
+import android.support.v7.app.AppCompatActivity;
 
 import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.GoogleApiAvailability;
@@ -39,7 +39,7 @@ public class PlayServicesUtil {
     public static void showGooglePlayServicesAvailabilityErrorDialog(Context context) {
         googleApiAvailability = GoogleApiAvailability.getInstance();
         Dialog dialog = googleApiAvailability.getErrorDialog(
-                (Activity) context,
+                (AppCompatActivity) context,
                 resultCode,
                 PLAY_SERVICE_ERROR_REQUEST_CODE);
         dialog.show();

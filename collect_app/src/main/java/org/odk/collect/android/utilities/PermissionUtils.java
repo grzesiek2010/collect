@@ -8,6 +8,7 @@ import android.os.Build;
 import android.support.annotation.NonNull;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AlertDialog;
+import android.support.v7.app.AppCompatActivity;
 
 import com.karumi.dexter.Dexter;
 import com.karumi.dexter.DexterBuilder;
@@ -111,7 +112,7 @@ public class PermissionUtils {
         return false;
     }
 
-    public static void finishAllActivities(Activity activity) {
+    public static void finishAllActivities(AppCompatActivity activity) {
         if (android.os.Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
             activity.finishAndRemoveTask();
         } else {
@@ -141,7 +142,7 @@ public class PermissionUtils {
         }, Manifest.permission.READ_EXTERNAL_STORAGE, Manifest.permission.WRITE_EXTERNAL_STORAGE);
     }
 
-    public void requestCameraPermission(Activity activity, @NonNull PermissionListener action) {
+    public void requestCameraPermission(AppCompatActivity activity, @NonNull PermissionListener action) {
         requestPermissions(activity, new PermissionListener() {
             @Override
             public void granted() {
@@ -156,7 +157,7 @@ public class PermissionUtils {
         }, Manifest.permission.CAMERA);
     }
 
-    public void requestLocationPermissions(Activity activity, @NonNull PermissionListener action) {
+    public void requestLocationPermissions(AppCompatActivity activity, @NonNull PermissionListener action) {
         requestPermissions(activity, new PermissionListener() {
             @Override
             public void granted() {
@@ -171,7 +172,7 @@ public class PermissionUtils {
         }, Manifest.permission.ACCESS_FINE_LOCATION, Manifest.permission.ACCESS_COARSE_LOCATION);
     }
 
-    public void requestRecordAudioPermission(Activity activity, @NonNull PermissionListener action) {
+    public void requestRecordAudioPermission(AppCompatActivity activity, @NonNull PermissionListener action) {
         requestPermissions(activity, new PermissionListener() {
             @Override
             public void granted() {
@@ -186,7 +187,7 @@ public class PermissionUtils {
         }, Manifest.permission.RECORD_AUDIO);
     }
 
-    public void requestCameraAndRecordAudioPermissions(Activity activity, @NonNull PermissionListener action) {
+    public void requestCameraAndRecordAudioPermissions(AppCompatActivity activity, @NonNull PermissionListener action) {
         requestPermissions(activity, new PermissionListener() {
             @Override
             public void granted() {
@@ -201,7 +202,7 @@ public class PermissionUtils {
         }, Manifest.permission.CAMERA, Manifest.permission.RECORD_AUDIO);
     }
 
-    public void requestGetAccountsPermission(Activity activity, @NonNull PermissionListener action) {
+    public void requestGetAccountsPermission(AppCompatActivity activity, @NonNull PermissionListener action) {
         requestPermissions(activity, new PermissionListener() {
             @Override
             public void granted() {
@@ -216,7 +217,7 @@ public class PermissionUtils {
         }, Manifest.permission.GET_ACCOUNTS);
     }
 
-    public void requestSendSMSPermission(Activity activity, @NonNull PermissionListener action) {
+    public void requestSendSMSPermission(AppCompatActivity activity, @NonNull PermissionListener action) {
         requestPermissions(activity, new PermissionListener() {
             @Override
             public void granted() {
@@ -231,7 +232,7 @@ public class PermissionUtils {
         }, Manifest.permission.SEND_SMS);
     }
 
-    public void requestReadPhoneStatePermission(Activity activity, boolean displayPermissionDeniedDialog, @NonNull PermissionListener action) {
+    public void requestReadPhoneStatePermission(AppCompatActivity activity, boolean displayPermissionDeniedDialog, @NonNull PermissionListener action) {
         requestPermissions(activity, new PermissionListener() {
             @Override
             public void granted() {
@@ -250,7 +251,7 @@ public class PermissionUtils {
         }, Manifest.permission.READ_PHONE_STATE);
     }
 
-    public void requestSendSMSAndReadPhoneStatePermissions(Activity activity, @NonNull PermissionListener action) {
+    public void requestSendSMSAndReadPhoneStatePermissions(AppCompatActivity activity, @NonNull PermissionListener action) {
         requestPermissions(activity, new PermissionListener() {
             @Override
             public void granted() {
@@ -279,7 +280,7 @@ public class PermissionUtils {
         }
     }
 
-    private DexterBuilder createSinglePermissionRequest(Activity activity, String permission, PermissionListener listener) {
+    private DexterBuilder createSinglePermissionRequest(AppCompatActivity activity, String permission, PermissionListener listener) {
         return Dexter.withActivity(activity)
                 .withPermission(permission)
                 .withListener(new com.karumi.dexter.listener.single.PermissionListener() {
@@ -300,7 +301,7 @@ public class PermissionUtils {
                 });
     }
 
-    private DexterBuilder createMultiplePermissionsRequest(Activity activity, PermissionListener listener, String[] permissions) {
+    private DexterBuilder createMultiplePermissionsRequest(AppCompatActivity activity, PermissionListener listener, String[] permissions) {
         return Dexter.withActivity(activity)
                 .withPermissions(permissions)
                 .withListener(new MultiplePermissionsListener() {

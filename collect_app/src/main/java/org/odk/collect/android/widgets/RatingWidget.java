@@ -14,12 +14,13 @@
 
 package org.odk.collect.android.widgets;
 
-import android.app.Activity;
 import android.content.Context;
 import android.graphics.drawable.Drawable;
+import android.support.v7.app.AppCompatActivity;
 import android.util.DisplayMetrics;
 import android.widget.GridLayout;
 import android.widget.ImageButton;
+
 import org.javarosa.core.model.RangeQuestion;
 import org.javarosa.core.model.data.IAnswerData;
 import org.javarosa.core.model.data.StringData;
@@ -38,7 +39,7 @@ public class RatingWidget extends QuestionWidget {
         Drawable d = getResources().getDrawable(R.drawable.ic_star);
         int widthOfStar = d.getIntrinsicWidth();
         DisplayMetrics dm = new DisplayMetrics();
-        ((Activity) context).getWindowManager().getDefaultDisplay().getMetrics(dm);
+        ((AppCompatActivity) context).getWindowManager().getDefaultDisplay().getMetrics(dm);
         int maxStarsPerRow = (dm.widthPixels - 20) / widthOfStar;
 
         gridLayout = new GridLayout(context);

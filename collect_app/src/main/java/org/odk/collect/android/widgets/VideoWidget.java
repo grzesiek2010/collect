@@ -28,6 +28,7 @@ import android.preference.PreferenceManager;
 import android.provider.MediaStore.Video;
 import android.support.annotation.NonNull;
 import android.support.v4.content.FileProvider;
+import android.support.v7.app.AppCompatActivity;
 import android.view.View;
 import android.widget.Button;
 import android.widget.LinearLayout;
@@ -387,7 +388,7 @@ public class VideoWidget extends QuestionWidget implements FileWidget {
         }
         try {
             waitForData();
-            ((Activity) getContext()).startActivityForResult(i,
+            ((AppCompatActivity) getContext()).startActivityForResult(i,
                     RequestCodes.VIDEO_CAPTURE);
         } catch (ActivityNotFoundException e) {
             Toast.makeText(
@@ -407,7 +408,7 @@ public class VideoWidget extends QuestionWidget implements FileWidget {
         // android.provider.MediaStore.Video.Media.EXTERNAL_CONTENT_URI);
         try {
             waitForData();
-            ((Activity) getContext()).startActivityForResult(i,
+            ((AppCompatActivity) getContext()).startActivityForResult(i,
                     RequestCodes.VIDEO_CHOOSER);
         } catch (ActivityNotFoundException e) {
             Toast.makeText(

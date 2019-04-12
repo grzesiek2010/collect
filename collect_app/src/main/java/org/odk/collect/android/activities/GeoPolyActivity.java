@@ -15,10 +15,10 @@
 package org.odk.collect.android.activities;
 
 import android.annotation.SuppressLint;
-import android.app.AlertDialog;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.VisibleForTesting;
+import android.support.v7.app.AlertDialog;
 import android.view.View;
 import android.view.Window;
 import android.widget.AdapterView;
@@ -82,9 +82,9 @@ public class GeoPolyActivity extends BaseGeoMapActivity implements IRegisterRece
     private TextView locationStatus;
     private TextView collectionStatus;
 
-    private AlertDialog settingsDialog;
+    private android.support.v7.app.AlertDialog settingsDialog;
     private View settingsView;
-    private AlertDialog polygonOrPolylineDialog;
+    private android.support.v7.app.AlertDialog polygonOrPolylineDialog;
     private View polygonOrPolylineView;
 
     private static final int[] INTERVAL_OPTIONS = {
@@ -638,7 +638,7 @@ public class GeoPolyActivity extends BaseGeoMapActivity implements IRegisterRece
 
     private void showClearDialog() {
         if (!map.getPolyPoints(featureId).isEmpty()) {
-            new AlertDialog.Builder(this)
+            new android.support.v7.app.AlertDialog.Builder(this)
                 .setMessage(R.string.geo_clear_warning)
                 .setPositiveButton(R.string.clear, (dialog, id) -> clear())
                 .setNegativeButton(R.string.cancel, null)

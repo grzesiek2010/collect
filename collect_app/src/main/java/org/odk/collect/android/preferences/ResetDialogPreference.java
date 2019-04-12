@@ -16,13 +16,13 @@
 
 package org.odk.collect.android.preferences;
 
-import android.app.AlertDialog;
 import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.graphics.Color;
 import android.os.Bundle;
 import android.preference.DialogPreference;
+import android.support.v7.app.AlertDialog;
 import android.util.AttributeSet;
 import android.view.View;
 import android.widget.CheckBox;
@@ -217,13 +217,13 @@ public class ResetDialogPreference extends DialogPreference implements CompoundB
     private void adjustResetButtonAccessibility() {
         if (preferences.isChecked() || instances.isChecked() || forms.isChecked()
                 || layers.isChecked() || cache.isChecked() || osmDroid.isChecked()) {
-            ((AlertDialog) getDialog()).getButton(AlertDialog.BUTTON_POSITIVE).setEnabled(true);
-            ((AlertDialog) getDialog()).getButton(AlertDialog.BUTTON_POSITIVE)
-                    .setTextColor(((AlertDialog) getDialog()).getButton(AlertDialog.BUTTON_NEGATIVE).getCurrentTextColor());
+            ((android.support.v7.app.AlertDialog) getDialog()).getButton(android.support.v7.app.AlertDialog.BUTTON_POSITIVE).setEnabled(true);
+            ((android.support.v7.app.AlertDialog) getDialog()).getButton(android.support.v7.app.AlertDialog.BUTTON_POSITIVE)
+                    .setTextColor(((android.support.v7.app.AlertDialog) getDialog()).getButton(android.support.v7.app.AlertDialog.BUTTON_NEGATIVE).getCurrentTextColor());
         } else {
-            ((AlertDialog) getDialog()).getButton(AlertDialog.BUTTON_POSITIVE).setEnabled(false);
-            ((AlertDialog) getDialog()).getButton(AlertDialog.BUTTON_POSITIVE)
-                    .setTextColor(getPartiallyTransparentColor(((AlertDialog) getDialog()).getButton(AlertDialog.BUTTON_NEGATIVE).getCurrentTextColor()));
+            ((android.support.v7.app.AlertDialog) getDialog()).getButton(android.support.v7.app.AlertDialog.BUTTON_POSITIVE).setEnabled(false);
+            ((android.support.v7.app.AlertDialog) getDialog()).getButton(android.support.v7.app.AlertDialog.BUTTON_POSITIVE)
+                    .setTextColor(getPartiallyTransparentColor(((android.support.v7.app.AlertDialog) getDialog()).getButton(android.support.v7.app.AlertDialog.BUTTON_NEGATIVE).getCurrentTextColor()));
         }
     }
 

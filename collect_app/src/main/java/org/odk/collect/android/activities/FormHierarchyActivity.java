@@ -14,17 +14,17 @@
 
 package org.odk.collect.android.activities;
 
-import android.app.AlertDialog;
 import android.content.DialogInterface;
 import android.os.Bundle;
 import android.support.v4.content.ContextCompat;
+import android.support.v7.app.AlertDialog;
 import android.support.v7.widget.DividerItemDecoration;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
-import android.view.View;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.view.View;
 import android.widget.Button;
 import android.widget.TextView;
 
@@ -797,7 +797,7 @@ public class FormHierarchyActivity extends CollectAbstractActivity {
      * Creates and displays dialog with the given errorMsg.
      */
     protected void createErrorDialog(String errorMsg) {
-        AlertDialog alertDialog = new AlertDialog.Builder(this).create();
+        android.support.v7.app.AlertDialog alertDialog = new android.support.v7.app.AlertDialog.Builder(this).create();
 
         alertDialog.setIcon(android.R.drawable.ic_dialog_info);
         alertDialog.setTitle(getString(R.string.error_occured));

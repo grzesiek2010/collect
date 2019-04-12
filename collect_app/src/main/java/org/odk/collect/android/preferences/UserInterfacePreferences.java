@@ -38,7 +38,7 @@ import java.util.TreeMap;
 
 import timber.log.Timber;
 
-import static android.app.Activity.RESULT_CANCELED;
+import static android.support.v7.app.AppCompatActivity.RESULT_CANCELED;
 import static org.odk.collect.android.preferences.GeneralKeys.GOOGLE_MAPS_BASEMAP_DEFAULT;
 import static org.odk.collect.android.preferences.GeneralKeys.KEY_APP_LANGUAGE;
 import static org.odk.collect.android.preferences.GeneralKeys.KEY_APP_THEME;

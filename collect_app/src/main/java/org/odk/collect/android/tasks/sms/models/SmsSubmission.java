@@ -1,6 +1,6 @@
 package org.odk.collect.android.tasks.sms.models;
 
-import android.app.Activity;
+import android.support.v7.app.AppCompatActivity;
 
 import org.odk.collect.android.tasks.sms.SmsService;
 
@@ -85,7 +85,7 @@ public class SmsSubmission {
      * @return the SmsStatus that will be transferred via the event.
      */
     public int validateResultCode(int resultCode) {
-        if (resultCode == Activity.RESULT_OK) {
+        if (resultCode == AppCompatActivity.RESULT_OK) {
             if (!isSubmissionComplete()) {
                 return SmsService.RESULT_OK_OTHERS_PENDING;
             }

@@ -14,6 +14,7 @@ the License.
 -->
 <RelativeLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:id="@+id/llParent"
     android:layout_width="match_parent"
     android:layout_height="match_parent">
@@ -56,7 +57,7 @@ the License.
             android:layout_height="50dip"
             android:layout_weight="1"
             android:contentDescription="@string/form_backward"
-            android:src="@drawable/navigate_back_button"/>
+            app:srcCompat="@drawable/navigate_back_button"/>
 
         <ImageButton
             android:id="@+id/form_forward_button"
@@ -64,7 +65,7 @@ the License.
             android:layout_height="50dip"
             android:layout_weight="1"
             android:contentDescription="@string/form_forward"
-            android:src="@drawable/navigate_forward_button"/>
+            app:srcCompat="@drawable/navigate_forward_button"/>
     </LinearLayout>
 
 </RelativeLayout>

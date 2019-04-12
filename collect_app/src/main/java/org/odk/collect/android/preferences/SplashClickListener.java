@@ -1,9 +1,9 @@
 package org.odk.collect.android.preferences;
 
-import android.app.AlertDialog;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.preference.Preference;
+import android.support.v7.app.AlertDialog;
 
 import org.odk.collect.android.R;
 
@@ -31,7 +31,7 @@ class SplashClickListener implements Preference.OnPreferenceClickListener {
             final CharSequence[] items = {preferencesFragment.getString(R.string.select_another_image),
                     preferencesFragment.getString(R.string.use_odk_default)};
 
-            AlertDialog.Builder builder = new AlertDialog.Builder(preferencesFragment.getActivity());
+            android.support.v7.app.AlertDialog.Builder builder = new android.support.v7.app.AlertDialog.Builder(preferencesFragment.getActivity());
             builder.setTitle(preferencesFragment.getString(R.string.change_splash_path));
             builder.setNeutralButton(preferencesFragment.getString(R.string.cancel),
                     new DialogInterface.OnClickListener() {
@@ -50,7 +50,7 @@ class SplashClickListener implements Preference.OnPreferenceClickListener {
                     }
                 }
             });
-            AlertDialog alert = builder.create();
+            android.support.v7.app.AlertDialog alert = builder.create();
             alert.show();
 
         } else {

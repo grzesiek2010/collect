@@ -14,15 +14,15 @@
 package org.odk.collect.android.fragments;
 
 import android.app.Activity;
-import android.app.AlertDialog;
-import android.app.Fragment;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.net.Uri;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
+import android.support.v4.app.Fragment;
 import android.support.v4.content.FileProvider;
+import android.support.v7.app.AlertDialog;
 import android.support.v7.widget.Toolbar;
 import android.view.LayoutInflater;
 import android.view.Menu;
@@ -95,7 +95,7 @@ public class ShowQRCodeFragment extends Fragment {
     TextView tvPasswordWarning;
 
     private Intent shareIntent;
-    private AlertDialog dialog;
+    private android.support.v7.app.AlertDialog dialog;
 
     @Nullable
     @Override
@@ -198,7 +198,7 @@ public class ShowQRCodeFragment extends Fragment {
                     getString(R.string.admin_password),
                     getString(R.string.server_password)};
 
-            dialog = new AlertDialog.Builder(getActivity())
+            dialog = new android.support.v7.app.AlertDialog.Builder(getActivity())
                     .setTitle(R.string.include_password_dialog)
                     .setMultiChoiceItems(items, checkedItems, (dialog, which, isChecked) -> checkedItems[which] = isChecked)
                     .setCancelable(false)

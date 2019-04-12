@@ -16,9 +16,9 @@
 
 package org.odk.collect.android.utilities;
 
-import android.app.AlertDialog;
 import android.content.Context;
 import android.content.DialogInterface;
+import android.support.v7.app.AlertDialog;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.EditText;
@@ -45,8 +45,8 @@ public class AuthDialogUtility {
         Collect.getInstance().getComponent().inject(this);
     }
 
-    public AlertDialog createDialog(final Context context,
-                                    final AuthDialogUtilityResultListener resultListener, String url) {
+    public android.support.v7.app.AlertDialog createDialog(final Context context,
+                                                           final AuthDialogUtilityResultListener resultListener, String url) {
 
         final View dialogView = LayoutInflater.from(context)
                 .inflate(R.layout.server_auth_dialog, null);
@@ -68,7 +68,7 @@ public class AuthDialogUtility {
         username.setText(customUsername != null ? customUsername : overriddenUrl != null ? null : webCredentialsUtils.getUserNameFromPreferences());
         password.setText(customPassword != null ? customPassword : overriddenUrl != null ? null : webCredentialsUtils.getPasswordFromPreferences());
 
-        AlertDialog.Builder builder = new AlertDialog.Builder(context);
+        android.support.v7.app.AlertDialog.Builder builder = new android.support.v7.app.AlertDialog.Builder(context);
         builder.setTitle(context.getString(R.string.server_requires_auth));
         builder.setMessage(context.getString(R.string.server_auth_credentials, overriddenUrl != null ? overriddenUrl : webCredentialsUtils.getServerUrlFromPreferences()));
         builder.setView(dialogView);

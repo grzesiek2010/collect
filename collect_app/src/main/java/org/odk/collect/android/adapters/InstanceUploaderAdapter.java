@@ -1,8 +1,8 @@
 package org.odk.collect.android.adapters;
 
-import android.app.Activity;
 import android.content.Context;
 import android.database.Cursor;
+import android.support.v7.app.AppCompatActivity;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -145,7 +145,7 @@ public class InstanceUploaderAdapter extends CursorAdapter {
 
     private void setSmsSubmissionStateIcons(int smsStatus, ViewHolder viewHolder) {
         switch (smsStatus) {
-            case Activity.RESULT_OK:
+            case AppCompatActivity.RESULT_OK:
                 viewHolder.statusIcon.setImageResource(R.drawable.form_state_submitted);
                 break;
 

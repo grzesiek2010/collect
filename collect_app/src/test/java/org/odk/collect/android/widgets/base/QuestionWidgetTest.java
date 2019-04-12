@@ -1,7 +1,7 @@
 package org.odk.collect.android.widgets.base;
 
-import android.app.Activity;
 import android.support.annotation.NonNull;
+import android.support.v7.app.AppCompatActivity;
 
 import org.javarosa.core.model.FormIndex;
 import org.javarosa.core.model.data.IAnswerData;
@@ -26,7 +26,7 @@ public abstract class QuestionWidgetTest<W extends Widget, A extends IAnswerData
         extends WidgetTest {
 
     protected Random random = new Random();
-    protected Activity activity = Robolectric.setupActivity(Activity.class);
+    protected AppCompatActivity activity = Robolectric.setupActivity(AppCompatActivity.class);
     private W widget;
     private W actualWidget;
 

@@ -16,7 +16,6 @@
 
 package org.odk.collect.android.widgets;
 
-import android.app.Activity;
 import android.content.ActivityNotFoundException;
 import android.content.ContentValues;
 import android.content.Context;
@@ -27,6 +26,7 @@ import android.provider.MediaStore;
 import android.support.annotation.IdRes;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
+import android.support.v7.app.AppCompatActivity;
 import android.util.DisplayMetrics;
 import android.view.View;
 import android.widget.ImageView;
@@ -299,7 +299,7 @@ public abstract class BaseImageWidget extends QuestionWidget implements FileWidg
     protected void launchActivityForResult(Intent intent, final int resourceCode, final int errorStringResource) {
         try {
             waitForData();
-            ((Activity) getContext()).startActivityForResult(intent, resourceCode);
+            ((AppCompatActivity) getContext()).startActivityForResult(intent, resourceCode);
         } catch (ActivityNotFoundException e) {
             Toast.makeText(getContext(),
                     getContext().getString(R.string.activity_not_found, getContext().getString(errorStringResource)),

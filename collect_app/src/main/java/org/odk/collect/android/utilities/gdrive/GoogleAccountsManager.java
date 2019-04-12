@@ -15,12 +15,12 @@
 package org.odk.collect.android.utilities.gdrive;
 
 import android.accounts.Account;
-import android.app.Activity;
-import android.app.AlertDialog;
 import android.content.Context;
 import android.content.Intent;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
+import android.support.v7.app.AlertDialog;
+import android.support.v7.app.AppCompatActivity;
 
 import com.google.android.gms.auth.GoogleAuthException;
 import com.google.android.gms.auth.GoogleAuthUtil;
@@ -93,7 +93,7 @@ public class GoogleAccountsManager {
         themeUtils = new ThemeUtils(context);
     }
 
-    public static void showSettingsDialog(Activity activity) {
+    public static void showSettingsDialog(AppCompatActivity activity) {
         AlertDialog alertDialog = new AlertDialog.Builder(activity)
                 .setIcon(android.R.drawable.ic_dialog_info)
                 .setTitle(R.string.missing_google_account_dialog_title)

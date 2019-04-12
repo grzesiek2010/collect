@@ -16,13 +16,13 @@ package org.odk.collect.android.activities;
  * limitations under the License.
  */
 
-import android.app.Activity;
 import android.content.Intent;
 import android.hardware.Camera;
 import android.media.CamcorderProfile;
 import android.media.MediaRecorder;
 import android.net.Uri;
 import android.os.Bundle;
+import android.support.v7.app.AppCompatActivity;
 import android.view.View;
 import android.view.Window;
 import android.view.WindowManager;
@@ -41,7 +41,7 @@ import timber.log.Timber;
 
 /*https://developer.android.com/guide/topics/media/camera.html#capture-video*/
 
-public class CaptureSelfieVideoActivity extends Activity {
+public class CaptureSelfieVideoActivity extends AppCompatActivity {
     private Camera camera;
     private CameraPreview camPreview;
     private int cameraId;

@@ -15,9 +15,9 @@
 package org.odk.collect.android.widgets;
 
 import android.annotation.SuppressLint;
-import android.app.AlertDialog;
 import android.content.Context;
 import android.content.DialogInterface;
+import android.support.v7.app.AlertDialog;
 import android.text.TextUtils;
 import android.view.View;
 import android.widget.Button;
@@ -61,7 +61,7 @@ public class SpinnerMultiWidget extends ItemsWidget implements ButtonWidget, Mul
     boolean[] selections;
 
     // The alert box that contains the answer selection view
-    AlertDialog.Builder alertBuilder;
+    android.support.v7.app.AlertDialog.Builder alertBuilder;
 
     // Displays the current selections below the button
     TextView selectionText;
@@ -72,7 +72,7 @@ public class SpinnerMultiWidget extends ItemsWidget implements ButtonWidget, Mul
 
         selections = new boolean[items.size()];
         answerItems = new CharSequence[items.size()];
-        alertBuilder = new AlertDialog.Builder(context);
+        alertBuilder = new android.support.v7.app.AlertDialog.Builder(context);
         button = getSimpleButton(context.getString(R.string.select_answer));
 
         // Build View
@@ -187,7 +187,7 @@ public class SpinnerMultiWidget extends ItemsWidget implements ButtonWidget, Mul
                         selections[which] = isChecked;
                     }
                 });
-        AlertDialog alert = alertBuilder.create();
+        android.support.v7.app.AlertDialog alert = alertBuilder.create();
         alert.show();
     }
 

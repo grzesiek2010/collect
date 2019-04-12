@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="@android:color/transparent"
@@ -29,7 +30,7 @@
             android:layout_width="72dip"
             android:layout_height="72dip"
             android:contentDescription="@string/app_name"
-            android:src="@drawable/notes" />
+            app:srcCompat="@drawable/notes" />
 
         <LinearLayout
             android:layout_width="wrap_content"

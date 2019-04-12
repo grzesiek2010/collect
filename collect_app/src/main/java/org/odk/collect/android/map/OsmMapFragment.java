@@ -14,7 +14,6 @@
 
 package org.odk.collect.android.map;
 
-import android.app.AlertDialog;
 import android.content.Context;
 import android.content.Intent;
 import android.graphics.Bitmap;
@@ -30,6 +29,7 @@ import android.support.annotation.VisibleForTesting;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentActivity;
 import android.support.v4.content.ContextCompat;
+import android.support.v7.app.AlertDialog;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -343,7 +343,7 @@ public class OsmMapFragment extends Fragment implements MapFragment,
 
     @Override public void onClientStop() { }
 
-    @VisibleForTesting public AlertDialog getGpsErrorDialog() {
+    @VisibleForTesting public android.support.v7.app.AlertDialog getGpsErrorDialog() {
         return gpsErrorDialog;
     }
 

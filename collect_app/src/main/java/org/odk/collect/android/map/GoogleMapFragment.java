@@ -15,7 +15,6 @@
 package org.odk.collect.android.map;
 
 import android.annotation.SuppressLint;
-import android.app.AlertDialog;
 import android.content.Intent;
 import android.location.Location;
 import android.os.Handler;
@@ -25,6 +24,7 @@ import android.support.annotation.Nullable;
 import android.support.annotation.VisibleForTesting;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentActivity;
+import android.support.v7.app.AlertDialog;
 
 import com.google.android.gms.location.LocationListener;
 import com.google.android.gms.maps.CameraUpdate;
@@ -77,7 +77,7 @@ public class GoogleMapFragment extends SupportMapFragment implements
     protected String lastLocationProvider;
     protected int nextFeatureId = 1;
     protected Map<Integer, MapFeature> features = new HashMap<>();
-    protected AlertDialog gpsErrorDialog;
+    protected android.support.v7.app.AlertDialog gpsErrorDialog;
     protected boolean gpsLocationEnabled;
 
     // During Robolectric tests, Google Play Services is unavailable; sadly, the
@@ -427,7 +427,7 @@ public class GoogleMapFragment extends SupportMapFragment implements
     }
 
     protected void showGpsDisabledAlert() {
-        gpsErrorDialog = new AlertDialog.Builder(getActivity())
+        gpsErrorDialog = new android.support.v7.app.AlertDialog.Builder(getActivity())
             .setMessage(getString(R.string.gps_enable_message))
             .setCancelable(false)
             .setPositiveButton(getString(R.string.enable_gps),

@@ -15,7 +15,6 @@
 
 package org.odk.collect.android.activities;
 
-import android.app.Activity;
 import android.content.pm.ActivityInfo;
 import android.graphics.Bitmap;
 import android.graphics.Canvas;
@@ -23,6 +22,7 @@ import android.net.Uri;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
 import android.support.v7.app.AlertDialog;
+import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.CardView;
 import android.view.KeyEvent;
 import android.view.View;
@@ -215,9 +215,9 @@ public class DrawActivity extends CollectAbstractActivity {
     private void saveAndClose() {
         try {
             saveFile(output);
-            setResult(Activity.RESULT_OK);
+            setResult(AppCompatActivity.RESULT_OK);
         } catch (FileNotFoundException e) {
-            setResult(Activity.RESULT_CANCELED);
+            setResult(AppCompatActivity.RESULT_CANCELED);
         }
         this.finish();
     }
@@ -256,7 +256,7 @@ public class DrawActivity extends CollectAbstractActivity {
     }
 
     private void cancelAndClose() {
-        setResult(Activity.RESULT_CANCELED);
+        setResult(AppCompatActivity.RESULT_CANCELED);
         this.finish();
     }
 

@@ -18,13 +18,14 @@ package org.odk.collect.android.preferences;
 
 import android.accounts.AccountManager;
 import android.app.Activity;
-import android.app.AlertDialog;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.preference.EditTextPreference;
 import android.preference.Preference;
 import android.preference.PreferenceManager;
+import android.support.v7.app.AlertDialog;
 import android.support.v7.content.res.AppCompatResources;
+import android.support.v7.widget.ListPopupWindow;
 import android.telephony.PhoneNumberUtils;
 import android.text.InputFilter;
 import android.text.TextUtils;
@@ -32,7 +33,6 @@ import android.view.MotionEvent;
 import android.view.View;
 import android.widget.ArrayAdapter;
 import android.widget.EditText;
-import android.widget.ListPopupWindow;
 
 import com.google.android.gms.analytics.HitBuilders;
 import com.google.gson.Gson;
@@ -61,7 +61,7 @@ import java.util.Locale;
 
 import javax.inject.Inject;
 
-import static android.app.Activity.RESULT_OK;
+import static android.support.v7.app.AppCompatActivity.RESULT_OK;
 import static org.odk.collect.android.preferences.GeneralKeys.KEY_FORMLIST_URL;
 import static org.odk.collect.android.preferences.GeneralKeys.KEY_PROTOCOL;
 import static org.odk.collect.android.preferences.GeneralKeys.KEY_SELECTED_GOOGLE_ACCOUNT;
@@ -519,7 +519,7 @@ public class ServerPreferencesFragment extends BasePreferenceFragment implements
 
         if (TextUtils.isEmpty(account) && protocol.equals(getString(R.string.protocol_google_sheets))) {
 
-            AlertDialog alertDialog = new AlertDialog.Builder(getActivity())
+            android.support.v7.app.AlertDialog alertDialog = new android.support.v7.app.AlertDialog.Builder(getActivity())
                     .setIcon(android.R.drawable.ic_dialog_info)
                     .setTitle(R.string.missing_google_account_dialog_title)
                     .setMessage(R.string.missing_google_account_dialog_desc)

@@ -19,6 +19,7 @@ package org.odk.collect.android.views;
 import android.app.Activity;
 import android.content.Context;
 import android.hardware.Camera;
+import android.support.v7.app.AppCompatActivity;
 import android.view.Surface;
 import android.view.SurfaceHolder;
 import android.view.SurfaceView;
@@ -87,7 +88,7 @@ public class CameraPreview extends SurfaceView implements SurfaceHolder.Callback
     private void setCameraDisplayOrientation(Camera camera) {
         Camera.CameraInfo info = new Camera.CameraInfo();
         Camera.getCameraInfo(1, info);
-        int rotation = ((Activity) context).getWindowManager().getDefaultDisplay().getRotation();
+        int rotation = ((AppCompatActivity) context).getWindowManager().getDefaultDisplay().getRotation();
         int degrees = 0;
         switch (rotation) {
             case Surface.ROTATION_0:

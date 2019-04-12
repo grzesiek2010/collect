@@ -16,13 +16,13 @@ See the License for the specific language governing permissions and
 limitations under the License.
  */
 
-import android.app.Activity;
 import android.content.Context;
 import android.hardware.Camera;
 import android.hardware.camera2.CameraAccessException;
 import android.hardware.camera2.CameraCharacteristics;
 import android.hardware.camera2.CameraManager;
 import android.os.Build;
+import android.support.v7.app.AppCompatActivity;
 import android.view.Surface;
 
 import org.odk.collect.android.application.Collect;
@@ -39,7 +39,7 @@ public class CameraUtils {
 
     }
 
-    public static Camera getCameraInstance(Activity activity, int cameraId) {
+    public static Camera getCameraInstance(AppCompatActivity activity, int cameraId) {
         Camera camera = Camera.open(cameraId);
         camera.setDisplayOrientation(90);
 

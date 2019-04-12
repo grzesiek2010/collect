@@ -21,7 +21,7 @@ import android.content.Context;
 import android.content.DialogInterface;
 import android.os.Bundle;
 import android.support.v4.app.DialogFragment;
-import android.app.AlertDialog;
+import android.support.v7.app.AlertDialog;
 
 import org.odk.collect.android.R;
 
@@ -47,7 +47,7 @@ public class MovingBackwardsDialog extends DialogFragment {
     public Dialog onCreateDialog(Bundle savedInstanceState) {
         setCancelable(false);
 
-        return new AlertDialog.Builder(getActivity())
+        return new android.support.v7.app.AlertDialog.Builder(getActivity())
                 .setTitle(R.string.moving_backwards_disabled_title)
                 .setMessage(R.string.moving_backwards_disabled_message)
                 .setPositiveButton(R.string.yes, new DialogInterface.OnClickListener() {

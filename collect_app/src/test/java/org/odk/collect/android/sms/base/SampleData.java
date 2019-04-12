@@ -1,6 +1,6 @@
 package org.odk.collect.android.sms.base;
 
-import android.app.Activity;
+import android.support.v7.app.AppCompatActivity;
 import android.telephony.SmsManager;
 
 import org.odk.collect.android.tasks.sms.SmsService;
@@ -55,7 +55,7 @@ public class SampleData {
     public static List<Message> generateSampleMessages() {
 
         Message first = new Message();
-        first.setResultCode(Activity.RESULT_OK);
+        first.setResultCode(AppCompatActivity.RESULT_OK);
         first.setPartNumber(1);
         first.generateRandomMessageID();
         first.setText("+N Joel Dean");
@@ -90,13 +90,13 @@ public class SampleData {
 
         Message second = new Message();
         second.setPartNumber(2);
-        second.setResultCode(Activity.RESULT_OK);
+        second.setResultCode(AppCompatActivity.RESULT_OK);
         second.generateRandomMessageID();
         second.setText("+C America");
 
         Message third = new Message();
         third.setPartNumber(2);
-        third.setResultCode(Activity.RESULT_OK);
+        third.setResultCode(AppCompatActivity.RESULT_OK);
         third.generateRandomMessageID();
         third.setText("+G Male");
 

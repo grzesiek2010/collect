@@ -18,8 +18,6 @@
 
 package org.odk.collect.android.activities;
 
-import android.app.Activity;
-import android.app.AlertDialog;
 import android.app.Dialog;
 import android.app.ProgressDialog;
 import android.content.Context;
@@ -30,6 +28,8 @@ import android.net.NetworkInfo;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
+import android.support.v7.app.AlertDialog;
+import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.view.View;
 import android.view.Window;
@@ -380,7 +380,7 @@ public class GoogleDriveActivity extends FormListActivity implements View.OnClic
                 progressDialog.setButton(getString(R.string.cancel), loadingButtonListener);
                 return progressDialog;
             case GOOGLE_USER_DIALOG:
-                AlertDialog.Builder gudBuilder = new AlertDialog.Builder(this);
+                AlertDialog.Builder gudBuilder = new android.support.v7.app.AlertDialog.Builder(this);
 
                 gudBuilder.setTitle(getString(R.string.no_google_account));
                 gudBuilder.setMessage(getString(R.string.google_set_account));
@@ -392,7 +392,7 @@ public class GoogleDriveActivity extends FormListActivity implements View.OnClic
     }
 
     private void createAlertDialog(String message) {
-        AlertDialog alertDialog = new AlertDialog.Builder(this).create();
+        android.support.v7.app.AlertDialog alertDialog = new android.support.v7.app.AlertDialog.Builder(this).create();
         alertDialog.setTitle(getString(R.string.download_forms_result));
         alertDialog.setMessage(message);
         DialogInterface.OnClickListener quitListener = new DialogInterface.OnClickListener() {
@@ -419,7 +419,7 @@ public class GoogleDriveActivity extends FormListActivity implements View.OnClic
                                     final Intent data) {
         switch (requestCode) {
             case AUTHORIZATION_REQUEST_CODE:
-                if (resultCode == Activity.RESULT_OK) {
+                if (resultCode == AppCompatActivity.RESULT_OK) {
                     getResultsFromApi();
                 }
                 break;

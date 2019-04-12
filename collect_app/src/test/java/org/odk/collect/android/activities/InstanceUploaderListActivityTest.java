@@ -1,9 +1,9 @@
 package org.odk.collect.android.activities;
 
 import android.app.Activity;
-import android.app.AlertDialog;
 import android.app.Application;
 import android.support.annotation.NonNull;
+import android.support.v7.app.AlertDialog;
 
 import com.google.android.gms.analytics.HitBuilders;
 import com.google.android.gms.analytics.Tracker;
@@ -26,7 +26,6 @@ import androidx.work.WorkManager;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.verify;
 import static org.odk.collect.android.support.RobolectricHelpers.overrideAppDependencyModule;
-import static org.robolectric.Shadows.shadowOf;
 
 @RunWith(RobolectricTestRunner.class)
 public class InstanceUploaderListActivityTest {

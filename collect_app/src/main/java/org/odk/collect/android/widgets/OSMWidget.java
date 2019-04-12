@@ -1,14 +1,14 @@
 package org.odk.collect.android.widgets;
 
 import android.annotation.SuppressLint;
-import android.app.Activity;
-import android.app.AlertDialog;
 import android.content.ActivityNotFoundException;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.graphics.Color;
 import android.graphics.Typeface;
+import android.support.v7.app.AlertDialog;
+import android.support.v7.app.AppCompatActivity;
 import android.view.View;
 import android.widget.Button;
 import android.widget.LinearLayout;
@@ -156,14 +156,14 @@ public class OSMWidget extends QuestionWidget implements BinaryWidget {
 
             try {
                 waitForData();
-                ((Activity) getContext()).startActivityForResult(launchIntent, RequestCodes.OSM_CAPTURE);
+                ((AppCompatActivity) getContext()).startActivityForResult(launchIntent, RequestCodes.OSM_CAPTURE);
             } catch (ActivityNotFoundException e) {
                 cancelWaitingForData();
                 errorTextView.setVisibility(View.VISIBLE);
             }
 
         } catch (Exception ex) {
-            AlertDialog.Builder builder = new AlertDialog.Builder(getContext());
+            android.support.v7.app.AlertDialog.Builder builder = new android.support.v7.app.AlertDialog.Builder(getContext());
             builder.setTitle(R.string.alert);
             builder.setMessage(R.string.install_openmapkit);
             DialogInterface.OnClickListener okClickListener = new DialogInterface.OnClickListener() {
@@ -173,7 +173,7 @@ public class OSMWidget extends QuestionWidget implements BinaryWidget {
             };
 
             builder.setPositiveButton("Ok", okClickListener);
-            AlertDialog dialog = builder.create();
+            android.support.v7.app.AlertDialog dialog = builder.create();
             dialog.show();
         }
     }

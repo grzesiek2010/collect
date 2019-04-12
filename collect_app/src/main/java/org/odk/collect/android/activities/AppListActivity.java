@@ -211,7 +211,7 @@ abstract class AppListActivity extends CollectAbstractActivity {
         });
 
         if (isSearchBoxShown) {
-            searchItem.expandActionView();
+            MenuItemCompat.expandActionView(searchItem);
             searchView.setQuery(savedFilterText, false);
         }
         return super.onCreateOptionsMenu(menu);

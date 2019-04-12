@@ -18,9 +18,9 @@ package org.odk.collect.android.activities;
  */
 
 import android.annotation.TargetApi;
-import android.app.Activity;
 import android.os.Build;
 import android.os.Bundle;
+import android.support.v7.app.AppCompatActivity;
 
 import org.odk.collect.android.R;
 import org.odk.collect.android.fragments.Camera2VideoFragment;
@@ -29,7 +29,7 @@ import org.odk.collect.android.utilities.ToastUtils;
 import static org.odk.collect.android.utilities.PermissionUtils.areCameraAndRecordAudioPermissionsGranted;
 
 @TargetApi(Build.VERSION_CODES.LOLLIPOP)
-public class CaptureSelfieVideoActivityNewApi extends Activity {
+public class CaptureSelfieVideoActivityNewApi extends AppCompatActivity {
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -42,7 +42,7 @@ public class CaptureSelfieVideoActivityNewApi extends Activity {
 
         setContentView(R.layout.activity_capture_selfie_video_new_api);
         if (null == savedInstanceState) {
-            getFragmentManager().beginTransaction()
+            getSupportFragmentManager().beginTransaction()
                     .replace(R.id.container, Camera2VideoFragment.newInstance())
                     .commit();
         }

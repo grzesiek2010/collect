@@ -14,7 +14,6 @@
 
 package org.odk.collect.android.fragments;
 
-import android.app.AlertDialog;
 import android.app.ProgressDialog;
 import android.content.DialogInterface;
 import android.os.AsyncTask;
@@ -22,6 +21,7 @@ import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v4.content.CursorLoader;
+import android.support.v7.app.AlertDialog;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -157,7 +157,7 @@ public class DataManagerList extends InstanceListFragment
      * Create the instance delete dialog
      */
     private void createDeleteInstancesDialog() {
-        alertDialog = new AlertDialog.Builder(getContext()).create();
+        alertDialog = new android.support.v7.app.AlertDialog.Builder(getContext()).create();
         alertDialog.setTitle(getString(R.string.delete_file));
         alertDialog.setMessage(getString(R.string.delete_confirm,
                 String.valueOf(getCheckedCount())));

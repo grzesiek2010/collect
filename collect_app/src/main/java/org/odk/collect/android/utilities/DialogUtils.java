@@ -16,21 +16,21 @@
 
 package org.odk.collect.android.utilities;
 
-import android.app.Activity;
-import android.app.AlertDialog;
 import android.app.Dialog;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.graphics.Color;
 import android.graphics.drawable.ColorDrawable;
 import android.support.annotation.NonNull;
+import android.support.v7.app.AlertDialog;
+import android.support.v7.app.AppCompatActivity;
 import android.widget.ListView;
 
 import org.odk.collect.android.R;
-
 import org.odk.collect.android.application.Collect;
 import org.odk.collect.android.logic.AuditEvent;
 import org.odk.collect.android.logic.FormController;
+
 import timber.log.Timber;
 
 import static android.content.DialogInterface.BUTTON_NEGATIVE;
@@ -68,7 +68,7 @@ public final class DialogUtils {
      * @param dialog   that needs to be shown
      * @param activity that has the dialog
      */
-    public static void showDialog(Dialog dialog, Activity activity) {
+    public static void showDialog(Dialog dialog, AppCompatActivity activity) {
 
         if (activity == null || activity.isFinishing()) {
             return;
@@ -130,7 +130,7 @@ public final class DialogUtils {
      * @param dialog   that needs to be shown
      * @param activity that has the dialog
      */
-    public static void dismissDialog(Dialog dialog, Activity activity) {
+    public static void dismissDialog(Dialog dialog, AppCompatActivity activity) {
 
         if (activity == null || activity.isFinishing()) {
             return;
@@ -152,8 +152,8 @@ public final class DialogUtils {
      * @param errorMsg The message to show on the dialog box
      * @param shouldExit Finish the activity if Ok is clicked
      */
-    public static Dialog createErrorDialog(@NonNull Activity activity, String errorMsg, final boolean shouldExit) {
-        AlertDialog alertDialog = new AlertDialog.Builder(activity).create();
+    public static Dialog createErrorDialog(@NonNull AppCompatActivity activity, String errorMsg, final boolean shouldExit) {
+        android.support.v7.app.AlertDialog alertDialog = new android.support.v7.app.AlertDialog.Builder(activity).create();
         alertDialog.setIcon(android.R.drawable.ic_dialog_info);
         alertDialog.setMessage(errorMsg);
         DialogInterface.OnClickListener errorListener = (dialog, i) -> {

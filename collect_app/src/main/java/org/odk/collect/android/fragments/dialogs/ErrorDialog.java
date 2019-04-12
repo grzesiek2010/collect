@@ -1,11 +1,11 @@
 package org.odk.collect.android.fragments.dialogs;
 
 import android.app.Activity;
-import android.app.AlertDialog;
 import android.app.Dialog;
 import android.app.DialogFragment;
 import android.content.DialogInterface;
 import android.os.Bundle;
+import android.support.v7.app.AlertDialog;
 
 /*
 Copyright 2018 Theodoros Tyrovouzis
@@ -37,7 +37,7 @@ public class ErrorDialog extends DialogFragment {
     @Override
     public Dialog onCreateDialog(Bundle savedInstanceState) {
         final Activity activity = getActivity();
-        return new AlertDialog.Builder(activity)
+        return new android.support.v7.app.AlertDialog.Builder(activity)
                 .setMessage(getArguments().getString(ARG_MESSAGE))
                 .setPositiveButton(android.R.string.ok, new DialogInterface.OnClickListener() {
                     @Override

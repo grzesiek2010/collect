@@ -1,6 +1,6 @@
 package org.odk.collect.android.tasks.sms.models;
 
-import android.app.Activity;
+import android.support.v7.app.AppCompatActivity;
 
 import org.odk.collect.android.tasks.sms.SmsService;
 
@@ -36,7 +36,7 @@ public class Message {
     }
 
     public boolean isSent() {
-        return resultCode == Activity.RESULT_OK;
+        return resultCode == AppCompatActivity.RESULT_OK;
     }
 
     public boolean isSending() {

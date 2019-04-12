@@ -1,7 +1,7 @@
 package org.odk.collect.android;
 
-import android.app.Activity;
 import android.support.test.runner.AndroidJUnit4;
+import android.support.v7.app.AppCompatActivity;
 import android.text.format.Formatter;
 
 import org.junit.Ignore;
@@ -111,7 +111,7 @@ public class SmsSubmissionMemoryTest extends BaseFormEntryActivityTest {
 
     public static List<Message> generateSampleMessages() {
         Message first = new Message();
-        first.setResultCode(Activity.RESULT_OK);
+        first.setResultCode(AppCompatActivity.RESULT_OK);
         first.setPartNumber(1);
         first.generateRandomMessageID();
         first.setText(randomString());

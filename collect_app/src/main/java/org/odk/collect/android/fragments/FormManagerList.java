@@ -14,12 +14,12 @@
 
 package org.odk.collect.android.fragments;
 
-import android.app.AlertDialog;
 import android.content.DialogInterface;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.v4.content.CursorLoader;
+import android.support.v7.app.AlertDialog;
 import android.view.View;
 import android.widget.ListView;
 

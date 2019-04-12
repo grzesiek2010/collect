@@ -18,7 +18,6 @@ package org.odk.collect.android.fragments;
 
 import android.annotation.TargetApi;
 import android.app.Activity;
-import android.app.Fragment;
 import android.content.Context;
 import android.content.Intent;
 import android.graphics.Matrix;
@@ -40,6 +39,8 @@ import android.os.Handler;
 import android.os.HandlerThread;
 import android.support.annotation.NonNull;
 import android.support.v13.app.FragmentCompat;
+import android.support.v4.app.Fragment;
+import android.support.v7.app.AppCompatActivity;
 import android.util.Size;
 import android.util.SparseIntArray;
 import android.view.LayoutInflater;
@@ -336,7 +337,7 @@ public class Camera2VideoFragment extends Fragment
      */
     @SuppressWarnings("MissingPermission")
     private void openCamera(int width, int height) {
-        final Activity activity = getActivity();
+        final AppCompatActivity activity = getActivity();
         if (null == activity || activity.isFinishing()) {
             return;
         }
@@ -472,7 +473,7 @@ public class Camera2VideoFragment extends Fragment
      * @param viewHeight The height of `textureView`
      */
     private void configureTransform(int viewWidth, int viewHeight) {
-        Activity activity = getActivity();
+        AppCompatActivity activity = getActivity();
         if (null == textureView || null == previewSize || null == activity) {
             return;
         }
@@ -495,7 +496,7 @@ public class Camera2VideoFragment extends Fragment
     }
 
     private void setUpMediaRecorder() throws IOException {
-        final Activity activity = getActivity();
+        final AppCompatActivity activity = getActivity();
         if (null == activity) {
             return;
         }
@@ -595,13 +596,13 @@ public class Camera2VideoFragment extends Fragment
         mediaRecorder.stop();
         mediaRecorder.reset();
 
-        Activity activity = getActivity();
+        AppCompatActivity activity = getActivity();
         if (null != activity) {
             Timber.d("Video saved: " + nextVideoAbsolutePath);
         }
         Intent i = new Intent();
         i.setData(Uri.fromFile(new File(nextVideoAbsolutePath)));
-        activity.setResult(Activity.RESULT_OK, i);
+        activity.setResult(AppCompatActivity.RESULT_OK, i);
         activity.finish();
     }
 }
