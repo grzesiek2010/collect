@@ -40,6 +40,7 @@ import java.util.UUID;
 
 import androidx.test.core.app.ApplicationProvider;
 import androidx.test.espresso.intent.rule.IntentsTestRule;
+import androidx.test.espresso.matcher.ViewMatchers;
 import androidx.test.rule.GrantPermissionRule;
 
 import static androidx.test.espresso.Espresso.onView;
@@ -59,6 +60,7 @@ import static androidx.test.espresso.matcher.ViewMatchers.hasFocus;
 import static androidx.test.espresso.matcher.ViewMatchers.isCompletelyDisplayed;
 import static androidx.test.espresso.matcher.ViewMatchers.isDisplayed;
 import static androidx.test.espresso.matcher.ViewMatchers.withClassName;
+import static androidx.test.espresso.matcher.ViewMatchers.withEffectiveVisibility;
 import static androidx.test.espresso.matcher.ViewMatchers.withId;
 import static androidx.test.espresso.matcher.ViewMatchers.withText;
 import static org.hamcrest.Matchers.allOf;
@@ -308,7 +310,7 @@ public class FieldListUpdateTest {
         jumpToGroupWithText("Push off screen binary");
         onView(withText(startsWith("Source10"))).perform(click());
 
-        onView(withText("Target10-15")).check(doesNotExist());
+        onView(withText("Target10-15")).check(matches(withEffectiveVisibility(ViewMatchers.Visibility.GONE)));
 
         // FormEntryActivity expects an image at a fixed path so copy the app logo there
         Bitmap icon = BitmapFactory.decodeResource(ApplicationProvider.getApplicationContext().getResources(), R.drawable.notes);
@@ -321,7 +323,7 @@ public class FieldListUpdateTest {
 
         onView(withId(R.id.capture_image)).perform(click());
 
-        onView(withText("Target10-15")).check(matches(isDisplayed()));
+        onView(withText("Target10-15")).check(matches(withEffectiveVisibility(ViewMatchers.Visibility.VISIBLE)));
         onView(withId(R.id.capture_image)).check(matches(isCompletelyDisplayed()));
     }
 
