@@ -186,6 +186,7 @@ public abstract class AbstractSelectListAdapter extends RecyclerView.Adapter<Abs
         }
 
         view.setOnClickListener(v -> onItemClick(selectChoice.selection(), v));
+        view.setEnabled(!widget.getFormEntryPrompt().isReadOnly());
         return view;
     }
 
@@ -214,6 +215,7 @@ public abstract class AbstractSelectListAdapter extends RecyclerView.Adapter<Abs
                 view.addView(setUpNoButtonsView(index));
             } else {
                 widget.addMediaFromChoice(mediaLayout, index, setUpButton(index), filteredItems);
+                mediaLayout.setEnabled(!widget.getFormEntryPrompt().isReadOnly());
             }
         }
     }
