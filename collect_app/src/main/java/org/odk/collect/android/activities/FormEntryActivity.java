@@ -1022,7 +1022,7 @@ public class FormEntryActivity extends CollectAbstractActivity implements Animat
 
                 if (formController != null) {
                     formController.getAuditEventLogger().exitView();
-                    formController.getAuditEventLogger().logEvent(AuditEvent.AuditEventType.HIERARCHY, true);
+                    formController.getAuditEventLogger().logEvent(AuditEvent.AuditEventType.HIERARCHY);
                 }
 
                 Intent i = new Intent(this, FormHierarchyActivity.class);
@@ -2453,7 +2453,7 @@ public class FormEntryActivity extends CollectAbstractActivity implements Animat
                         if (formMode == null || ApplicationConstants.FormModes.EDIT_SAVED.equalsIgnoreCase(formMode)) {
                             savedFormStart = true;
                             formController.getAuditEventLogger().logEvent(AuditEvent.AuditEventType.FORM_RESUME, true);
-                            formController.getAuditEventLogger().logEvent(AuditEvent.AuditEventType.HIERARCHY, true);
+                            formController.getAuditEventLogger().logEvent(AuditEvent.AuditEventType.HIERARCHY);
                             startActivityForResult(new Intent(this, FormHierarchyActivity.class), RequestCodes.HIERARCHY_ACTIVITY);
                             return; // so we don't show the intro screen before jumping to the hierarchy
                         } else {
