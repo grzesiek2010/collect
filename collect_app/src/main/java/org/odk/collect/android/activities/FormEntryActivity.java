@@ -1198,7 +1198,7 @@ public class FormEntryActivity extends CollectAbstractActivity implements Animat
                     FormEntryPrompt[] prompts = formController.getQuestionPrompts();
                     for (FormEntryPrompt question : prompts) {
                         String answer = question.getAnswerValue() != null ? question.getAnswerValue().getDisplayText() : null;
-                        formController.getAuditEventLogger().logEvent(AuditEvent.AuditEventType.QUESTION, question.getIndex(), true, answer);
+                        formController.getAuditEventLogger().logEvent(AuditEvent.AuditEventType.QUESTION, question.getIndex(), false, answer);
                     }
                     FormEntryCaption[] groups = formController
                             .getGroupsForCurrentIndex();
