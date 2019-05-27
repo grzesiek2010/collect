@@ -25,14 +25,15 @@ import static org.odk.collect.android.logic.AuditEvent.AuditEventType.LOCATION_P
 import static org.odk.collect.android.logic.FormController.AUDIT_FILE_NAME;
 
 /**
- * Handle logging of auditEvents (which contain time and might contain location coordinates),
+ * Handle logging of auditEvents (which contain time and might contain location coordinates and question answers),
  * and pass them to an Async task to append to a file
  * Notes:
  * 1) If the user has saved the form, then resumes editing, then exits without saving then the timing data during the
- * second editing session will be saved.  This is OK as it records user activity.  However if the user exits
+ * second editing session will be saved. This is OK as it records user activity. However if the user exits
  * without saving and they have never saved the form then the timing data is lost as the form editing will be
  * restarted from scratch.
- * 2) The auditEvents for questions in a field-list group are not shown.  Only the event for the group is shown.
+ * 2) The auditEvent for question in a field-list is shown only if tracking changes option is
+ * enabled and its answer has changed.
  */
 public class AuditEventLogger {
 
@@ -61,9 +62,6 @@ public class AuditEventLogger {
         logEvent(eventType, null, writeImmediatelyToDisk, null);
     }
 
-    /*
-     * Log a new event
-     */
     public void logEvent(AuditEvent.AuditEventType eventType, FormIndex formIndex,
                          boolean writeImmediatelyToDisk, String questionAnswer) {
 
@@ -86,18 +84,14 @@ public class AuditEventLogger {
                 addLocationCoordinatesToAuditEvent(newAuditEvent);
             }
 
-            /*
-             * Close any existing interval events if the view is being exited
-             */
+            // Close any existing interval events if the view is being exited
             if (eventType == AuditEvent.AuditEventType.FORM_EXIT) {
                 manageSavedEvents();
             }
 
             auditEvents.add(newAuditEvent);
 
-            /*
-             * Write the event unless it is an interval event in which case we need to wait for the end of that event
-             */
+            // Write the event unless it is an interval event in which case we need to wait for the end of that event
             if (writeImmediatelyToDisk && !newAuditEvent.isIntervalAuditEventType()) {
                 writeEvents();
             }
@@ -144,9 +138,7 @@ public class AuditEventLogger {
         return false;
     }
 
-    /*
-     * Exit a question
-     */
+    // Exit a question
     public void exitView() {
         if (isAuditEnabled()) {
             manageSavedEvents();
@@ -217,9 +209,7 @@ public class AuditEventLogger {
         }
     }
 
-    /*
-     * Use the time the survey was opened as a consistent value for wall clock time
-     */
+    // Use the time the survey was opened as a consistent value for wall clock time
     private long getEventTime() {
         if (surveyOpenTime == 0) {
             surveyOpenTime = System.currentTimeMillis();
