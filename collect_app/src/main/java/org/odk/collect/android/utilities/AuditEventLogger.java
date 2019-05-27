@@ -171,9 +171,11 @@ public class AuditEventLogger {
         }
 
         // Set answers
-        FormController formController = Collect.getInstance().getFormController();
-        if (aev.getAuditEventType().equals(AuditEvent.AuditEventType.QUESTION) && formController != null) {
-            addNewValueToQuestionAuditEvent(aev, formController);
+        if (auditConfig.isTrackingChangesEnabled()) {
+            FormController formController = Collect.getInstance().getFormController();
+            if (aev.getAuditEventType().equals(AuditEvent.AuditEventType.QUESTION) && formController != null) {
+                addNewValueToQuestionAuditEvent(aev, formController);
+            }
         }
 
         // Set end time
