@@ -165,7 +165,9 @@ public class AuditEventLogger {
     }
 
     private void setIntervalEventFinalParameters(AuditEvent aev, long end) {
-        // Set location parameters
+        // Set location parameters.
+        // We try to add them here again (first attempt takes place when an event is being created),
+        // because coordinates might be not available then, so now we have another (last) chance.
         if (auditConfig.isLocationEnabled()) {
             addLocationCoordinatesToAuditEvent(aev);
         }
