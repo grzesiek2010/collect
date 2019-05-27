@@ -53,6 +53,10 @@ public class AuditEventLogger {
         }
     }
 
+    public void logEvent(AuditEvent.AuditEventType eventType) {
+        logEvent(eventType, null, false, null);
+    }
+
     public void logEvent(AuditEvent.AuditEventType eventType, boolean writeImmediatelyToDisk) {
         logEvent(eventType, null, writeImmediatelyToDisk, null);
     }
