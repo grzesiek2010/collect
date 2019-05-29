@@ -34,6 +34,7 @@ import org.odk.collect.android.R;
 import org.odk.collect.android.activities.FormEntryActivity;
 import org.odk.collect.android.adapters.AbstractSelectListAdapter;
 import org.odk.collect.android.external.ExternalSelectChoice;
+import org.odk.collect.android.logic.SpacesItemDecoration;
 import org.odk.collect.android.utilities.WidgetAppearanceUtils;
 import org.odk.collect.android.views.MediaLayout;
 
@@ -154,6 +155,7 @@ public abstract class SelectWidget extends ItemsWidget {
             recyclerView.addItemDecoration(new DividerItemDecoration(getContext(), DividerItemDecoration.VERTICAL));
         }
         recyclerView.setLayoutManager(new GridLayoutManager(getContext(), numColumns));
+        recyclerView.addItemDecoration(new SpacesItemDecoration(100));
 
         return recyclerView;
     }
