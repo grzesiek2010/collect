@@ -145,10 +145,6 @@ public abstract class QuestionWidget
 
         addQuestionMediaLayout(getQuestionMediaLayout());
         addHelpTextLayout(getHelpTextLayout());
-
-        if (context instanceof FormEntryActivity && !getFormEntryPrompt().isReadOnly()) {
-            registerToClearAnswerOnLongPress((FormEntryActivity) context);
-        }
     }
 
     private TextView setupGuidanceTextAndLayout(TextView guidanceTextView, FormEntryPrompt prompt) {
@@ -469,6 +465,10 @@ public abstract class QuestionWidget
 
         params.setMargins(10, 0, 10, 0);
         addView(v, params);
+
+        if (getContext() instanceof FormEntryActivity && !getFormEntryPrompt().isReadOnly()) {
+            registerToClearAnswerOnLongPress((FormEntryActivity) getContext());
+        }
     }
 
     /**
