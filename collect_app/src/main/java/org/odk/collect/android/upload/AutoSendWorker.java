@@ -124,7 +124,11 @@ public class AutoSendWorker extends Worker {
 
                 try {
                     accountsManager.getDriveHelper().createOrGetIDOfSubmissionsFolder();
-                } catch (IOException | MultipleFoldersFoundException e) {
+                } catch (MultipleFoldersFoundException e) {
+                    Timber.d(e, "Multiple \"Submissions\" folders found");
+                    showUploadStatusNotification(true, "Multiple \"Submissions\" folders found");
+                    return Result.FAILURE;
+                } catch (IOException e) {
                     Timber.d(e, "Exception getting or creating root folder for submissions");
                     showUploadStatusNotification(true, "Exception getting or creating root folder for submissions");
                     return Result.FAILURE;

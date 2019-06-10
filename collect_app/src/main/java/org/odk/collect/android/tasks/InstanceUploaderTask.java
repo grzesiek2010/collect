@@ -49,6 +49,8 @@ public abstract class InstanceUploaderTask extends AsyncTask<Long, Integer, Inst
             if (outcome != null && stateListener != null) {
                 if (outcome.authRequestingServer != null) {
                     stateListener.authRequest(outcome.authRequestingServer, outcome.messagesByInstanceId);
+                } else if (outcome.generalError != null) {
+                    stateListener.uploadingFailed(outcome.generalError);
                 } else {
                     stateListener.uploadingComplete(outcome.messagesByInstanceId);
 
@@ -176,5 +178,7 @@ public abstract class InstanceUploaderTask extends AsyncTask<Long, Integer, Inst
          * instead of a mix of localized and non-localized user-facing strings.
          */
         HashMap<String, String> messagesByInstanceId = new HashMap<>();
+
+        String generalError;
     }
 }

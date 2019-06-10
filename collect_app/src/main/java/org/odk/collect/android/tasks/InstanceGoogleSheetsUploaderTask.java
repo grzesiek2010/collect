@@ -23,10 +23,12 @@ import org.odk.collect.android.application.Collect;
 import org.odk.collect.android.dao.FormsDao;
 import org.odk.collect.android.dto.Form;
 import org.odk.collect.android.dto.Instance;
+import org.odk.collect.android.exception.MultipleFoldersFoundException;
 import org.odk.collect.android.upload.InstanceGoogleSheetsUploader;
 import org.odk.collect.android.upload.UploadException;
 import org.odk.collect.android.utilities.gdrive.GoogleAccountsManager;
 
+import java.io.IOException;
 import java.util.List;
 
 import timber.log.Timber;
@@ -45,8 +47,7 @@ public class InstanceGoogleSheetsUploaderTask extends InstanceUploaderTask {
         InstanceGoogleSheetsUploader uploader = new InstanceGoogleSheetsUploader(accountsManager);
         final Outcome outcome = new Outcome();
 
-        // TODO: check this behavior against master -- is there an error message shown?
-        if (!uploader.submissionsFolderExistsAndIsUnique()) {
+        if (!isSumbissionFolderCreated(uploader, outcome)) {
             return outcome;
         }
 
@@ -93,5 +94,20 @@ public class InstanceGoogleSheetsUploaderTask extends InstanceUploaderTask {
             }
         }
         return outcome;
+    }
+
+    private boolean isSumbissionFolderCreated(InstanceGoogleSheetsUploader uploader, Outcome outcome) {
+        try {
+            uploader.submissionsFolderExistsAndIsUnique();
+            return true;
+        } catch (IOException e) {
+            Timber.d(e, "Exception getting or creating root folder for submissions");
+            outcome.generalError = "Exception getting or creating root folder for submissions";
+            return false;
+        } catch (MultipleFoldersFoundException e) {
+            Timber.d(e, "Multiple \"Submissions\" folders found");
+            outcome.generalError = "Multiple \"Submissions\" folders found";
+            return false;
+        }
     }
 }

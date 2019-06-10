@@ -319,6 +319,17 @@ public class GoogleSheetsUploaderActivity extends CollectAbstractActivity implem
     }
 
     @Override
+    public void uploadingFailed(String error) {
+        try {
+            dismissDialog(PROGRESS_DIALOG);
+        } catch (Exception e) {
+            // tried to close a dialog not open. don't care.
+        }
+
+        createAlertDialog(error);
+    }
+
+    @Override
     public void progressUpdate(int progress, int total) {
         alertMsg = getString(R.string.sending_items, String.valueOf(progress), String.valueOf(total));
         progressDialog.setMessage(alertMsg);

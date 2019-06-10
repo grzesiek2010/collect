@@ -86,14 +86,8 @@ public class InstanceGoogleSheetsUploader extends InstanceUploader {
      * Returns whether the submissions folder previously existed or was successfully created. False
      * if multiple folders match or there was another exception.
      */
-    public boolean submissionsFolderExistsAndIsUnique() {
-        try {
-            driveHelper.createOrGetIDOfSubmissionsFolder();
-            return true;
-        } catch (IOException | MultipleFoldersFoundException e) {
-            Timber.d(e, "Exception getting or creating root folder for submissions");
-            return false;
-        }
+    public void submissionsFolderExistsAndIsUnique() throws IOException, MultipleFoldersFoundException {
+        driveHelper.createOrGetIDOfSubmissionsFolder();
     }
 
     @Override
