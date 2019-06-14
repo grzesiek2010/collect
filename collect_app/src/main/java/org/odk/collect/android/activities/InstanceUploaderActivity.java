@@ -16,15 +16,14 @@ package org.odk.collect.android.activities;
 
 import android.app.Dialog;
 import android.app.ProgressDialog;
-import android.content.DialogInterface;
 import android.net.Uri;
 import android.os.Bundle;
 
 import org.odk.collect.android.R;
+import org.odk.collect.android.UploaderActivity;
 import org.odk.collect.android.application.Collect;
 import org.odk.collect.android.dao.InstancesDao;
 import org.odk.collect.android.fragments.dialogs.SimpleDialog;
-import org.odk.collect.android.listeners.InstanceUploaderListener;
 import org.odk.collect.android.listeners.PermissionListener;
 import org.odk.collect.android.provider.InstanceProviderAPI.InstanceColumns;
 import org.odk.collect.android.tasks.InstanceServerUploaderTask;
@@ -48,9 +47,7 @@ import timber.log.Timber;
  *
  * @author Carl Hartung (carlhartung@gmail.com)
  */
-public class InstanceUploaderActivity extends CollectAbstractActivity implements InstanceUploaderListener,
-        AuthDialogUtility.AuthDialogUtilityResultListener {
-    private static final int PROGRESS_DIALOG = 1;
+public class InstanceUploaderActivity extends UploaderActivity implements AuthDialogUtility.AuthDialogUtilityResultListener {
     private static final int AUTH_DIALOG = 2;
 
     private static final String AUTH_URI = "auth";
@@ -62,8 +59,6 @@ public class InstanceUploaderActivity extends CollectAbstractActivity implements
     private ProgressDialog progressDialog;
 
     private String alertMsg;
-
-    private InstanceServerUploaderTask instanceServerUploaderTask;
 
     // maintain a list of what we've yet to send, in case we're interrupted by auth requests
     private Long[] instancesToSend;
@@ -167,33 +162,33 @@ public class InstanceUploaderActivity extends CollectAbstractActivity implements
         // Get the task if there was a configuration change but the app did not go out of memory.
         // If the app went out of memory, the task is null but the simple state was saved so
         // the task status is reconstructed from that state.
-        instanceServerUploaderTask = (InstanceServerUploaderTask) getLastCustomNonConfigurationInstance();
+        uploaderTask = (InstanceServerUploaderTask) getLastCustomNonConfigurationInstance();
 
-        if (instanceServerUploaderTask == null) {
+        if (uploaderTask == null) {
             // set up dialog and upload task
-            showDialog(PROGRESS_DIALOG);
-            instanceServerUploaderTask = new InstanceServerUploaderTask();
+            dismissProgressDialog();
+            uploaderTask = new InstanceServerUploaderTask();
 
             if (url != null) {
-                instanceServerUploaderTask.setCompleteDestinationUrl(url + Collect.getInstance().getString(R.string.default_odk_submission));
+                ((InstanceServerUploaderTask) uploaderTask).setCompleteDestinationUrl(url + Collect.getInstance().getString(R.string.default_odk_submission));
 
                 if (deleteInstanceAfterUpload != null) {
-                    instanceServerUploaderTask.setDeleteInstanceAfterSubmission(deleteInstanceAfterUpload);
+                    uploaderTask.setDeleteInstanceAfterSubmission(deleteInstanceAfterUpload);
                 }
 
                 String host = Uri.parse(url).getHost();
                 if (host != null) {
                     // We do not need to clear the cookies since they are cleared before any request is made and the Credentials provider is used
                     if (password != null && username != null) {
-                        instanceServerUploaderTask.setCustomUsername(username);
-                        instanceServerUploaderTask.setCustomPassword(password);
+                        ((InstanceServerUploaderTask) uploaderTask).setCustomUsername(username);
+                        ((InstanceServerUploaderTask) uploaderTask).setCustomPassword(password);
                     }
                 }
             }
 
             // register this activity with the new uploader task
-            instanceServerUploaderTask.setUploaderListener(this);
-            instanceServerUploaderTask.execute(instancesToSend);
+            uploaderTask.setUploaderListener(this);
+            uploaderTask.execute(instancesToSend);
         }
     }
 
@@ -202,8 +197,8 @@ public class InstanceUploaderActivity extends CollectAbstractActivity implements
         if (instancesToSend != null) {
             Timber.i("onResume: Resuming upload of %d instances!", instancesToSend.length);
         }
-        if (instanceServerUploaderTask != null) {
-            instanceServerUploaderTask.setUploaderListener(this);
+        if (uploaderTask != null) {
+            uploaderTask.setUploaderListener(this);
         }
         super.onResume();
     }
@@ -226,14 +221,9 @@ public class InstanceUploaderActivity extends CollectAbstractActivity implements
     }
 
     @Override
-    public Object onRetainCustomNonConfigurationInstance() {
-        return instanceServerUploaderTask;
-    }
-
-    @Override
     protected void onDestroy() {
-        if (instanceServerUploaderTask != null) {
-            instanceServerUploaderTask.setUploaderListener(null);
+        if (uploaderTask != null) {
+            uploaderTask.setUploaderListener(null);
         }
         super.onDestroy();
     }
@@ -244,7 +234,7 @@ public class InstanceUploaderActivity extends CollectAbstractActivity implements
                 result.size(), instancesToSend.length);
 
         try {
-            dismissDialog(PROGRESS_DIALOG);
+            dismissProgressDialog();
         } catch (Exception e) {
             // tried to close a dialog not open. don't care.
         }
@@ -305,25 +295,6 @@ public class InstanceUploaderActivity extends CollectAbstractActivity implements
     @Override
     protected Dialog onCreateDialog(int id) {
         switch (id) {
-            case PROGRESS_DIALOG:
-                progressDialog = new ProgressDialog(this);
-                DialogInterface.OnClickListener loadingButtonListener =
-                        new DialogInterface.OnClickListener() {
-                            @Override
-                            public void onClick(DialogInterface dialog, int which) {
-                                dialog.dismiss();
-                                instanceServerUploaderTask.cancel(true);
-                                instanceServerUploaderTask.setUploaderListener(null);
-                                finish();
-                            }
-                        };
-                progressDialog.setTitle(getString(R.string.uploading_data));
-                progressDialog.setMessage(alertMsg);
-                progressDialog.setIndeterminate(true);
-                progressDialog.setProgressStyle(ProgressDialog.STYLE_SPINNER);
-                progressDialog.setCancelable(false);
-                progressDialog.setButton(getString(R.string.cancel), loadingButtonListener);
-                return progressDialog;
             case AUTH_DIALOG:
                 Timber.i("onCreateDialog(AUTH_DIALOG): for upload of %d instances!",
                         instancesToSend.length);
@@ -394,19 +365,19 @@ public class InstanceUploaderActivity extends CollectAbstractActivity implements
 
     @Override
     public void updatedCredentials() {
-        showDialog(PROGRESS_DIALOG);
-        instanceServerUploaderTask = new InstanceServerUploaderTask();
+        dismissProgressDialog();
+        uploaderTask = new InstanceServerUploaderTask();
 
         // register this activity with the new uploader task
-        instanceServerUploaderTask.setUploaderListener(this);
+        uploaderTask.setUploaderListener(this);
         // In the case of credentials set via intent extras, the credentials are stored in the
         // global WebCredentialsUtils but the task also needs to know what server to set to
         // TODO: is this really needed here? When would the task not have gotten a server set in
         // init already?
         if (url != null) {
-            instanceServerUploaderTask.setCompleteDestinationUrl(url + Collect.getInstance().getString(R.string.default_odk_submission), false);
+            ((InstanceServerUploaderTask) uploaderTask).setCompleteDestinationUrl(url + Collect.getInstance().getString(R.string.default_odk_submission), false);
         }
-        instanceServerUploaderTask.execute(instancesToSend);
+        uploaderTask.execute(instancesToSend);
     }
 
     @Override
