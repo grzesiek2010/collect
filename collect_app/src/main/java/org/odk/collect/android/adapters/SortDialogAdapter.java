@@ -62,6 +62,7 @@ public class SortDialogAdapter extends RecyclerView.Adapter<SortDialogAdapter.Vi
         viewHolder.txtViewTitle.setTextColor(color);
         try {
             viewHolder.imgViewIcon.setImageResource(ApplicationConstants.getSortLabelToIconMap().get(sortList[position]));
+            viewHolder.imgViewIcon.setTag(ApplicationConstants.getSortLabelToIconMap().get(sortList[position]));
             viewHolder.imgViewIcon.setImageDrawable(DrawableCompat.wrap(viewHolder.imgViewIcon.getDrawable()).mutate());
             DrawableCompat.setTintList(viewHolder.imgViewIcon.getDrawable(), position == selectedSortingOrder ? ColorStateList.valueOf(color) : null);
         } catch (NullPointerException e) {

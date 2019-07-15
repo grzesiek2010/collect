@@ -15,7 +15,14 @@ import org.odk.collect.android.espressoutils.MainMenu;
 import org.odk.collect.android.support.CopyFormRule;
 import org.odk.collect.android.support.ResetStateRule;
 
+import static androidx.test.espresso.Espresso.onView;
 import static androidx.test.espresso.Espresso.pressBack;
+import static androidx.test.espresso.action.ViewActions.click;
+import static androidx.test.espresso.assertion.ViewAssertions.matches;
+import static androidx.test.espresso.matcher.ViewMatchers.withId;
+import static androidx.test.espresso.matcher.ViewMatchers.withText;
+import static org.odk.collect.android.espressoutils.matchers.DrawableMatcher.withImageDrawable;
+import static org.odk.collect.android.espressoutils.matchers.RecyclerViewMatcher.withRecyclerView;
 
 // Issue number NODK-209
 @RunWith(AndroidJUnit4.class)
@@ -33,22 +40,36 @@ public class DrawWidgetTest extends BaseRegressionTest {
     @Test
     public void saveIgnoreDialog_ShouldUseBothOptions() {
 
-        //TestCase1
-        MainMenu.startBlankForm("All widgets");
-        FormEntry.clickGoToIconInForm();
-        FormEntry.clickOnText("Image widgets");
-        FormEntry.clickOnText("Draw widget");
-        FormEntry.clickOnId(R.id.simple_button);
-        pressBack();
-        FormEntry.checkIsTextDisplayed("Exit Sketch Image");
-        FormEntry.checkIsStringDisplayed(R.string.keep_changes);
-        FormEntry.clickOnString(R.string.do_not_save);
-        FormEntry.clickOnId(R.id.simple_button);
-        pressBack();
-        FormEntry.clickOnString(R.string.keep_changes);
-        FormEntry.clickGoToIconInForm();
-        FormEntry.clickJumpEndButton();
-        FormEntry.clickSaveAndExit();
+        onView(withId(R.id.enter_data)).perform(click());
+        onView(withId(R.id.menu_sort)).perform(click());
+
+        onView(withRecyclerView(R.id.recyclerView)
+                .atPositionOnView(0, R.id.title))
+                .check(matches(withText(main.getActivity().getString(R.string.sort_by_name_asc))));
+        onView(withRecyclerView(R.id.recyclerView)
+                .atPositionOnView(0, R.id.icon))
+                .check(matches(withImageDrawable(R.drawable.ic_sort_by_alpha)));
+
+        onView(withRecyclerView(R.id.recyclerView)
+                .atPositionOnView(1, R.id.title))
+                .check(matches(withText(main.getActivity().getString(R.string.sort_by_name_desc))));
+        onView(withRecyclerView(R.id.recyclerView)
+                .atPositionOnView(1, R.id.icon))
+                .check(matches(withImageDrawable(R.drawable.ic_sort_by_alpha)));
+
+        onView(withRecyclerView(R.id.recyclerView)
+                .atPositionOnView(2, R.id.title))
+                .check(matches(withText(main.getActivity().getString(R.string.sort_by_date_asc))));
+        onView(withRecyclerView(R.id.recyclerView)
+                .atPositionOnView(2, R.id.icon))
+                .check(matches(withImageDrawable(R.drawable.ic_access_time)));
+
+        onView(withRecyclerView(R.id.recyclerView)
+                .atPositionOnView(3, R.id.title))
+                .check(matches(withText(main.getActivity().getString(R.string.sort_by_date_desc))));
+        onView(withRecyclerView(R.id.recyclerView)
+                .atPositionOnView(3, R.id.icon))
+                .check(matches(withImageDrawable(R.drawable.ic_access_time)));
     }
 
     @Test
