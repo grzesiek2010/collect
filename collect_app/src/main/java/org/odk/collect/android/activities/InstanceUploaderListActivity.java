@@ -37,11 +37,9 @@ import android.widget.AdapterView;
 import android.widget.Button;
 import android.widget.ListView;
 
-import com.google.android.gms.analytics.HitBuilders;
-import com.google.android.gms.analytics.Tracker;
-
 import org.odk.collect.android.R;
 import org.odk.collect.android.adapters.InstanceUploaderAdapter;
+import org.odk.collect.android.application.Collect;
 import org.odk.collect.android.dao.InstancesDao;
 import org.odk.collect.android.injection.DaggerUtils;
 import org.odk.collect.android.listeners.DiskSyncListener;
@@ -126,9 +124,6 @@ public class InstanceUploaderListActivity extends InstanceListActivity implement
 
     @Inject
     SmsSubmissionManagerContract smsSubmissionManager;
-
-    @Inject
-    Tracker tracker;
 
     @Inject
     PermissionUtils permissionUtils;
@@ -522,10 +517,7 @@ public class InstanceUploaderListActivity extends InstanceListActivity implement
                         case 1: // show all
                             showAllMode = true;
                             updateAdapter();
-                            tracker.send(new HitBuilders.EventBuilder()
-                                            .setCategory("FilterSendForms")
-                                            .setAction("SentAndUnsent")
-                                            .build());
+                            Collect.getInstance().logRemoteAnalytics("FilterSendForms", "SentAndUnsent", null);
                             break;
 
                         case 2:// do nothing

@@ -205,7 +205,6 @@ dependencies {
     implementation 'androidx.exifinterface:exifinterface:1.1.0-alpha01'
     implementation "androidx.multidex:multidex:2.0.1"
 
-    implementation "com.google.android.gms:play-services-analytics:16.0.1"
     implementation "com.google.android.gms:play-services-auth:16.0.0"
     implementation "com.google.android.gms:play-services-maps:15.0.1"
     implementation "com.google.android.gms:play-services-location:15.0.1"
