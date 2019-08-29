@@ -17,6 +17,8 @@ import org.odk.collect.android.support.CopyFormRule;
 import org.odk.collect.android.support.ResetStateRule;
 import org.odk.collect.android.support.ScreenshotOnFailureTestRule;
 
+import java.util.concurrent.TimeoutException;
+
 import static androidx.test.espresso.Espresso.pressBack;
 
 // Issue number NODK-209
@@ -37,7 +39,7 @@ public class DrawWidgetTest extends BaseRegressionTest {
     public TestRule screenshotFailRule = new ScreenshotOnFailureTestRule();
 
     @Test
-    public void saveIgnoreDialog_ShouldUseBothOptions() {
+    public void saveIgnoreDialog_ShouldUseBothOptions() throws TimeoutException, InterruptedException {
 
         //TestCase1
         MainMenu.startBlankForm("All widgets");
@@ -45,24 +47,24 @@ public class DrawWidgetTest extends BaseRegressionTest {
         FormEntry.clickOnText("Image widgets");
         FormEntry.clickOnText("Draw widget");
         FormEntry.clickOnId(R.id.simple_button);
-        FormEntry.waitForRotationToEnd();
+        waitForId(R.id.drawView);
         pressBack();
         FormEntry.checkIsTextDisplayed("Exit Sketch Image");
         FormEntry.checkIsStringDisplayed(R.string.keep_changes);
         FormEntry.clickOnString(R.string.do_not_save);
-        FormEntry.waitForRotationToEnd();
+        waitForId(R.id.questionholder);
         FormEntry.clickOnId(R.id.simple_button);
-        FormEntry.waitForRotationToEnd();
+        waitForId(R.id.drawView);
         pressBack();
         FormEntry.clickOnString(R.string.keep_changes);
-        FormEntry.waitForRotationToEnd();
+        waitForId(R.id.questionholder);
         FormEntry.clickGoToIconInForm();
         FormEntry.clickJumpEndButton();
         FormEntry.clickSaveAndExit();
     }
 
     @Test
-    public void setColor_ShouldSeeColorPicker() {
+    public void setColor_ShouldSeeColorPicker() throws TimeoutException, InterruptedException {
 
         //TestCase2
         MainMenu.startBlankForm("All widgets");
@@ -70,20 +72,20 @@ public class DrawWidgetTest extends BaseRegressionTest {
         FormEntry.clickOnText("Image widgets");
         FormEntry.clickOnText("Draw widget");
         FormEntry.clickOnId(R.id.simple_button);
-        FormEntry.waitForRotationToEnd();
+        waitForId(R.id.drawView);
         FormEntry.clickOnId(R.id.fab_actions);
         FormEntry.clickOnId(R.id.fab_set_color);
         FormEntry.clickOnString(R.string.ok);
         pressBack();
         FormEntry.clickOnString(R.string.keep_changes);
-        FormEntry.waitForRotationToEnd();
+        waitForId(R.id.questionholder);
         FormEntry.clickGoToIconInForm();
         FormEntry.clickJumpEndButton();
         FormEntry.clickSaveAndExit();
     }
 
     @Test
-    public void multiClickOnPlus_ShouldDisplayIcons() {
+    public void multiClickOnPlus_ShouldDisplayIcons() throws TimeoutException, InterruptedException {
 
         //TestCase3
         MainMenu.startBlankForm("All widgets");
@@ -91,7 +93,7 @@ public class DrawWidgetTest extends BaseRegressionTest {
         FormEntry.clickOnText("Image widgets");
         FormEntry.clickOnText("Draw widget");
         FormEntry.clickOnId(R.id.simple_button);
-        FormEntry.waitForRotationToEnd();
+        waitForId(R.id.drawView);
         FormEntry.clickOnId(R.id.fab_actions);
         FormEntry.checkIsStringDisplayed(R.string.set_color);
         FormEntry.checkIsIdDisplayed(R.id.fab_clear);
@@ -103,7 +105,7 @@ public class DrawWidgetTest extends BaseRegressionTest {
         FormEntry.checkIsStringDisplayed(R.string.set_color);
         pressBack();
         FormEntry.clickOnString(R.string.keep_changes);
-        FormEntry.waitForRotationToEnd();
+        waitForId(R.id.questionholder);
         FormEntry.clickGoToIconInForm();
         FormEntry.clickJumpEndButton();
         FormEntry.clickSaveAndExit();

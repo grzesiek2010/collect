@@ -17,6 +17,8 @@ import org.odk.collect.android.support.CopyFormRule;
 import org.odk.collect.android.support.ResetStateRule;
 import org.odk.collect.android.support.ScreenshotOnFailureTestRule;
 
+import java.util.concurrent.TimeoutException;
+
 import static androidx.test.espresso.Espresso.pressBack;
 
 // Issue number NODK-211
@@ -37,7 +39,7 @@ public class SignatureWidgetTest extends BaseRegressionTest {
     public TestRule screenshotFailRule = new ScreenshotOnFailureTestRule();
 
     @Test
-    public void saveIgnoreDialog_ShouldUseBothOptions() {
+    public void saveIgnoreDialog_ShouldUseBothOptions() throws TimeoutException, InterruptedException {
 
         //TestCase1
         MainMenu.startBlankForm("All widgets");
@@ -45,24 +47,24 @@ public class SignatureWidgetTest extends BaseRegressionTest {
         FormEntry.clickOnText("Image widgets");
         FormEntry.clickOnText("Signature widget");
         FormEntry.clickSignatureButton();
-        FormEntry.waitForRotationToEnd();
+        waitForId(R.id.drawView);
         pressBack();
         FormEntry.checkIsTextDisplayed("Exit Gather Signature");
         FormEntry.checkIsStringDisplayed(R.string.keep_changes);
         FormEntry.clickOnString(R.string.do_not_save);
-        FormEntry.waitForRotationToEnd();
+        waitForId(R.id.questionholder);
         FormEntry.clickSignatureButton();
-        FormEntry.waitForRotationToEnd();
+        waitForId(R.id.drawView);
         pressBack();
         FormEntry.clickOnString(R.string.keep_changes);
-        FormEntry.waitForRotationToEnd();
+        waitForId(R.id.questionholder);
         FormEntry.clickGoToIconInForm();
         FormEntry.clickJumpEndButton();
         FormEntry.clickSaveAndExit();
     }
 
     @Test
-    public void multiClickOnPlus_ShouldDisplayIcons() {
+    public void multiClickOnPlus_ShouldDisplayIcons() throws TimeoutException, InterruptedException {
 
         //TestCase2
         MainMenu.startBlankForm("All widgets");
@@ -70,7 +72,7 @@ public class SignatureWidgetTest extends BaseRegressionTest {
         FormEntry.clickOnText("Image widgets");
         FormEntry.clickOnText("Signature widget");
         FormEntry.clickSignatureButton();
-        FormEntry.waitForRotationToEnd();
+        waitForId(R.id.drawView);
         FormEntry.clickOnId(R.id.fab_actions);
         FormEntry.checkIsIdDisplayed(R.id.fab_save_and_close);
         FormEntry.clickOnId(R.id.fab_set_color);
@@ -79,7 +81,7 @@ public class SignatureWidgetTest extends BaseRegressionTest {
         FormEntry.checkIsIdDisplayed(R.id.fab_set_color);
         pressBack();
         FormEntry.clickOnString(R.string.keep_changes);
-        FormEntry.waitForRotationToEnd();
+        waitForId(R.id.questionholder);
         FormEntry.clickGoToIconInForm();
         FormEntry.clickJumpEndButton();
         FormEntry.clickSaveAndExit();
