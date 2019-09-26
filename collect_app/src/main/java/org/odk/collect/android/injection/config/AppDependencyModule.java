@@ -5,8 +5,6 @@ import android.content.Context;
 import android.telephony.SmsManager;
 import android.webkit.MimeTypeMap;
 
-import com.google.android.gms.analytics.Tracker;
-
 import org.javarosa.core.reference.ReferenceManager;
 import org.odk.collect.android.application.Collect;
 import org.odk.collect.android.dao.FormsDao;
@@ -104,12 +102,6 @@ public class AppDependencyModule {
                 webCredentialsUtils,
                 formsDao
         );
-    }
-
-    @Provides
-    @Singleton
-    public Tracker providesTracker(Application application) {
-        return ((Collect) application).getDefaultTracker();
     }
 
     @Provides

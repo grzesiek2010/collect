@@ -116,7 +116,6 @@ public class FormManagementPreferences extends BasePreferenceFragment {
 
                 pref.setOnPreferenceChangeListener((preference, newValue) -> {
                     Collect.getInstance().logRemoteAnalytics("PreferenceChange", "Automatic form updates", newValue + " " + formUpdateCheckPeriod);
-
                     return true;
                 });
             }
