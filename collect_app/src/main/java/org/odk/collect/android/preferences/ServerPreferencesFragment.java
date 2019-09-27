@@ -310,10 +310,10 @@ public class ServerPreferencesFragment extends BasePreferenceFragment implements
 
     @Override
     public boolean onTouch(View v, MotionEvent event) {
-        final int DRAWABLE_RIGHT = 2;
+        final int drawableRight = 2;
         if (event.getAction() == MotionEvent.ACTION_UP) {
             if (event.getX() >= (v.getWidth() - ((EditText) v)
-                    .getCompoundDrawables()[DRAWABLE_RIGHT].getBounds().width())) {
+                    .getCompoundDrawables()[drawableRight].getBounds().width())) {
                 SoftKeyboardUtils.hideSoftKeyboard(v);
                 listPopupWindow.show();
                 return true;

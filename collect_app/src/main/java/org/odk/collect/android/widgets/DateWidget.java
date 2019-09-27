@@ -285,7 +285,7 @@ public class DateWidget extends QuestionWidget implements DatePickerDialog.OnDat
             if (Build.VERSION.SDK_INT == Build.VERSION_CODES.N) {
                 try {
                     // Get the theme's android:datePickerMode
-                    final int MODE_SPINNER = 2;
+                    final int modeSpinner = 2;
                     Class<?> styleableClass = Class.forName("com.android.internal.R$styleable");
                     Field datePickerStyleableField = styleableClass.getField("DatePicker");
                     int[] datePickerStyleable = (int[]) datePickerStyleableField.get(null);
@@ -293,10 +293,10 @@ public class DateWidget extends QuestionWidget implements DatePickerDialog.OnDat
                             android.R.attr.datePickerStyle, 0);
                     Field datePickerModeStyleableField = styleableClass.getField("DatePicker_datePickerMode");
                     int datePickerModeStyleable = datePickerModeStyleableField.getInt(null);
-                    final int mode = a.getInt(datePickerModeStyleable, MODE_SPINNER);
+                    final int mode = a.getInt(datePickerModeStyleable, modeSpinner);
                     a.recycle();
 
-                    if (mode == MODE_SPINNER) {
+                    if (mode == modeSpinner) {
 
                         Field datePickerField = findField(DatePickerDialog.class,
                                 DatePicker.class, "mDatePicker");

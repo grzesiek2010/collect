@@ -56,7 +56,6 @@
         <exclude name="ShortVariable" />
         <exclude name="TooManyStaticImports" />
         <exclude name="FieldNamingConventions" />
-        <exclude name="LocalVariableNamingConventions" />
         <exclude name="UseUnderscoresInNumericLiterals" />
         <exclude name="LinguisticNaming" />
         <exclude name="UselessParentheses" />               <!-- Decided not to use in #1519 -->

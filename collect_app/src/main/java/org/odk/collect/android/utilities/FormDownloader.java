@@ -389,8 +389,8 @@ public class FormDownloader {
         // failure.  Only if there are two consecutive failures do we abort.
         boolean success = false;
         int attemptCount = 0;
-        final int MAX_ATTEMPT_COUNT = 2;
-        while (!success && ++attemptCount <= MAX_ATTEMPT_COUNT) {
+        final int maxAttemptCount = 2;
+        while (!success && ++attemptCount <= maxAttemptCount) {
             if (stateListener != null && stateListener.isTaskCanceled()) {
                 throw new TaskCancelledException(tempFile);
             }
@@ -419,7 +419,7 @@ public class FormDownloader {
 
                 FileUtils.deleteAndReport(tempFile);
 
-                if (attemptCount == MAX_ATTEMPT_COUNT) {
+                if (attemptCount == maxAttemptCount) {
                     throw e;
                 }
             } finally {
