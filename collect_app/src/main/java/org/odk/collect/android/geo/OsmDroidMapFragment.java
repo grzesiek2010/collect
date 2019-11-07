@@ -15,6 +15,7 @@
 package org.odk.collect.android.geo;
 
 import android.app.AlertDialog;
+import android.content.ActivityNotFoundException;
 import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
@@ -445,8 +446,13 @@ public class OsmDroidMapFragment extends Fragment implements MapFragment,
             .setMessage(getString(R.string.gps_enable_message))
             .setCancelable(false)
             .setPositiveButton(getString(R.string.enable_gps),
-                (dialog, id) -> startActivityForResult(
-                    new Intent(Settings.ACTION_LOCATION_SOURCE_SETTINGS), 0))
+                (dialog, id) -> {
+                    try {
+                        startActivityForResult(new Intent(Settings.ACTION_LOCATION_SOURCE_SETTINGS), 0);
+                    } catch (ActivityNotFoundException e) {
+                        Timber.w(e);
+                    }
+                })
             .setNegativeButton(getString(R.string.cancel),
                 (dialog, id) -> dialog.cancel())
             .create()

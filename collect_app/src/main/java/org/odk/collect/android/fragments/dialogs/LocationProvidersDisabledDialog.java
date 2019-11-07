@@ -17,6 +17,7 @@
 package org.odk.collect.android.fragments.dialogs;
 
 import android.app.Dialog;
+import android.content.ActivityNotFoundException;
 import android.content.Intent;
 import android.os.Bundle;
 import android.provider.Settings;
@@ -62,7 +63,11 @@ public class LocationProvidersDisabledDialog extends DialogFragment {
                 .setTitle(R.string.provider_disabled_error)
                 .setMessage(R.string.location_providers_disabled_dialog_message)
                 .setPositiveButton(R.string.go_to_settings, (dialog, id) -> {
-                    startActivity(new Intent(Settings.ACTION_LOCATION_SOURCE_SETTINGS));
+                    try {
+                        startActivity(new Intent(Settings.ACTION_LOCATION_SOURCE_SETTINGS));
+                    } catch (ActivityNotFoundException e) {
+                        Timber.w(e);
+                    }
                 })
                 .setNegativeButton(R.string.cancel, (dialog, id) -> {
                 })

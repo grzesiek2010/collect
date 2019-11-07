@@ -16,6 +16,7 @@ package org.odk.collect.android.geo;
 
 import android.annotation.SuppressLint;
 import android.app.AlertDialog;
+import android.content.ActivityNotFoundException;
 import android.content.Intent;
 import android.location.Location;
 import android.os.Bundle;
@@ -555,8 +556,13 @@ public class GoogleMapFragment extends SupportMapFragment implements
             .setMessage(getString(R.string.gps_enable_message))
             .setCancelable(false)
             .setPositiveButton(getString(R.string.enable_gps),
-                (dialog, id) -> startActivityForResult(
-                    new Intent(Settings.ACTION_LOCATION_SOURCE_SETTINGS), 0))
+                (dialog, id) -> {
+                    try {
+                        startActivityForResult(new Intent(Settings.ACTION_LOCATION_SOURCE_SETTINGS), 0);
+                    } catch (ActivityNotFoundException e) {
+                        Timber.w(e);
+                    }
+                })
             .setNegativeButton(getString(R.string.cancel),
                 (dialog, id) -> dialog.cancel())
             .create()

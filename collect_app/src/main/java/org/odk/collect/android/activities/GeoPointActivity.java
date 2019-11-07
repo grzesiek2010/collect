@@ -16,6 +16,7 @@ package org.odk.collect.android.activities;
 
 import android.annotation.SuppressLint;
 import android.app.ProgressDialog;
+import android.content.ActivityNotFoundException;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.location.GpsSatellite;
@@ -258,7 +259,11 @@ public class GeoPointActivity extends CollectAbstractActivity implements Locatio
         ToastUtils.showShortToast(R.string.provider_disabled_error);
         Intent onGPSIntent = new Intent(Settings.ACTION_LOCATION_SOURCE_SETTINGS);
 
-        startActivity(onGPSIntent);
+        try {
+            startActivity(onGPSIntent);
+        } catch (ActivityNotFoundException e) {
+            Timber.w(e);
+        }
         finish();
     }
 
