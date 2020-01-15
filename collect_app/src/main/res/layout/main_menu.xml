@@ -63,6 +63,16 @@
                     android:orientation="vertical">
 
                     <Button
+                        android:id="@+id/start_files_migration"
+                        style="@style/Widget.Collect.Button.Big"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="@dimen/margin_extra_small"
+                        android:text="Start Files Migration"
+                        android:background="@android:color/holo_red_dark"
+                        android:onClick="startFilesMigration"/>
+
+                    <Button
                         android:id="@+id/enter_data"
                         style="@style/Widget.Collect.Button.Big"
                         android:layout_width="match_parent"

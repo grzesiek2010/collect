@@ -581,6 +581,9 @@ public class MainMenuActivity extends CollectAbstractActivity {
         return res;
     }
 
+    public void startFilesMigration(View view) {
+    }
+
     /*
      * Used to prevent memory leaks
      */
