@@ -65,6 +65,7 @@ public class ServerPollingJob extends Job {
     private static final long ONE_DAY_PERIOD = 86400000;
 
     public static final String TAG = "serverPollingJob";
+    private static boolean IS_DOWNLOADING_RUNNING;
 
     @Inject
     DownloadFormListUtils downloadFormListUtils;
@@ -76,6 +77,7 @@ public class ServerPollingJob extends Job {
     @Override
     @NonNull
     protected Result onRunJob(@NonNull Params params) {
+        IS_DOWNLOADING_RUNNING = false;
         if (!isDeviceOnline()) {
             return Result.FAILURE;
         }
@@ -100,8 +102,10 @@ public class ServerPollingJob extends Job {
 
             if (!newDetectedForms.isEmpty()) {
                 if (GeneralSharedPreferences.getInstance().getBoolean(KEY_AUTOMATIC_UPDATE, false)) {
+                    IS_DOWNLOADING_RUNNING = true;
                     final HashMap<FormDetails, String> result = new FormDownloader().downloadForms(newDetectedForms);
                     informAboutNewDownloadedForms(Collect.getInstance().getString(R.string.download_forms_result), result);
+                    IS_DOWNLOADING_RUNNING = false;
                 } else {
                     for (FormDetails formDetails : newDetectedForms) {
                         String manifestFileHash = formDetails.getManifestFileHash() != null ? formDetails.getManifestFileHash() : "";
@@ -122,6 +126,10 @@ public class ServerPollingJob extends Job {
         } else {
             return Result.FAILURE;
         }
+    }
+
+    public static boolean isIsDownloadingForms() {
+        return IS_DOWNLOADING_RUNNING;
     }
 
     public static void schedulePeriodicJob(String selectedOption) {
