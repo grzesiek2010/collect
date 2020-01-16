@@ -43,6 +43,7 @@ import android.widget.TextView;
 import org.odk.collect.android.R;
 import org.odk.collect.android.application.Collect;
 import org.odk.collect.android.dao.InstancesDao;
+import org.odk.collect.android.storagemigrator.StorageMigratorTask;
 import org.odk.collect.android.preferences.AdminKeys;
 import org.odk.collect.android.preferences.AdminPreferencesActivity;
 import org.odk.collect.android.preferences.AdminSharedPreferences;
@@ -582,6 +583,7 @@ public class MainMenuActivity extends CollectAbstractActivity {
     }
 
     public void startFilesMigration(View view) {
+        new StorageMigratorTask(this).execute();
     }
 
     /*
