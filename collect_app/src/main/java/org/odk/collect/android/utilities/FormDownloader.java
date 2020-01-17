@@ -139,7 +139,7 @@ public class FormDownloader {
 
             if (fd.getManifestUrl() != null) {
                 // use a temporary media path until everything is ok.
-                tempMediaPath = new File(Collect.CACHE_PATH,
+                tempMediaPath = new File(StorageManager.getCacheDirPath(),
                         String.valueOf(System.currentTimeMillis())).getAbsolutePath();
                 finalMediaPath = FileUtils.constructMediaPath(
                         fileResult.getFile().getAbsolutePath());
@@ -390,7 +390,7 @@ public class FormDownloader {
     private void downloadFile(File file, String downloadUrl)
             throws IOException, TaskCancelledException, URISyntaxException, Exception {
         File tempFile = File.createTempFile(file.getName(), TEMP_DOWNLOAD_EXTENSION,
-                new File(Collect.CACHE_PATH));
+                new File(StorageManager.getCacheDirPath()));
 
         // WiFi network connections can be renegotiated during a large form download sequence.
         // This will cause intermittent download failures.  Silently retry once after each

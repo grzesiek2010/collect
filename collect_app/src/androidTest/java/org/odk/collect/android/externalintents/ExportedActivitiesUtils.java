@@ -8,7 +8,6 @@ import java.io.File;
 
 import timber.log.Timber;
 
-import static org.odk.collect.android.application.Collect.CACHE_PATH;
 import static org.odk.collect.android.application.Collect.ODK_ROOT;
 
 class ExportedActivitiesUtils {
@@ -17,7 +16,7 @@ class ExportedActivitiesUtils {
             ODK_ROOT,
             StorageManager.getFormsDirPath(),
             StorageManager.getInstancesDirPath(),
-            CACHE_PATH,
+            StorageManager.getCacheDirPath(),
             StorageManager.getMetadataDirPath(),
             StorageManager.getOfflineLayersDirPath()
     };
