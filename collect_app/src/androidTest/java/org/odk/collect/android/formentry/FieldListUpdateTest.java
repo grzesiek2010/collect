@@ -33,13 +33,13 @@ import org.junit.Test;
 import org.junit.rules.RuleChain;
 import org.odk.collect.android.R;
 import org.odk.collect.android.activities.FormEntryActivity;
-import org.odk.collect.android.application.Collect;
 import org.odk.collect.android.preferences.GeneralKeys;
 import org.odk.collect.android.preferences.GeneralSharedPreferences;
 import org.odk.collect.android.preferences.GuidanceHint;
 import org.odk.collect.android.support.CopyFormRule;
 import org.odk.collect.android.support.ResetStateRule;
 import org.odk.collect.android.test.FormLoadingUtils;
+import org.odk.collect.android.utilities.StorageManager;
 
 import java.io.File;
 import java.io.FileOutputStream;
@@ -318,7 +318,7 @@ public class FieldListUpdateTest {
 
         // FormEntryActivity expects an image at a fixed path so copy the app logo there
         Bitmap icon = BitmapFactory.decodeResource(ApplicationProvider.getApplicationContext().getResources(), R.drawable.notes);
-        File tmpJpg = new File(Collect.TMPFILE_PATH);
+        File tmpJpg = new File(StorageManager.getTmpfilePath());
         tmpJpg.createNewFile();
         FileOutputStream fos = new FileOutputStream(tmpJpg);
         icon.compress(Bitmap.CompressFormat.JPEG, 90, fos);

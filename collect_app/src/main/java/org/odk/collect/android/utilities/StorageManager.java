@@ -94,4 +94,8 @@ public class StorageManager {
                 getSettingsDirPath()
         };
     }
+
+    public static String getTmpfilePath() {
+        return getCacheDirPath() + File.separator + "tmp.jpg";
+    }
 }

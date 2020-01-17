@@ -44,6 +44,7 @@ import org.odk.collect.android.utilities.ApplicationConstants;
 import org.odk.collect.android.utilities.FileUtils;
 import org.odk.collect.android.utilities.MediaManager;
 import org.odk.collect.android.utilities.MediaUtils;
+import org.odk.collect.android.utilities.StorageManager;
 import org.odk.collect.android.utilities.ViewIds;
 import org.odk.collect.android.widgets.interfaces.FileWidget;
 
@@ -261,7 +262,7 @@ public abstract class BaseImageWidget extends QuestionWidget implements FileWidg
                 File f = new File(getInstanceFolder() + File.separator + binaryName);
                 i.putExtra(DrawActivity.REF_IMAGE, Uri.fromFile(f));
             }
-            i.putExtra(DrawActivity.EXTRA_OUTPUT, Uri.fromFile(new File(Collect.TMPFILE_PATH)));
+            i.putExtra(DrawActivity.EXTRA_OUTPUT, Uri.fromFile(new File(StorageManager.getTmpfilePath())));
             i = addExtrasToIntent(i);
             launchActivityForResult(i, requestCode, stringResourceId);
         }
