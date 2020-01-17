@@ -108,6 +108,10 @@ public class StorageManager {
         return getCacheDirPath() + File.separator + "tmpDraw.jpg";
     }
 
+    public static String getQRCodeFilePath() {
+        return getSettingsDirPath() + File.separator + "collect-settings.png";
+    }
+
     public static boolean clearFormsDir() {
         return deleteFolderContents(getFormsDirPath());
     }
