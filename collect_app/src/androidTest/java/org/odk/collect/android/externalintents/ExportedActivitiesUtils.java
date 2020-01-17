@@ -2,12 +2,13 @@ package org.odk.collect.android.externalintents;
 
 import junit.framework.Assert;
 
+import org.odk.collect.android.utilities.StorageManager;
+
 import java.io.File;
 
 import timber.log.Timber;
 
 import static org.odk.collect.android.application.Collect.CACHE_PATH;
-import static org.odk.collect.android.application.Collect.FORMS_PATH;
 import static org.odk.collect.android.application.Collect.INSTANCES_PATH;
 import static org.odk.collect.android.application.Collect.METADATA_PATH;
 import static org.odk.collect.android.application.Collect.ODK_ROOT;
@@ -16,7 +17,7 @@ import static org.odk.collect.android.application.Collect.OFFLINE_LAYERS;
 class ExportedActivitiesUtils {
 
     private static final String[] DIRS = {
-            ODK_ROOT, FORMS_PATH, INSTANCES_PATH, CACHE_PATH, METADATA_PATH, OFFLINE_LAYERS
+            ODK_ROOT, StorageManager.getFormsDirPath(), INSTANCES_PATH, CACHE_PATH, METADATA_PATH, OFFLINE_LAYERS
     };
 
     private ExportedActivitiesUtils() {

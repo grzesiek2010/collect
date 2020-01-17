@@ -27,6 +27,7 @@ import org.odk.collect.android.dao.FormsDao;
 import org.odk.collect.android.provider.FormsProviderAPI.FormsColumns;
 import org.odk.collect.android.tasks.FormLoaderTask;
 import org.odk.collect.android.utilities.FileUtils;
+import org.odk.collect.android.utilities.StorageManager;
 
 import java.io.File;
 import java.io.IOException;
@@ -92,13 +93,13 @@ public class FormLoadingUtils {
     }
 
     private static String copyForm(String formFilename) throws IOException {
-        String pathname = Collect.FORMS_PATH + "/" + formFilename;
+        String pathname = StorageManager.getFormsDirPath() + "/" + formFilename;
         copyFileFromAssets("forms/" + formFilename, pathname);
         return pathname;
     }
 
     private static void copyFormMediaFiles(String formFilename, List<String> mediaFilenames) throws IOException {
-        String mediaPathName = Collect.FORMS_PATH + "/" + formFilename.replace(".xml", "") + FileUtils.MEDIA_SUFFIX + "/";
+        String mediaPathName = StorageManager.getFormsDirPath() + "/" + formFilename.replace(".xml", "") + FileUtils.MEDIA_SUFFIX + "/";
         FileUtils.checkMediaPath(new File(mediaPathName));
 
         for (String mediaFilename : mediaFilenames) {

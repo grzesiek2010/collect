@@ -27,6 +27,7 @@ import org.odk.collect.android.dao.FormsDao;
 import org.odk.collect.android.listeners.DiskSyncListener;
 import org.odk.collect.android.provider.FormsProviderAPI.FormsColumns;
 import org.odk.collect.android.utilities.FileUtils;
+import org.odk.collect.android.utilities.StorageManager;
 import org.odk.collect.android.utilities.Validator;
 
 import java.io.File;
@@ -65,7 +66,7 @@ public class DiskSyncTask extends AsyncTask<Void, String, String> {
             // Process everything then report what didn't work.
             StringBuilder errors = new StringBuilder();
 
-            File formDir = new File(Collect.FORMS_PATH);
+            File formDir = new File(StorageManager.getFormsDirPath());
             if (formDir.exists() && formDir.isDirectory()) {
                 // Get all the files in the /odk/foms directory
                 File[] formDefs = formDir.listFiles();
