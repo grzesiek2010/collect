@@ -92,7 +92,6 @@ public class Collect extends Application {
     public static final String ODK_ROOT = Environment.getExternalStorageDirectory()
             + File.separator + "odk";
     public static final String CACHE_PATH = ODK_ROOT + File.separator + ".cache";
-    public static final String METADATA_PATH = ODK_ROOT + File.separator + "metadata";
     public static final String TMPFILE_PATH = CACHE_PATH + File.separator + "tmp.jpg";
     public static final String TMPDRAWFILE_PATH = CACHE_PATH + File.separator + "tmpDraw.jpg";
     public static final String DEFAULT_FONTSIZE = "21";

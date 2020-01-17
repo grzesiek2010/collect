@@ -103,7 +103,7 @@ public class ResetUtility {
     private void resetForms() {
         new FormsDao().deleteFormsDatabase();
 
-        File itemsetDbFile = new File(Collect.METADATA_PATH + File.separator + ItemsetDbAdapter.DATABASE_NAME);
+        File itemsetDbFile = new File(StorageManager.getMetadataDirPath() + File.separator + ItemsetDbAdapter.DATABASE_NAME);
 
         if (deleteFolderContents(StorageManager.getFormsDirPath()) && (!itemsetDbFile.exists() || itemsetDbFile.delete())) {
             failedResetActions.remove(failedResetActions.indexOf(ResetAction.RESET_FORMS));

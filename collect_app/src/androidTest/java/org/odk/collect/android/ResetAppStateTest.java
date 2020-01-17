@@ -105,7 +105,7 @@ public class ResetAppStateTest {
         createTestItemsetsDatabaseFile();
         resetAppState(Collections.singletonList(ResetUtility.ResetAction.RESET_FORMS));
         assertFolderEmpty(StorageManager.getFormsDirPath());
-        assertFalse(new File(Collect.METADATA_PATH + "/itemsets.db").exists());
+        assertFalse(new File(StorageManager.getMetadataDirPath() + "/itemsets.db").exists());
     }
 
     @Test
@@ -196,7 +196,7 @@ public class ResetAppStateTest {
     }
 
     private void createTestItemsetsDatabaseFile() throws IOException {
-        assertTrue(new File(Collect.METADATA_PATH + "/itemsets.db").createNewFile());
+        assertTrue(new File(StorageManager.getMetadataDirPath() + "/itemsets.db").createNewFile());
     }
 
     private void saveTestFormFiles() throws IOException {
