@@ -51,7 +51,7 @@ public class ResetUtility {
                     resetForms();
                     break;
                 case ResetAction.RESET_LAYERS:
-                    if (deleteFolderContents(Collect.OFFLINE_LAYERS)) {
+                    if (deleteFolderContents(StorageManager.getOfflineLayersDirPath())) {
                         failedResetActions.remove(failedResetActions.indexOf(ResetAction.RESET_LAYERS));
                     }
                     break;

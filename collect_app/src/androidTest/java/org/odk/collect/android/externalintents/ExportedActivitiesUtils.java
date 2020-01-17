@@ -10,7 +10,6 @@ import timber.log.Timber;
 
 import static org.odk.collect.android.application.Collect.CACHE_PATH;
 import static org.odk.collect.android.application.Collect.ODK_ROOT;
-import static org.odk.collect.android.application.Collect.OFFLINE_LAYERS;
 
 class ExportedActivitiesUtils {
 
@@ -20,7 +19,7 @@ class ExportedActivitiesUtils {
             StorageManager.getInstancesDirPath(),
             CACHE_PATH,
             StorageManager.getMetadataDirPath(),
-            OFFLINE_LAYERS
+            StorageManager.getOfflineLayersDirPath()
     };
 
     private ExportedActivitiesUtils() {
