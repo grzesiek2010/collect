@@ -65,6 +65,7 @@ import org.odk.collect.android.utilities.FileUtils;
 import org.odk.collect.android.utilities.LocaleHelper;
 import org.odk.collect.android.utilities.NotificationUtils;
 import org.odk.collect.android.utilities.PRNGFixes;
+import org.odk.collect.android.utilities.StorageManager;
 
 import java.io.ByteArrayInputStream;
 import java.io.File;
@@ -134,32 +135,7 @@ public class Collect extends Application {
      * @throws RuntimeException if there is no SDCard or the directory exists as a non directory
      */
     public static void createODKDirs() throws RuntimeException {
-        String cardstatus = Environment.getExternalStorageState();
-        if (!cardstatus.equals(Environment.MEDIA_MOUNTED)) {
-            throw new RuntimeException(
-                    Collect.getInstance().getString(R.string.sdcard_unmounted, cardstatus));
-        }
-
-        String[] dirs = {
-                ODK_ROOT, FORMS_PATH, INSTANCES_PATH, CACHE_PATH, METADATA_PATH, OFFLINE_LAYERS
-        };
-
-        for (String dirName : dirs) {
-            File dir = new File(dirName);
-            if (!dir.exists()) {
-                if (!dir.mkdirs()) {
-                    String message = getInstance().getString(R.string.cannot_create_directory, dirName);
-                    Timber.w(message);
-                    throw new RuntimeException(message);
-                }
-            } else {
-                if (!dir.isDirectory()) {
-                    String message = getInstance().getString(R.string.not_a_directory, dirName);
-                    Timber.w(message);
-                    throw new RuntimeException(message);
-                }
-            }
-        }
+        StorageManager.createODKDirs();
     }
 
     /**
