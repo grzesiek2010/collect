@@ -87,7 +87,6 @@ import static org.odk.collect.android.tasks.sms.SmsSender.SMS_SEND_ACTION;
  */
 public class Collect extends Application {
 
-    public static final String TMPDRAWFILE_PATH = StorageManager.getCacheDirPath() + File.separator + "tmpDraw.jpg";
     public static final String DEFAULT_FONTSIZE = "21";
     public static final int DEFAULT_FONTSIZE_INT = 21;
 

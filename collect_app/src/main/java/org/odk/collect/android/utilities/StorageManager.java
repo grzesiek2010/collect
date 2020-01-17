@@ -98,4 +98,8 @@ public class StorageManager {
     public static String getTmpfilePath() {
         return getCacheDirPath() + File.separator + "tmp.jpg";
     }
+
+    public static String getTmpDrawFilePath() {
+        return getCacheDirPath() + File.separator + "tmpDraw.jpg";
+    }
 }
