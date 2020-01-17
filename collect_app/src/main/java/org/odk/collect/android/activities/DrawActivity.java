@@ -154,7 +154,7 @@ public class DrawActivity extends CollectAbstractActivity {
             refImage = null;
             savepointImage = new File(StorageManager.getTmpDrawFilePath());
             savepointImage.delete();
-            output = new File(StorageManager.getTmpfilePath());
+            output = new File(StorageManager.getTmpFilePath());
         } else {
             if (extras.getInt(SCREEN_ORIENTATION) == 1) {
                 setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_PORTRAIT);
@@ -186,7 +186,7 @@ public class DrawActivity extends CollectAbstractActivity {
             if (uri != null) {
                 output = new File(uri.getPath());
             } else {
-                output = new File(StorageManager.getTmpfilePath());
+                output = new File(StorageManager.getTmpFilePath());
             }
         }
 

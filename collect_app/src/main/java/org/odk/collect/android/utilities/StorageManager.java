@@ -14,7 +14,7 @@ import static org.odk.collect.android.preferences.GeneralKeys.KEY_SCOPED_STORAGE
 
 public class StorageManager {
 
-    private static String getStoragePath() {
+    public static String getStoragePath() {
         return isScopedStorageUsed()
                 ? Collect.getInstance().getExternalFilesDir(null).getAbsolutePath()
                 : Environment.getExternalStorageDirectory().getAbsolutePath();
@@ -95,7 +95,7 @@ public class StorageManager {
         };
     }
 
-    public static String getTmpfilePath() {
+    public static String getTmpFilePath() {
         return getCacheDirPath() + File.separator + "tmp.jpg";
     }
 
