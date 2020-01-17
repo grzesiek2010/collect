@@ -83,7 +83,7 @@ public class StorageManager {
         }
     }
 
-    private static String[] getODKDirs() {
+    public static String[] getODKDirs() {
         return new String[] {
                 getODKDirPath(),
                 getFormsDirPath(),
