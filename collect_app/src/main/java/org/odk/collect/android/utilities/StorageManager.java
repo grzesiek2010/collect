@@ -14,6 +14,10 @@ import static org.odk.collect.android.preferences.GeneralKeys.KEY_SCOPED_STORAGE
 
 public class StorageManager {
 
+    private StorageManager() {
+
+    }
+
     public static String getStoragePath() {
         return isScopedStorageUsed()
                 ? Collect.getInstance().getExternalFilesDir(null).getAbsolutePath()
