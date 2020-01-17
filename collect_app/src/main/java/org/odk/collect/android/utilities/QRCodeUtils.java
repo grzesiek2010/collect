@@ -54,10 +54,10 @@ import io.reactivex.Observable;
 import timber.log.Timber;
 
 public class QRCodeUtils {
-    public static final String QR_CODE_FILEPATH = Collect.SETTINGS + File.separator + "collect-settings.png";
+    public static final String QR_CODE_FILEPATH = StorageManager.getSettingsDirPath() + File.separator + "collect-settings.png";
     private static final int QR_CODE_SIDE_LENGTH = 400; // in pixels
     private static final String SETTINGS_MD5_FILE = ".collect-settings-hash";
-    static final String MD5_CACHE_PATH = Collect.SETTINGS + File.separator + SETTINGS_MD5_FILE;
+    static final String MD5_CACHE_PATH = StorageManager.getSettingsDirPath() + File.separator + SETTINGS_MD5_FILE;
 
     private QRCodeUtils() {
     }
@@ -120,7 +120,7 @@ public class QRCodeUtils {
             Bitmap bitmap = null;
 
             // check if settings directory exists, if not then create one
-            File writeDir = new File(Collect.SETTINGS);
+            File writeDir = new File(StorageManager.getSettingsDirPath());
             if (!writeDir.exists()) {
                 if (!writeDir.mkdirs()) {
                     Timber.e("Error creating directory " + writeDir.getAbsolutePath());

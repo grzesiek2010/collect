@@ -10,7 +10,6 @@ import com.google.zxing.WriterException;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
-import org.odk.collect.android.application.Collect;
 import org.odk.collect.android.preferences.AdminSharedPreferences;
 import org.odk.collect.android.preferences.GeneralSharedPreferences;
 import org.robolectric.RobolectricTestRunner;
@@ -78,7 +77,7 @@ public class QRCodeUtilsTest {
         String expectedData = "{\"general\":{},\"admin\":{}}";
 
         // stubbing cache and bitmap files
-        new File(Collect.SETTINGS).mkdirs();
+        new File(StorageManager.getSettingsDirPath()).mkdirs();
         FileUtils.saveBitmapToFile(QRCodeUtils.generateQRBitMap(expectedData, 100), QR_CODE_FILEPATH);
         FileUtils.write(md5File, getDigest(expectedData.getBytes()));
 
