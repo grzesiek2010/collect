@@ -37,6 +37,7 @@ import org.odk.collect.android.provider.FormsProviderAPI.FormsColumns;
 import org.odk.collect.android.tasks.DiskSyncTask;
 import org.odk.collect.android.utilities.ApplicationConstants;
 import org.odk.collect.android.utilities.PermissionUtils;
+import org.odk.collect.android.utilities.StorageManager;
 
 import androidx.annotation.NonNull;
 import androidx.loader.app.LoaderManager;
@@ -71,7 +72,7 @@ public class FormChooserListActivity extends FormListActivity implements
             public void granted() {
                 // must be at the beginning of any activity that can be called from an external intent
                 try {
-                    Collect.createODKDirs();
+                    StorageManager.createODKDirs();
                     init();
                 } catch (RuntimeException e) {
                     createErrorDialog(e.getMessage(), EXIT);

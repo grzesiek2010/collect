@@ -118,15 +118,6 @@ public class Collect extends Application {
     }
 
     /**
-     * Creates required directories on the SDCard (or other external storage)
-     *
-     * @throws RuntimeException if there is no SDCard or the directory exists as a non directory
-     */
-    public static void createODKDirs() throws RuntimeException {
-        StorageManager.createODKDirs();
-    }
-
-    /**
      * Predicate that tests whether a directory path might refer to an
      * ODK Tables instance data directory (e.g., for media attachments).
      */
