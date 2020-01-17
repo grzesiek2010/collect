@@ -24,7 +24,6 @@ import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 import android.os.Build;
 import android.os.Bundle;
-import android.os.Environment;
 import android.os.SystemClock;
 import android.preference.PreferenceManager;
 import android.util.Log;
@@ -88,9 +87,6 @@ import static org.odk.collect.android.tasks.sms.SmsSender.SMS_SEND_ACTION;
  */
 public class Collect extends Application {
 
-    // Storage paths
-    public static final String ODK_ROOT = Environment.getExternalStorageDirectory()
-            + File.separator + "odk";
     public static final String TMPFILE_PATH = StorageManager.getCacheDirPath() + File.separator + "tmp.jpg";
     public static final String TMPDRAWFILE_PATH = StorageManager.getCacheDirPath() + File.separator + "tmpDraw.jpg";
     public static final String DEFAULT_FONTSIZE = "21";
@@ -142,8 +138,8 @@ public class Collect extends Application {
          * could be in use by ODK Tables.
          */
         String dirPath = directory.getAbsolutePath();
-        if (dirPath.startsWith(Collect.ODK_ROOT)) {
-            dirPath = dirPath.substring(Collect.ODK_ROOT.length());
+        if (dirPath.startsWith(StorageManager.getStoragePath())) {
+            dirPath = dirPath.substring(StorageManager.getStoragePath().length());
             String[] parts = dirPath.split(File.separatorChar == '\\' ? "\\\\" : File.separator);
             // [appName, instances, tableId, instanceId ]
             if (parts.length == 4 && parts[1].equals("instances")) {

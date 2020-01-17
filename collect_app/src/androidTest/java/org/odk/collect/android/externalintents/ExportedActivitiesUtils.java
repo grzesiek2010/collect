@@ -8,12 +8,10 @@ import java.io.File;
 
 import timber.log.Timber;
 
-import static org.odk.collect.android.application.Collect.ODK_ROOT;
-
 class ExportedActivitiesUtils {
 
     private static final String[] DIRS = {
-            ODK_ROOT,
+            StorageManager.getODKDirPath(),
             StorageManager.getFormsDirPath(),
             StorageManager.getInstancesDirPath(),
             StorageManager.getCacheDirPath(),

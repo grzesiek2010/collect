@@ -56,6 +56,7 @@ import org.odk.collect.android.provider.InstanceProviderAPI.InstanceColumns;
 import org.odk.collect.android.utilities.ApplicationConstants;
 import org.odk.collect.android.utilities.PlayServicesUtil;
 import org.odk.collect.android.utilities.SharedPreferencesUtils;
+import org.odk.collect.android.utilities.StorageManager;
 import org.odk.collect.android.utilities.ToastUtils;
 
 import java.io.File;
@@ -231,8 +232,8 @@ public class MainMenuActivity extends CollectAbstractActivity {
                     .getVersionedAppName());
         }
 
-        File f = new File(Collect.ODK_ROOT + "/collect.settings");
-        File j = new File(Collect.ODK_ROOT + "/collect.settings.json");
+        File f = new File(StorageManager.getStoragePath() + "/collect.settings");
+        File j = new File(StorageManager.getStoragePath() + "/collect.settings.json");
         // Give JSON file preference
         if (j.exists()) {
             boolean success = SharedPreferencesUtils.loadSharedPreferencesFromJSONFile(j);

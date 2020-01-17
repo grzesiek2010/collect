@@ -22,7 +22,6 @@ import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
-import org.odk.collect.android.application.Collect;
 import org.odk.collect.android.forms.Form;
 import org.odk.collect.android.provider.FormsProviderAPI.FormsColumns;
 import org.odk.collect.android.utilities.ResetUtility;
@@ -149,7 +148,7 @@ public class FormsDaoTest {
                 .date(1487782554846L)
                 .formMediaPath(StorageManager.getFormsDirPath() + "/Widgets-media")
                 .formFilePath(StorageManager.getFormsDirPath() + "/Widgets.xml")
-                .jrCacheFilePath(Collect.ODK_ROOT + "/.cache/0eacc6333449e66826326eb5fcc75749.formdef")
+                .jrCacheFilePath(StorageManager.getStoragePath() + "/.cache/0eacc6333449e66826326eb5fcc75749.formdef")
                 .build();
 
         String where = FormsColumns.DISPLAY_NAME + "=?";
@@ -178,7 +177,7 @@ public class FormsDaoTest {
                 .date(1487773315435L)
                 .formMediaPath(StorageManager.getFormsDirPath() + "/Biggest N of Set-media")
                 .formFilePath(StorageManager.getFormsDirPath() + "/Biggest N of Set.xml")
-                .jrCacheFilePath(Collect.ODK_ROOT + "/.cache/ccce6015dd1b8f935f5f3058e81eeb43.formdef")
+                .jrCacheFilePath(StorageManager.getStoragePath() + "/.cache/ccce6015dd1b8f935f5f3058e81eeb43.formdef")
                 .build();
 
         formsDao.saveForm(formsDao.getValuesFromFormObject(biggestNOfSetForm));
@@ -192,7 +191,7 @@ public class FormsDaoTest {
                 .date(1487782404899L)
                 .formMediaPath(StorageManager.getFormsDirPath() + "/Birds-media")
                 .formFilePath(StorageManager.getFormsDirPath() + "/Birds.xml")
-                .jrCacheFilePath(Collect.ODK_ROOT + "/.cache/4cd980d50f884362afba842cbff3a798.formdef")
+                .jrCacheFilePath(StorageManager.getStoragePath() + "/.cache/4cd980d50f884362afba842cbff3a798.formdef")
                 .build();
 
         formsDao.saveForm(formsDao.getValuesFromFormObject(birdsForm));
@@ -205,7 +204,7 @@ public class FormsDaoTest {
                 .date(1487782545945L)
                 .formMediaPath(StorageManager.getFormsDirPath() + "/Miramare-media")
                 .formFilePath(StorageManager.getFormsDirPath() + "/Miramare.xml")
-                .jrCacheFilePath(Collect.ODK_ROOT + "/.cache/e733627cdbf220929bf9c4899cb983ea.formdef")
+                .jrCacheFilePath(StorageManager.getStoragePath() + "/.cache/e733627cdbf220929bf9c4899cb983ea.formdef")
                 .build();
 
         formsDao.saveForm(formsDao.getValuesFromFormObject(miramareForm));
@@ -218,7 +217,7 @@ public class FormsDaoTest {
                 .date(1487782428992L)
                 .formMediaPath(StorageManager.getFormsDirPath() + "/Geo Tagger v2-media")
                 .formFilePath(StorageManager.getFormsDirPath() + "/Geo Tagger v2.xml")
-                .jrCacheFilePath(Collect.ODK_ROOT + "/.cache/1d5e9109298c8ef02bc523b17d7c0451.formdef")
+                .jrCacheFilePath(StorageManager.getStoragePath() + "/.cache/1d5e9109298c8ef02bc523b17d7c0451.formdef")
                 .build();
 
         formsDao.saveForm(formsDao.getValuesFromFormObject(geoTaggerV2Form));
@@ -231,7 +230,7 @@ public class FormsDaoTest {
                 .date(1487782554846L)
                 .formMediaPath(StorageManager.getFormsDirPath() + "/Widgets-media")
                 .formFilePath(StorageManager.getFormsDirPath() + "/Widgets.xml")
-                .jrCacheFilePath(Collect.ODK_ROOT + "/.cache/0eacc6333449e66826326eb5fcc75749.formdef")
+                .jrCacheFilePath(StorageManager.getStoragePath() + "/.cache/0eacc6333449e66826326eb5fcc75749.formdef")
                 .build();
 
         formsDao.saveForm(formsDao.getValuesFromFormObject(widgetsForm));
@@ -244,7 +243,7 @@ public class FormsDaoTest {
                 .date(1487782555840L)
                 .formMediaPath(StorageManager.getFormsDirPath() + "/sample-media")
                 .formFilePath(StorageManager.getFormsDirPath() + "/sample.xml")
-                .jrCacheFilePath(Collect.ODK_ROOT + "/.cache/4f495fddd1f2544f65444ea83d25f425.formdef")
+                .jrCacheFilePath(StorageManager.getStoragePath() + "/.cache/4f495fddd1f2544f65444ea83d25f425.formdef")
                 .build();
 
         formsDao.saveForm(formsDao.getValuesFromFormObject(sampleForm));
@@ -258,7 +257,7 @@ public class FormsDaoTest {
                 .date(1512390303610L)
                 .formMediaPath(StorageManager.getFormsDirPath() + "/Birds_4-media")
                 .formFilePath(StorageManager.getFormsDirPath() + "/Birds_4.xml")
-                .jrCacheFilePath(Collect.ODK_ROOT + "/.cache/4cd980d50f884362afba842cbff3a775.formdef")
+                .jrCacheFilePath(StorageManager.getStoragePath() + "/.cache/4cd980d50f884362afba842cbff3a775.formdef")
                 .build();
 
         formsDao.saveForm(formsDao.getValuesFromFormObject(birds2Form));
