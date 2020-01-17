@@ -9,7 +9,6 @@ import java.io.File;
 import timber.log.Timber;
 
 import static org.odk.collect.android.application.Collect.CACHE_PATH;
-import static org.odk.collect.android.application.Collect.INSTANCES_PATH;
 import static org.odk.collect.android.application.Collect.METADATA_PATH;
 import static org.odk.collect.android.application.Collect.ODK_ROOT;
 import static org.odk.collect.android.application.Collect.OFFLINE_LAYERS;
@@ -17,7 +16,7 @@ import static org.odk.collect.android.application.Collect.OFFLINE_LAYERS;
 class ExportedActivitiesUtils {
 
     private static final String[] DIRS = {
-            ODK_ROOT, StorageManager.getFormsDirPath(), INSTANCES_PATH, CACHE_PATH, METADATA_PATH, OFFLINE_LAYERS
+            ODK_ROOT, StorageManager.getFormsDirPath(), StorageManager.getInstancesDirPath(), CACHE_PATH, METADATA_PATH, OFFLINE_LAYERS
     };
 
     private ExportedActivitiesUtils() {

@@ -147,6 +147,7 @@ import org.odk.collect.android.utilities.FormNameUtils;
 import org.odk.collect.android.utilities.ScreenContext;
 import org.odk.collect.android.utilities.SnackbarUtils;
 import org.odk.collect.android.utilities.SoftKeyboardUtils;
+import org.odk.collect.android.utilities.StorageManager;
 import org.odk.collect.android.utilities.ToastUtils;
 import org.odk.collect.android.views.ODKView;
 import org.odk.collect.android.widgets.DateTimeWidget;
@@ -612,7 +613,7 @@ public class FormEntryActivity extends CollectAbstractActivity implements Animat
                                     candidate.getName().length()
                                             - fileSuffix.length());
                     File instanceDir = new File(
-                            Collect.INSTANCES_PATH + File.separator
+                            StorageManager.getInstancesDirPath() + File.separator
                                     + instanceDirName);
                     File instanceFile = new File(instanceDir,
                             instanceDirName + ".xml");
@@ -2516,7 +2517,7 @@ public class FormEntryActivity extends CollectAbstractActivity implements Animat
                 Locale.ENGLISH).format(Calendar.getInstance().getTime());
         String file = formPath.substring(formPath.lastIndexOf('/') + 1,
                 formPath.lastIndexOf('.'));
-        String path = Collect.INSTANCES_PATH + File.separator + file + "_"
+        String path = StorageManager.getInstancesDirPath() + File.separator + file + "_"
                 + time;
         if (FileUtils.createFolder(path)) {
             File instanceFile = new File(path + File.separator + file + "_" + time + ".xml");
