@@ -5,6 +5,7 @@ import android.os.Environment;
 import org.odk.collect.android.R;
 import org.odk.collect.android.application.Collect;
 import org.odk.collect.android.preferences.GeneralSharedPreferences;
+import org.osmdroid.config.Configuration;
 
 import java.io.File;
 
@@ -105,5 +106,52 @@ public class StorageManager {
 
     public static String getTmpDrawFilePath() {
         return getCacheDirPath() + File.separator + "tmpDraw.jpg";
+    }
+
+    public static boolean clearFormsDir() {
+        return deleteFolderContents(getFormsDirPath());
+    }
+
+    public static boolean clearInstancesDir() {
+        return deleteFolderContents(getInstancesDirPath());
+    }
+
+    public static boolean clearOfflineLayersDir() {
+        return deleteFolderContents(getOfflineLayersDirPath());
+    }
+
+    public static boolean clearCacheDir() {
+        return deleteFolderContents(getCacheDirPath());
+    }
+
+    public static boolean clearSettingsDir() {
+        return deleteFolderContents(getSettingsDirPath());
+    }
+
+    public static boolean clearOSMDroidDir() {
+        return deleteFolderContents(Configuration.getInstance().getOsmdroidTileCache().getPath());
+    }
+
+    private static boolean deleteFolderContents(String path) {
+        boolean result = true;
+        File file = new File(path);
+        if (file.exists()) {
+            File[] files = file.listFiles();
+            if (files != null) {
+                for (File f : files) {
+                    result = deleteRecursive(f);
+                }
+            }
+        }
+        return result;
+    }
+
+    private static boolean deleteRecursive(File fileOrDirectory) {
+        if (fileOrDirectory.isDirectory()) {
+            for (File child : fileOrDirectory.listFiles()) {
+                deleteRecursive(child);
+            }
+        }
+        return fileOrDirectory.delete();
     }
 }
