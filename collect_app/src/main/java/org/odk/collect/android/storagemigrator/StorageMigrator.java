@@ -34,10 +34,10 @@ public class StorageMigrator {
 
     StorageMigrationResult performStorageMigration() {
         if (isFormUploaderRunning()) {
-            return StorageMigrationResult.FORM_DOWNLOADER_IS_RUNNING;
+            return StorageMigrationResult.FORM_UPLOADER_IS_RUNNING;
         }
         if (isFormDownloaderRunning()) {
-            return StorageMigrationResult.FORM_UPLOADER_IS_RUNNING;
+            return StorageMigrationResult.FORM_DOWNLOADER_IS_RUNNING;
         }
         if (!isEnoughSpaceOnInternalStorage()) {
             return StorageMigrationResult.NOT_ENOUGH_SPACE;
