@@ -171,4 +171,19 @@ public class StorageManager {
         }
         return instanceDirs;
     }
+
+    public static String getCacheFilePathColumnContent(String fileName) {
+        return isScopedStorageUsed()
+                ? fileName
+                : getCacheDirPath() + File.separator + fileName;
+    }
+
+    public static String getAbsoluteCacheFilePath(String filePath) {
+        if (filePath == null) {
+            return null;
+        }
+        return filePath.startsWith(getCacheDirPath())
+                ? filePath
+                : getCacheDirPath() + File.separator + filePath;
+    }
 }
