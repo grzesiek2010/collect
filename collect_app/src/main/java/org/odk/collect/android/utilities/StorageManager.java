@@ -162,4 +162,13 @@ public class StorageManager {
     public static void createMediaDir(String mediaDirName) {
         FileUtils.createFolder(getFormsDirPath() + File.separator + mediaDirName);
     }
+
+    public static File[] getInstanceDirs() {
+        File[] instanceDirs = new File[]{};
+        File instancesDir = new File(getInstancesDirPath());
+        if (instancesDir.exists() && instancesDir.isDirectory()) {
+            instanceDirs = instancesDir.listFiles();
+        }
+        return instanceDirs;
+    }
 }
