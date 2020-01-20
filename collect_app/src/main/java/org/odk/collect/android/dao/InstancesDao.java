@@ -37,6 +37,10 @@ import java.util.List;
  */
 public class InstancesDao {
 
+    public Cursor getInstancesCursor() {
+        return getInstancesCursor(null, null, null, null);
+    }
+
     public Cursor getSentInstancesCursor() {
         String selection = InstanceColumns.STATUS + " =? ";
         String[] selectionArgs = {InstanceProviderAPI.STATUS_SUBMITTED};
