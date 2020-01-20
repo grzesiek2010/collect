@@ -158,4 +158,8 @@ public class StorageManager {
         }
         return fileOrDirectory.delete();
     }
+
+    public static void createMediaDir(String mediaDirName) {
+        FileUtils.createFolder(getFormsDirPath() + File.separator + mediaDirName);
+    }
 }
