@@ -48,6 +48,7 @@ import javax.inject.Inject;
 import timber.log.Timber;
 
 import static org.odk.collect.android.forms.FormUtils.setupReferenceManagerForForm;
+import static org.odk.collect.android.utilities.FileUtils.MEDIA_SUFFIX;
 
 public class FormDownloader {
 
@@ -297,22 +298,22 @@ public class FormDownloader {
             isNew = cursor.getCount() <= 0;
 
             if (isNew) {
-                uri = saveNewForm(formInfo, formFile, mediaPath);
+                uri = saveNewForm(formInfo, formFile);
             } else {
                 cursor.moveToFirst();
                 uri = Uri.withAppendedPath(FormsColumns.CONTENT_URI,
                         cursor.getString(cursor.getColumnIndex(FormsColumns._ID)));
-                mediaPath = cursor.getString(cursor.getColumnIndex(FormsColumns.FORM_MEDIA_PATH));
+                mediaPath = StorageManager.getAbsoluteFormFilePath(cursor.getString(cursor.getColumnIndex(FormsColumns.FORM_MEDIA_PATH)));
             }
         }
 
         return new UriResult(uri, mediaPath, isNew);
     }
 
-    private Uri saveNewForm(Map<String, String> formInfo, File formFile, String mediaPath) {
+    private Uri saveNewForm(Map<String, String> formInfo, File formFile) {
         final ContentValues v = new ContentValues();
         v.put(FormsColumns.FORM_FILE_PATH,          formFile.getAbsolutePath());
-        v.put(FormsColumns.FORM_MEDIA_PATH,         mediaPath);
+        v.put(FormsColumns.FORM_MEDIA_PATH,         StorageManager.getFormFilePathColumnContent(formFile.getName() + MEDIA_SUFFIX));
         v.put(FormsColumns.DISPLAY_NAME,            formInfo.get(FileUtils.TITLE));
         v.put(FormsColumns.JR_VERSION,              formInfo.get(FileUtils.VERSION));
         v.put(FormsColumns.JR_FORM_ID,              formInfo.get(FileUtils.FORMID));

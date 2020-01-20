@@ -35,6 +35,7 @@ import java.util.Map;
 
 import static org.odk.collect.android.forms.FormUtils.setupReferenceManagerForForm;
 import static org.odk.collect.android.test.FileUtils.copyFileFromAssets;
+import static org.odk.collect.android.utilities.FileUtils.MEDIA_SUFFIX;
 
 public class FormLoadingUtils {
 
@@ -74,7 +75,7 @@ public class FormLoadingUtils {
         Map<String, String> formInfo = FileUtils.getMetadataFromFormDefinition(outFile);
         final ContentValues v = new ContentValues();
         v.put(FormsColumns.FORM_FILE_PATH, outFile.getAbsolutePath());
-        v.put(FormsColumns.FORM_MEDIA_PATH, FileUtils.constructMediaPath(outFile.getAbsolutePath()));
+        v.put(FormsColumns.FORM_MEDIA_PATH, StorageManager.getFormFilePathColumnContent(outFile.getName() + MEDIA_SUFFIX));
         v.put(FormsColumns.DISPLAY_NAME, formInfo.get(FileUtils.TITLE));
         v.put(FormsColumns.JR_VERSION, formInfo.get(FileUtils.VERSION));
         v.put(FormsColumns.JR_FORM_ID, formInfo.get(FileUtils.FORMID));
@@ -98,7 +99,7 @@ public class FormLoadingUtils {
     }
 
     private static void copyFormMediaFiles(String formFilename, List<String> mediaFilenames) throws IOException {
-        String mediaPathName = StorageManager.getFormsDirPath() + "/" + formFilename.replace(".xml", "") + FileUtils.MEDIA_SUFFIX + "/";
+        String mediaPathName = StorageManager.getFormsDirPath() + "/" + formFilename.replace(".xml", "") + MEDIA_SUFFIX + "/";
         FileUtils.checkMediaPath(new File(mediaPathName));
 
         for (String mediaFilename : mediaFilenames) {

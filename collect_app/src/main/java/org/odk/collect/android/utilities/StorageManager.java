@@ -186,4 +186,19 @@ public class StorageManager {
                 ? filePath
                 : getCacheDirPath() + File.separator + filePath;
     }
+
+    public static String getFormFilePathColumnContent(String fileName) {
+        return isScopedStorageUsed()
+                ? fileName
+                : getCacheDirPath() + File.separator + fileName;
+    }
+
+    public static String getAbsoluteFormFilePath(String filePath) {
+        if (filePath == null) {
+            return null;
+        }
+        return filePath.startsWith(getFormsDirPath())
+                ? filePath
+                : getFormsDirPath() + File.separator + filePath;
+    }
 }
