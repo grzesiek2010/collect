@@ -50,6 +50,8 @@ public class AboutListAdapter extends RecyclerView.Adapter<AboutListAdapter.View
         holder.imageView.setTag(iconId);
         holder.title.setText(context.getString(items[position][1]));
         holder.setSummary(items[position][2]);
+
+
     }
 
     @Override
