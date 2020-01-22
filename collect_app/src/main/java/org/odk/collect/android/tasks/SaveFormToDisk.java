@@ -211,7 +211,8 @@ public class SaveFormToDisk {
             }
 
             String where = InstanceColumns.INSTANCE_FILE_PATH + "=?";
-            int updated = new InstancesDao().updateInstance(values, where, new String[] {StorageManager.getInstanceFilePath(StorageManager.getRelativeInstanceFilePath(instancePath))});
+            StorageManager storageManager = new StorageManager();
+            int updated = new InstancesDao().updateInstance(values, where, new String[] {storageManager.getInstanceFilePath(storageManager.getRelativeInstanceFilePath(instancePath))});
             if (updated > 1) {
                 Timber.w("Updated more than one entry, that's not good: %s", instancePath);
             } else if (updated == 1) {
@@ -229,7 +230,7 @@ public class SaveFormToDisk {
                     }
 
                     // add missing fields into values
-                    values.put(InstanceColumns.INSTANCE_FILE_PATH, StorageManager.getInstanceFilePath(StorageManager.getRelativeInstanceFilePath(instancePath)));
+                    values.put(InstanceColumns.INSTANCE_FILE_PATH, storageManager.getInstanceFilePath(storageManager.getRelativeInstanceFilePath(instancePath)));
                     values.put(InstanceColumns.SUBMISSION_URI, submissionUri);
                     if (instanceName != null) {
                         values.put(InstanceColumns.DISPLAY_NAME, instanceName);
@@ -329,7 +330,7 @@ public class SaveFormToDisk {
      * Return the savepoint file for a given instance.
      */
     static File getSavepointFile(String instanceName) {
-        File tempDir = new File(StorageManager.getCacheDirPath());
+        File tempDir = new File(new StorageManager().getCacheDirPath());
         return new File(tempDir, instanceName + ".save");
     }
 
@@ -337,7 +338,7 @@ public class SaveFormToDisk {
      * Return the formIndex file for a given instance.
      */
     public static File getFormIndexFile(String instanceName) {
-        File tempDir = new File(StorageManager.getCacheDirPath());
+        File tempDir = new File(new StorageManager().getCacheDirPath());
         return new File(tempDir, instanceName + ".index");
     }
 
