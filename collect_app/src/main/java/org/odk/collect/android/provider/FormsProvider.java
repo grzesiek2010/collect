@@ -180,7 +180,7 @@ public class FormsProvider extends ContentProvider {
             // Normalize the file path.
             // (don't trust the requester).
             File form = new File(storagePathProvider.getAbsoluteFormFilePath(values.getAsString(FormsColumns.FORM_FILE_PATH)));
-            values.put(FormsColumns.FORM_FILE_PATH, storagePathProvider.getFormFilePathToStoreInDatabaseBasingOnRelativePath(form.getName()));
+            values.put(FormsColumns.FORM_FILE_PATH, storagePathProvider.getFormDbPathFromRelativePath(form.getName()));
 
             Long now = System.currentTimeMillis();
 
@@ -201,18 +201,18 @@ public class FormsProvider extends ContentProvider {
             values.put(FormsColumns.MD5_HASH, md5);
 
             if (!values.containsKey(FormsColumns.JRCACHE_FILE_PATH)) {
-                String cachePath = storagePathProvider.getCacheFilePathToStoreInDatabaseBasingOnRelativePath(md5 + ".formdef");
+                String cachePath = storagePathProvider.getCacheDbPathFromRelativePath(md5 + ".formdef");
                 values.put(FormsColumns.JRCACHE_FILE_PATH, cachePath);
             }
             if (!values.containsKey(FormsColumns.FORM_MEDIA_PATH)) {
-                values.put(FormsColumns.FORM_MEDIA_PATH, storagePathProvider.getFormFilePathToStoreInDatabaseBasingOnRelativePath(FileUtils.constructMediaPath(form.getName())));
+                values.put(FormsColumns.FORM_MEDIA_PATH, storagePathProvider.getFormDbPathFromRelativePath(FileUtils.constructMediaPath(form.getName())));
             }
 
             SQLiteDatabase db = formsDatabaseHelper.getWritableDatabase();
 
             // first try to see if a record with this filename already exists...
             String[] projection = {FormsColumns._ID, FormsColumns.FORM_FILE_PATH};
-            String[] selectionArgs = {storagePathProvider.getFormFilePathToStoreInDatabaseBasingOnRelativePath(form.getName())};
+            String[] selectionArgs = {storagePathProvider.getFormDbPathFromRelativePath(form.getName())};
             String selection = FormsColumns.FORM_FILE_PATH + "=?";
             Cursor c = null;
             try {
@@ -481,7 +481,7 @@ public class FormsProvider extends ContentProvider {
                                         .getMd5Hash(new File(formFile));
                                 values.put(FormsColumns.MD5_HASH, newMd5);
                                 values.put(FormsColumns.JRCACHE_FILE_PATH,
-                                        storagePathProvider.getCacheFilePathToStoreInDatabaseBasingOnRelativePath(newMd5 + ".formdef"));
+                                        storagePathProvider.getCacheDbPathFromRelativePath(newMd5 + ".formdef"));
                             }
 
                             count = db.update(

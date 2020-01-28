@@ -2071,7 +2071,7 @@ public class FormEntryActivity extends CollectAbstractActivity implements Animat
                                 String selection = FormsColumns.FORM_FILE_PATH
                                         + "=?";
                                 StoragePathProvider storagePathProvider = new StoragePathProvider();
-                                String[] selectArgs = {storagePathProvider.getFormFilePathToStoreInDatabaseBasingOnRelativePath(storagePathProvider.getRelativeFormFilePath(formPath))};
+                                String[] selectArgs = {storagePathProvider.getFormDbPathFromRelativePath(storagePathProvider.getRelativeFormFilePath(formPath))};
                                 int updated = new FormsDao().updateForm(values, selection, selectArgs);
                                 Timber.i("Updated language to: %s in %d rows",
                                         languages[whichButton],

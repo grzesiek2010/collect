@@ -83,8 +83,8 @@ public class ResetUtility {
         boolean deletedSettingsFolderContest = !new File(new StoragePathProvider().getSettingsDirPath()).exists()
                 || deleteFolderContents(new StoragePathProvider().getSettingsDirPath());
 
-        boolean deletedSettingsFile = !new File(new StoragePathProvider().getMainODKDirPath() + "/collect.settings").exists()
-                || (new File(new StoragePathProvider().getMainODKDirPath() + "/collect.settings").delete());
+        boolean deletedSettingsFile = !new File(new StoragePathProvider().getRootOdkDirPath() + "/collect.settings").exists()
+                || (new File(new StoragePathProvider().getRootOdkDirPath() + "/collect.settings").delete());
         
         new LocaleHelper().updateLocale(context);
 

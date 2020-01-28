@@ -233,8 +233,8 @@ public class MainMenuActivity extends CollectAbstractActivity {
                     .getVersionedAppName());
         }
 
-        File f = new File(new StoragePathProvider().getMainODKDirPath() + "/collect.settings");
-        File j = new File(new StoragePathProvider().getMainODKDirPath() + "/collect.settings.json");
+        File f = new File(new StoragePathProvider().getRootOdkDirPath() + "/collect.settings");
+        File j = new File(new StoragePathProvider().getRootOdkDirPath() + "/collect.settings.json");
         // Give JSON file preference
         if (j.exists()) {
             boolean success = SharedPreferencesUtils.loadSharedPreferencesFromJSONFile(j);

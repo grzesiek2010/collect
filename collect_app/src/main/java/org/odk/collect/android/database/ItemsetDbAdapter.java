@@ -116,7 +116,7 @@ public class ItemsetDbAdapter {
 
         ContentValues cv = new ContentValues();
         cv.put(KEY_ITEMSET_HASH, formHash);
-        cv.put(KEY_PATH, new StoragePathProvider().getFormFilePathToStoreInDatabaseBasingOnRelativePath(relativeCsvFilePath));
+        cv.put(KEY_PATH, new StoragePathProvider().getFormDbPathFromRelativePath(relativeCsvFilePath));
         db.insert(ITEMSET_TABLE, null, cv);
 
         return true;
@@ -173,7 +173,7 @@ public class ItemsetDbAdapter {
         // and remove the entry from the itemsets table
         String where = KEY_PATH + "=?";
         String[] whereArgs = {
-                new StoragePathProvider().getFormFilePathToStoreInDatabaseBasingOnRelativePath(relativeCsvFilePath)
+                new StoragePathProvider().getFormDbPathFromRelativePath(relativeCsvFilePath)
         };
         db.delete(ITEMSET_TABLE, where, whereArgs);
     }
@@ -181,7 +181,7 @@ public class ItemsetDbAdapter {
     public Cursor getItemsets(String relativeCsvFilePath) {
         String selection = KEY_PATH + "=?";
         String[] selectionArgs = {
-                new StoragePathProvider().getFormFilePathToStoreInDatabaseBasingOnRelativePath(relativeCsvFilePath)
+                new StoragePathProvider().getFormDbPathFromRelativePath(relativeCsvFilePath)
         };
         return db.query(ITEMSET_TABLE, null, selection, selectionArgs, null, null, null);
     }
@@ -199,7 +199,7 @@ public class ItemsetDbAdapter {
 
         String where = KEY_PATH + "=?";
         String[] whereArgs = {
-                new StoragePathProvider().getFormFilePathToStoreInDatabaseBasingOnRelativePath(relativeCsvFilePath)
+                new StoragePathProvider().getFormDbPathFromRelativePath(relativeCsvFilePath)
         };
         db.delete(ITEMSET_TABLE, where, whereArgs);
     }

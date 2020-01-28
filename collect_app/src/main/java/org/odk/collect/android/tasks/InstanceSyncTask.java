@@ -169,7 +169,7 @@ public class InstanceSyncTask extends AsyncTask<Void, String, String> {
                                 // add missing fields into content values
                                 ContentValues values = new ContentValues();
                                 StoragePathProvider storagePathProvider = new StoragePathProvider();
-                                values.put(InstanceColumns.INSTANCE_FILE_PATH, storagePathProvider.getInstanceFilePathToStoreInDatabaseBasingOnRelativePath(storagePathProvider.getRelativeInstanceFilePath(candidateInstance)));
+                                values.put(InstanceColumns.INSTANCE_FILE_PATH, storagePathProvider.getInstanceDbPathFromRelativePath(storagePathProvider.getRelativeInstanceFilePath(candidateInstance)));
                                 values.put(InstanceColumns.SUBMISSION_URI, submissionUri);
                                 values.put(InstanceColumns.DISPLAY_NAME, formName);
                                 values.put(InstanceColumns.JR_FORM_ID, jrFormId);
@@ -265,7 +265,7 @@ public class InstanceSyncTask extends AsyncTask<Void, String, String> {
                 values.put(InstanceColumns.GEOMETRY_TYPE, (String) null);
                 values.put(InstanceColumns.GEOMETRY, (String) null);
                 StoragePathProvider storagePathProvider = new StoragePathProvider();
-                instancesDao.updateInstance(values, InstanceColumns.INSTANCE_FILE_PATH + "=?", new String[]{storagePathProvider.getInstanceFilePathToStoreInDatabaseBasingOnRelativePath(storagePathProvider.getRelativeInstanceFilePath(candidateInstance))});
+                instancesDao.updateInstance(values, InstanceColumns.INSTANCE_FILE_PATH + "=?", new String[]{storagePathProvider.getInstanceDbPathFromRelativePath(storagePathProvider.getRelativeInstanceFilePath(candidateInstance))});
 
                 SaveFormToDisk.manageFilesAfterSavingEncryptedForm(instanceXml, submissionXml);
                 if (!EncryptionUtils.deletePlaintextFiles(instanceXml, null)) {

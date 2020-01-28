@@ -19,7 +19,7 @@ public class StoragePathProvider {
 
     public String[] getODKDirPaths() {
         return new String[]{
-                getMainODKDirPath(),
+                getRootOdkDirPath(),
                 getFormsDirPath(),
                 getInstancesDirPath(),
                 getCacheDirPath(),
@@ -30,11 +30,11 @@ public class StoragePathProvider {
 
     private String getStoragePath() {
         return storageStateProvider.isScopedStorageUsed()
-                ? getPrimaryExternalStorageFilePath()
-                : getSecondaryExternalStorageFilePath();
+                ? getScopedExternalFilesDirPath()
+                : getUnscopedExternalFilesDirPath();
     }
 
-    String getPrimaryExternalStorageFilePath() {
+    String getScopedExternalFilesDirPath() {
         File primaryStorageFile = Collect.getInstance().getExternalFilesDir(null);
         if (primaryStorageFile != null) {
             return primaryStorageFile.getAbsolutePath();
@@ -42,36 +42,36 @@ public class StoragePathProvider {
         return "";
     }
 
-    String getSecondaryExternalStorageFilePath() {
+    String getUnscopedExternalFilesDirPath() {
         return Environment.getExternalStorageDirectory().getAbsolutePath();
     }
 
-    public String getMainODKDirPath() {
+    public String getRootOdkDirPath() {
         return getStoragePath() + File.separator + "odk";
     }
 
     public String getFormsDirPath() {
-        return getMainODKDirPath() + File.separator + "forms";
+        return getRootOdkDirPath() + File.separator + "forms";
     }
 
     public String getInstancesDirPath() {
-        return getMainODKDirPath() + File.separator + "instances";
+        return getRootOdkDirPath() + File.separator + "instances";
     }
 
     public String getMetadataDirPath() {
-        return getMainODKDirPath() + File.separator + "metadata";
+        return getRootOdkDirPath() + File.separator + "metadata";
     }
 
     public String getCacheDirPath() {
-        return getMainODKDirPath() + File.separator + ".cache";
+        return getRootOdkDirPath() + File.separator + ".cache";
     }
 
     public String getOfflineLayersDirPath() {
-        return getMainODKDirPath() + File.separator + "layers";
+        return getRootOdkDirPath() + File.separator + "layers";
     }
 
     public String getSettingsDirPath() {
-        return getMainODKDirPath() + File.separator + "settings";
+        return getRootOdkDirPath() + File.separator + "settings";
     }
 
     public String getTmpFilePath() {
@@ -83,7 +83,7 @@ public class StoragePathProvider {
     }
 
     // TODO the method should be removed once using Scoped storage became required
-    public String getCacheFilePathToStoreInDatabaseBasingOnRelativePath(String relativePath) {
+    public String getCacheDbPathFromRelativePath(String relativePath) {
         return storageStateProvider.isScopedStorageUsed()
                 ? relativePath
                 : getCacheDirPath() + File.separator + relativePath;
@@ -99,7 +99,7 @@ public class StoragePathProvider {
     }
 
     // TODO the method should be removed once using Scoped storage became required
-    public String getFormFilePathToStoreInDatabaseBasingOnRelativePath(String relativePath) {
+    public String getFormDbPathFromRelativePath(String relativePath) {
         return storageStateProvider.isScopedStorageUsed()
                 ? relativePath
                 : getFormsDirPath() + File.separator + relativePath;
@@ -122,7 +122,7 @@ public class StoragePathProvider {
     }
 
     // TODO the method should be removed once using Scoped storage became required
-    public String getInstanceFilePathToStoreInDatabaseBasingOnRelativePath(String relativePath) {
+    public String getInstanceDbPathFromRelativePath(String relativePath) {
         return storageStateProvider.isScopedStorageUsed()
                 ? relativePath
                 : getInstancesDirPath() + File.separator + relativePath;

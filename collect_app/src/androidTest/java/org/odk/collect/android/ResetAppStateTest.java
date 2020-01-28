@@ -166,17 +166,17 @@ public class ResetAppStateTest {
 
         assertTrue(new File(storagePathProvider.getSettingsDirPath()).exists() || new File(storagePathProvider.getSettingsDirPath()).mkdir());
         assertTrue(new File(storagePathProvider.getSettingsDirPath() + "/collect.settings").createNewFile());
-        assertTrue(new File(storagePathProvider.getMainODKDirPath() + "/collect.settings").createNewFile());
+        assertTrue(new File(storagePathProvider.getRootOdkDirPath() + "/collect.settings").createNewFile());
     }
 
     private void setupTestFormsDatabase() {
         ContentValues values = new ContentValues();
-        values.put(FormsColumns.JRCACHE_FILE_PATH, storagePathProvider.getCacheFilePathToStoreInDatabaseBasingOnRelativePath("3a76a386464925b6f3e53422673dfe3c.formdef"));
+        values.put(FormsColumns.JRCACHE_FILE_PATH, storagePathProvider.getCacheDbPathFromRelativePath("3a76a386464925b6f3e53422673dfe3c.formdef"));
         values.put(FormsColumns.JR_FORM_ID, "jrFormId");
-        values.put(FormsColumns.FORM_MEDIA_PATH, storagePathProvider.getFormFilePathToStoreInDatabaseBasingOnRelativePath("testFile1-media"));
+        values.put(FormsColumns.FORM_MEDIA_PATH, storagePathProvider.getFormDbPathFromRelativePath("testFile1-media"));
         values.put(FormsColumns.DATE, "1487077903756");
         values.put(FormsColumns.DISPLAY_NAME, "displayName");
-        values.put(FormsColumns.FORM_FILE_PATH, storagePathProvider.getFormFilePathToStoreInDatabaseBasingOnRelativePath("testFile1.xml"));
+        values.put(FormsColumns.FORM_FILE_PATH, storagePathProvider.getFormDbPathFromRelativePath("testFile1.xml"));
         Collect.getInstance().getContentResolver()
                 .insert(FormsColumns.CONTENT_URI, values);
 
@@ -185,7 +185,7 @@ public class ResetAppStateTest {
 
     private void setupTestInstancesDatabase() {
         ContentValues values = new ContentValues();
-        values.put(InstanceColumns.INSTANCE_FILE_PATH, storagePathProvider.getInstanceFilePathToStoreInDatabaseBasingOnRelativePath("testDir1/testFile1"));
+        values.put(InstanceColumns.INSTANCE_FILE_PATH, storagePathProvider.getInstanceDbPathFromRelativePath("testDir1/testFile1"));
         values.put(InstanceColumns.SUBMISSION_URI, "submissionUri");
         values.put(InstanceColumns.DISPLAY_NAME, "displayName");
         values.put(InstanceColumns.DISPLAY_NAME, "formName");
