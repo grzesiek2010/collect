@@ -49,7 +49,7 @@ import org.odk.collect.android.logic.FormController;
 import org.odk.collect.android.provider.FormsProviderAPI.FormsColumns;
 import org.odk.collect.android.provider.InstanceProviderAPI;
 import org.odk.collect.android.provider.InstanceProviderAPI.InstanceColumns;
-import org.odk.collect.android.storage.StorageManager;
+import org.odk.collect.android.storage.StoragePathProvider;
 import org.odk.collect.android.utilities.EncryptionUtils;
 import org.odk.collect.android.utilities.EncryptionUtils.EncryptedFormInformation;
 import org.odk.collect.android.utilities.FileUtils;
@@ -211,8 +211,8 @@ public class SaveFormToDisk {
             }
 
             String where = InstanceColumns.INSTANCE_FILE_PATH + "=?";
-            StorageManager storageManager = new StorageManager();
-            int updated = new InstancesDao().updateInstance(values, where, new String[] {storageManager.getInstanceFilePathToStoreInDatabaseBasingOnRelativePath(storageManager.getRelativeInstanceFilePath(instancePath))});
+            StoragePathProvider storagePathProvider = new StoragePathProvider();
+            int updated = new InstancesDao().updateInstance(values, where, new String[] {storagePathProvider.getInstanceFilePathToStoreInDatabaseBasingOnRelativePath(storagePathProvider.getRelativeInstanceFilePath(instancePath))});
             if (updated > 1) {
                 Timber.w("Updated more than one entry, that's not good: %s", instancePath);
             } else if (updated == 1) {
@@ -230,7 +230,7 @@ public class SaveFormToDisk {
                     }
 
                     // add missing fields into values
-                    values.put(InstanceColumns.INSTANCE_FILE_PATH, storageManager.getInstanceFilePathToStoreInDatabaseBasingOnRelativePath(storageManager.getRelativeInstanceFilePath(instancePath)));
+                    values.put(InstanceColumns.INSTANCE_FILE_PATH, storagePathProvider.getInstanceFilePathToStoreInDatabaseBasingOnRelativePath(storagePathProvider.getRelativeInstanceFilePath(instancePath)));
                     values.put(InstanceColumns.SUBMISSION_URI, submissionUri);
                     if (instanceName != null) {
                         values.put(InstanceColumns.DISPLAY_NAME, instanceName);
@@ -330,7 +330,7 @@ public class SaveFormToDisk {
      * Return the savepoint file for a given instance.
      */
     static File getSavepointFile(String instanceName) {
-        File tempDir = new File(new StorageManager().getCacheDirPath());
+        File tempDir = new File(new StoragePathProvider().getCacheDirPath());
         return new File(tempDir, instanceName + ".save");
     }
 
@@ -338,7 +338,7 @@ public class SaveFormToDisk {
      * Return the formIndex file for a given instance.
      */
     public static File getFormIndexFile(String instanceName) {
-        File tempDir = new File(new StorageManager().getCacheDirPath());
+        File tempDir = new File(new StoragePathProvider().getCacheDirPath());
         return new File(tempDir, instanceName + ".index");
     }
 

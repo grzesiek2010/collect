@@ -26,7 +26,7 @@ import org.odk.collect.android.application.Collect;
 import org.odk.collect.android.instances.Instance;
 import org.odk.collect.android.provider.InstanceProviderAPI;
 import org.odk.collect.android.provider.InstanceProviderAPI.InstanceColumns;
-import org.odk.collect.android.storage.StorageManager;
+import org.odk.collect.android.storage.StoragePathProvider;
 import org.odk.collect.android.utilities.ApplicationConstants;
 
 import java.util.ArrayList;
@@ -167,9 +167,9 @@ public class InstancesDao {
     }
 
     public Cursor getInstancesCursorForFilePath(String path) {
-        StorageManager storageManager = new StorageManager();
+        StoragePathProvider storagePathProvider = new StoragePathProvider();
         String selection = InstanceColumns.INSTANCE_FILE_PATH + "=?";
-        String[] selectionArgs = {storageManager.getInstanceFilePathToStoreInDatabaseBasingOnRelativePath(storageManager.getRelativeInstanceFilePath(path))};
+        String[] selectionArgs = {storagePathProvider.getInstanceFilePathToStoreInDatabaseBasingOnRelativePath(storagePathProvider.getRelativeInstanceFilePath(path))};
 
         return getInstancesCursor(null, selection, selectionArgs, null);
     }
@@ -276,9 +276,9 @@ public class InstancesDao {
             StringBuilder selection = new StringBuilder();
             selection.append(InstanceColumns.INSTANCE_FILE_PATH + " IN (");
             int j = 0;
-            StorageManager storageManager = new StorageManager();
+            StoragePathProvider storagePathProvider = new StoragePathProvider();
             while (j < selectionArgs.length) {
-                selectionArgs[j] = storageManager.getInstanceFilePathToStoreInDatabaseBasingOnRelativePath(storageManager.getRelativeInstanceFilePath(instanceFilePaths.get(
+                selectionArgs[j] = storagePathProvider.getInstanceFilePathToStoreInDatabaseBasingOnRelativePath(storagePathProvider.getRelativeInstanceFilePath(instanceFilePaths.get(
                         counter * ApplicationConstants.SQLITE_MAX_VARIABLE_NUMBER + j)));
                 selection.append('?');
 

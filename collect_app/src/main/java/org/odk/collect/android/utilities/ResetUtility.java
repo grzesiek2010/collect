@@ -24,7 +24,7 @@ import org.odk.collect.android.dao.InstancesDao;
 import org.odk.collect.android.database.ItemsetDbAdapter;
 import org.odk.collect.android.preferences.AdminSharedPreferences;
 import org.odk.collect.android.preferences.GeneralSharedPreferences;
-import org.odk.collect.android.storage.StorageManager;
+import org.odk.collect.android.storage.StoragePathProvider;
 import org.osmdroid.config.Configuration;
 
 import java.io.File;
@@ -33,7 +33,7 @@ import java.util.List;
 
 public class ResetUtility {
 
-    private final StorageManager storageManager = new StorageManager();
+    private final StoragePathProvider storagePathProvider = new StoragePathProvider();
 
     private List<Integer> failedResetActions;
 
@@ -54,12 +54,12 @@ public class ResetUtility {
                     resetForms();
                     break;
                 case ResetAction.RESET_LAYERS:
-                    if (deleteFolderContents(storageManager.getOfflineLayersDirPath())) {
+                    if (deleteFolderContents(storagePathProvider.getOfflineLayersDirPath())) {
                         failedResetActions.remove(failedResetActions.indexOf(ResetAction.RESET_LAYERS));
                     }
                     break;
                 case ResetAction.RESET_CACHE:
-                    if (deleteFolderContents(storageManager.getCacheDirPath())) {
+                    if (deleteFolderContents(storagePathProvider.getCacheDirPath())) {
                         failedResetActions.remove(failedResetActions.indexOf(ResetAction.RESET_CACHE));
                     }
                     break;
@@ -80,11 +80,11 @@ public class ResetUtility {
         GeneralSharedPreferences.getInstance().loadDefaultPreferences();
         AdminSharedPreferences.getInstance().loadDefaultPreferences();
 
-        boolean deletedSettingsFolderContest = !new File(new StorageManager().getSettingsDirPath()).exists()
-                || deleteFolderContents(new StorageManager().getSettingsDirPath());
+        boolean deletedSettingsFolderContest = !new File(new StoragePathProvider().getSettingsDirPath()).exists()
+                || deleteFolderContents(new StoragePathProvider().getSettingsDirPath());
 
-        boolean deletedSettingsFile = !new File(new StorageManager().getMainODKDirPath() + "/collect.settings").exists()
-                || (new File(new StorageManager().getMainODKDirPath() + "/collect.settings").delete());
+        boolean deletedSettingsFile = !new File(new StoragePathProvider().getMainODKDirPath() + "/collect.settings").exists()
+                || (new File(new StoragePathProvider().getMainODKDirPath() + "/collect.settings").delete());
         
         new LocaleHelper().updateLocale(context);
 
@@ -98,7 +98,7 @@ public class ResetUtility {
     private void resetInstances() {
         new InstancesDao().deleteInstancesDatabase();
 
-        if (deleteFolderContents(storageManager.getInstancesDirPath())) {
+        if (deleteFolderContents(storagePathProvider.getInstancesDirPath())) {
             failedResetActions.remove(failedResetActions.indexOf(ResetAction.RESET_INSTANCES));
         }
     }
@@ -106,9 +106,9 @@ public class ResetUtility {
     private void resetForms() {
         new FormsDao().deleteFormsDatabase();
 
-        File itemsetDbFile = new File(storageManager.getMetadataDirPath() + File.separator + ItemsetDbAdapter.DATABASE_NAME);
+        File itemsetDbFile = new File(storagePathProvider.getMetadataDirPath() + File.separator + ItemsetDbAdapter.DATABASE_NAME);
 
-        if (deleteFolderContents(storageManager.getFormsDirPath()) && (!itemsetDbFile.exists() || itemsetDbFile.delete())) {
+        if (deleteFolderContents(storagePathProvider.getFormsDirPath()) && (!itemsetDbFile.exists() || itemsetDbFile.delete())) {
             failedResetActions.remove(failedResetActions.indexOf(ResetAction.RESET_FORMS));
         }
     }

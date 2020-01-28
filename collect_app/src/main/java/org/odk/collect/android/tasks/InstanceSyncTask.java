@@ -32,7 +32,7 @@ import org.odk.collect.android.logic.FormController;
 import org.odk.collect.android.preferences.GeneralKeys;
 import org.odk.collect.android.provider.FormsProviderAPI.FormsColumns;
 import org.odk.collect.android.provider.InstanceProviderAPI;
-import org.odk.collect.android.storage.StorageManager;
+import org.odk.collect.android.storage.StoragePathProvider;
 import org.odk.collect.android.utilities.EncryptionUtils;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
@@ -77,7 +77,7 @@ public class InstanceSyncTask extends AsyncTask<Void, String, String> {
 
         try {
             List<String> candidateInstances = new LinkedList<>();
-            File instancesPath = new File(new StorageManager().getInstancesDirPath());
+            File instancesPath = new File(new StoragePathProvider().getInstancesDirPath());
             if (instancesPath.exists() && instancesPath.isDirectory()) {
                 File[] instanceFolders = instancesPath.listFiles();
                 if (instanceFolders == null || instanceFolders.length == 0) {
@@ -120,7 +120,7 @@ public class InstanceSyncTask extends AsyncTask<Void, String, String> {
                     instanceCursor.moveToPosition(-1);
 
                     while (instanceCursor.moveToNext()) {
-                        String instanceFilename = new StorageManager().getAbsoluteInstanceFilePath(instanceCursor.getString(
+                        String instanceFilename = new StoragePathProvider().getAbsoluteInstanceFilePath(instanceCursor.getString(
                                 instanceCursor.getColumnIndex(InstanceColumns.INSTANCE_FILE_PATH)));
                         String instanceStatus = instanceCursor.getString(
                                 instanceCursor.getColumnIndex(InstanceColumns.STATUS));
@@ -168,8 +168,8 @@ public class InstanceSyncTask extends AsyncTask<Void, String, String> {
 
                                 // add missing fields into content values
                                 ContentValues values = new ContentValues();
-                                StorageManager storageManager = new StorageManager();
-                                values.put(InstanceColumns.INSTANCE_FILE_PATH, storageManager.getInstanceFilePathToStoreInDatabaseBasingOnRelativePath(storageManager.getRelativeInstanceFilePath(candidateInstance)));
+                                StoragePathProvider storagePathProvider = new StoragePathProvider();
+                                values.put(InstanceColumns.INSTANCE_FILE_PATH, storagePathProvider.getInstanceFilePathToStoreInDatabaseBasingOnRelativePath(storagePathProvider.getRelativeInstanceFilePath(candidateInstance)));
                                 values.put(InstanceColumns.SUBMISSION_URI, submissionUri);
                                 values.put(InstanceColumns.DISPLAY_NAME, formName);
                                 values.put(InstanceColumns.JR_FORM_ID, jrFormId);
@@ -264,8 +264,8 @@ public class InstanceSyncTask extends AsyncTask<Void, String, String> {
                 values.put(InstanceColumns.CAN_EDIT_WHEN_COMPLETE, Boolean.toString(false));
                 values.put(InstanceColumns.GEOMETRY_TYPE, (String) null);
                 values.put(InstanceColumns.GEOMETRY, (String) null);
-                StorageManager storageManager = new StorageManager();
-                instancesDao.updateInstance(values, InstanceColumns.INSTANCE_FILE_PATH + "=?", new String[]{storageManager.getInstanceFilePathToStoreInDatabaseBasingOnRelativePath(storageManager.getRelativeInstanceFilePath(candidateInstance))});
+                StoragePathProvider storagePathProvider = new StoragePathProvider();
+                instancesDao.updateInstance(values, InstanceColumns.INSTANCE_FILE_PATH + "=?", new String[]{storagePathProvider.getInstanceFilePathToStoreInDatabaseBasingOnRelativePath(storagePathProvider.getRelativeInstanceFilePath(candidateInstance))});
 
                 SaveFormToDisk.manageFilesAfterSavingEncryptedForm(instanceXml, submissionXml);
                 if (!EncryptionUtils.deletePlaintextFiles(instanceXml, null)) {

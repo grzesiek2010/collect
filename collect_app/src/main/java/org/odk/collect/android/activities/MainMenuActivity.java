@@ -53,7 +53,7 @@ import org.odk.collect.android.preferences.PreferenceSaver;
 import org.odk.collect.android.preferences.PreferencesActivity;
 import org.odk.collect.android.preferences.Transport;
 import org.odk.collect.android.provider.InstanceProviderAPI.InstanceColumns;
-import org.odk.collect.android.storage.StorageManager;
+import org.odk.collect.android.storage.StoragePathProvider;
 import org.odk.collect.android.utilities.ApplicationConstants;
 import org.odk.collect.android.utilities.PlayServicesUtil;
 import org.odk.collect.android.utilities.SharedPreferencesUtils;
@@ -219,7 +219,7 @@ public class MainMenuActivity extends CollectAbstractActivity {
         // external intent
         Timber.i("Starting up, creating directories");
         try {
-            new StorageManager().createODKDirs();
+            new StoragePathProvider().createODKDirs();
         } catch (RuntimeException e) {
             createErrorDialog(e.getMessage(), EXIT);
             return;
@@ -232,8 +232,8 @@ public class MainMenuActivity extends CollectAbstractActivity {
                     .getVersionedAppName());
         }
 
-        File f = new File(new StorageManager().getMainODKDirPath() + "/collect.settings");
-        File j = new File(new StorageManager().getMainODKDirPath() + "/collect.settings.json");
+        File f = new File(new StoragePathProvider().getMainODKDirPath() + "/collect.settings");
+        File j = new File(new StoragePathProvider().getMainODKDirPath() + "/collect.settings.json");
         // Give JSON file preference
         if (j.exists()) {
             boolean success = SharedPreferencesUtils.loadSharedPreferencesFromJSONFile(j);

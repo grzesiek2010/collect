@@ -26,7 +26,7 @@ import org.odk.collect.android.application.Collect;
 import org.odk.collect.android.dao.FormsDao;
 import org.odk.collect.android.listeners.DiskSyncListener;
 import org.odk.collect.android.provider.FormsProviderAPI.FormsColumns;
-import org.odk.collect.android.storage.StorageManager;
+import org.odk.collect.android.storage.StoragePathProvider;
 import org.odk.collect.android.utilities.FileUtils;
 import org.odk.collect.android.utilities.Validator;
 
@@ -66,7 +66,7 @@ public class DiskSyncTask extends AsyncTask<Void, String, String> {
             // Process everything then report what didn't work.
             StringBuilder errors = new StringBuilder();
 
-            File formDir = new File(new StorageManager().getFormsDirPath());
+            File formDir = new File(new StoragePathProvider().getFormsDirPath());
             if (formDir.exists() && formDir.isDirectory()) {
                 // Get all the files in the /odk/foms directory
                 File[] formDefs = formDir.listFiles();
@@ -93,7 +93,7 @@ public class DiskSyncTask extends AsyncTask<Void, String, String> {
                     while (cursor.moveToNext()) {
                         // For each element in the provider, see if the file already exists
                         String sqlFilename =
-                                new StorageManager().getAbsoluteFormFilePath(cursor.getString(
+                                new StoragePathProvider().getAbsoluteFormFilePath(cursor.getString(
                                         cursor.getColumnIndex(FormsColumns.FORM_FILE_PATH)));
                         String md5 = cursor.getString(
                                 cursor.getColumnIndex(FormsColumns.MD5_HASH));
@@ -324,7 +324,7 @@ public class DiskSyncTask extends AsyncTask<Void, String, String> {
 
         // Note, the path doesn't change here, but it needs to be included so the
         // update will automatically update the .md5 and the cache path.
-        updateValues.put(FormsColumns.FORM_FILE_PATH, new StorageManager().getFormFilePathToStoreInDatabaseBasingOnRelativePath(formDefFile.getName()));
+        updateValues.put(FormsColumns.FORM_FILE_PATH, new StoragePathProvider().getFormFilePathToStoreInDatabaseBasingOnRelativePath(formDefFile.getName()));
 
         return updateValues;
     }
