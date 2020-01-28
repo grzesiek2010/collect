@@ -18,6 +18,7 @@ import org.odk.collect.android.http.CollectThenSystemContentTypeMapper;
 import org.odk.collect.android.http.openrosa.OpenRosaHttpInterface;
 import org.odk.collect.android.http.openrosa.okhttp.OkHttpConnection;
 import org.odk.collect.android.http.openrosa.okhttp.OkHttpOpenRosaServerClientProvider;
+import org.odk.collect.android.storage.StoragePathProvider;
 import org.odk.collect.android.tasks.sms.SmsSubmissionManager;
 import org.odk.collect.android.tasks.sms.contracts.SmsSubmissionManagerContract;
 import org.odk.collect.android.utilities.ActivityAvailability;
@@ -146,5 +147,10 @@ public class AppDependencyModule {
     @Provides
     public ActivityAvailability providesActivityAvailability(Context context) {
         return new ActivityAvailability(context);
+    }
+
+    @Provides
+    public StoragePathProvider storagePathProvider() {
+        return new StoragePathProvider();
     }
 }
