@@ -3,13 +3,20 @@ package org.odk.collect.android.storage;
 import android.os.Environment;
 
 import org.odk.collect.android.application.Collect;
-import org.odk.collect.android.preferences.GeneralSharedPreferences;
 
 import java.io.File;
 
-import static org.odk.collect.android.preferences.GeneralKeys.KEY_SCOPED_STORAGE_USED;
+import javax.inject.Inject;
 
 public class StoragePathProvider {
+
+    @Inject
+    StorageStateProvider storageStateProvider;
+
+    public StoragePathProvider() {
+        Collect.getInstance().getComponent().inject(this);
+    }
+
     public String[] getODKDirPaths() {
         return new String[]{
                 getMainODKDirPath(),
@@ -22,7 +29,7 @@ public class StoragePathProvider {
     }
 
     private String getStoragePath() {
-        return isScopedStorageUsed()
+        return storageStateProvider.isScopedStorageUsed()
                 ? getPrimaryExternalStorageFilePath()
                 : getSecondaryExternalStorageFilePath();
     }
@@ -75,17 +82,9 @@ public class StoragePathProvider {
         return getCacheDirPath() + File.separator + "tmpDraw.jpg";
     }
 
-    boolean isScopedStorageUsed() {
-        return GeneralSharedPreferences.getInstance().getBoolean(KEY_SCOPED_STORAGE_USED, false);
-    }
-
-    public void recordMigrationToScopedStorage() {
-        GeneralSharedPreferences.getInstance().save(KEY_SCOPED_STORAGE_USED, true);
-    }
-
     // TODO the method should be removed once using Scoped storage became required
     public String getCacheFilePathToStoreInDatabaseBasingOnRelativePath(String relativePath) {
-        return isScopedStorageUsed()
+        return storageStateProvider.isScopedStorageUsed()
                 ? relativePath
                 : getCacheDirPath() + File.separator + relativePath;
     }
@@ -101,7 +100,7 @@ public class StoragePathProvider {
 
     // TODO the method should be removed once using Scoped storage became required
     public String getFormFilePathToStoreInDatabaseBasingOnRelativePath(String relativePath) {
-        return isScopedStorageUsed()
+        return storageStateProvider.isScopedStorageUsed()
                 ? relativePath
                 : getFormsDirPath() + File.separator + relativePath;
     }
@@ -124,7 +123,7 @@ public class StoragePathProvider {
 
     // TODO the method should be removed once using Scoped storage became required
     public String getInstanceFilePathToStoreInDatabaseBasingOnRelativePath(String relativePath) {
-        return isScopedStorageUsed()
+        return storageStateProvider.isScopedStorageUsed()
                 ? relativePath
                 : getInstancesDirPath() + File.separator + relativePath;
     }

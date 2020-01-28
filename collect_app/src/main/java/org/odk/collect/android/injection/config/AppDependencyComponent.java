@@ -19,6 +19,7 @@ import org.odk.collect.android.http.openrosa.OpenRosaHttpInterface;
 import org.odk.collect.android.logic.PropertyManager;
 import org.odk.collect.android.preferences.ServerPreferencesFragment;
 import org.odk.collect.android.storage.StorageInitializer;
+import org.odk.collect.android.storage.StoragePathProvider;
 import org.odk.collect.android.tasks.InstanceServerUploaderTask;
 import org.odk.collect.android.tasks.ServerPollingJob;
 import org.odk.collect.android.tasks.sms.SmsNotificationReceiver;
@@ -119,6 +120,8 @@ public interface AppDependencyComponent {
     void inject(ODKView odkView);
 
     void inject(StorageInitializer storageInitializer);
+
+    void inject(StoragePathProvider storagePathProvider);
 
     SmsManager smsManager();
 

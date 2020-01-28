@@ -16,6 +16,9 @@ public class StorageInitializer {
     @Inject
     StoragePathProvider storagePathProvider;
 
+    @Inject
+    StorageStateProvider storageStateProvider;
+
     public StorageInitializer() {
         Collect.getInstance().getComponent().inject(this);
     }
@@ -26,7 +29,7 @@ public class StorageInitializer {
      * @throws RuntimeException if there is no SDCard or the directory exists as a non directory
      */
     public void createODKDirs() throws RuntimeException {
-        if (!isStorageAvailable()) {
+        if (!storageStateProvider.isStorageAvailable()) {
             throw new RuntimeException(
                     Collect.getInstance().getString(R.string.sdcard_unmounted, Environment.getExternalStorageState()));
         }
@@ -47,9 +50,5 @@ public class StorageInitializer {
                 }
             }
         }
-    }
-
-    private boolean isStorageAvailable() {
-        return Environment.getExternalStorageState().equals(Environment.MEDIA_MOUNTED);
     }
 }

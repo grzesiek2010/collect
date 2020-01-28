@@ -10,6 +10,7 @@ import static org.mockito.Mockito.spy;
 public class StoragePathProviderTest {
 
     private final StoragePathProvider storagePathProvider = spy(StoragePathProvider.class);
+    private final StorageStateProvider storageStateProvider = spy(StorageStateProvider.class);
 
     @Before
     public void setup() {
@@ -18,11 +19,11 @@ public class StoragePathProviderTest {
     }
 
     private void mockUsingScopedStorage() {
-        doReturn(true).when(storagePathProvider).isScopedStorageUsed();
+        doReturn(true).when(storageStateProvider).isScopedStorageUsed();
     }
 
     private void mockUsingSdCard() {
-        doReturn(false).when(storagePathProvider).isScopedStorageUsed();
+        doReturn(false).when(storageStateProvider).isScopedStorageUsed();
     }
 
     @Test
