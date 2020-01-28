@@ -102,7 +102,7 @@ public class Collect extends Application {
     private FormController formController;
     private ExternalDataManager externalDataManager;
     private FirebaseAnalytics firebaseAnalytics;
-    private AppDependencyComponent applicationComponent;
+    private static AppDependencyComponent applicationComponent;
 
     public static Collect getInstance() {
         return singleton;
@@ -184,6 +184,7 @@ public class Collect extends Application {
     protected void attachBaseContext(Context base) {
         super.attachBaseContext(base);
         MultiDex.install(this);
+        setupDagger();
     }
 
     @Override
@@ -193,7 +194,6 @@ public class Collect extends Application {
         firebaseAnalytics = FirebaseAnalytics.getInstance(this);
 
         installTls12();
-        setupDagger();
 
         NotificationUtils.createNotificationChannel(singleton);
 
@@ -346,12 +346,12 @@ public class Collect extends Application {
         return allowClick;
     }
 
-    public AppDependencyComponent getComponent() {
+    public static AppDependencyComponent getComponent() {
         return applicationComponent;
     }
 
     public void setComponent(AppDependencyComponent applicationComponent) {
-        this.applicationComponent = applicationComponent;
+        Collect.applicationComponent = applicationComponent;
         applicationComponent.inject(this);
     }
 

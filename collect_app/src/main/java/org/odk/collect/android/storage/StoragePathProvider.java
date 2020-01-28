@@ -14,7 +14,7 @@ public class StoragePathProvider {
     StorageStateProvider storageStateProvider;
 
     public StoragePathProvider() {
-        Collect.getInstance().getComponent().inject(this);
+        Collect.getComponent().inject(this);
     }
 
     public String[] getODKDirPaths() {

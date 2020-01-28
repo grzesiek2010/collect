@@ -20,7 +20,7 @@ public class StorageInitializer {
     StorageStateProvider storageStateProvider;
 
     public StorageInitializer() {
-        Collect.getInstance().getComponent().inject(this);
+        Collect.getComponent().inject(this);
     }
 
     /**
