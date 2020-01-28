@@ -28,7 +28,7 @@ public class StorageInitializer {
     public void createODKDirs() throws RuntimeException {
         if (!isStorageAvailable()) {
             throw new RuntimeException(
-                    Collect.getInstance().getString(R.string.sdcard_unmounted, getStorageState()));
+                    Collect.getInstance().getString(R.string.sdcard_unmounted, Environment.getExternalStorageState()));
         }
 
         for (String dirPath : storagePathProvider.getODKDirPaths()) {
@@ -50,10 +50,6 @@ public class StorageInitializer {
     }
 
     private boolean isStorageAvailable() {
-        return getStorageState().equals(Environment.MEDIA_MOUNTED);
-    }
-
-    private String getStorageState() {
-        return Environment.getExternalStorageState();
+        return Environment.getExternalStorageState().equals(Environment.MEDIA_MOUNTED);
     }
 }
