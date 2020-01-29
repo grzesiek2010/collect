@@ -185,7 +185,7 @@ public class ResetAppStateTest {
 
     private void setupTestInstancesDatabase() {
         ContentValues values = new ContentValues();
-        values.put(InstanceColumns.INSTANCE_FILE_PATH, storagePathProvider.getInstanceDbPathFromRelativePath("testDir1/testFile1"));
+        values.put(InstanceColumns.INSTANCE_FILE_PATH, storagePathProvider.getInstanceDbPath("testDir1/testFile1"));
         values.put(InstanceColumns.SUBMISSION_URI, "submissionUri");
         values.put(InstanceColumns.DISPLAY_NAME, "displayName");
         values.put(InstanceColumns.DISPLAY_NAME, "formName");

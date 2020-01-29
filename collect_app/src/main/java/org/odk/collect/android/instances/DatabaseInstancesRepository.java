@@ -35,7 +35,7 @@ public final class DatabaseInstancesRepository implements InstancesRepository {
     public Instance getByPath(String instancePath) {
         StoragePathProvider storagePathProvider = new StoragePathProvider();
         Cursor c = dao.getInstancesCursor(InstanceColumns.INSTANCE_FILE_PATH + "=?",
-                new String[] {storagePathProvider.getInstanceDbPathFromRelativePath(storagePathProvider.getRelativeInstanceFilePath(instancePath))});
+                new String[] {storagePathProvider.getInstanceDbPath(instancePath)});
         List<Instance> instances = dao.getInstancesFromCursor(c);
         if (instances.size() == 1) {
             return instances.get(0);
