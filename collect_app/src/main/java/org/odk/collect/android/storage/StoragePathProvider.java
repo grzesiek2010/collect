@@ -82,11 +82,26 @@ public class StoragePathProvider {
         return getCacheDirPath() + File.separator + "tmpDraw.jpg";
     }
 
-    // TODO the method should be removed once using Scoped storage became required
-    public String getCacheDbPathFromRelativePath(String relativePath) {
+    public String getCacheDbPath(String path) {
+        String absolutePath;
+        String relativePath;
+        if (path.startsWith(getCacheDirPath())) {
+            absolutePath = path;
+            relativePath = getRelativeCacheFilePath(path);
+        } else {
+            relativePath = path;
+            absolutePath = getAbsoluteCacheFilePath(path);
+        }
+
         return storageStateProvider.isScopedStorageUsed()
                 ? relativePath
-                : getCacheDirPath() + File.separator + relativePath;
+                : absolutePath;
+    }
+
+    public String getRelativeCacheFilePath(String filePath) {
+        return filePath.startsWith(getFormsDirPath())
+                ? filePath.substring(getFormsDirPath().length() + 1)
+                : filePath;
     }
 
     public String getAbsoluteCacheFilePath(String filePath) {

@@ -201,7 +201,7 @@ public class FormsProvider extends ContentProvider {
             values.put(FormsColumns.MD5_HASH, md5);
 
             if (!values.containsKey(FormsColumns.JRCACHE_FILE_PATH)) {
-                String cachePath = storagePathProvider.getCacheDbPathFromRelativePath(md5 + ".formdef");
+                String cachePath = storagePathProvider.getCacheDbPath(md5 + ".formdef");
                 values.put(FormsColumns.JRCACHE_FILE_PATH, cachePath);
             }
             if (!values.containsKey(FormsColumns.FORM_MEDIA_PATH)) {
@@ -481,7 +481,7 @@ public class FormsProvider extends ContentProvider {
                                         .getMd5Hash(new File(formFile));
                                 values.put(FormsColumns.MD5_HASH, newMd5);
                                 values.put(FormsColumns.JRCACHE_FILE_PATH,
-                                        storagePathProvider.getCacheDbPathFromRelativePath(newMd5 + ".formdef"));
+                                        storagePathProvider.getCacheDbPath(newMd5 + ".formdef"));
                             }
 
                             count = db.update(

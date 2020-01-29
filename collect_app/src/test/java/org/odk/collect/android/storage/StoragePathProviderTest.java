@@ -60,14 +60,14 @@ public class StoragePathProviderTest {
     public void when_scopedStorageNotUsed_should_getCacheFilePathMethodReturnAbsolutePath() {
         mockUsingSdCard();
 
-        assertEquals("/storage/emulated/0/odk/.cache/4cd980d50f884362afba842cbff3a798.formdef", storagePathProvider.getCacheDbPathFromRelativePath("4cd980d50f884362afba842cbff3a798.formdef"));
+        assertEquals("/storage/emulated/0/odk/.cache/4cd980d50f884362afba842cbff3a798.formdef", storagePathProvider.getCacheDbPath("4cd980d50f884362afba842cbff3a798.formdef"));
     }
 
     @Test
     public void when_scopedStorageUsed_should_getCacheFilePathMethodReturnRelativePath() {
         mockUsingScopedStorage();
 
-        assertEquals("4cd980d50f884362afba842cbff3a798.formdef", storagePathProvider.getCacheDbPathFromRelativePath("4cd980d50f884362afba842cbff3a798.formdef"));
+        assertEquals("4cd980d50f884362afba842cbff3a798.formdef", storagePathProvider.getCacheDbPath("4cd980d50f884362afba842cbff3a798.formdef"));
     }
 
     @Test
