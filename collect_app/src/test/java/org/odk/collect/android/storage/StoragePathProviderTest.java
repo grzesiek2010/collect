@@ -82,14 +82,14 @@ public class StoragePathProviderTest {
     public void when_scopedStorageNotUsed_should_getFormFilePathMethodReturnAbsolutePath() {
         mockUsingSdCard();
 
-        assertEquals("/storage/emulated/0/odk/forms/All widgets.xml", storagePathProvider.getFormDbPathFromRelativePath("All widgets.xml"));
+        assertEquals("/storage/emulated/0/odk/forms/All widgets.xml", storagePathProvider.getFormDbPath("All widgets.xml"));
     }
 
     @Test
     public void when_scopedStorageUsed_should_getFormFilePathMethodReturnRelativePath() {
         mockUsingScopedStorage();
 
-        assertEquals("All widgets.xml", storagePathProvider.getFormDbPathFromRelativePath("All widgets.xml"));
+        assertEquals("All widgets.xml", storagePathProvider.getFormDbPath("All widgets.xml"));
     }
 
     @Test

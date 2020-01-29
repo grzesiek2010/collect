@@ -180,7 +180,7 @@ public class FormsProvider extends ContentProvider {
             // Normalize the file path.
             // (don't trust the requester).
             File form = new File(storagePathProvider.getAbsoluteFormFilePath(values.getAsString(FormsColumns.FORM_FILE_PATH)));
-            values.put(FormsColumns.FORM_FILE_PATH, storagePathProvider.getFormDbPathFromRelativePath(form.getName()));
+            values.put(FormsColumns.FORM_FILE_PATH, storagePathProvider.getFormDbPath(form.getName()));
 
             Long now = System.currentTimeMillis();
 
@@ -205,14 +205,14 @@ public class FormsProvider extends ContentProvider {
                 values.put(FormsColumns.JRCACHE_FILE_PATH, cachePath);
             }
             if (!values.containsKey(FormsColumns.FORM_MEDIA_PATH)) {
-                values.put(FormsColumns.FORM_MEDIA_PATH, storagePathProvider.getFormDbPathFromRelativePath(FileUtils.constructMediaPath(form.getName())));
+                values.put(FormsColumns.FORM_MEDIA_PATH, storagePathProvider.getFormDbPath(FileUtils.constructMediaPath(form.getName())));
             }
 
             SQLiteDatabase db = formsDatabaseHelper.getWritableDatabase();
 
             // first try to see if a record with this filename already exists...
             String[] projection = {FormsColumns._ID, FormsColumns.FORM_FILE_PATH};
-            String[] selectionArgs = {storagePathProvider.getFormDbPathFromRelativePath(form.getName())};
+            String[] selectionArgs = {storagePathProvider.getFormDbPath(form.getName())};
             String selection = FormsColumns.FORM_FILE_PATH + "=?";
             Cursor c = null;
             try {

@@ -98,14 +98,22 @@ public class StoragePathProvider {
                 : getCacheDirPath() + File.separator + filePath;
     }
 
-    // TODO the method should be removed once using Scoped storage became required
-    public String getFormDbPathFromRelativePath(String relativePath) {
+    public String getFormDbPath(String path) {
+        String absolutePath;
+        String relativePath;
+        if (path.startsWith(getFormsDirPath())) {
+            absolutePath = path;
+            relativePath = getRelativeFormFilePath(path);
+        } else {
+            relativePath = path;
+            absolutePath = getAbsoluteFormFilePath(path);
+        }
+
         return storageStateProvider.isScopedStorageUsed()
                 ? relativePath
-                : getFormsDirPath() + File.separator + relativePath;
+                : absolutePath;
     }
 
-    // TODO the method should be removed once using Scoped storage became required
     public String getRelativeFormFilePath(String filePath) {
         return filePath.startsWith(getFormsDirPath())
                 ? filePath.substring(getFormsDirPath().length() + 1)
