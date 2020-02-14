@@ -20,7 +20,6 @@ import org.odk.collect.android.openrosa.OpenRosaAPIClient;
 import org.odk.collect.android.openrosa.OpenRosaHttpInterface;
 import org.odk.collect.android.logic.PropertyManager;
 import org.odk.collect.android.preferences.ServerPreferencesFragment;
-import org.odk.collect.android.storage.migration.StorageMigrationDialog;
 import org.odk.collect.android.storage.migration.StorageMigrationService;
 import org.odk.collect.android.tasks.InstanceServerUploaderTask;
 import org.odk.collect.android.tasks.ServerPollingJob;
@@ -121,8 +120,6 @@ public interface AppDependencyComponent {
     void inject(ODKView odkView);
 
     void inject(MainMenuActivity mainMenuActivity);
-
-    void inject(StorageMigrationDialog storageMigrationDialog);
 
     void inject(StorageMigrationService storageMigrationService);
 
