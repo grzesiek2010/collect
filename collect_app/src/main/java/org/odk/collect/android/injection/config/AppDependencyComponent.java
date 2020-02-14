@@ -28,6 +28,7 @@ import org.odk.collect.android.tasks.sms.SmsSender;
 import org.odk.collect.android.tasks.sms.SmsSentBroadcastReceiver;
 import org.odk.collect.android.tasks.sms.SmsService;
 import org.odk.collect.android.tasks.sms.contracts.SmsSubmissionManagerContract;
+import org.odk.collect.android.upload.AutoSendWorker;
 import org.odk.collect.android.utilities.AuthDialogUtility;
 import org.odk.collect.android.utilities.FormListDownloader;
 import org.odk.collect.android.utilities.FormDownloader;
@@ -122,6 +123,8 @@ public interface AppDependencyComponent {
     void inject(MainMenuActivity mainMenuActivity);
 
     void inject(StorageMigrationService storageMigrationService);
+
+    void inject(AutoSendWorker autoSendWorker);
 
     SmsManager smsManager();
 
