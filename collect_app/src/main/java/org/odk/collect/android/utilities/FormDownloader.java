@@ -174,7 +174,7 @@ public class FormDownloader {
         }
 
         Map<String, String> parsedFields = null;
-        if (fileResult != null) {
+        if (fileResult != null && fileResult.isNew) {
             try {
                 final long start = System.currentTimeMillis();
                 Timber.w("Parsing document %s", fileResult.file.getAbsolutePath());
@@ -200,8 +200,8 @@ public class FormDownloader {
 
         boolean installed = false;
 
-        if ((stateListener == null || !stateListener.isTaskCanceled()) && message.isEmpty() && parsedFields != null) {
-            if (isSubmissionOk(parsedFields)) {
+        if ((stateListener == null || !stateListener.isTaskCanceled()) && message.isEmpty()) {
+            if (!fileResult.isNew() || isSubmissionOk(parsedFields)) {
                 installed = installEverything(tempMediaPath, fileResult, parsedFields);
             } else {
                 message += Collect.getInstance().getString(R.string.xform_parse_error,
