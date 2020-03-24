@@ -2834,10 +2834,29 @@ public class FormEntryActivity extends CollectAbstractActivity implements Animat
             immutableQuestionsBeforeSave.add(new ImmutableDisplayableQuestion(questionBeforeSave));
         }
 
-        // Re-evaluate the form with the newly-changed value and store questions in a map by FormIndex
-        // to later quickly match questions that are still relevant with the corresponding question
-        // before saving.
-        saveAnswersForCurrentScreen(false);
+        FormController formController = getFormController();
+        ODKView currentView = getCurrentViewIfODKView();
+        if (formController == null || currentView == null) {
+            return;
+        }
+
+        HashMap<FormIndex, IAnswerData> answersFromCurrentScreen = currentView.getAnswers();
+        for (int i = 0; i < questionsBeforeSave.length; i++) {
+            FormIndex currentFormIndex = questionsBeforeSave[i].getIndex();
+            IAnswerData currentAnswer;
+
+            if (immutableQuestionsBeforeSave.get(i).getAnswerText() == null && questionsBeforeSave[i].getAnswerText() == null || immutableQuestionsBeforeSave.get(i).getAnswerText().equals(questionsBeforeSave[i].getAnswerText())) {
+                currentAnswer = answersFromCurrentScreen.get(currentFormIndex);
+            } else {
+                currentAnswer = questionsBeforeSave[i].getAnswerValue();
+            }
+            try {
+                formController.saveOneScreenAnswers(currentFormIndex, currentAnswer, false);
+            } catch (JavaRosaException e) {
+                Timber.w(e);
+            }
+        }
+
         FormEntryPrompt[] questionsAfterSave = Collect.getInstance().getFormController().getQuestionPrompts();
 
         Map<FormIndex, FormEntryPrompt> questionsAfterSaveByIndex = new HashMap<>();

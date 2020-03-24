@@ -90,6 +90,10 @@ public class ImmutableDisplayableQuestion {
         return index;
     }
 
+    public String getAnswerText() {
+        return answerText;
+    }
+
     /**
      * Returns {@code true} if the provided {@link FormEntryPrompt} has the same user-visible
      * aspects, {@code false} otherwise.
