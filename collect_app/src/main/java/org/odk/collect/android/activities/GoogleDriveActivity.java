@@ -52,6 +52,7 @@ import org.odk.collect.android.storage.StoragePathProvider;
 import org.odk.collect.android.storage.StorageSubdirectory;
 import org.odk.collect.android.utilities.DialogUtils;
 import org.odk.collect.android.utilities.FileUtils;
+import org.odk.collect.android.utilities.ListSortingUtils;
 import org.odk.collect.android.utilities.PermissionUtils;
 import org.odk.collect.android.utilities.gdrive.DriveHelper;
 import org.odk.collect.android.utilities.gdrive.GoogleAccountsManager;
@@ -72,7 +73,7 @@ import timber.log.Timber;
 import static org.odk.collect.android.utilities.ListSortingUtils.FORMS_BY_NAME_ASC;
 import static org.odk.collect.android.utilities.gdrive.GoogleAccountsManager.showSettingsDialog;
 
-public class GoogleDriveActivity extends FormListActivity implements View.OnClickListener,
+public class GoogleDriveActivity extends AppListActivity implements View.OnClickListener,
         TaskListener, GoogleDriveFormDownloadListener, AdapterView.OnItemClickListener {
 
     private static final String DRIVE_DOWNLOAD_LIST_SORTING_ORDER = "driveDownloadListSortingOrder";
@@ -340,7 +341,7 @@ public class GoogleDriveActivity extends FormListActivity implements View.OnClic
                 return lhs.getType() == DriveListItem.DIR ? -1 : 1;
             } else {
                 int compareName = lhs.getName().compareToIgnoreCase(rhs.getName());
-                return getSortingOrder().equals(FORMS_BY_NAME_ASC) ? compareName : -compareName;
+                return ListSortingUtils.getFormSortingOrder(getSelectedSortingOrder()).equals(FORMS_BY_NAME_ASC) ? compareName : -compareName;
             }
         });
     }

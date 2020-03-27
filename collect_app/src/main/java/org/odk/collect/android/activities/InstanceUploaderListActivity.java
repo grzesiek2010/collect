@@ -55,6 +55,7 @@ import org.odk.collect.android.tasks.sms.SmsService;
 import org.odk.collect.android.tasks.sms.contracts.SmsSubmissionManagerContract;
 import org.odk.collect.android.tasks.sms.models.SmsSubmission;
 import org.odk.collect.android.upload.AutoSendWorker;
+import org.odk.collect.android.utilities.ListSortingUtils;
 import org.odk.collect.android.utilities.PermissionUtils;
 import org.odk.collect.android.utilities.PlayServicesUtil;
 import org.odk.collect.android.utilities.ToastUtils;
@@ -82,7 +83,7 @@ import static org.odk.collect.android.utilities.PermissionUtils.finishAllActivit
  * @author Yaw Anokwa (yanokwa@gmail.com)
  */
 
-public class InstanceUploaderListActivity extends InstanceListActivity implements
+public class InstanceUploaderListActivity extends AppListActivity implements
         OnLongClickListener, DiskSyncListener, AdapterView.OnItemClickListener, LoaderManager.LoaderCallbacks<Cursor> {
     private static final String SHOW_ALL_MODE = "showAllMode";
     private static final String INSTANCE_UPLOADER_LIST_SORTING_ORDER = "instanceUploaderListSortingOrder";
@@ -471,9 +472,9 @@ public class InstanceUploaderListActivity extends InstanceListActivity implement
     public Loader<Cursor> onCreateLoader(int id, Bundle args) {
         showProgressBar();
         if (showAllMode) {
-            return instancesDao.getCompletedUndeletedInstancesCursorLoader(getFilterText(), getSortingOrder());
+            return instancesDao.getCompletedUndeletedInstancesCursorLoader(getFilterText(), ListSortingUtils.getInstanceSortingOrder(getSelectedSortingOrder()));
         } else {
-            return instancesDao.getFinalizedInstancesCursorLoader(getFilterText(), getSortingOrder());
+            return instancesDao.getFinalizedInstancesCursorLoader(getFilterText(), ListSortingUtils.getInstanceSortingOrder(getSelectedSortingOrder()));
         }
     }
 

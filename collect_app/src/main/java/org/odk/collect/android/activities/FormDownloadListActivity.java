@@ -52,6 +52,7 @@ import org.odk.collect.android.utilities.ApplicationConstants;
 import org.odk.collect.android.utilities.AuthDialogUtility;
 import org.odk.collect.android.utilities.DialogUtils;
 import org.odk.collect.android.utilities.FormListDownloader;
+import org.odk.collect.android.utilities.ListSortingUtils;
 import org.odk.collect.android.utilities.PermissionUtils;
 import org.odk.collect.android.utilities.ToastUtils;
 import org.odk.collect.android.utilities.WebCredentialsUtils;
@@ -87,7 +88,7 @@ import static org.odk.collect.android.utilities.ListSortingUtils.FORMS_BY_NAME_A
  *
  * @author Carl Hartung (carlhartung@gmail.com)
  */
-public class FormDownloadListActivity extends FormListActivity implements FormListDownloaderListener,
+public class FormDownloadListActivity extends AppListActivity implements FormListDownloaderListener,
         DownloadFormsTaskListener, AuthDialogUtility.AuthDialogUtilityResultListener, AdapterView.OnItemClickListener {
     private static final String FORM_DOWNLOAD_LIST_SORTING_ORDER = "formDownloadListSortingOrder";
 
@@ -396,7 +397,7 @@ public class FormDownloadListActivity extends FormListActivity implements FormLi
         Collections.sort(filteredFormList, new Comparator<HashMap<String, String>>() {
             @Override
             public int compare(HashMap<String, String> lhs, HashMap<String, String> rhs) {
-                if (getSortingOrder().equals(FORMS_BY_NAME_ASC)) {
+                if (ListSortingUtils.getFormSortingOrder(getSelectedSortingOrder()).equals(FORMS_BY_NAME_ASC)) {
                     return lhs.get(FORMNAME).compareToIgnoreCase(rhs.get(FORMNAME));
                 } else {
                     return rhs.get(FORMNAME).compareToIgnoreCase(lhs.get(FORMNAME));

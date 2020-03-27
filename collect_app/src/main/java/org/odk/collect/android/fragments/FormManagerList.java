@@ -29,6 +29,7 @@ import org.odk.collect.android.listeners.DiskSyncListener;
 import org.odk.collect.android.provider.FormsProviderAPI.FormsColumns;
 import org.odk.collect.android.tasks.DeleteFormsTask;
 import org.odk.collect.android.tasks.DiskSyncTask;
+import org.odk.collect.android.utilities.ListSortingUtils;
 import org.odk.collect.android.utilities.ToastUtils;
 
 import androidx.annotation.NonNull;
@@ -42,7 +43,7 @@ import timber.log.Timber;
  * @author Carl Hartung (carlhartung@gmail.com)
  * @author Yaw Anokwa (yanokwa@gmail.com)
  */
-public class FormManagerList extends FormListFragment implements DiskSyncListener,
+public class FormManagerList extends FileManagerFragment implements DiskSyncListener,
         DeleteFormsListener, View.OnClickListener {
     private static final String FORM_MANAGER_LIST_SORTING_ORDER = "formManagerListSortingOrder";
     BackgroundTasks backgroundTasks; // handled across orientation changes
@@ -120,7 +121,7 @@ public class FormManagerList extends FormListFragment implements DiskSyncListene
 
     @Override
     protected CursorLoader getCursorLoader() {
-        return new FormsDao().getFormsCursorLoader(getFilterText(), getSortingOrder());
+        return new FormsDao().getFormsCursorLoader(getFilterText(), ListSortingUtils.getFormSortingOrder(getSelectedSortingOrder()));
     }
 
     /**

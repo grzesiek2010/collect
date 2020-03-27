@@ -36,6 +36,7 @@ import org.odk.collect.android.provider.FormsProviderAPI.FormsColumns;
 import org.odk.collect.android.storage.StorageInitializer;
 import org.odk.collect.android.tasks.DiskSyncTask;
 import org.odk.collect.android.utilities.ApplicationConstants;
+import org.odk.collect.android.utilities.ListSortingUtils;
 import org.odk.collect.android.utilities.MultiClickGuard;
 import org.odk.collect.android.utilities.PermissionUtils;
 
@@ -53,7 +54,7 @@ import static org.odk.collect.android.utilities.PermissionUtils.finishAllActivit
  * @author Yaw Anokwa (yanokwa@gmail.com)
  * @author Carl Hartung (carlhartung@gmail.com)
  */
-public class FormChooserListActivity extends FormListActivity implements
+public class FormChooserListActivity extends AppListActivity implements
         DiskSyncListener, AdapterView.OnItemClickListener, LoaderManager.LoaderCallbacks<Cursor> {
     private static final String FORM_CHOOSER_LIST_SORTING_ORDER = "formChooserListSortingOrder";
 
@@ -243,7 +244,7 @@ public class FormChooserListActivity extends FormListActivity implements
     public Loader<Cursor> onCreateLoader(int id, Bundle args) {
         showProgressBar();
 
-        return new FormsDao().getFormsCursorLoader(getFilterText(), getSortingOrder(), hideOldFormVersions());
+        return new FormsDao().getFormsCursorLoader(getFilterText(), ListSortingUtils.getFormSortingOrder(getSelectedSortingOrder()), hideOldFormVersions());
     }
 
     @Override

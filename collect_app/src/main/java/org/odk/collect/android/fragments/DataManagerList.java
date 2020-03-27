@@ -37,6 +37,7 @@ import org.odk.collect.android.provider.InstanceProviderAPI.InstanceColumns;
 import org.odk.collect.android.tasks.DeleteInstancesTask;
 import org.odk.collect.android.tasks.InstanceSyncTask;
 import org.odk.collect.android.tasks.sms.contracts.SmsSubmissionManagerContract;
+import org.odk.collect.android.utilities.ListSortingUtils;
 import org.odk.collect.android.utilities.ToastUtils;
 
 import java.util.Arrays;
@@ -53,7 +54,7 @@ import timber.log.Timber;
  * @author Carl Hartung (carlhartung@gmail.com)
  * @author Yaw Anokwa (yanokwa@gmail.com)
  */
-public class DataManagerList extends InstanceListFragment
+public class DataManagerList extends FileManagerFragment
         implements DeleteInstancesListener, DiskSyncListener, View.OnClickListener {
     private static final String DATA_MANAGER_LIST_SORTING_ORDER = "dataManagerListSortingOrder";
 
@@ -150,7 +151,7 @@ public class DataManagerList extends InstanceListFragment
 
     @Override
     protected CursorLoader getCursorLoader() {
-        return new InstancesDao().getSavedInstancesCursorLoader(getFilterText(), getSortingOrder());
+        return new InstancesDao().getSavedInstancesCursorLoader(getFilterText(), ListSortingUtils.getInstanceSortingOrder(getSelectedSortingOrder()));
     }
 
     /**

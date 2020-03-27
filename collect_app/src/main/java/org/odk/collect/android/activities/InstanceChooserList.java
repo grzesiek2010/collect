@@ -40,6 +40,7 @@ import org.odk.collect.android.provider.InstanceProviderAPI.InstanceColumns;
 import org.odk.collect.android.storage.StorageInitializer;
 import org.odk.collect.android.tasks.InstanceSyncTask;
 import org.odk.collect.android.utilities.ApplicationConstants;
+import org.odk.collect.android.utilities.ListSortingUtils;
 import org.odk.collect.android.utilities.MultiClickGuard;
 import org.odk.collect.android.utilities.PermissionUtils;
 
@@ -53,7 +54,7 @@ import static org.odk.collect.android.utilities.PermissionUtils.finishAllActivit
  * @author Yaw Anokwa (yanokwa@gmail.com)
  * @author Carl Hartung (carlhartung@gmail.com)
  */
-public class InstanceChooserList extends InstanceListActivity implements
+public class InstanceChooserList extends AppListActivity implements
         DiskSyncListener, AdapterView.OnItemClickListener, LoaderManager.LoaderCallbacks<Cursor> {
     private static final String INSTANCE_LIST_ACTIVITY_SORTING_ORDER = "instanceListActivitySortingOrder";
     private static final String VIEW_SENT_FORM_SORTING_ORDER = "ViewSentFormSortingOrder";
@@ -220,9 +221,9 @@ public class InstanceChooserList extends InstanceListActivity implements
     public Loader<Cursor> onCreateLoader(int id, Bundle args) {
         showProgressBar();
         if (editMode) {
-            return new InstancesDao().getUnsentInstancesCursorLoader(getFilterText(), getSortingOrder());
+            return new InstancesDao().getUnsentInstancesCursorLoader(getFilterText(), ListSortingUtils.getInstanceSortingOrder(getSelectedSortingOrder()));
         } else {
-            return new InstancesDao().getSentInstancesCursorLoader(getFilterText(), getSortingOrder());
+            return new InstancesDao().getSentInstancesCursorLoader(getFilterText(), ListSortingUtils.getInstanceSortingOrder(getSelectedSortingOrder()));
         }
     }
 
