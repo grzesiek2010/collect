@@ -13,38 +13,10 @@ limitations under the License.
 
 package org.odk.collect.android.fragments;
 
-import org.odk.collect.android.provider.InstanceProviderAPI.InstanceColumns;
-
-import static org.odk.collect.android.utilities.ApplicationConstants.SortingOrder.BY_DATE_ASC;
-import static org.odk.collect.android.utilities.ApplicationConstants.SortingOrder.BY_DATE_DESC;
-import static org.odk.collect.android.utilities.ApplicationConstants.SortingOrder.BY_NAME_ASC;
-import static org.odk.collect.android.utilities.ApplicationConstants.SortingOrder.BY_NAME_DESC;
-import static org.odk.collect.android.utilities.ApplicationConstants.SortingOrder.BY_STATUS_ASC;
-import static org.odk.collect.android.utilities.ApplicationConstants.SortingOrder.BY_STATUS_DESC;
+import org.odk.collect.android.utilities.ListSortingUtils;
 
 public abstract class InstanceListFragment extends FileManagerFragment {
     protected String getSortingOrder() {
-        String sortOrder = InstanceColumns.DISPLAY_NAME + " COLLATE NOCASE ASC, " + InstanceColumns.STATUS + " DESC";
-        switch (getSelectedSortingOrder()) {
-            case BY_NAME_ASC:
-                sortOrder = InstanceColumns.DISPLAY_NAME + " COLLATE NOCASE ASC, " + InstanceColumns.STATUS + " DESC";
-                break;
-            case BY_NAME_DESC:
-                sortOrder = InstanceColumns.DISPLAY_NAME + " COLLATE NOCASE DESC, " + InstanceColumns.STATUS + " DESC";
-                break;
-            case BY_DATE_ASC:
-                sortOrder = InstanceColumns.LAST_STATUS_CHANGE_DATE + " ASC";
-                break;
-            case BY_DATE_DESC:
-                sortOrder = InstanceColumns.LAST_STATUS_CHANGE_DATE + " DESC";
-                break;
-            case BY_STATUS_ASC:
-                sortOrder = InstanceColumns.STATUS + " ASC, " + InstanceColumns.DISPLAY_NAME + " COLLATE NOCASE ASC";
-                break;
-            case BY_STATUS_DESC:
-                sortOrder = InstanceColumns.STATUS + " DESC, " + InstanceColumns.DISPLAY_NAME + " COLLATE NOCASE ASC";
-                break;
-        }
-        return sortOrder;
+        return ListSortingUtils.getInstanceSortingOrder(getSelectedSortingOrder());
     }
 }
