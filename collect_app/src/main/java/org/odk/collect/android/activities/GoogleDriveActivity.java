@@ -69,6 +69,7 @@ import javax.inject.Inject;
 
 import timber.log.Timber;
 
+import static org.odk.collect.android.utilities.ListSortingUtils.FORMS_BY_NAME_ASC;
 import static org.odk.collect.android.utilities.gdrive.GoogleAccountsManager.showSettingsDialog;
 
 public class GoogleDriveActivity extends FormListActivity implements View.OnClickListener,
@@ -339,7 +340,7 @@ public class GoogleDriveActivity extends FormListActivity implements View.OnClic
                 return lhs.getType() == DriveListItem.DIR ? -1 : 1;
             } else {
                 int compareName = lhs.getName().compareToIgnoreCase(rhs.getName());
-                return getSortingOrder().equals(SORT_BY_NAME_ASC) ? compareName : -compareName;
+                return getSortingOrder().equals(FORMS_BY_NAME_ASC) ? compareName : -compareName;
             }
         });
     }

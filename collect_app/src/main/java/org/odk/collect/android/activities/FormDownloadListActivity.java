@@ -70,6 +70,7 @@ import timber.log.Timber;
 
 import static org.odk.collect.android.utilities.FormListDownloader.DL_AUTH_REQUIRED;
 import static org.odk.collect.android.utilities.FormListDownloader.DL_ERROR_MSG;
+import static org.odk.collect.android.utilities.ListSortingUtils.FORMS_BY_NAME_ASC;
 
 /**
  * Responsible for displaying, adding and deleting all the valid forms in the forms directory. One
@@ -395,7 +396,7 @@ public class FormDownloadListActivity extends FormListActivity implements FormLi
         Collections.sort(filteredFormList, new Comparator<HashMap<String, String>>() {
             @Override
             public int compare(HashMap<String, String> lhs, HashMap<String, String> rhs) {
-                if (getSortingOrder().equals(SORT_BY_NAME_ASC)) {
+                if (getSortingOrder().equals(FORMS_BY_NAME_ASC)) {
                     return lhs.get(FORMNAME).compareToIgnoreCase(rhs.get(FORMNAME));
                 } else {
                     return rhs.get(FORMNAME).compareToIgnoreCase(lhs.get(FORMNAME));
