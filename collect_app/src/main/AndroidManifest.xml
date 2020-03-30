@@ -121,6 +121,7 @@ the specific language governing permissions and limitations under the License.
             android:windowSoftInputMode="stateHidden" />
         <activity android:name=".activities.InstanceChooserList" />
         <activity android:name=".activities.FormChooserListActivity" />
+        <activity android:name=".formlist.FormChooserListActivity" />
         <activity android:name=".activities.FormDownloadListActivity" />
         <activity
             android:name=".activities.FileManagerTabs"
