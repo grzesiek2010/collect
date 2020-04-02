@@ -127,6 +127,27 @@ public class FormEntryPage extends Page<FormEntryPage> {
         return this;
     }
 
+    public FormEntryPage longPressOnView(int id, int index) {
+        onView(withIndex(withId(id), index)).perform(longClick());
+        try {
+            Thread.sleep(2000);
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        }
+        return this;
+    }
+
+    public FormEntryPage longPressOnView(String text) {
+        onView(withText(text)).perform(longClick());
+        return this;
+    }
+
+    public FormEntryPage removeResponse() {
+        onView(withText(R.string.clear_answer)).perform(click());
+        onView(withText(R.string.discard_answer)).perform(click());
+        return this;
+    }
+
     public FormEntryPage putTextOnIndex(int index, String text) {
         onView(withIndex(withClassName(endsWith("Text")), index)).perform(replaceText(text));
         return this;

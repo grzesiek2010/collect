@@ -1118,28 +1118,10 @@ public class FormEntryActivity extends CollectAbstractActivity implements Animat
         if (item.getItemId() == DELETE_REPEAT) {
             createDeleteRepeatConfirmDialog();
         } else {
-            /*
-             * We don't have the right view here, so we store the View's ID as the
-             * item ID and loop through the possible views to find the one the user
-             * clicked on.
-             */
-            boolean shouldClearDialogBeShown;
             ODKView odkView = getCurrentViewIfODKView();
             if (odkView != null) {
                 for (QuestionWidget qw : odkView.getWidgets()) {
-                    shouldClearDialogBeShown = false;
-                    if (qw instanceof StringWidget) {
-                        for (int i = 0; i < qw.getChildCount(); i++) {
-                            if (item.getItemId() == qw.getChildAt(i).getId()) {
-                                shouldClearDialogBeShown = true;
-                                break;
-                            }
-                        }
-                    } else if (item.getItemId() == qw.getId()) {
-                        shouldClearDialogBeShown = true;
-                    }
-
-                    if (shouldClearDialogBeShown) {
+                    if (item.getItemId() == qw.getId()) {
                         createClearDialog(qw);
                         break;
                     }
