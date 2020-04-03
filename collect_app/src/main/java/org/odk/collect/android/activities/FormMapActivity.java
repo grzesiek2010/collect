@@ -19,6 +19,7 @@ import android.content.ContentUris;
 import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
+import android.view.View;
 import android.view.Window;
 import android.widget.TextView;
 
@@ -28,12 +29,15 @@ import androidx.lifecycle.ViewModel;
 import androidx.lifecycle.ViewModelProvider;
 import androidx.lifecycle.ViewModelProviders;
 
+import com.google.android.material.bottomsheet.BottomSheetBehavior;
+
 import org.odk.collect.android.R;
 import org.odk.collect.android.activities.viewmodels.FormMapViewModel;
 import org.odk.collect.android.activities.viewmodels.FormMapViewModel.ClickAction;
 import org.odk.collect.android.activities.viewmodels.FormMapViewModel.MappableFormInstance;
 import org.odk.collect.android.dao.FormsDao;
 import org.odk.collect.android.forms.Form;
+import org.odk.collect.android.geo.ExampleBottomSheetDialog;
 import org.odk.collect.android.geo.MapFragment;
 import org.odk.collect.android.geo.MapPoint;
 import org.odk.collect.android.geo.MapProvider;
@@ -226,33 +230,37 @@ public class FormMapActivity extends BaseGeoMapActivity {
      * Reacts to a tap on a feature by showing a toast or switching activities to view or edit a form.
      */
     public void onFeatureClicked(int featureId) {
-        MappableFormInstance instance = instancesByFeatureId.get(featureId);
-        ClickAction clickAction = instance == null ? FormMapViewModel.ClickAction.NONE : instance.getClickAction();
+        ExampleBottomSheetDialog bottomSheet = new ExampleBottomSheetDialog();
+        bottomSheet.show(getSupportFragmentManager(), "exampleBottomSheet");
 
-        boolean canEditSaved = (Boolean) AdminSharedPreferences.getInstance().get(AdminKeys.KEY_EDIT_SAVED);
 
-        switch (clickAction) {
-            case DELETED_TOAST:
-                String deletedTime = getString(R.string.deleted_on_date_at_time);
-                String disabledMessage = new SimpleDateFormat(deletedTime,
-                        Locale.getDefault()).format(viewModel.getDeletedDateOf(instance.getDatabaseId()));
-
-                ToastUtils.showLongToast(disabledMessage);
-                break;
-            case NOT_VIEWABLE_TOAST:
-                ToastUtils.showLongToast(R.string.cannot_edit_completed_form);
-                break;
-            case OPEN_READ_ONLY:
-                startActivity(getViewOnlyFormInstanceIntentFor(featureId));
-                break;
-            case OPEN_EDIT:
-                if (canEditSaved) {
-                    startActivity(getEditFormInstanceIntentFor(featureId));
-                } else {
-                    startActivity(getViewOnlyFormInstanceIntentFor(featureId));
-                }
-                break;
-        }
+//        MappableFormInstance instance = instancesByFeatureId.get(featureId);
+//        ClickAction clickAction = instance == null ? FormMapViewModel.ClickAction.NONE : instance.getClickAction();
+//
+//        boolean canEditSaved = (Boolean) AdminSharedPreferences.getInstance().get(AdminKeys.KEY_EDIT_SAVED);
+//
+//        switch (clickAction) {
+//            case DELETED_TOAST:
+//                String deletedTime = getString(R.string.deleted_on_date_at_time);
+//                String disabledMessage = new SimpleDateFormat(deletedTime,
+//                        Locale.getDefault()).format(viewModel.getDeletedDateOf(instance.getDatabaseId()));
+//
+//                ToastUtils.showLongToast(disabledMessage);
+//                break;
+//            case NOT_VIEWABLE_TOAST:
+//                ToastUtils.showLongToast(R.string.cannot_edit_completed_form);
+//                break;
+//            case OPEN_READ_ONLY:
+//                startActivity(getViewOnlyFormInstanceIntentFor(featureId));
+//                break;
+//            case OPEN_EDIT:
+//                if (canEditSaved) {
+//                    startActivity(getEditFormInstanceIntentFor(featureId));
+//                } else {
+//                    startActivity(getViewOnlyFormInstanceIntentFor(featureId));
+//                }
+//                break;
+//        }
     }
 
     private Intent getEditFormInstanceIntentFor(int featureId) {

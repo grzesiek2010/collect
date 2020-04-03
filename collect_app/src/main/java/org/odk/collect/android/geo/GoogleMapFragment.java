@@ -375,6 +375,8 @@ public class GoogleMapFragment extends SupportMapFragment implements
     }
 
     @Override public boolean onMarkerClick(Marker marker) {
+        zoomToPoint(new MapPoint(marker.getPosition().latitude, marker.getPosition().longitude), false);
+
         if (featureClickListener != null) { // FormMapActivity
             featureClickListener.onFeature(findFeature(marker));
         } else { // GeoWidget
