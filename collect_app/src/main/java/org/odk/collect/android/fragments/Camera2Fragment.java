@@ -83,6 +83,8 @@ public class Camera2Fragment extends Fragment
         ORIENTATIONS.append(Surface.ROTATION_270, 270);
     }
 
+    private static final int STATE_NOT_READY = -1;
+
     /**
      * Camera state: Showing camera preview.
      */
@@ -183,6 +185,7 @@ public class Camera2Fragment extends Fragment
             cameraOpenCloseLock.release();
             Camera2Fragment.this.cameraDevice = cameraDevice;
             createCameraPreviewSession();
+            state = STATE_PREVIEW;
         }
 
         @Override
@@ -252,7 +255,7 @@ public class Camera2Fragment extends Fragment
      *
      * @see #captureCallback
      */
-    private int state = STATE_PREVIEW;
+    private int state = STATE_NOT_READY;
 
     /**
      * A {@link Semaphore} to prevent the app from exiting before closing the camera.
@@ -821,8 +824,10 @@ public class Camera2Fragment extends Fragment
     public void onClick(View view) {
         switch (view.getId()) {
             case R.id.texture: {
-                textureView.setClickable(false);
-                takePicture();
+                if (state != STATE_NOT_READY) {
+                    textureView.setClickable(false);
+                    takePicture();
+                }
                 break;
             }
         }
