@@ -26,6 +26,7 @@ import org.javarosa.core.services.properties.IPropertyRules;
 import org.odk.collect.android.application.Collect;
 import org.odk.collect.android.events.ReadPhoneStatePermissionRxEvent;
 import org.odk.collect.android.events.RxEventBus;
+import org.odk.collect.android.metadata.InstallIDProvider;
 import org.odk.collect.android.utilities.DeviceDetailsProvider;
 import org.odk.collect.android.utilities.PermissionUtils;
 
@@ -59,6 +60,7 @@ public class PropertyManager implements IPropertyManager {
     private static final String ANDROID6_FAKE_MAC = "02:00:00:00:00:00";
 
     public static final String SCHEME_USERNAME     = "username";
+    private static final String SCHEME_DEVICE_ID    = "deviceid";
     private static final String SCHEME_TEL          = "tel";
     private static final String SCHEME_MAILTO       = "mailto";
     private static final String SCHEME_IMSI         = "imsi";
@@ -76,6 +78,9 @@ public class PropertyManager implements IPropertyManager {
 
     @Inject
     PermissionUtils permissionUtils;
+
+    @Inject
+    InstallIDProvider installIDProvider;
 
     public String getName() {
         return "Property Manager";
@@ -101,8 +106,7 @@ public class PropertyManager implements IPropertyManager {
     public PropertyManager reload(Context context) {
         try {
             // Device-defined properties
-            IdAndPrefix idp = findDeviceId(context, deviceDetailsProvider);
-            putProperty(PROPMGR_DEVICE_ID,     idp.prefix,          idp.id);
+            putProperty(PROPMGR_DEVICE_ID,     SCHEME_DEVICE_ID,   installIDProvider.getInstallID());
             putProperty(PROPMGR_PHONE_NUMBER,  SCHEME_TEL,          deviceDetailsProvider.getLine1Number());
             putProperty(PROPMGR_SUBSCRIBER_ID, SCHEME_IMSI,         deviceDetailsProvider.getSubscriberId());
             putProperty(PROPMGR_SIM_SERIAL,    SCHEME_SIMSERIAL,    deviceDetailsProvider.getSimSerialNumber());
