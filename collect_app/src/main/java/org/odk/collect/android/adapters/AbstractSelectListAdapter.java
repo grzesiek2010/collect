@@ -29,6 +29,7 @@ import android.widget.Filter;
 import android.widget.Filterable;
 import android.widget.FrameLayout;
 import android.widget.ImageView;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
@@ -169,7 +170,10 @@ public abstract class AbstractSelectListAdapter extends RecyclerView.Adapter<Abs
 
                     if (bitmap != null) {
                         ImageView imageView = new ImageView(context);
-                        imageView.setImageBitmap(ImageConverter.scaleImageToNewWidth(bitmap, context.getResources().getDisplayMetrics().widthPixels / numColumns));
+                        if (!WidgetAppearanceUtils.isColumnsPack(getFormEntryPrompt())) {
+                            bitmap = ImageConverter.scaleImageToNewWidth(bitmap, context.getResources().getDisplayMetrics().widthPixels / numColumns);
+                        }
+                        imageView.setImageBitmap(bitmap);
                         imageView.setAdjustViewBounds(true);
                         view = imageView;
                     } else {
@@ -245,6 +249,12 @@ public abstract class AbstractSelectListAdapter extends RecyclerView.Adapter<Abs
                 view.setOnClickListener(v -> onItemClick(filteredItems.get(index).selection(), v));
                 view.setEnabled(!getFormEntryPrompt().isReadOnly());
             } else {
+                if (WidgetAppearanceUtils.isColumnsPack(getFormEntryPrompt())) {
+                    RelativeLayout.LayoutParams params = new RelativeLayout.LayoutParams(RelativeLayout.LayoutParams.WRAP_CONTENT, RelativeLayout.LayoutParams.WRAP_CONTENT);
+
+                    audioVideoImageTextLabel.findViewById(R.id.audio_video_image_text_label_container).setLayoutParams(params);
+                    audioVideoImageTextLabel.findViewById(R.id.image_text_label_container).setLayoutParams(params);
+                }
                 addMediaFromChoice(audioVideoImageTextLabel, index, createButton(index, audioVideoImageTextLabel), filteredItems);
                 audioVideoImageTextLabel.setEnabled(!getFormEntryPrompt().isReadOnly());
             }

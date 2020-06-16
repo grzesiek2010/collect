@@ -29,6 +29,9 @@ import androidx.recyclerview.widget.DividerItemDecoration;
 import androidx.recyclerview.widget.GridLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.google.android.flexbox.FlexDirection;
+import com.google.android.flexbox.FlexboxLayoutManager;
+
 import org.javarosa.core.model.SelectChoice;
 import org.odk.collect.android.R;
 import org.odk.collect.android.activities.FormEntryActivity;
@@ -68,10 +71,25 @@ public abstract class SelectWidget extends ItemsWidget {
     }
 
     protected RecyclerView setUpRecyclerView() {
-        numColumns = WidgetAppearanceUtils.getNumberOfColumns(getFormEntryPrompt(), getContext());
-
         RecyclerView recyclerView = (RecyclerView) LayoutInflater.from(getContext()).inflate(R.layout.recycler_view, null); // keep in an xml file to enable the vertical scrollbar
 
+        if (WidgetAppearanceUtils.isColumnsPack(getFormEntryPrompt())) {
+            setUpFlexboxLayout(recyclerView);
+        } else {
+            setUpGridLayout(recyclerView);
+        }
+
+        return recyclerView;
+    }
+
+    private void setUpFlexboxLayout(RecyclerView recyclerView) {
+        FlexboxLayoutManager layoutManager = new FlexboxLayoutManager(getContext());
+        layoutManager.setFlexDirection(FlexDirection.ROW);
+        recyclerView.setLayoutManager(layoutManager);
+    }
+
+    private void setUpGridLayout(RecyclerView recyclerView) {
+        numColumns = WidgetAppearanceUtils.getNumberOfColumns(getFormEntryPrompt(), getContext());
         if (numColumns == 1) {
             DividerItemDecoration divider = new DividerItemDecoration(getContext(), DividerItemDecoration.VERTICAL);
             Drawable drawable = ContextCompat.getDrawable(getContext(), R.drawable.inset_divider_64dp);
@@ -79,14 +97,12 @@ public abstract class SelectWidget extends ItemsWidget {
             if (android.os.Build.VERSION.SDK_INT <= Build.VERSION_CODES.LOLLIPOP_MR1) {
                 DrawableCompat.setTint(DrawableCompat.wrap(drawable), new ThemeUtils(getContext()).getColorOnSurface());
             }
-            
+
             divider.setDrawable(drawable);
             recyclerView.addItemDecoration(divider);
         }
 
         recyclerView.setLayoutManager(new GridLayoutManager(getContext(), numColumns));
-
-        return recyclerView;
     }
 
     void adjustRecyclerViewSize(AbstractSelectListAdapter adapter, RecyclerView recyclerView) {

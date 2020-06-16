@@ -171,4 +171,11 @@ public class WidgetAppearanceUtils {
     public static boolean useThousandSeparator(FormEntryPrompt prompt) {
         return getSanitizedAppearanceHint(prompt).contains(WidgetAppearanceUtils.THOUSANDS_SEP);
     }
+
+    public static boolean isColumnsPack(FormEntryPrompt prompt) {
+        String appearance = getSanitizedAppearanceHint(prompt);
+        return !appearance.startsWith(WidgetAppearanceUtils.COMPACT_N) && (appearance.startsWith(WidgetAppearanceUtils.COMPACT)
+                || appearance.startsWith(WidgetAppearanceUtils.QUICKCOMPACT)
+                || appearance.startsWith(WidgetAppearanceUtils.COLUMNS_PACK));
+    }
 }
