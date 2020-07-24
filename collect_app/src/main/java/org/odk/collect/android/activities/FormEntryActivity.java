@@ -723,6 +723,18 @@ public class FormEntryActivity extends CollectAbstractActivity implements Animat
                     ((DateWidget) qw).setBinaryData(date);
                     widgetValueChanged(qw);
                     return;
+                } else if (qw instanceof DateTimeWidget) {
+                    LocalDateTime date = new LocalDateTime()
+                            .withYear(year)
+                            .withMonthOfYear(month + 1)
+                            .withDayOfMonth(dayOfMonth)
+                            .withHourOfDay(0)
+                            .withMinuteOfHour(0)
+                            .withSecondOfMinute(0)
+                            .withMillisOfSecond(0);
+                    ((DateTimeWidget) qw).setBinaryData(date);
+                    widgetValueChanged(qw);
+                    return;
                 }
             }
         }
@@ -734,6 +746,10 @@ public class FormEntryActivity extends CollectAbstractActivity implements Animat
             for (QuestionWidget qw : ((ODKView) currentView).getWidgets()) {
                 if (qw instanceof TimeWidget) {
                     ((TimeWidget) qw).onTimeSet(view, hourOfDay, minute);
+                    widgetValueChanged(qw);
+                    return;
+                } else if (qw instanceof DateTimeWidget) {
+                    ((DateTimeWidget) qw).onTimeSet(view, hourOfDay, minute);
                     widgetValueChanged(qw);
                     return;
                 }
