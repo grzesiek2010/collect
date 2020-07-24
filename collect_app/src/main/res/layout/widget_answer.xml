@@ -9,10 +9,9 @@
         style="@style/Widget.Collect.Button.Custom"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:padding="@dimen/margin_small"
-        android:layout_marginStart="@dimen/margin_standard"
-        android:layout_marginEnd="@dimen/margin_standard"
-        android:layout_marginTop="@dimen/margin_extra_small">
+        android:layout_marginHorizontal="@dimen/margin_standard"
+        android:layout_marginTop="@dimen/margin_extra_small"
+        android:padding="@dimen/margin_small">
     </org.odk.collect.android.views.MultiClickSafeButton>
 
     <com.google.android.material.textview.MaterialTextView
@@ -20,8 +19,7 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginTop="@dimen/margin_extra_small"
-        android:paddingStart="@dimen/margin_standard"
-        android:paddingEnd="@dimen/margin_standard"
+        android:paddingHorizontal="@dimen/margin_standard"
         android:textColor="?colorOnSurface"
         android:textAppearance="@style/TextAppearance.Collect.Body1"
         />
