@@ -82,7 +82,7 @@ public class BearingWidget extends QuestionWidget implements BinaryDataReceiver,
             if (!isSensorAvailable) {
                 answer.setText(s);
             }
-            setBinaryData(s);
+            setData(s);
         }
         addAnswerView(answerLayout, WidgetViewUtils.getStandardMargin(context));
     }
@@ -107,7 +107,7 @@ public class BearingWidget extends QuestionWidget implements BinaryDataReceiver,
     }
 
     @Override
-    public void setBinaryData(Object answer) {
+    public void setData(Object answer) {
         this.answer.setText((String) answer);
         widgetValueChanged();
     }

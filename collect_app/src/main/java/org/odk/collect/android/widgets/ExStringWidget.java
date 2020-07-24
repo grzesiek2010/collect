@@ -143,7 +143,7 @@ public class ExStringWidget extends StringWidget implements BinaryDataReceiver, 
      * Allows answer to be set externally in {@link FormEntryActivity}.
      */
     @Override
-    public void setBinaryData(Object answer) {
+    public void setData(Object answer) {
         StringData stringData = ExternalAppsUtils.asStringData(answer);
         answerText.setText(stringData == null ? null : stringData.getValue().toString());
         widgetValueChanged();

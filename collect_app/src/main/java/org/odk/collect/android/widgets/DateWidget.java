@@ -99,13 +99,13 @@ public class DateWidget extends QuestionWidget implements BinaryDataReceiver {
 
     @Override
     public IAnswerData getAnswer() {
-        return !binding.widgetAnswerText.getText().equals(getContext().getString(R.string.no_date_selected))
-                ? new DateData(selectedDate.toDate())
-                : null;
+        return binding.widgetAnswerText.getText().equals(getContext().getString(R.string.no_date_selected))
+                ? null
+                : new DateData(selectedDate.toDate());
     }
 
     @Override
-    public void setBinaryData(Object answer) {
+    public void setData(Object answer) {
         if (answer instanceof LocalDateTime) {
             selectedDate = (LocalDateTime) answer;
 

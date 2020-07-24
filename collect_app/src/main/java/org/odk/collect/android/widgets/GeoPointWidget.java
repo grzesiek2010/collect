@@ -63,7 +63,7 @@ public class GeoPointWidget extends QuestionWidget implements BinaryDataReceiver
         boolean dataAvailable = false;
         if (stringAnswer != null && !stringAnswer.isEmpty()) {
             dataAvailable = true;
-            setBinaryData(stringAnswer);
+            setData(stringAnswer);
         }
         updateButtonLabelsAndVisibility(dataAvailable);
     }
@@ -118,7 +118,7 @@ public class GeoPointWidget extends QuestionWidget implements BinaryDataReceiver
     }
 
     @Override
-    public void setBinaryData(Object answer) {
+    public void setData(Object answer) {
         stringAnswer = (String) answer;
         binding.geoAnswerText.setText(getAnswerToDisplay(stringAnswer));
 

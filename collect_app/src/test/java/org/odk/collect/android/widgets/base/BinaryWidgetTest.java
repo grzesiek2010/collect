@@ -79,7 +79,7 @@ public abstract class BinaryWidgetTest<W extends Widget, A extends IAnswerData>
         A answer = getNextAnswer();
         Object binaryData = createBinaryData(answer);
 
-        ((BinaryDataReceiver) widget).setBinaryData(binaryData);
+        ((BinaryDataReceiver) widget).setData(binaryData);
 
         IAnswerData answerData = widget.getAnswer();
 
@@ -97,7 +97,7 @@ public abstract class BinaryWidgetTest<W extends Widget, A extends IAnswerData>
         A newAnswer = getNextAnswer();
         Object binaryData = createBinaryData(newAnswer);
 
-        ((BinaryDataReceiver) widget).setBinaryData(binaryData);
+        ((BinaryDataReceiver) widget).setData(binaryData);
 
         IAnswerData answerData = widget.getAnswer();
 

@@ -183,7 +183,7 @@ public class OSMWidget extends QuestionWidget implements BinaryDataReceiver, But
     }
 
     @Override
-    public void setBinaryData(Object answer) {
+    public void setData(Object answer) {
         // show file name of saved osm data
         osmFileName = (String) answer;
         osmFileNameTextView.setText(osmFileName);

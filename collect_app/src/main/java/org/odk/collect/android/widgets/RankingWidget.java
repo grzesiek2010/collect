@@ -88,7 +88,7 @@ public class RankingWidget extends ItemsWidget implements BinaryDataReceiver, Bu
     }
 
     @Override
-    public void setBinaryData(Object values) {
+    public void setData(Object values) {
         savedItems = (List<SelectChoice>) values;
         answerTextView.setText(getAnswerText());
     }

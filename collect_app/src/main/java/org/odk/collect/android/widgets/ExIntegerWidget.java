@@ -66,7 +66,7 @@ public class ExIntegerWidget extends ExStringWidget {
      * Allows answer to be set externally in {@link FormEntryActivity}.
      */
     @Override
-    public void setBinaryData(Object answer) {
+    public void setData(Object answer) {
         IntegerData integerData = ExternalAppsUtils.asIntegerData(answer);
         answerText.setText(integerData == null ? null : integerData.getValue().toString());
         widgetValueChanged();

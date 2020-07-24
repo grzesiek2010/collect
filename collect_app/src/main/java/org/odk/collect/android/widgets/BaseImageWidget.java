@@ -100,7 +100,7 @@ public abstract class BaseImageWidget extends QuestionWidget implements FileWidg
     }
 
     @Override
-    public void setBinaryData(Object newImageObj) {
+    public void setData(Object newImageObj) {
         // you are replacing an answer. delete the previous image using the
         // content provider.
         if (binaryName != null) {

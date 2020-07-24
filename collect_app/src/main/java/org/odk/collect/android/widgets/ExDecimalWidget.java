@@ -66,7 +66,7 @@ public class ExDecimalWidget extends ExStringWidget {
      * Allows answer to be set externally in {@link FormEntryActivity}.
      */
     @Override
-    public void setBinaryData(Object answer) {
+    public void setData(Object answer) {
         DecimalData decimalData = ExternalAppsUtils.asDecimalData(answer);
         answerText.setText(decimalData == null ? null : decimalData.getValue().toString());
         widgetValueChanged();

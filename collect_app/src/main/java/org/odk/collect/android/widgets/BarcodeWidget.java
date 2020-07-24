@@ -95,7 +95,7 @@ public class BarcodeWidget extends QuestionWidget implements BinaryDataReceiver,
      * Allows answer to be set externally in {@link FormEntryActivity}.
      */
     @Override
-    public void setBinaryData(Object answer) {
+    public void setData(Object answer) {
         String response = (String) answer;
         stringAnswer.setText(stripInvalidCharacters(response));
 

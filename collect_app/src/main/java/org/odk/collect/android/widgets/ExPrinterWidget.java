@@ -196,7 +196,7 @@ public class ExPrinterWidget extends QuestionWidget implements BinaryDataReceive
      * Allows answer to be set externally in {@link FormEntryActivity}.
      */
     @Override
-    public void setBinaryData(Object answer) {
+    public void setData(Object answer) {
     }
 
     @Override

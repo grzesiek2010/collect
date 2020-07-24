@@ -151,7 +151,7 @@ public class AudioWidget extends QuestionWidget implements FileWidget, ButtonCli
      * @see org.odk.collect.android.activities.FormEntryActivity#onActivityResult(int, int, Intent)
      */
     @Override
-    public void setBinaryData(Object object) {
+    public void setData(Object object) {
         File newAudio;
         // get the file path and create a copy in the instance folder
         if (object instanceof Uri) {

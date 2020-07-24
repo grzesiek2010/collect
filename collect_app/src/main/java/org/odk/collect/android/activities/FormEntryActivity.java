@@ -713,12 +713,12 @@ public class FormEntryActivity extends CollectAbstractActivity implements Animat
         if (currentView != null) {
             for (QuestionWidget qw : ((ODKView) currentView).getWidgets()) {
                 if (qw instanceof DateWidget) {
-                    ((DateWidget) qw).setBinaryData(DateTimeUtils.getLocalDateTime(
+                    ((DateWidget) qw).setData(DateTimeUtils.getLocalDateTime(
                             year, month + 1, dayOfMonth, 0, 0));
                     widgetValueChanged(qw);
                     return;
                 } else if (qw instanceof DateTimeWidget) {
-                    ((DateTimeWidget) qw).setBinaryData(DateTimeUtils.getLocalDateTime(
+                    ((DateTimeWidget) qw).setData(DateTimeUtils.getLocalDateTime(
                             year, month + 1, dayOfMonth, 0, 0));
                     widgetValueChanged(qw);
                     return;
@@ -733,12 +733,12 @@ public class FormEntryActivity extends CollectAbstractActivity implements Animat
             for (QuestionWidget qw : ((ODKView) currentView).getWidgets()) {
                 if (qw instanceof TimeWidget) {
                     view.clearFocus();
-                    ((TimeWidget) qw).setBinaryData(DateTimeUtils.getDateTime(hourOfDay, minute));
+                    ((TimeWidget) qw).setData(DateTimeUtils.getDateTime(hourOfDay, minute));
                     widgetValueChanged(qw);
                     return;
                 } else if (qw instanceof DateTimeWidget) {
                     view.clearFocus();
-                    ((DateTimeWidget) qw).setBinaryData(DateTimeUtils.getDateTime(hourOfDay, minute));
+                    ((DateTimeWidget) qw).setData(DateTimeUtils.getDateTime(hourOfDay, minute));
                     widgetValueChanged(qw);
                     return;
                 }
@@ -1043,7 +1043,7 @@ public class FormEntryActivity extends CollectAbstractActivity implements Animat
                 if (widget instanceof BinaryDataReceiver) {
                     if (waitingForDataRegistry.isWaitingForData(widget.getFormEntryPrompt().getIndex())) {
                         try {
-                            ((BinaryDataReceiver) widget).setBinaryData(data);
+                            ((BinaryDataReceiver) widget).setData(data);
                             waitingForDataRegistry.cancelWaitingForData();
                         } catch (Exception e) {
                             Timber.e(e);
