@@ -25,7 +25,8 @@ import android.widget.TextView;
 import org.javarosa.core.model.data.IAnswerData;
 import org.javarosa.core.model.data.StringData;
 import org.javarosa.form.api.FormEntryPrompt;
-import org.odk.collect.android.databinding.UrlWidgetAnswerBinding;
+import org.odk.collect.android.R;
+import org.odk.collect.android.databinding.WidgetAnswerBinding;
 import org.odk.collect.android.formentry.questions.QuestionDetails;
 import org.odk.collect.android.utilities.CustomTabHelper;
 import org.odk.collect.android.utilities.ToastUtils;
@@ -34,7 +35,7 @@ import org.odk.collect.android.utilities.ToastUtils;
 public class UrlWidget extends QuestionWidget {
 
     private final CustomTabHelper customTabHelper;
-    private UrlWidgetAnswerBinding binding;
+    private WidgetAnswerBinding binding;
 
     public UrlWidget(Context context, QuestionDetails questionDetails, CustomTabHelper customTabHelper) {
         super(context, questionDetails);
@@ -43,18 +44,20 @@ public class UrlWidget extends QuestionWidget {
 
     @Override
     protected View onCreateAnswerView(Context context, FormEntryPrompt prompt, int answerFontSize) {
-        binding = UrlWidgetAnswerBinding.inflate(((Activity) context).getLayoutInflater());
+        binding = WidgetAnswerBinding.inflate(((Activity) context).getLayoutInflater());
         View answerView = binding.getRoot();
 
         if (prompt.isReadOnly()) {
-            binding.urlButton.setVisibility(GONE);
+            binding.widgetButton.setVisibility(GONE);
         } else {
-            binding.urlButton.setTextSize(TypedValue.COMPLEX_UNIT_DIP, answerFontSize);
-            binding.urlButton.setOnClickListener(v -> onButtonClick());
+            binding.widgetButton.setTextSize(TypedValue.COMPLEX_UNIT_DIP, answerFontSize);
+            binding.widgetButton.setText(getContext().getString(R.string.open_url));
+            binding.widgetButton.setOnClickListener(v -> onButtonClick());
         }
 
-        binding.urlAnswerText.setTextSize(TypedValue.COMPLEX_UNIT_DIP, answerFontSize);
-        binding.urlAnswerText.setText(prompt.getAnswerText());
+        binding.widgetAnswerText.setGravity(TEXT_ALIGNMENT_CENTER);
+        binding.widgetAnswerText.setTextSize(TypedValue.COMPLEX_UNIT_DIP, answerFontSize);
+        binding.widgetAnswerText.setText(prompt.getAnswerText());
 
         return answerView;
     }
@@ -66,7 +69,7 @@ public class UrlWidget extends QuestionWidget {
 
     @Override
     public IAnswerData getAnswer() {
-        String answerText = binding.urlAnswerText.getText().toString();
+        String answerText = binding.widgetAnswerText.getText().toString();
         return !answerText.isEmpty()
                 ? new StringData(answerText)
                 : null;
@@ -74,14 +77,14 @@ public class UrlWidget extends QuestionWidget {
 
     @Override
     public void setOnLongClickListener(OnLongClickListener l) {
-        binding.urlButton.setOnLongClickListener(l);
+        binding.widgetButton.setOnLongClickListener(l);
     }
 
     @Override
     public void cancelLongPress() {
         super.cancelLongPress();
-        binding.urlButton.cancelLongPress();
-        binding.urlAnswerText.cancelLongPress();
+        binding.widgetButton.cancelLongPress();
+        binding.widgetAnswerText.cancelLongPress();
     }
 
     @Override
@@ -93,7 +96,7 @@ public class UrlWidget extends QuestionWidget {
     }
 
     public void onButtonClick() {
-        if (!isUrlEmpty(binding.urlAnswerText)) {
+        if (!isUrlEmpty(binding.widgetAnswerText)) {
             customTabHelper.bindCustomTabsService(getContext(), null);
             customTabHelper.openUri(getContext(), getUri());
         } else {
@@ -101,7 +104,7 @@ public class UrlWidget extends QuestionWidget {
         }
     }
 
-    protected UrlWidgetAnswerBinding getBinding() {
+    protected WidgetAnswerBinding getBinding() {
         return binding;
     }
 
@@ -111,6 +114,6 @@ public class UrlWidget extends QuestionWidget {
     }
 
     private Uri getUri() {
-        return Uri.parse(binding.urlAnswerText.getText().toString());
+        return Uri.parse(binding.widgetAnswerText.getText().toString());
     }
 }
