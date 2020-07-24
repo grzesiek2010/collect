@@ -136,6 +136,7 @@ import org.odk.collect.android.tasks.FormLoaderTask;
 import org.odk.collect.android.tasks.SaveFormIndexTask;
 import org.odk.collect.android.tasks.SavePointTask;
 import org.odk.collect.android.utilities.ApplicationConstants;
+import org.odk.collect.android.utilities.DateTimeUtils;
 import org.odk.collect.android.utilities.DestroyableLifecyleOwner;
 import org.odk.collect.android.utilities.DialogUtils;
 import org.odk.collect.android.utilities.FlingRegister;
@@ -712,27 +713,13 @@ public class FormEntryActivity extends CollectAbstractActivity implements Animat
         if (currentView != null) {
             for (QuestionWidget qw : ((ODKView) currentView).getWidgets()) {
                 if (qw instanceof DateWidget) {
-                    LocalDateTime date = new LocalDateTime()
-                            .withYear(year)
-                            .withMonthOfYear(month + 1)
-                            .withDayOfMonth(dayOfMonth)
-                            .withHourOfDay(0)
-                            .withMinuteOfHour(0)
-                            .withSecondOfMinute(0)
-                            .withMillisOfSecond(0);
-                    ((DateWidget) qw).setBinaryData(date);
+                    ((DateWidget) qw).setBinaryData(DateTimeUtils.getLocalDateTime(
+                            year, month + 1, dayOfMonth, 0, 0));
                     widgetValueChanged(qw);
                     return;
                 } else if (qw instanceof DateTimeWidget) {
-                    LocalDateTime date = new LocalDateTime()
-                            .withYear(year)
-                            .withMonthOfYear(month + 1)
-                            .withDayOfMonth(dayOfMonth)
-                            .withHourOfDay(0)
-                            .withMinuteOfHour(0)
-                            .withSecondOfMinute(0)
-                            .withMillisOfSecond(0);
-                    ((DateTimeWidget) qw).setBinaryData(date);
+                    ((DateTimeWidget) qw).setBinaryData(DateTimeUtils.getLocalDateTime(
+                            year, month + 1, dayOfMonth, 0, 0));
                     widgetValueChanged(qw);
                     return;
                 }
@@ -746,12 +733,12 @@ public class FormEntryActivity extends CollectAbstractActivity implements Animat
             for (QuestionWidget qw : ((ODKView) currentView).getWidgets()) {
                 if (qw instanceof TimeWidget) {
                     view.clearFocus();
-                    ((TimeWidget) qw).onTimeSet(hourOfDay, minute);
+                    ((TimeWidget) qw).setBinaryData(DateTimeUtils.getDateTime(hourOfDay, minute));
                     widgetValueChanged(qw);
                     return;
                 } else if (qw instanceof DateTimeWidget) {
                     view.clearFocus();
-                    ((DateTimeWidget) qw).onTimeSet(hourOfDay, minute);
+                    ((DateTimeWidget) qw).setBinaryData(DateTimeUtils.getDateTime(hourOfDay, minute));
                     widgetValueChanged(qw);
                     return;
                 }
@@ -2906,4 +2893,3 @@ public class FormEntryActivity extends CollectAbstractActivity implements Animat
         return !Objects.equals(mutableQuestionBeforeSave.getAnswerText(), immutableQuestionBeforeSave.getAnswerText());
     }
 }
-
