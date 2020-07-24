@@ -11,15 +11,13 @@ import androidx.appcompat.widget.SearchView;
 import androidx.appcompat.widget.Toolbar;
 import androidx.lifecycle.ViewModelProvider;
 
-import org.javarosa.core.model.data.helper.Selection;
 import org.jetbrains.annotations.NotNull;
 import org.odk.collect.android.R;
 import org.odk.collect.android.adapters.AbstractSelectListAdapter;
 import org.odk.collect.android.databinding.SelectMinimalDialogLayoutBinding;
 import org.odk.collect.android.fragments.viewmodels.SelectMinimalViewModel;
+import org.odk.collect.android.widgets.interfaces.BinaryDataReceiver;
 import org.odk.collect.material.MaterialFullScreenDialogFragment;
-
-import java.util.List;
 
 public class SelectMinimalDialog extends MaterialFullScreenDialogFragment {
     private SelectMinimalDialogLayoutBinding binding;
@@ -30,11 +28,7 @@ public class SelectMinimalDialog extends MaterialFullScreenDialogFragment {
 
     private SelectMinimalViewModel viewModel;
     private SearchView searchView;
-    private SelectMinimalDialogListener listener;
-
-    public interface SelectMinimalDialogListener {
-        void updateSelectedItems(List<Selection> items);
-    }
+    private BinaryDataReceiver listener;
 
     public SelectMinimalDialog() {
     }
@@ -48,8 +42,8 @@ public class SelectMinimalDialog extends MaterialFullScreenDialogFragment {
     @Override
     public void onAttach(@NotNull Context context) {
         super.onAttach(context);
-        if (context instanceof SelectMinimalDialogListener) {
-            listener = (SelectMinimalDialogListener) context;
+        if (context instanceof BinaryDataReceiver) {
+            listener = (BinaryDataReceiver) context;
         }
         viewModel = new ViewModelProvider(this, new SelectMinimalViewModel.Factory(selectListAdapter, isFlex, isAutocomplete)).get(SelectMinimalViewModel.class);
         if (viewModel.getSelectListAdapter() == null) {
@@ -79,14 +73,14 @@ public class SelectMinimalDialog extends MaterialFullScreenDialogFragment {
     @Override
     protected void onCloseClicked() {
         viewModel.getSelectListAdapter().getFilter().filter("");
-        listener.updateSelectedItems(viewModel.getSelectListAdapter().getSelectedItems());
+        listener.setBinaryData(viewModel.getSelectListAdapter().getSelectedItems());
         dismiss();
     }
 
     @Override
     protected void onBackPressed() {
         viewModel.getSelectListAdapter().getFilter().filter("");
-        listener.updateSelectedItems(viewModel.getSelectListAdapter().getSelectedItems());
+        listener.setBinaryData(viewModel.getSelectListAdapter().getSelectedItems());
         dismiss();
     }
 

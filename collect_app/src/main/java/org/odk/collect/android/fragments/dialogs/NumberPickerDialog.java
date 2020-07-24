@@ -19,7 +19,6 @@ package org.odk.collect.android.fragments.dialogs;
 import androidx.appcompat.app.AlertDialog;
 import android.app.Dialog;
 import android.content.Context;
-import android.content.DialogInterface;
 import android.os.Bundle;
 import androidx.fragment.app.DialogFragment;
 import android.view.LayoutInflater;
@@ -27,6 +26,7 @@ import android.view.View;
 import android.widget.NumberPicker;
 
 import org.odk.collect.android.R;
+import org.odk.collect.android.widgets.interfaces.BinaryDataReceiver;
 
 public class NumberPickerDialog extends DialogFragment {
 
@@ -35,15 +35,10 @@ public class NumberPickerDialog extends DialogFragment {
     public static final String DISPLAYED_VALUES = "displayedValues";
     public static final String PROGRESS = "progress";
 
-    public interface NumberPickerListener {
-        void onNumberPickerValueSelected(int widgetId, int value);
-    }
+    private BinaryDataReceiver listener;
 
-    private NumberPickerListener listener;
-
-    public static NumberPickerDialog newInstance(int widgetId, String[] displayedValues, int progress) {
+    public static NumberPickerDialog newInstance(String[] displayedValues, int progress) {
         Bundle bundle = new Bundle();
-        bundle.putInt(WIDGET_ID, widgetId);
         bundle.putSerializable(DISPLAYED_VALUES, displayedValues);
         bundle.putInt(PROGRESS, progress);
 
@@ -57,7 +52,7 @@ public class NumberPickerDialog extends DialogFragment {
         super.onAttach(context);
 
         try {
-            listener = (NumberPickerListener) context;
+            listener = (BinaryDataReceiver) context;
         } catch (ClassCastException e) {
             throw new ClassCastException(context.toString() + " must implement OnHeadlineSelectedListener");
         }
@@ -78,17 +73,8 @@ public class NumberPickerDialog extends DialogFragment {
         return new AlertDialog.Builder(getActivity())
                 .setTitle(R.string.number_picker_title)
                 .setView(view)
-                .setPositiveButton(R.string.ok,
-                        new DialogInterface.OnClickListener() {
-                            public void onClick(DialogInterface dialog, int whichButton) {
-                                listener.onNumberPickerValueSelected(getArguments().getInt(WIDGET_ID), numberPicker.getValue());
-                            }
-                        })
-                .setNegativeButton(R.string.cancel,
-                        new DialogInterface.OnClickListener() {
-                            public void onClick(DialogInterface dialog, int whichButton) {
-                            }
-                        })
+                .setPositiveButton(R.string.ok, (dialog, whichButton) -> listener.setBinaryData(numberPicker.getValue()))
+                .setNegativeButton(R.string.cancel, (dialog, whichButton) -> { })
                 .create();
     }
 }

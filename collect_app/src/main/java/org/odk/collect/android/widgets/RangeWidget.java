@@ -29,12 +29,14 @@ import android.widget.SeekBar;
 import android.widget.TextView;
 
 import org.javarosa.core.model.RangeQuestion;
+import org.joda.time.LocalDateTime;
 import org.odk.collect.android.R;
 import org.odk.collect.android.activities.FormEntryActivity;
 import org.odk.collect.android.formentry.questions.QuestionDetails;
 import org.odk.collect.android.formentry.questions.WidgetViewUtils;
 import org.odk.collect.android.fragments.dialogs.NumberPickerDialog;
 import org.odk.collect.android.utilities.ToastUtils;
+import org.odk.collect.android.widgets.interfaces.BinaryDataReceiver;
 import org.odk.collect.android.widgets.interfaces.ButtonClickListener;
 
 import java.math.BigDecimal;
@@ -45,7 +47,7 @@ import static org.odk.collect.android.formentry.questions.WidgetViewUtils.create
 import static org.odk.collect.android.formentry.questions.WidgetViewUtils.createSimpleButton;
 
 @SuppressWarnings("BigDecimalMethodWithoutRoundingCalled")
-public abstract class RangeWidget extends QuestionWidget implements ButtonClickListener, SeekBar.OnSeekBarChangeListener {
+public abstract class RangeWidget extends QuestionWidget implements ButtonClickListener, SeekBar.OnSeekBarChangeListener, BinaryDataReceiver {
 
     private static final String VERTICAL_APPEARANCE = "vertical";
     private static final String NO_TICKS_APPEARANCE = "no-ticks";
@@ -266,21 +268,24 @@ public abstract class RangeWidget extends QuestionWidget implements ButtonClickL
         view.findViewById(hiddenSeekBarId).setVisibility(GONE);
     }
 
-    public void setNumberPickerValue(int value) {
-        if (rangeStart.compareTo(rangeEnd) == -1) {
-            actualValue = rangeStart.add(new BigDecimal(elementCount - value).multiply(rangeStep));
-        } else {
-            actualValue = rangeStart.subtract(new BigDecimal(elementCount - value).multiply(rangeStep));
+    @Override
+    public void setBinaryData(Object answer) {
+        if (answer instanceof Integer) {
+            if (rangeStart.compareTo(rangeEnd) == -1) {
+                actualValue = rangeStart.add(new BigDecimal(elementCount - (int) answer).multiply(rangeStep));
+            } else {
+                actualValue = rangeStart.subtract(new BigDecimal(elementCount - (int) answer).multiply(rangeStep));
+            }
+
+            progress = actualValue.subtract(rangeStart).abs().divide(rangeStep).intValue();
+
+            answerTextView.setText(String.valueOf(actualValue));
+            pickerButton.setText(R.string.edit_value);
         }
-
-        progress = actualValue.subtract(rangeStart).abs().divide(rangeStep).intValue();
-
-        answerTextView.setText(String.valueOf(actualValue));
-        pickerButton.setText(R.string.edit_value);
     }
 
     private void showNumberPickerDialog() {
-        NumberPickerDialog dialog = NumberPickerDialog.newInstance(getId(), displayedValuesForNumberPicker, progress);
+        NumberPickerDialog dialog = NumberPickerDialog.newInstance(displayedValuesForNumberPicker, progress);
 
         try {
             dialog.show(((FormEntryActivity) getContext()).getSupportFragmentManager(), NumberPickerDialog.NUMBER_PICKER_DIALOG_TAG);

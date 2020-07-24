@@ -43,20 +43,17 @@ import org.odk.collect.android.adapters.RankingListAdapter;
 import org.odk.collect.android.fragments.viewmodels.RankingViewModel;
 import org.odk.collect.android.utilities.QuestionFontSizeUtils;
 import org.odk.collect.android.utilities.RankingItemTouchHelperCallback;
+import org.odk.collect.android.widgets.interfaces.BinaryDataReceiver;
 
 import java.util.ArrayList;
 import java.util.List;
 
 public class RankingWidgetDialog extends DialogFragment {
-    private RankingListener listener;
+    private BinaryDataReceiver listener;
     private RankingListAdapter rankingListAdapter;
     private List<SelectChoice> items;
     private FormIndex formIndex;
     private RankingViewModel viewModel;
-
-    public interface RankingListener {
-        void onRankingChanged(List<SelectChoice> items);
-    }
 
     public RankingWidgetDialog() {
     }
@@ -69,8 +66,8 @@ public class RankingWidgetDialog extends DialogFragment {
     @Override
     public void onAttach(@NotNull Context context) {
         super.onAttach(context);
-        if (context instanceof RankingListener) {
-            listener = (RankingListener) context;
+        if (context instanceof BinaryDataReceiver) {
+            listener = (BinaryDataReceiver) context;
         }
         viewModel = new ViewModelProvider(this, new RankingViewModel.Factory(items, formIndex)).get(RankingViewModel.class);
         if (viewModel.getItems() == null) {
@@ -83,7 +80,7 @@ public class RankingWidgetDialog extends DialogFragment {
         return new Builder(getActivity())
                 .setView(setUpRankingLayout())
                 .setPositiveButton(string.ok, (dialog, id) -> {
-                    listener.onRankingChanged(rankingListAdapter.getItems());
+                    listener.setBinaryData(rankingListAdapter.getItems());
                     dismiss();
                 })
                 .setNegativeButton(string.cancel, (dialog, id) -> dismiss())

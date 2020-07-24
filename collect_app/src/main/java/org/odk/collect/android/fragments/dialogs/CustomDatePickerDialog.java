@@ -34,6 +34,7 @@ import org.odk.collect.android.application.Collect;
 import org.odk.collect.android.logic.DatePickerDetails;
 import org.odk.collect.android.javarosawrapper.FormController;
 import org.odk.collect.android.utilities.DateTimeUtils;
+import org.odk.collect.android.widgets.interfaces.BinaryDataReceiver;
 
 /**
  * @author Grzegorz Orczykowski (gorczykowski@soldevelo.com)
@@ -57,17 +58,13 @@ public abstract class CustomDatePickerDialog extends DialogFragment {
 
     private DatePickerDetails datePickerDetails;
 
-    private CustomDatePickerDialogListener listener;
-
-    public interface CustomDatePickerDialogListener {
-        void onDateChanged(LocalDateTime date);
-    }
+    private BinaryDataReceiver listener;
 
     @Override
     public void onAttach(Context context) {
         super.onAttach(context);
-        if (context instanceof CustomDatePickerDialogListener) {
-            listener = (CustomDatePickerDialogListener) context;
+        if (context instanceof BinaryDataReceiver) {
+            listener = (BinaryDataReceiver) context;
         }
     }
 
@@ -97,7 +94,7 @@ public abstract class CustomDatePickerDialog extends DialogFragment {
                         if (formController != null) {
                             formController.setIndexWaitingForData(formIndex);
                         }
-                        listener.onDateChanged(getDateAsGregorian(getOriginalDate()));
+                        listener.setBinaryData(getDateAsGregorian(getOriginalDate()));
                         dismiss();
                     }
                 })
