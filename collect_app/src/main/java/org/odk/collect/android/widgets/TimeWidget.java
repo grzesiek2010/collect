@@ -30,8 +30,6 @@ import org.odk.collect.android.formentry.questions.QuestionDetails;
 import org.odk.collect.android.widgets.interfaces.BinaryDataReceiver;
 import org.odk.collect.android.widgets.utilities.DateTimeWidgetUtils;
 
-import java.util.Date;
-
 @SuppressLint("ViewConstructor")
 public class TimeWidget extends QuestionWidget implements BinaryDataReceiver {
     WidgetAnswerBinding binding;
