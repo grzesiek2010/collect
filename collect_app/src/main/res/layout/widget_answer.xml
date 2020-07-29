@@ -2,14 +2,15 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:orientation="vertical"
     android:layout_width="match_parent"
-    android:layout_height="wrap_content">
+    android:layout_height="wrap_content"
+    android:paddingVertical="@dimen/margin_small"
+    android:paddingHorizontal="@dimen/margin_standard">
 
     <org.odk.collect.android.views.MultiClickSafeButton
         android:id="@+id/widget_button"
         style="@style/Widget.Collect.Button.Custom"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginHorizontal="@dimen/margin_standard"
         android:layout_marginTop="@dimen/margin_extra_small"
         android:padding="@dimen/margin_small">
     </org.odk.collect.android.views.MultiClickSafeButton>
@@ -19,7 +20,6 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginTop="@dimen/margin_extra_small"
-        android:paddingHorizontal="@dimen/margin_standard"
         android:textColor="?colorOnSurface"
         android:textAppearance="@style/TextAppearance.Collect.Body1"
         />
