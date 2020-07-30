@@ -2647,6 +2647,7 @@ public class FormEntryActivity extends CollectAbstractActivity implements Animat
 
     @Override
     public void onDateSet(DatePicker view, int year, int month, int dayOfMonth) {
+        view.clearFocus();
         if (getCurrentViewIfODKView() != null) {
             QuestionWidget widgetGettingNewValue = getWidgetWaitingForBinaryData();
             setBinaryWidgetData(DateTimeUtils.getLocalDateTime(
@@ -2657,6 +2658,7 @@ public class FormEntryActivity extends CollectAbstractActivity implements Animat
 
     @Override
     public void onTimeSet(TimePicker view, int hourOfDay, int minute) {
+        view.clearFocus();
         if (getCurrentViewIfODKView() != null) {
             QuestionWidget widgetGettingNewValue = getWidgetWaitingForBinaryData();
             setBinaryWidgetData(DateTimeUtils.getDateTime(hourOfDay, minute));
