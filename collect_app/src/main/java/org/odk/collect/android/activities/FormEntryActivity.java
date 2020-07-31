@@ -14,8 +14,6 @@
 
 package org.odk.collect.android.activities;
 
-import android.app.DatePickerDialog;
-import android.app.TimePickerDialog;
 import android.content.BroadcastReceiver;
 import android.content.ContentValues;
 import android.content.Context;
@@ -45,12 +43,10 @@ import android.view.ViewGroup.LayoutParams;
 import android.view.animation.Animation;
 import android.view.animation.Animation.AnimationListener;
 import android.widget.CheckBox;
-import android.widget.DatePicker;
 import android.widget.EditText;
 import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
-import android.widget.TimePicker;
 
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AlertDialog;
@@ -134,7 +130,6 @@ import org.odk.collect.android.tasks.FormLoaderTask;
 import org.odk.collect.android.tasks.SaveFormIndexTask;
 import org.odk.collect.android.tasks.SavePointTask;
 import org.odk.collect.android.utilities.ApplicationConstants;
-import org.odk.collect.android.utilities.DateTimeUtils;
 import org.odk.collect.android.utilities.DestroyableLifecyleOwner;
 import org.odk.collect.android.utilities.DialogUtils;
 import org.odk.collect.android.utilities.FlingRegister;
@@ -206,8 +201,7 @@ public class FormEntryActivity extends CollectAbstractActivity implements Animat
         RankingWidgetDialog.RankingListener, SaveFormIndexTask.SaveFormIndexListener,
         WidgetValueChangedListener, ScreenContext, FormLoadingDialogFragment.FormLoadingDialogFragmentListener,
         AudioControllerView.SwipableParent, FormIndexAnimationHandler.Listener,
-        QuitFormDialogFragment.Listener, DeleteRepeatDialogFragment.DeleteRepeatDialogCallback,
-        DatePickerDialog.OnDateSetListener, TimePickerDialog.OnTimeSetListener {
+        QuitFormDialogFragment.Listener, DeleteRepeatDialogFragment.DeleteRepeatDialogCallback {
 
     // Defines for FormEntryActivity
     private static final boolean EXIT = true;
@@ -2642,27 +2636,6 @@ public class FormEntryActivity extends CollectAbstractActivity implements Animat
                     return;
                 }
             }
-        }
-    }
-
-    @Override
-    public void onDateSet(DatePicker view, int year, int month, int dayOfMonth) {
-        view.clearFocus();
-        if (getCurrentViewIfODKView() != null) {
-            QuestionWidget widgetGettingNewValue = getWidgetWaitingForBinaryData();
-            setBinaryWidgetData(DateTimeUtils.getLocalDateTime(
-                    year, month + 1, dayOfMonth, 0, 0));
-            widgetValueChanged(widgetGettingNewValue);
-        }
-    }
-
-    @Override
-    public void onTimeSet(TimePicker view, int hourOfDay, int minute) {
-        view.clearFocus();
-        if (getCurrentViewIfODKView() != null) {
-            QuestionWidget widgetGettingNewValue = getWidgetWaitingForBinaryData();
-            setBinaryWidgetData(DateTimeUtils.getLocalDateTime(0, 1, 1, hourOfDay, minute));
-            widgetValueChanged(widgetGettingNewValue);
         }
     }
 
