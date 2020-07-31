@@ -21,7 +21,9 @@ import org.javarosa.form.api.FormEntryPrompt;
 import org.odk.collect.android.application.Collect;
 import org.odk.collect.android.formentry.questions.QuestionDetails;
 import org.odk.collect.android.utilities.CustomTabHelper;
+import org.odk.collect.android.utilities.ScreenContext;
 import org.odk.collect.android.utilities.WidgetAppearanceUtils;
+import org.odk.collect.android.widgets.utilities.DateTimeWidgetUtils;
 import org.odk.collect.android.widgets.utilities.WaitingForDataRegistry;
 
 import static org.odk.collect.android.utilities.WidgetAppearanceUtils.MAPS;
@@ -57,13 +59,13 @@ public class WidgetFactory {
             case Constants.CONTROL_INPUT:
                 switch (prompt.getDataType()) {
                     case Constants.DATATYPE_DATE_TIME:
-                        questionWidget = new DateTimeWidget(context, questionDetails);
+                        questionWidget = new DateTimeWidget(context, questionDetails, ((ScreenContext) context).getViewLifecycle(), new DateTimeWidgetUtils());
                         break;
                     case Constants.DATATYPE_DATE:
-                        questionWidget = new DateWidget(context, questionDetails);
+                        questionWidget = new DateWidget(context, questionDetails, ((ScreenContext) context).getViewLifecycle(), new DateTimeWidgetUtils());
                         break;
                     case Constants.DATATYPE_TIME:
-                        questionWidget = new TimeWidget(context, questionDetails);
+                        questionWidget = new TimeWidget(context, questionDetails, ((ScreenContext) context).getViewLifecycle(), new DateTimeWidgetUtils());
                         break;
                     case Constants.DATATYPE_DECIMAL:
                         if (appearance.startsWith(WidgetAppearanceUtils.EX)) {
