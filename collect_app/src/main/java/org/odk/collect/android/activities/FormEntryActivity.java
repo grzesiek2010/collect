@@ -15,6 +15,7 @@
 package org.odk.collect.android.activities;
 
 import android.app.DatePickerDialog;
+import android.app.TimePickerDialog;
 import android.content.BroadcastReceiver;
 import android.content.ContentValues;
 import android.content.Context;
@@ -49,6 +50,7 @@ import android.widget.EditText;
 import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
+import android.widget.TimePicker;
 
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AlertDialog;
@@ -154,6 +156,7 @@ import org.odk.collect.android.widgets.RangeWidget;
 import org.odk.collect.android.widgets.interfaces.BinaryDataReceiver;
 import org.odk.collect.android.widgets.utilities.FormControllerWaitingForDataRegistry;
 import org.odk.collect.android.widgets.utilities.WaitingForDataRegistry;
+import org.odk.collect.android.widgets.TimeWidget;
 
 import java.io.File;
 import java.io.FileOutputStream;
@@ -208,7 +211,7 @@ public class FormEntryActivity extends CollectAbstractActivity implements Animat
         ScreenContext, FormLoadingDialogFragment.FormLoadingDialogFragmentListener,
         AudioControllerView.SwipableParent, FormIndexAnimationHandler.Listener,
         QuitFormDialogFragment.Listener, DeleteRepeatDialogFragment.DeleteRepeatDialogCallback,
-        DatePickerDialog.OnDateSetListener {
+        DatePickerDialog.OnDateSetListener, TimePickerDialog.OnTimeSetListener {
 
     // Defines for FormEntryActivity
     private static final boolean EXIT = true;
@@ -718,6 +721,19 @@ public class FormEntryActivity extends CollectAbstractActivity implements Animat
                             .withSecondOfMinute(0)
                             .withMillisOfSecond(0);
                     ((DateWidget) qw).setBinaryData(date);
+                    widgetValueChanged(qw);
+                    return;
+                }
+            }
+        }
+    }
+
+    @Override
+    public void onTimeSet(TimePicker view, int hourOfDay, int minute) {
+        if (currentView != null) {
+            for (QuestionWidget qw : ((ODKView) currentView).getWidgets()) {
+                if (qw instanceof TimeWidget) {
+                    ((TimeWidget) qw).onTimeSet(view, hourOfDay, minute);
                     widgetValueChanged(qw);
                     return;
                 }
