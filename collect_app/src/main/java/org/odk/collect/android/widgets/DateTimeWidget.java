@@ -29,7 +29,7 @@ import org.odk.collect.android.R;
 import org.odk.collect.android.activities.FormEntryActivity;
 import org.odk.collect.android.databinding.DateTimeWidgetAnswerBinding;
 import org.odk.collect.android.formentry.questions.QuestionDetails;
-import org.odk.collect.android.widgets.interfaces.BinaryDataReceiver;
+import org.odk.collect.android.widgets.interfaces.WidgetDataReceiver;
 import org.odk.collect.android.logic.DatePickerDetails;
 import org.odk.collect.android.utilities.DateTimeUtils;
 import org.odk.collect.android.widgets.utilities.DateTimeWidgetUtils;
@@ -39,7 +39,7 @@ import org.odk.collect.android.widgets.utilities.DateTimeWidgetUtils;
  * exist.
  */
 @SuppressLint("ViewConstructor")
-public class DateTimeWidget extends QuestionWidget implements BinaryDataReceiver {
+public class DateTimeWidget extends QuestionWidget implements WidgetDataReceiver {
     DateTimeWidgetAnswerBinding binding;
 
     private LocalDateTime selectedDate;

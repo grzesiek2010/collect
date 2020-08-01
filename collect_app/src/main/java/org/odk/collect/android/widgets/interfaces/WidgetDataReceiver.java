@@ -14,6 +14,6 @@
 
 package org.odk.collect.android.widgets.interfaces;
 
-public interface BinaryDataReceiver {
+public interface WidgetDataReceiver {
     void setData(Object answer);
 }

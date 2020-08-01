@@ -31,7 +31,7 @@ import org.odk.collect.android.databinding.GeoWidgetAnswerBinding;
 import org.odk.collect.android.formentry.questions.QuestionDetails;
 import org.odk.collect.android.listeners.PermissionListener;
 import org.odk.collect.android.utilities.MultiClickGuard;
-import org.odk.collect.android.widgets.interfaces.BinaryDataReceiver;
+import org.odk.collect.android.widgets.interfaces.WidgetDataReceiver;
 import org.odk.collect.android.widgets.utilities.GeoWidgetUtils;
 import org.odk.collect.android.widgets.utilities.WaitingForDataRegistry;
 
@@ -41,7 +41,7 @@ import static org.odk.collect.android.widgets.GeoPointMapWidget.DEFAULT_LOCATION
 import static org.odk.collect.android.widgets.GeoPointMapWidget.LOCATION;
 
 @SuppressLint("ViewConstructor")
-public class GeoPointWidget extends QuestionWidget implements BinaryDataReceiver {
+public class GeoPointWidget extends QuestionWidget implements WidgetDataReceiver {
 
     private final WaitingForDataRegistry waitingForDataRegistry;
     private final double accuracyThreshold;

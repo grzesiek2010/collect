@@ -25,7 +25,7 @@ import org.odk.collect.android.formentry.questions.QuestionDetails;
 import org.odk.collect.android.formentry.questions.WidgetViewUtils;
 import org.odk.collect.android.javarosawrapper.FormController;
 import org.odk.collect.android.utilities.FileUtils;
-import org.odk.collect.android.widgets.interfaces.BinaryDataReceiver;
+import org.odk.collect.android.widgets.interfaces.WidgetDataReceiver;
 import org.odk.collect.android.widgets.interfaces.ButtonClickListener;
 import org.odk.collect.android.widgets.utilities.WaitingForDataRegistry;
 
@@ -42,7 +42,7 @@ import static org.odk.collect.android.utilities.ApplicationConstants.RequestCode
  * @author Nicholas Hallahan nhallahan@spatialdev.com
  */
 @SuppressLint("ViewConstructor")
-public class OSMWidget extends QuestionWidget implements BinaryDataReceiver, ButtonClickListener {
+public class OSMWidget extends QuestionWidget implements WidgetDataReceiver, ButtonClickListener {
 
     // button colors
     private static final int OSM_GREEN = Color.rgb(126, 188, 111);

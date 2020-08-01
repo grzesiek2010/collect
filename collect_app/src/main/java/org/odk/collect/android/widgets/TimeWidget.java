@@ -27,11 +27,11 @@ import org.odk.collect.android.R;
 import org.odk.collect.android.activities.FormEntryActivity;
 import org.odk.collect.android.databinding.WidgetAnswerBinding;
 import org.odk.collect.android.formentry.questions.QuestionDetails;
-import org.odk.collect.android.widgets.interfaces.BinaryDataReceiver;
+import org.odk.collect.android.widgets.interfaces.WidgetDataReceiver;
 import org.odk.collect.android.widgets.utilities.DateTimeWidgetUtils;
 
 @SuppressLint("ViewConstructor")
-public class TimeWidget extends QuestionWidget implements BinaryDataReceiver {
+public class TimeWidget extends QuestionWidget implements WidgetDataReceiver {
     WidgetAnswerBinding binding;
 
     private DateTime selectedTime;
