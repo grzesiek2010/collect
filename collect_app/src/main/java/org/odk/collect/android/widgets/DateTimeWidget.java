@@ -31,7 +31,6 @@ import org.odk.collect.android.databinding.DateTimeWidgetAnswerBinding;
 import org.odk.collect.android.formentry.questions.QuestionDetails;
 import org.odk.collect.android.logic.DatePickerDetails;
 import org.odk.collect.android.utilities.DateTimeUtils;
-import org.odk.collect.android.widgets.interfaces.DateTimeWidgetListener;
 import org.odk.collect.android.widgets.interfaces.WidgetDataReceiver;
 import org.odk.collect.android.widgets.utilities.DateTimeWidgetUtils;
 
@@ -43,12 +42,12 @@ import org.odk.collect.android.widgets.utilities.DateTimeWidgetUtils;
 public class DateTimeWidget extends QuestionWidget implements WidgetDataReceiver {
     DateTimeWidgetAnswerBinding binding;
 
-    private final DateTimeWidgetListener listener;
+    private final DateTimeWidgetUtils listener;
 
     private LocalDateTime selectedDateTime;
     private DatePickerDetails datePickerDetails;
 
-    public DateTimeWidget(Context context, QuestionDetails prompt, DateTimeWidgetListener listener) {
+    public DateTimeWidget(Context context, QuestionDetails prompt, DateTimeWidgetUtils listener) {
         super(context, prompt);
         this.listener = listener;
     }

@@ -30,7 +30,6 @@ import org.odk.collect.android.utilities.MyanmarDateUtils;
 import org.odk.collect.android.utilities.ScreenContext;
 import org.odk.collect.android.utilities.ThemeUtils;
 import org.odk.collect.android.utilities.WidgetAppearanceUtils;
-import org.odk.collect.android.widgets.interfaces.DateTimeWidgetListener;
 
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
@@ -46,23 +45,20 @@ import mmcalendar.MyanmarDate;
 import mmcalendar.MyanmarDateConverter;
 import timber.log.Timber;
 
-public class DateTimeWidgetUtils implements DateTimeWidgetListener {
+public class DateTimeWidgetUtils {
     public static final String FORM_INDEX = "formIndex";
     public static final String DATE = "date";
     public static final String DATE_PICKER_DETAILS = "datePickerDetails";
     public static final String DATE_PICKER_THEME = "datePickerTheme";
 
-    @Override
     public void setWidgetWaitingForData(FormIndex formIndex) {
         setWaitingForData(formIndex);
     }
 
-    @Override
     public void displayDatePickerDialog(Context context, FormIndex formIndex, DatePickerDetails datePickerDetails, LocalDateTime selectedDate) {
         showDatePickerDialog(context, formIndex, datePickerDetails, selectedDate);
     }
 
-    @Override
     public void displayTimePickerDialog(Context context, LocalDateTime selectedTime) {
         showTimePickerDialog(context, selectedTime);
     }

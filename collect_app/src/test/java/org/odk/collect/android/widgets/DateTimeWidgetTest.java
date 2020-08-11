@@ -18,7 +18,6 @@ import org.odk.collect.android.listeners.WidgetValueChangedListener;
 import org.odk.collect.android.logic.DatePickerDetails;
 import org.odk.collect.android.support.TestScreenContextActivity;
 import org.odk.collect.android.utilities.DateTimeUtils;
-import org.odk.collect.android.widgets.interfaces.DateTimeWidgetListener;
 import org.odk.collect.android.widgets.utilities.DateTimeWidgetUtils;
 import org.robolectric.RobolectricTestRunner;
 
@@ -36,7 +35,7 @@ import static org.odk.collect.android.widgets.support.QuestionWidgetHelpers.widg
 @RunWith(RobolectricTestRunner.class)
 public class DateTimeWidgetTest {
     private TestScreenContextActivity widgetActivity;
-    private DateTimeWidgetListener dateTimeWidgetListener;
+    private DateTimeWidgetUtils dateTimeWidgetListener;
     private View.OnLongClickListener onLongClickListener;
 
     private QuestionDef questionDef;
@@ -48,7 +47,7 @@ public class DateTimeWidgetTest {
 
         questionDef = mock(QuestionDef.class);
         onLongClickListener = mock(View.OnLongClickListener.class);
-        dateTimeWidgetListener = mock(DateTimeWidgetListener.class);
+        dateTimeWidgetListener = mock(DateTimeWidgetUtils.class);
 
         localDateTime = new LocalDateTime()
                 .withDate(2010, 5, 12)

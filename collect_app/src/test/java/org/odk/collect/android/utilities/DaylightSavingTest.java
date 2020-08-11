@@ -34,7 +34,7 @@ import org.odk.collect.android.support.RobolectricHelpers;
 import org.odk.collect.android.support.TestScreenContextActivity;
 import org.odk.collect.android.widgets.DateTimeWidget;
 import org.odk.collect.android.widgets.DateWidget;
-import org.odk.collect.android.widgets.interfaces.DateTimeWidgetListener;
+import org.odk.collect.android.widgets.utilities.DateTimeWidgetUtils;
 import org.robolectric.RobolectricTestRunner;
 
 import java.util.TimeZone;
@@ -56,13 +56,13 @@ public class DaylightSavingTest {
     private static final String CET_TIME_ZONE = "Europe/Warsaw";
 
     private TestScreenContextActivity widgetActivity;
-    private DateTimeWidgetListener listener;
+    private DateTimeWidgetUtils listener;
     private TimeZone currentTimeZone;
 
     @Before
     public void setUp() {
         widgetActivity = RobolectricHelpers.buildThemedActivity(TestScreenContextActivity.class).get();
-        listener = mock(DateTimeWidgetListener.class);
+        listener = mock(DateTimeWidgetUtils.class);
         currentTimeZone = TimeZone.getDefault();
     }
 

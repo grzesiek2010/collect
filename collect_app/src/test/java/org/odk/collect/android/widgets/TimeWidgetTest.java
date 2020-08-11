@@ -14,7 +14,7 @@ import org.odk.collect.android.formentry.questions.QuestionDetails;
 import org.odk.collect.android.listeners.WidgetValueChangedListener;
 import org.odk.collect.android.support.TestScreenContextActivity;
 import org.odk.collect.android.utilities.DateTimeUtils;
-import org.odk.collect.android.widgets.interfaces.DateTimeWidgetListener;
+import org.odk.collect.android.widgets.utilities.DateTimeWidgetUtils;
 import org.robolectric.RobolectricTestRunner;
 
 import static org.hamcrest.MatcherAssert.assertThat;
@@ -30,7 +30,7 @@ import static org.odk.collect.android.widgets.support.QuestionWidgetHelpers.widg
 @RunWith(RobolectricTestRunner.class)
 public class TimeWidgetTest {
     private TestScreenContextActivity widgetActivity;
-    private DateTimeWidgetListener dateTimeWidgetListener;
+    private DateTimeWidgetUtils dateTimeWidgetListener;
     private View.OnLongClickListener onLongClickListener;
 
     private QuestionDef questionDef;
@@ -42,7 +42,7 @@ public class TimeWidgetTest {
 
         questionDef = mock(QuestionDef.class);
         onLongClickListener = mock(View.OnLongClickListener.class);
-        dateTimeWidgetListener = mock(DateTimeWidgetListener.class);
+        dateTimeWidgetListener = mock(DateTimeWidgetUtils.class);
 
         timeAnswer = DateTimeUtils.getSelectedTime(new LocalDateTime().withTime(12, 10, 0, 0), LocalDateTime.now());
     }

@@ -30,18 +30,18 @@ import org.odk.collect.android.R;
 import org.odk.collect.android.databinding.WidgetAnswerBinding;
 import org.odk.collect.android.formentry.questions.QuestionDetails;
 import org.odk.collect.android.utilities.DateTimeUtils;
-import org.odk.collect.android.widgets.interfaces.DateTimeWidgetListener;
 import org.odk.collect.android.widgets.interfaces.WidgetDataReceiver;
+import org.odk.collect.android.widgets.utilities.DateTimeWidgetUtils;
 
 @SuppressLint("ViewConstructor")
 public class TimeWidget extends QuestionWidget implements WidgetDataReceiver {
     WidgetAnswerBinding binding;
 
-    private final DateTimeWidgetListener listener;
+    private final DateTimeWidgetUtils listener;
 
     private LocalDateTime selectedTime;
 
-    public TimeWidget(Context context, final QuestionDetails prompt, DateTimeWidgetListener listener) {
+    public TimeWidget(Context context, final QuestionDetails prompt, DateTimeWidgetUtils listener) {
         super(context, prompt);
         this.listener = listener;
     }
