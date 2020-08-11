@@ -10,6 +10,7 @@ import androidx.annotation.Nullable;
 import androidx.fragment.app.FragmentActivity;
 import androidx.preference.PreferenceFragmentCompat;
 
+import org.jetbrains.annotations.NotNull;
 import org.odk.collect.android.activities.CollectAbstractActivity;
 import org.odk.collect.android.configure.SettingsChangeHandler;
 import org.odk.collect.android.injection.DaggerUtils;
@@ -30,7 +31,7 @@ public abstract class BasePreferenceFragment extends PreferenceFragmentCompat im
     }
 
     @Override
-    public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
+    public void onViewCreated(@NotNull View view, @Nullable Bundle savedInstanceState) {
         FragmentActivity activity = getActivity();
         if (activity instanceof CollectAbstractActivity) {
             ((CollectAbstractActivity) activity).initToolbar(getPreferenceScreen().getTitle());
