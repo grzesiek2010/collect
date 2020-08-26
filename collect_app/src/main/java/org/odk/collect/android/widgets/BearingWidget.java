@@ -18,6 +18,7 @@ import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
+import android.graphics.Color;
 import android.hardware.Sensor;
 import android.hardware.SensorManager;
 import android.util.TypedValue;
@@ -118,7 +119,7 @@ public class BearingWidget extends QuestionWidget implements BinaryDataReceiver 
     }
 
     private void onButtonClick() {
-        if (areSensorsAvailable) {
+        if (false) {
             Intent intent = new Intent(getContext(), BearingActivity.class);
 
             waitingForDataRegistry.waitForData(getFormEntryPrompt().getIndex());
@@ -127,11 +128,6 @@ public class BearingWidget extends QuestionWidget implements BinaryDataReceiver 
             ToastUtils.showLongToast(R.string.bearing_lack_of_sensors);
 
             binding.bearingButton.setEnabled(false);
-
-            MarginLayoutParams marginLayoutParams = (MarginLayoutParams) binding.answerText.getLayoutParams();
-            marginLayoutParams.setMarginStart(UiUtils.getDimen(R.dimen.margin_standard));
-            marginLayoutParams.setMarginEnd(UiUtils.getDimen(R.dimen.margin_standard));
-            binding.answerText.setLayoutParams(marginLayoutParams);
 
             binding.answerText.setBackground(new EditText(getContext()).getBackground());
             binding.answerText.setFocusable(true);
