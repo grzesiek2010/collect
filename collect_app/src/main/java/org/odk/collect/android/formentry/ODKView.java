@@ -19,11 +19,14 @@ import android.animation.ValueAnimator;
 import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.content.ActivityNotFoundException;
+import android.content.ClipData;
 import android.content.Context;
 import android.content.Intent;
 import android.graphics.Rect;
+import android.net.Uri;
 import android.os.Bundle;
 import android.os.Handler;
+import android.os.ParcelFileDescriptor;
 import android.text.TextUtils;
 import android.util.TypedValue;
 import android.view.MotionEvent;
@@ -53,6 +56,7 @@ import org.odk.collect.android.analytics.Analytics;
 import org.odk.collect.android.application.Collect;
 import org.odk.collect.android.audio.AudioHelper;
 import org.odk.collect.android.audio.PlaybackFailedException;
+import org.odk.collect.android.dao.helpers.ContentResolverHelper;
 import org.odk.collect.android.exception.ExternalParamsException;
 import org.odk.collect.android.exception.JavaRosaException;
 import org.odk.collect.android.external.ExternalAppsUtils;
@@ -69,8 +73,16 @@ import org.odk.collect.android.utilities.ToastUtils;
 import org.odk.collect.android.widgets.QuestionWidget;
 import org.odk.collect.android.widgets.StringWidget;
 import org.odk.collect.android.widgets.WidgetFactory;
+import org.odk.collect.android.widgets.interfaces.BinaryDataReceiver;
 import org.odk.collect.android.widgets.utilities.WaitingForDataRegistry;
 
+import java.io.File;
+import java.io.FileDescriptor;
+import java.io.FileInputStream;
+import java.io.FileOutputStream;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.OutputStream;
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -424,6 +436,7 @@ public class ODKView extends FrameLayout implements OnLongClickListener, WidgetV
                                 case Constants.DATATYPE_TEXT:
                                 case Constants.DATATYPE_INTEGER:
                                 case Constants.DATATYPE_DECIMAL:
+                                case Constants.DATATYPE_BINARY:
                                     i.putExtra(reference.getNameLast(),
                                             (Serializable) value);
                                     break;
@@ -472,7 +485,7 @@ public class ODKView extends FrameLayout implements OnLongClickListener, WidgetV
     /**
      * Saves answers for the widgets in this view. Called when the widgets are in an intent group.
      */
-    public void setDataForFields(Bundle bundle) throws JavaRosaException {
+    public void setDataForFields(Bundle bundle, ClipData clipData) throws JavaRosaException {
         if (bundle == null) {
             return;
         }
@@ -506,6 +519,51 @@ public class ODKView extends FrameLayout implements OnLongClickListener, WidgetV
 
                     ((StringWidget) questionWidget).setDisplayValueFromModel();
                     break;
+                }
+            }
+        }
+
+        if (clipData != null) {
+            for (int i = 0; i < clipData.getItemCount(); i++) {
+                CharSequence key = clipData.getItemAt(i).getText();
+                for (QuestionWidget questionWidget : widgets) {
+                    FormEntryPrompt prompt = questionWidget.getFormEntryPrompt();
+                    TreeReference treeReference =
+                            (TreeReference) prompt.getFormElement().getBind().getReference();
+
+                    if (key != null && treeReference.getNameLast().equals(key.toString())) {
+                        Uri uri = clipData.getItemAt(i).getUri();
+                        if (uri != null) {
+                            try {
+                                File destFile = new File(formController.getInstanceFile().getParent()
+                                        + File.separator
+                                        + System.currentTimeMillis()
+                                        + "."
+                                        + ContentResolverHelper.getFileExtensionFromUri(getContext(), uri));
+
+                                ParcelFileDescriptor pfd = getContext().getContentResolver().openFileDescriptor(uri, "r");
+                                FileDescriptor fd = pfd.getFileDescriptor();
+                                InputStream fileStream = new FileInputStream(fd);
+                                OutputStream newDatabase = new FileOutputStream(destFile);
+
+                                byte[] buffer = new byte[1024];
+                                int length;
+
+                                while ((length = fileStream.read(buffer)) > 0) {
+                                    newDatabase.write(buffer, 0, length);
+                                }
+
+                                newDatabase.flush();
+                                fileStream.close();
+                                newDatabase.close();
+                                pfd.close();
+
+                                ((BinaryDataReceiver) questionWidget).setBinaryData(destFile);
+                            } catch (IOException e) {
+                                e.printStackTrace();
+                            }
+                        }
+                    }
                 }
             }
         }
