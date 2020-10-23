@@ -80,7 +80,7 @@ public class WidgetFactory {
                                                         AudioPlayer audioPlayer) {
 
         String appearance = WidgetAppearanceUtils.getSanitizedAppearanceHint(prompt);
-        QuestionDetails questionDetails = new QuestionDetails(prompt, Collect.getCurrentFormIdentifierHash());
+        QuestionDetails questionDetails = new QuestionDetails(prompt, Collect.getCurrentFormIdentifierHash(), readOnlyOverride);
         PermissionUtils permissionUtils = new PermissionUtils();
         ActivityAvailability activityAvailability = new ActivityAvailability(context);
 
