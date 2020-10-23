@@ -149,11 +149,11 @@ public class WidgetFactory {
 
                             analytics.logEvent(PROMPT, "Url", questionDetails.getFormAnalyticsID());
                         } else {
-                            questionWidget = new StringWidget(context, questionDetails, readOnlyOverride);
+                            questionWidget = new StringWidget(context, questionDetails);
                         }
                         break;
                     default:
-                        questionWidget = new StringWidget(context, questionDetails, readOnlyOverride);
+                        questionWidget = new StringWidget(context, questionDetails);
                         break;
                 }
                 break;
@@ -246,13 +246,13 @@ public class WidgetFactory {
                             }
                             break;
                         default:
-                            questionWidget = new StringWidget(context, questionDetails, readOnlyOverride);
+                            questionWidget = new StringWidget(context, questionDetails);
                             break;
                     }
                 }
                 break;
             default:
-                questionWidget = new StringWidget(context, questionDetails, readOnlyOverride);
+                questionWidget = new StringWidget(context, questionDetails);
                 break;
         }
 
