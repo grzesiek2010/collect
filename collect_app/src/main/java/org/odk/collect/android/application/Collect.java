@@ -60,6 +60,8 @@ public class Collect extends Application implements LocalizedApplication {
     @Inject
     PreferencesProvider preferencesProvider;
 
+    private long lastMigrationAttempt;
+
     public static Collect getInstance() {
         return singleton;
     }
@@ -168,6 +170,14 @@ public class Collect extends Application implements LocalizedApplication {
     public void setComponent(AppDependencyComponent applicationComponent) {
         this.applicationComponent = applicationComponent;
         applicationComponent.inject(this);
+    }
+
+    public boolean alreadyTriedToMigrateDataToday() {
+        long currentTime = System.currentTimeMillis();
+        long oneDayPeriod = 86400000;
+        boolean result = currentTime - lastMigrationAttempt < oneDayPeriod;
+        lastMigrationAttempt = currentTime;
+        return result;
     }
 
     /**

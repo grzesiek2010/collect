@@ -282,6 +282,7 @@ public class MainMenuActivity extends CollectAbstractActivity implements AdminPa
         setButtonsVisibility();
         invalidateOptionsMenu();
         setUpStorageMigrationBanner();
+        tryToPerformAutomaticMigration();
     }
 
     private void setButtonsVisibility() {
@@ -599,6 +600,15 @@ public class MainMenuActivity extends CollectAbstractActivity implements AdminPa
             String type = new File(storagePathProvider.getStorageRootDirPath() + "/collect.settings.json").exists()
                     ? SETTINGS_IMPORT_JSON : SETTINGS_IMPORT_SERIALIZED;
             analytics.logEvent(type, "Corrupt exception", "none");
+        }
+    }
+
+    private void tryToPerformAutomaticMigration() {
+        if (!storageStateProvider.isScopedStorageUsed() && !Collect.getInstance().alreadyTriedToMigrateDataToday()) {
+            StorageMigrationDialog dialog = showStorageMigrationDialog();
+            if (dialog != null) {
+                dialog.startStorageMigration();
+            }
         }
     }
 }
