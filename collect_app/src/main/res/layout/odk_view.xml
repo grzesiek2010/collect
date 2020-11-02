@@ -36,6 +36,15 @@ limitations under the License.
             tools:text="Group text"
             tools:visibility="visible" />
 
+        <com.google.android.material.button.MaterialButton
+            android:id="@+id/launchIntentButton"
+            style="@style/Widget.MaterialComponents.Button.OutlinedButton.Icon"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:textColor="?colorOnPrimary"
+            android:visibility="gone"
+            android:layout_margin="@dimen/margin_standard" />
+
         <LinearLayout
             android:id="@+id/widgets"
             android:layout_width="match_parent"
