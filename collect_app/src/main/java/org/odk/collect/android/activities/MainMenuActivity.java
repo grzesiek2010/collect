@@ -604,7 +604,7 @@ public class MainMenuActivity extends CollectAbstractActivity implements AdminPa
     }
 
     private void tryToPerformAutomaticMigration() {
-        if (!storageStateProvider.isScopedStorageUsed() && !Collect.getInstance().alreadyTriedToMigrateDataToday()) {
+        if (storageStateProvider.shouldPerformAutomaticMigration()) {
             StorageMigrationDialog dialog = showStorageMigrationDialog();
             if (dialog != null) {
                 dialog.startStorageMigration();
