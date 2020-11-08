@@ -5,6 +5,7 @@ import android.Manifest;
 import androidx.test.rule.GrantPermissionRule;
 
 import org.junit.rules.RuleChain;
+import org.odk.collect.android.application.Collect;
 
 public class TestRuleChain {
 
@@ -13,11 +14,11 @@ public class TestRuleChain {
     }
 
     public static RuleChain chain() {
-        return chain(false, new TestDependencies());
+        return chain(true, new TestDependencies());
     }
 
     public static RuleChain chain(TestDependencies testDependencies) {
-        return chain(false, testDependencies);
+        return chain(true, testDependencies);
     }
 
     public static RuleChain chain(boolean useScopedStorage, TestDependencies testDependencies) {

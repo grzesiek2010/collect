@@ -31,8 +31,6 @@ public class StorageInitializer {
             throw new RuntimeException(context.getString(R.string.sdcard_unmounted, Environment.getExternalStorageState()));
         }
 
-        enableScopedStorageForFreshInstalls();
-
         for (String dirPath : storagePathProvider.getOdkDirPaths()) {
             File dir = new File(dirPath);
             if (!dir.exists()) {
@@ -48,12 +46,6 @@ public class StorageInitializer {
                     throw new RuntimeException(message);
                 }
             }
-        }
-    }
-
-    private void enableScopedStorageForFreshInstalls() {
-        if (!storageStateProvider.isScopedStorageUsed() && !new File(storagePathProvider.getUnscopedStorageRootDirPath()).exists()) {
-            storageStateProvider.enableUsingScopedStorage();
         }
     }
 }
