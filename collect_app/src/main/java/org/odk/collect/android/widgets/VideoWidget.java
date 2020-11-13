@@ -32,7 +32,6 @@ import androidx.annotation.NonNull;
 
 import org.javarosa.core.model.data.IAnswerData;
 import org.javarosa.core.model.data.StringData;
-import org.odk.collect.android.BuildConfig;
 import org.odk.collect.android.R;
 import org.odk.collect.android.activities.CaptureSelfieVideoActivity;
 import org.odk.collect.android.application.Collect;
@@ -41,9 +40,7 @@ import org.odk.collect.android.formentry.questions.WidgetViewUtils;
 import org.odk.collect.android.listeners.PermissionListener;
 import org.odk.collect.android.preferences.GeneralKeys;
 import org.odk.collect.android.utilities.CameraUtils;
-import org.odk.collect.android.utilities.ContentUriProvider;
 import org.odk.collect.android.utilities.FileUtil;
-import org.odk.collect.android.utilities.FileUtils;
 import org.odk.collect.android.utilities.MediaUtils;
 import org.odk.collect.android.utilities.QuestionMediaManager;
 import org.odk.collect.android.utilities.ToastUtils;
@@ -264,7 +261,7 @@ public class VideoWidget extends QuestionWidget implements FileWidget, ButtonCli
                 chooseVideo();
                 break;
             case R.id.play_video:
-                playVideoFile();
+                mediaUtils.openFile(getContext(), new File(getInstanceFolder() + File.separator + binaryName));
                 break;
         }
     }
@@ -324,29 +321,6 @@ public class VideoWidget extends QuestionWidget implements FileWidget, ButtonCli
                     .show();
 
             waitingForDataRegistry.cancelWaitingForData();
-        }
-    }
-
-    private void playVideoFile() {
-        Intent intent = new Intent(Intent.ACTION_VIEW);
-        File file = new File(getInstanceFolder() + File.separator + binaryName);
-
-        Uri uri = null;
-        try {
-            uri = ContentUriProvider.getUriForFile(getContext(), BuildConfig.APPLICATION_ID + ".provider", file);
-            FileUtils.grantFileReadPermissions(intent, uri, getContext());
-        } catch (IllegalArgumentException e) {
-            Timber.e(e);
-        }
-
-        intent.setDataAndType(uri, "video/*");
-        try {
-            getContext().startActivity(intent);
-        } catch (ActivityNotFoundException e) {
-            Toast.makeText(
-                    getContext(),
-                    getContext().getString(R.string.activity_not_found,
-                            getContext().getString(R.string.view_video)), Toast.LENGTH_SHORT).show();
         }
     }
 }
