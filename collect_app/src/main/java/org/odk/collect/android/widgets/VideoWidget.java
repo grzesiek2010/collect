@@ -211,7 +211,7 @@ public class VideoWidget extends QuestionWidget implements FileWidget, ButtonCli
     }
 
     private String getSourcePathFromUri(@NonNull Uri uri) {
-        return mediaUtils.getPathFromUri(getContext(), uri, Video.Media.DATA);
+        return mediaUtils.getPath(getContext(), uri);
     }
 
     @Override

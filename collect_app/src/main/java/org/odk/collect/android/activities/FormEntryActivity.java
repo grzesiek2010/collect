@@ -336,6 +336,9 @@ public class FormEntryActivity extends CollectAbstractActivity implements Animat
     @Inject
     AudioRecorderViewModelFactory audioRecorderViewModelFactory;
 
+    @Inject
+    MediaUtils mediaUtils;
+
     private final LocationProvidersReceiver locationProvidersReceiver = new LocationProvidersReceiver();
 
     private SwipeHandler swipeHandler;
@@ -959,7 +962,7 @@ public class FormEntryActivity extends CollectAbstractActivity implements Animat
                     setWidgetData(mediaUri);
                 }
                 saveAnswersForCurrentScreen(DO_NOT_EVALUATE_CONSTRAINTS);
-                String filePath = MediaUtils.getDataColumn(this, mediaUri, null, null);
+                String filePath = mediaUtils.getDataColumn(this, mediaUri, null, null);
                 if (filePath != null) {
                     new File(filePath).delete();
                 }

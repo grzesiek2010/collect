@@ -69,7 +69,7 @@ public class MediaUtils {
         Uri contentUri = ContentUriProvider.getUriForFile(context, BuildConfig.APPLICATION_ID + ".provider", file);
         Intent intent = new Intent();
         intent.setAction(Intent.ACTION_VIEW);
-        intent.setDataAndType(contentUri, getMimeType(getPathFromUri(context, fileUri, null)));
+        intent.setDataAndType(contentUri, getMimeType(getPath(context, fileUri)));
         FileUtils.grantFileReadPermissions(intent, contentUri, context);
 
         if (new ActivityAvailability(context).isActivityAvailable(intent)) {
@@ -87,15 +87,6 @@ public class MediaUtils {
     }
 
     /**
-     * Consolidates the file path determination functionality of the various
-     * media prompts. Beginning with KitKat, the responses use a different
-     * mechanism and needs a lot of special handling.
-     */
-    public static String getPathFromUri(Context ctxt, Uri uri, String pathKey) {
-        return getPath(ctxt, uri);
-    }
-
-    /**
      * Get a file path from a Uri. This will get the the path for Storage Access
      * Framework Documents, as well as the _data field for the MediaStore and
      * other file-based ContentProviders.<br>
@@ -109,7 +100,7 @@ public class MediaUtils {
      * @see #getFile(Context, Uri)
      * @author paulburke
      */
-    public static String getPath(final Context context, final Uri uri) {
+    public String getPath(final Context context, final Uri uri) {
 
         // DocumentProvider
         if (DocumentsContract.isDocumentUri(context, uri)) {
@@ -204,9 +195,9 @@ public class MediaUtils {
         return null;
     }
 
-    public static File getFileFromUri(final Context context, final Uri uri, String pathKey, NetworkStateProvider connectivityProvider) throws GDriveConnectionException {
+    public File getFileFromUri(final Context context, final Uri uri, NetworkStateProvider connectivityProvider) throws GDriveConnectionException {
         File file = null;
-        String filePath = getPathFromUri(context, uri, pathKey);
+        String filePath = getPath(context, uri);
         if (filePath != null) {
             file = new File(filePath);
         } else if (isGoogleDriveDocument(uri)) {
@@ -216,7 +207,7 @@ public class MediaUtils {
         return file;
     }
 
-    private static File getGoogleDriveFile(Context context, Uri uri, NetworkStateProvider connectivityProvider) throws GDriveConnectionException {
+    private File getGoogleDriveFile(Context context, Uri uri, NetworkStateProvider connectivityProvider) throws GDriveConnectionException {
         if (!connectivityProvider.isDeviceOnline()) {
             throw new GDriveConnectionException();
         }
@@ -254,7 +245,7 @@ public class MediaUtils {
      * @return Whether the Uri authority is ExternalStorageProvider.
      * @author paulburke
      */
-    public static boolean isExternalStorageDocument(Uri uri) {
+    private boolean isExternalStorageDocument(Uri uri) {
         return "com.android.externalstorage.documents".equals(uri
                 .getAuthority());
     }
@@ -264,7 +255,7 @@ public class MediaUtils {
      * @return Whether the Uri authority is DownloadsProvider.
      * @author paulburke
      */
-    public static boolean isDownloadsDocument(Uri uri) {
+    private boolean isDownloadsDocument(Uri uri) {
         return "com.android.providers.downloads.documents".equals(uri
                 .getAuthority());
     }
@@ -274,7 +265,7 @@ public class MediaUtils {
      * @return Whether the Uri authority is MediaProvider.
      * @author paulburke
      */
-    public static boolean isMediaDocument(Uri uri) {
+    private boolean isMediaDocument(Uri uri) {
         return "com.android.providers.media.documents".equals(uri
                 .getAuthority());
     }
@@ -283,7 +274,7 @@ public class MediaUtils {
      * @param uri The Uri to check.
      * @return Whether the Uri authority is Google Photos.
      */
-    public static boolean isGooglePhotosUri(Uri uri) {
+    private boolean isGooglePhotosUri(Uri uri) {
         return "com.google.android.apps.photos.content".equals(uri
                 .getAuthority());
     }
@@ -292,7 +283,7 @@ public class MediaUtils {
      * @param uri The Uri to check
      * @return Whether the Uri authority is Google Drive.
      */
-    private static boolean isGoogleDriveDocument(Uri uri) {
+    private boolean isGoogleDriveDocument(Uri uri) {
         return uri.getAuthority().startsWith("com.google.android.apps.docs.storage")
                 || uri.getAuthority().startsWith("com.google.android.apps.photos.content");
     }
@@ -308,7 +299,7 @@ public class MediaUtils {
      * @return The value of the _data column, which is typically a file path.
      * @author paulburke
      */
-    public static String getDataColumn(Context context, Uri uri,
+    public String getDataColumn(Context context, Uri uri,
                                        String selection, String[] selectionArgs) {
 
         Cursor cursor = null;
@@ -331,7 +322,7 @@ public class MediaUtils {
         return null;
     }
 
-    public static String getFileNameFromUri(@NonNull Context context, Uri uri) {
+    public String getFileNameFromUri(@NonNull Context context, Uri uri) {
         String mimeType = context.getContentResolver().getType(uri);
         String fileName = null;
 
@@ -357,7 +348,7 @@ public class MediaUtils {
         return fileName;
     }
 
-    private static String getName(String filename) {
+    private String getName(String filename) {
         if (filename == null) {
             return null;
         }
@@ -365,7 +356,7 @@ public class MediaUtils {
         return filename.substring(index + 1);
     }
 
-    private static File getDocumentCacheDir(@NonNull Context context) {
+    private File getDocumentCacheDir(@NonNull Context context) {
         File dir = new File(context.getCacheDir(), "documents");
         if (!dir.exists()) {
             dir.mkdirs();
@@ -375,7 +366,7 @@ public class MediaUtils {
     }
 
     @Nullable
-    private static File generateFileName(@Nullable String name, File directory) {
+    private File generateFileName(@Nullable String name, File directory) {
         if (name == null) {
             return null;
         }
@@ -412,7 +403,7 @@ public class MediaUtils {
         return file;
     }
 
-    private static void saveFileFromUri(Context context, Uri uri, String destinationPath) {
+    private void saveFileFromUri(Context context, Uri uri, String destinationPath) {
         InputStream is = null;
         BufferedOutputStream bos = null;
         try {

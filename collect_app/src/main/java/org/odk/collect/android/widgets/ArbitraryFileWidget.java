@@ -21,7 +21,6 @@ import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
 import android.net.Uri;
-import android.provider.MediaStore;
 import androidx.annotation.NonNull;
 import android.view.Gravity;
 import android.widget.Button;
@@ -117,7 +116,7 @@ public class ArbitraryFileWidget extends QuestionWidget implements FileWidget, B
         File newFile;
         // get the file path and create a copy in the instance folder
         if (object instanceof Uri) {
-            String sourcePath = getSourcePathFromUri((Uri) object);
+            String sourcePath = mediaUtils.getPath(getContext(), (Uri) object);
             String destinationPath = FileWidgetUtils.getDestinationPathFromSourcePath(sourcePath, getInstanceFolder(), fileUtil);
             File source = fileUtil.getFileAtPath(sourcePath);
             newFile = fileUtil.getFileAtPath(destinationPath);
@@ -186,9 +185,5 @@ public class ArbitraryFileWidget extends QuestionWidget implements FileWidget, B
         intent.addCategory(Intent.CATEGORY_OPENABLE);
         intent.setType("*/*"); // all file types
         ((Activity) getContext()).startActivityForResult(intent, ApplicationConstants.RequestCodes.ARBITRARY_FILE_CHOOSER);
-    }
-
-    private String getSourcePathFromUri(@NonNull Uri uri) {
-        return mediaUtils.getPathFromUri(getContext(), uri, MediaStore.Files.FileColumns.DATA);
     }
 }

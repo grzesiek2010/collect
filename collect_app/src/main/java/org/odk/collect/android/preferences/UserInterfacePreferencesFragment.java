@@ -19,7 +19,6 @@ import android.content.Intent;
 import android.content.SharedPreferences;
 import android.net.Uri;
 import android.os.Bundle;
-import android.provider.MediaStore;
 
 import androidx.preference.ListPreference;
 import androidx.preference.Preference;
@@ -53,6 +52,9 @@ public class UserInterfacePreferencesFragment extends BasePreferenceFragment {
 
     @Inject
     VersionInformation versionInformation;
+
+    @Inject
+    MediaUtils mediaUtils;
 
     @Override
     public void onAttach(Context context) {
@@ -174,8 +176,7 @@ public class UserInterfacePreferencesFragment extends BasePreferenceFragment {
             case IMAGE_CHOOSER:
                 // get gp of chosen file
                 Uri selectedMedia = intent.getData();
-                String sourceMediaPath = MediaUtils.getPathFromUri(getActivity(), selectedMedia,
-                        MediaStore.Images.Media.DATA);
+                String sourceMediaPath = mediaUtils.getPath(getActivity(), selectedMedia);
 
                 // setting image path
                 setSplashPath(sourceMediaPath);
