@@ -493,26 +493,28 @@ public class ODKView extends FrameLayout implements OnLongClickListener, WidgetV
                     TreeReference treeReference =
                             (TreeReference) prompt.getFormElement().getBind().getReference();
 
-                    if (treeReference.getNameLast().equals(key)) {
+                    Object answer = bundle.get(key);
+                    if (treeReference.getNameLast().equals(key) && answer != null) {
+                        questionWidget.showAnswerContainer();
                         switch (prompt.getDataType()) {
                             case Constants.DATATYPE_TEXT:
                                 formController.saveAnswer(prompt.getIndex(),
-                                        ExternalAppsUtils.asStringData(bundle.get(key)));
+                                        ExternalAppsUtils.asStringData(answer));
                                 ((StringWidget) questionWidget).setDisplayValueFromModel();
                                 break;
                             case Constants.DATATYPE_INTEGER:
                                 formController.saveAnswer(prompt.getIndex(),
-                                        ExternalAppsUtils.asIntegerData(bundle.get(key)));
+                                        ExternalAppsUtils.asIntegerData(answer));
                                 ((StringWidget) questionWidget).setDisplayValueFromModel();
                                 break;
                             case Constants.DATATYPE_DECIMAL:
                                 formController.saveAnswer(prompt.getIndex(),
-                                        ExternalAppsUtils.asDecimalData(bundle.get(key)));
+                                        ExternalAppsUtils.asDecimalData(answer));
                                 ((StringWidget) questionWidget).setDisplayValueFromModel();
                                 break;
                             case Constants.DATATYPE_BINARY:
                                 try {
-                                    Uri uri = (Uri) bundle.get(key);
+                                    Uri uri = (Uri) answer;
                                     if (uri != null) {
                                         File destFile = FileUtils.createDestinationMediaFile(formController.getInstanceFile().getParent(), ContentResolverHelper.getFileExtensionFromUri(getContext(), uri));
                                         //TODO might be better to use QuestionMediaManager in the future
