@@ -60,6 +60,10 @@ public class ExIntegerWidget extends ExStringWidget {
 
     @Override
     public IAnswerData getAnswer() {
+        if (isAnswerContainerHidden()) {
+            return null;
+        }
+
         return StringWidgetUtils.getIntegerData(answerText.getText().toString(), getFormEntryPrompt());
     }
 

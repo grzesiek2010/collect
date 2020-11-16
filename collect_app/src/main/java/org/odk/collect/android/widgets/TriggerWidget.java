@@ -62,6 +62,10 @@ public class TriggerWidget extends QuestionWidget {
 
     @Override
     public IAnswerData getAnswer() {
+        if (isAnswerContainerHidden()) {
+            return null;
+        }
+
         return triggerButton.isChecked() ? new StringData(OK_TEXT) : null;
     }
 

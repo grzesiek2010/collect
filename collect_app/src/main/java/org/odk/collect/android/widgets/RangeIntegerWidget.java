@@ -63,6 +63,10 @@ public class RangeIntegerWidget extends QuestionWidget implements Slider.OnChang
 
     @Override
     public IAnswerData getAnswer() {
+        if (isAnswerContainerHidden()) {
+            return null;
+        }
+
         String stringAnswer = currentValue.getText().toString();
         return stringAnswer.isEmpty() ? null : new IntegerData(Integer.parseInt(stringAnswer));
     }

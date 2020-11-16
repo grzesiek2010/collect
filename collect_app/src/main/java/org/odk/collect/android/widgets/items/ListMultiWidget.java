@@ -254,6 +254,10 @@ public class ListMultiWidget extends ItemsWidget implements MultiChoiceWidget {
 
     @Override
     public IAnswerData getAnswer() {
+        if (isAnswerContainerHidden()) {
+            return null;
+        }
+
         List<Selection> vc = new ArrayList<>();
         for (int i = 0; i < checkBoxes.size(); i++) {
             CheckBox c = checkBoxes.get(i);

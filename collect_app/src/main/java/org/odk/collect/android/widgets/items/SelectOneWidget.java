@@ -72,6 +72,10 @@ public class SelectOneWidget extends BaseSelectListWidget {
 
     @Override
     public IAnswerData getAnswer() {
+        if (isAnswerContainerHidden()) {
+            return null;
+        }
+
         Selection selectedItem = ((SelectOneListAdapter) recyclerViewAdapter).getSelectedItem();
         return selectedItem == null
                 ? null

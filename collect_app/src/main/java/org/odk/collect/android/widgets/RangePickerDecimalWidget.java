@@ -58,6 +58,10 @@ public class RangePickerDecimalWidget extends QuestionWidget {
 
     @Override
     public IAnswerData getAnswer() {
+        if (isAnswerContainerHidden()) {
+            return null;
+        }
+
         return binding.widgetAnswerText.getText().toString().equals(getContext().getString(R.string.no_value_selected))
                 ? null
                 : new DecimalData(Double.parseDouble(binding.widgetAnswerText.getText().toString()));

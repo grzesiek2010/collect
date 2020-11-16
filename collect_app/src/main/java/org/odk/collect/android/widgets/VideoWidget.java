@@ -157,6 +157,9 @@ public class VideoWidget extends QuestionWidget implements FileWidget, ButtonCli
 
     @Override
     public IAnswerData getAnswer() {
+        if (isAnswerContainerHidden()) {
+            return null;
+        }
         if (binaryName != null) {
             return new StringData(binaryName);
         } else {

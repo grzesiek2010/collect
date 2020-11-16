@@ -60,6 +60,10 @@ public class ExDecimalWidget extends ExStringWidget {
 
     @Override
     public IAnswerData getAnswer() {
+        if (isAnswerContainerHidden()) {
+            return null;
+        }
+
         return StringWidgetUtils.getDecimalData(answerText.getText().toString(), getFormEntryPrompt());
     }
 

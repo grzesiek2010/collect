@@ -95,6 +95,10 @@ public class DateTimeWidget extends QuestionWidget implements WidgetDataReceiver
 
     @Override
     public IAnswerData getAnswer() {
+        if (isAnswerContainerHidden()) {
+            return null;
+        }
+
         if (isNullValue()) {
             return null;
         } else {

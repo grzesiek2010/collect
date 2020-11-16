@@ -53,6 +53,10 @@ public class SelectMultiMinimalWidget extends SelectMinimalWidget {
 
     @Override
     public IAnswerData getAnswer() {
+        if (isAnswerContainerHidden()) {
+            return null;
+        }
+
         return selectedItems.isEmpty()
                 ? null
                 : new SelectMultiData(selectedItems);

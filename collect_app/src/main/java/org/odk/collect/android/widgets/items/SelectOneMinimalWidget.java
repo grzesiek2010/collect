@@ -55,6 +55,10 @@ public class SelectOneMinimalWidget extends SelectMinimalWidget {
 
     @Override
     public IAnswerData getAnswer() {
+        if (isAnswerContainerHidden()) {
+            return null;
+        }
+
         return selectedItem == null
                 ? null
                 : new SelectOneData(selectedItem);

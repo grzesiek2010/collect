@@ -114,6 +114,10 @@ public class AudioWidget extends QuestionWidget implements FileWidget, WidgetDat
 
     @Override
     public IAnswerData getAnswer() {
+        if (isAnswerContainerHidden()) {
+            return null;
+        }
+
         if (binaryName != null) {
             return new StringData(binaryName);
         } else {

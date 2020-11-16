@@ -428,6 +428,11 @@ public abstract class QuestionWidget extends FrameLayout implements Widget {
         findViewById(R.id.answer_container).setVisibility(VISIBLE);
     }
 
+    protected boolean isAnswerContainerHidden() {
+        View answerContainer = findViewById(R.id.answer_container);
+        return answerContainer != null && answerContainer.getVisibility() == GONE;
+    }
+
     /**
      * Register this widget's child views to pop up a context menu to clear the widget when the
      * user long presses on it. Widget subclasses may override this if some or all of their

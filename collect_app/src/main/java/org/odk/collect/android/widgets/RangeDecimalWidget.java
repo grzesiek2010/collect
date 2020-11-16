@@ -63,6 +63,10 @@ public class RangeDecimalWidget extends QuestionWidget implements Slider.OnChang
 
     @Override
     public IAnswerData getAnswer() {
+        if (isAnswerContainerHidden()) {
+            return null;
+        }
+
         String stringAnswer = currentValue.getText().toString();
         return stringAnswer.isEmpty() ? null : new DecimalData(Double.parseDouble(stringAnswer));
     }

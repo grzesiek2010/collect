@@ -59,6 +59,10 @@ public class SelectMultiWidget extends BaseSelectListWidget {
 
     @Override
     public IAnswerData getAnswer() {
+        if (isAnswerContainerHidden()) {
+            return null;
+        }
+
         List<Selection> selectedItems = recyclerViewAdapter.getSelectedItems();
         return selectedItems.isEmpty()
                 ? null

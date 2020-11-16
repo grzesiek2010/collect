@@ -101,6 +101,10 @@ public class ArbitraryFileWidget extends QuestionWidget implements FileWidget, B
 
     @Override
     public IAnswerData getAnswer() {
+        if (isAnswerContainerHidden()) {
+            return null;
+        }
+
         return binaryName != null ? new StringData(binaryName) : null;
     }
 

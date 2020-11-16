@@ -195,6 +195,10 @@ public class OSMWidget extends QuestionWidget implements WidgetDataReceiver, But
 
     @Override
     public IAnswerData getAnswer() {
+        if (isAnswerContainerHidden()) {
+            return null;
+        }
+
         String s = osmFileNameTextView.getText().toString();
 
         return !s.isEmpty()

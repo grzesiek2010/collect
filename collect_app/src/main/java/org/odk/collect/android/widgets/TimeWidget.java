@@ -82,6 +82,10 @@ public class TimeWidget extends QuestionWidget implements WidgetDataReceiver {
 
     @Override
     public IAnswerData getAnswer() {
+        if (isAnswerContainerHidden()) {
+            return null;
+        }
+
         return binding.timeAnswerText.getText().equals(getContext().getString(R.string.no_time_selected))
                 ? null
                 : new TimeData(selectedTime.toDateTime().toDate());

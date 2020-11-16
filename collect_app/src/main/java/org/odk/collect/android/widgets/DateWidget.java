@@ -77,6 +77,10 @@ public class DateWidget extends QuestionWidget implements WidgetDataReceiver {
 
     @Override
     public IAnswerData getAnswer() {
+        if (isAnswerContainerHidden()) {
+            return null;
+        }
+
         return binding.dateAnswerText.getText().equals(getContext().getString(R.string.no_date_selected))
                 ? null
                 : new DateData(selectedDate.toDate());

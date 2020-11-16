@@ -84,6 +84,10 @@ public class BearingWidget extends QuestionWidget implements WidgetDataReceiver 
 
     @Override
     public IAnswerData getAnswer() {
+        if (isAnswerContainerHidden()) {
+            return null;
+        }
+
         String answerText = binding.answerText.getText().toString();
         return answerText.isEmpty() ? null : new StringData(answerText);
     }

@@ -88,6 +88,10 @@ public class LikertWidget extends ItemsWidget {
 
     @Override
     public IAnswerData getAnswer() {
+        if (isAnswerContainerHidden()) {
+            return null;
+        }
+
         if (checkedButton == null) {
             return null;
         } else {

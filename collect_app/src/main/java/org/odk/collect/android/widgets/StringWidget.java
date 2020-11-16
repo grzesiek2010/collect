@@ -67,6 +67,10 @@ public class StringWidget extends QuestionWidget {
 
     @Override
     public IAnswerData getAnswer() {
+        if (isAnswerContainerHidden()) {
+            return null;
+        }
+
         String answer = getAnswerText();
         return !answer.isEmpty() ? new StringData(answer) : null;
     }

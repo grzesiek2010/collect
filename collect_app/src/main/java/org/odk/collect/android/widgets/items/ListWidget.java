@@ -237,6 +237,10 @@ public class ListWidget extends ItemsWidget implements MultiChoiceWidget, OnChec
 
     @Override
     public IAnswerData getAnswer() {
+        if (isAnswerContainerHidden()) {
+            return null;
+        }
+
         int i = getCheckedId();
         if (i == -1) {
             return null;

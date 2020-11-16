@@ -86,6 +86,10 @@ public class BarcodeWidget extends QuestionWidget implements WidgetDataReceiver 
 
     @Override
     public IAnswerData getAnswer() {
+        if (isAnswerContainerHidden()) {
+            return null;
+        }
+
         String answer = binding.barcodeAnswerText.getText().toString();
         return answer.isEmpty() ? null : new StringData(answer);
     }

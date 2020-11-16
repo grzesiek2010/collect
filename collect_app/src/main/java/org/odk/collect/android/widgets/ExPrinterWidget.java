@@ -191,6 +191,10 @@ public class ExPrinterWidget extends QuestionWidget implements WidgetDataReceive
 
     @Override
     public IAnswerData getAnswer() {
+        if (isAnswerContainerHidden()) {
+            return null;
+        }
+
         return getFormEntryPrompt().getAnswerValue();
     }
 

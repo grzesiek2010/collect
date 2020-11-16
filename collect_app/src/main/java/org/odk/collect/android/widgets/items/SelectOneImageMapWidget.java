@@ -65,6 +65,10 @@ public class SelectOneImageMapWidget extends SelectImageMapWidget {
 
     @Override
     public IAnswerData getAnswer() {
+        if (isAnswerContainerHidden()) {
+            return null;
+        }
+
         return selections.isEmpty() ? null
                 : new SelectOneData(selections.get(0));
     }

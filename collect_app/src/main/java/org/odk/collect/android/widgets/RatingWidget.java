@@ -92,6 +92,10 @@ public class RatingWidget extends QuestionWidget {
 
     @Override
     public IAnswerData getAnswer() {
+        if (isAnswerContainerHidden()) {
+            return null;
+        }
+
         return binding.ratingBar1.getRating() == 0.0F
                 ? null
                 : new IntegerData((int) (binding.ratingBar1.getRating() + binding.ratingBar2.getRating()));

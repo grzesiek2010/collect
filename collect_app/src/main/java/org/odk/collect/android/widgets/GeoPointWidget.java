@@ -74,6 +74,10 @@ public class GeoPointWidget extends QuestionWidget implements WidgetDataReceiver
 
     @Override
     public IAnswerData getAnswer() {
+        if (isAnswerContainerHidden()) {
+            return null;
+        }
+
         return answerText == null || answerText.isEmpty()
                 ? null
                 : new GeoPointData(GeoWidgetUtils.getLocationParamsFromStringAnswer(answerText));

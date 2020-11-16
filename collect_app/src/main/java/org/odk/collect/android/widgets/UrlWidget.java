@@ -57,6 +57,10 @@ public class UrlWidget extends QuestionWidget {
 
     @Override
     public IAnswerData getAnswer() {
+        if (isAnswerContainerHidden()) {
+            return null;
+        }
+
         return getFormEntryPrompt().getAnswerValue() == null
                 ? null
                 : new StringData(getFormEntryPrompt().getAnswerText());

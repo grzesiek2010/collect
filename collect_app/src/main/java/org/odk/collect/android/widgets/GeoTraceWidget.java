@@ -91,6 +91,10 @@ public class GeoTraceWidget extends QuestionWidget implements WidgetDataReceiver
 
     @Override
     public IAnswerData getAnswer() {
+        if (isAnswerContainerHidden()) {
+            return null;
+        }
+
         return getAnswerText().isEmpty() ? null : new StringData(getAnswerText());
     }
 

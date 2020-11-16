@@ -58,6 +58,10 @@ public class RankingWidget extends ItemsWidget implements WidgetDataReceiver, Bu
 
     @Override
     public IAnswerData getAnswer() {
+        if (isAnswerContainerHidden()) {
+            return null;
+        }
+
         List<Selection> orderedItems = new ArrayList<>();
         if (savedItems != null) {
             for (SelectChoice selectChoice : savedItems) {

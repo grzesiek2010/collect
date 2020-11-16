@@ -66,6 +66,10 @@ public class ItemsetWidget extends SelectOneWidget {
 
     @Override
     public IAnswerData getAnswer() {
+        if (isAnswerContainerHidden()) {
+            return null;
+        }
+
         Selection selectedItem = recyclerViewAdapter.getSelectedItems().isEmpty()
                 ? null
                 : recyclerViewAdapter.getSelectedItems().get(0);

@@ -53,6 +53,10 @@ public class SelectMultiImageMapWidget extends SelectImageMapWidget {
 
     @Override
     public IAnswerData getAnswer() {
+        if (isAnswerContainerHidden()) {
+            return null;
+        }
+
         return selections.size() == 0 ? null : new SelectMultiData(selections);
     }
 }

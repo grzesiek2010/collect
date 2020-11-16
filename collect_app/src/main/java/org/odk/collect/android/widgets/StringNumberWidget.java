@@ -34,6 +34,10 @@ public class StringNumberWidget extends StringWidget {
 
     @Override
     public IAnswerData getAnswer() {
+        if (isAnswerContainerHidden()) {
+            return null;
+        }
+
         return StringWidgetUtils.getStringNumberData(getAnswerText(), getFormEntryPrompt());
     }
 }
