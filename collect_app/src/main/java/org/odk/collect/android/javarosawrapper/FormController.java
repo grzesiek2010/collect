@@ -50,6 +50,7 @@ import org.odk.collect.android.formentry.audit.AuditConfig;
 import org.odk.collect.android.formentry.audit.AuditEventLogger;
 import org.odk.collect.android.utilities.FileUtils;
 import org.odk.collect.android.utilities.FormNameUtils;
+import org.odk.collect.android.utilities.ToastUtils;
 
 import java.io.ByteArrayInputStream;
 import java.io.File;
@@ -903,7 +904,7 @@ public class FormController {
      * @throws RuntimeException if there is a group at this {@link FormIndex} and it contains
      *                          elements that are not questions or regular (non-repeat) groups.
      */
-    public FormEntryPrompt[] getQuestionPrompts() throws RuntimeException {
+    public FormEntryPrompt[] getQuestionPrompts() {
         // For questions, there is only one.
         // For groups, there could be many, but we set that below
         FormEntryPrompt[] questions = new FormEntryPrompt[0];
@@ -918,9 +919,9 @@ public class FormController {
                     String errorMsg =
                             "Only questions and regular groups are allowed in 'field-list'.  Bad node is: "
                                     + index.getReference().toString(false);
-                    RuntimeException e = new RuntimeException(errorMsg);
-                    Timber.w(errorMsg);
-                    throw e;
+
+                    ToastUtils.showLongToast(errorMsg);
+                    continue;
                 }
 
                 // we only display relevant questions
