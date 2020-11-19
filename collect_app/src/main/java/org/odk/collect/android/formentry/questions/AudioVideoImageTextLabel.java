@@ -19,6 +19,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.Color;
+import android.graphics.drawable.Drawable;
 import android.net.Uri;
 import android.text.method.LinkMovementMethod;
 import android.util.AttributeSet;
@@ -34,8 +35,15 @@ import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
 import androidx.lifecycle.LiveData;
 
+import com.bumptech.glide.Glide;
+import com.bumptech.glide.load.DataSource;
+import com.bumptech.glide.load.engine.GlideException;
+import com.bumptech.glide.request.RequestFutureTarget;
+import com.bumptech.glide.request.RequestListener;
+import com.bumptech.glide.request.target.Target;
 import com.google.android.material.button.MaterialButton;
 
 import org.jetbrains.annotations.NotNull;
@@ -142,8 +150,26 @@ public class AudioVideoImageTextLabel extends RelativeLayout implements View.OnC
         setupAudioButton(audioURI, audioHelper);
     }
 
-    public void setImage(@NonNull File imageFile) {
-        setupImage(imageFile);
+    public void setImage(@NonNull File imageFile, boolean gridView) {
+        if (imageFile.exists()) {
+            if (gridView) {
+                Glide.with(this)
+                        .load(imageFile)
+                        .centerCrop()
+                        .into(imageView);
+            } else {
+                Glide.with(this)
+                        .load(imageFile)
+                        .centerInside()
+                        .into(imageView);
+            }
+
+            imageView.setVisibility(VISIBLE);
+            imageView.setOnClickListener(this);
+        } else {
+            missingImage.setVisibility(VISIBLE);
+            missingImage.setText(getContext().getString(R.string.file_missing, imageFile));
+        }
     }
 
     public void setBigImage(@NonNull File bigImageFile) {
@@ -256,33 +282,6 @@ public class AudioVideoImageTextLabel extends RelativeLayout implements View.OnC
         }
         if (listener != null) {
             listener.onItemClicked();
-        }
-    }
-
-    private void setupImage(File imageFile) {
-        String errorMsg = null;
-
-        if (imageFile.exists()) {
-            Bitmap b = FileUtils.getBitmapScaledToDisplay(imageFile, ScreenUtils.getScreenHeight(), ScreenUtils.getScreenWidth());
-            if (b != null) {
-                imageView.setVisibility(VISIBLE);
-                imageView.setImageBitmap(b);
-                imageView.setOnClickListener(this);
-            } else {
-                // Loading the image failed, so it's likely a bad file.
-                errorMsg = getContext().getString(R.string.file_invalid, imageFile);
-            }
-        } else {
-            // We should have an image, but the file doesn't exist.
-            errorMsg = getContext().getString(R.string.file_missing, imageFile);
-        }
-
-        if (errorMsg != null) {
-            // errorMsg is only set when an error has occurred
-            Timber.e(errorMsg);
-            imageView.setVisibility(View.GONE);
-            missingImage.setVisibility(VISIBLE);
-            missingImage.setText(errorMsg);
         }
     }
 

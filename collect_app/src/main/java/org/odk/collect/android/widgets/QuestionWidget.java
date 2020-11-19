@@ -179,7 +179,7 @@ public abstract class QuestionWidget extends FrameLayout implements Widget {
         String playableAudioURI = getPlayableAudioURI(prompt, referenceManager);
         try {
             if (imageURI != null) {
-                audioVideoImageTextLabel.setImage(new File(referenceManager.deriveReference(imageURI).getLocalURI()));
+                audioVideoImageTextLabel.setImage(new File(referenceManager.deriveReference(imageURI).getLocalURI()), false);
             }
             if (bigImageURI != null) {
                 audioVideoImageTextLabel.setBigImage(new File(referenceManager.deriveReference(bigImageURI).getLocalURI()));

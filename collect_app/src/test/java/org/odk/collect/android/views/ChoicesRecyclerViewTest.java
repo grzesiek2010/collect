@@ -374,7 +374,7 @@ public class ChoicesRecyclerViewTest {
         AudioVideoImageTextLabel view = (AudioVideoImageTextLabel) getChoiceView(0);
         File file = mock(File.class);
         when(file.exists()).thenReturn(true);
-        view.setImage(file);
+        view.setImage(file, false);
         view.setVideo(file);
         AudioHelper audioHelper = mock(AudioHelper.class);
         MutableLiveData<Boolean> isPlaying = new MutableLiveData<>(false);

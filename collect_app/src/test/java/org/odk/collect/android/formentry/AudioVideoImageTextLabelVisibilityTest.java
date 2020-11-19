@@ -114,7 +114,7 @@ public class AudioVideoImageTextLabelVisibilityTest {
         if (imageURI != null && isReferenceManagerStubbed) {
             imageFile = mock(File.class);
             when(imageFile.exists()).thenReturn(imageFileExists);
-            audioVideoImageTextLabel.setImage(imageFile);
+            audioVideoImageTextLabel.setImage(imageFile, false);
         }
         if (videoURI != null && isReferenceManagerStubbed) {
             videoFile = mock(File.class);
