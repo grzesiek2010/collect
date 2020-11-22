@@ -3,11 +3,13 @@ package org.odk.collect.android.widgets.items;
 import android.annotation.SuppressLint;
 import android.content.Context;
 
+import org.javarosa.core.model.SelectChoice;
 import org.javarosa.core.model.data.IAnswerData;
 import org.javarosa.core.model.data.SelectOneData;
 import org.javarosa.core.model.data.helper.Selection;
 import org.odk.collect.android.R;
 import org.odk.collect.android.activities.FormEntryActivity;
+import org.odk.collect.android.external.FastExternalItemsReader;
 import org.odk.collect.android.formentry.questions.QuestionDetails;
 import org.odk.collect.android.fragments.dialogs.SelectMinimalDialog;
 import org.odk.collect.android.fragments.dialogs.SelectOneMinimalDialog;
@@ -29,9 +31,18 @@ public class SelectOneMinimalWidget extends SelectMinimalWidget {
 
     public SelectOneMinimalWidget(Context context, QuestionDetails prompt, boolean autoAdvance, WaitingForDataRegistry waitingForDataRegistry) {
         super(context, prompt, waitingForDataRegistry);
-        selectedItem = getQuestionDetails().getPrompt().getAnswerValue() == null
-                ? null
-                : ((Selection) getQuestionDetails().getPrompt().getAnswerValue().getValue());
+
+        Object answerData = prompt.getPrompt().getAnswerValue().getValue();
+        if (answerData instanceof Selection) {
+            selectedItem = getQuestionDetails().getPrompt().getAnswerValue() == null
+                    ? null
+                    : ((Selection) answerData);
+        } else {
+            selectedItem = getQuestionDetails().getPrompt().getAnswerValue() == null
+                    ? null
+                    : FastExternalItemsReader.getCos((String) answerData, items);
+        }
+
         this.autoAdvance = autoAdvance;
         if (context instanceof AdvanceToNextListener) {
             autoAdvanceListener = (AdvanceToNextListener) context;
