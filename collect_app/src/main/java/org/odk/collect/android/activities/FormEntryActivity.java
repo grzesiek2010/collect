@@ -29,6 +29,7 @@ import android.os.Bundle;
 import android.text.Editable;
 import android.text.InputFilter;
 import android.text.TextWatcher;
+import android.util.Log;
 import android.view.ContextMenu;
 import android.view.ContextMenu.ContextMenuInfo;
 import android.view.KeyEvent;
@@ -359,6 +360,7 @@ public class FormEntryActivity extends CollectAbstractActivity implements Animat
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        Log.i("QWERTY", "onCreate");
         Collect.getInstance().getComponent().inject(this);
         setContentView(R.layout.form_entry);
         setupViewModels();
@@ -406,9 +408,11 @@ public class FormEntryActivity extends CollectAbstractActivity implements Animat
         questionFontSize = QuestionFontSizeUtils.getQuestionFontSize();
 
         if (savedInstanceState == null) {
+            Log.i("QWERTY", "onCreate savedInstanceState is null");
             mediaLoadingFragment = new MediaLoadingFragment();
             getFragmentManager().beginTransaction().add(mediaLoadingFragment, TAG_MEDIA_LOADING_FRAGMENT).commit();
         } else {
+            Log.i("QWERTY", "onCreate savedInstanceState is not null");
             mediaLoadingFragment = (MediaLoadingFragment) getFragmentManager().findFragmentByTag(TAG_MEDIA_LOADING_FRAGMENT);
         }
 
@@ -544,15 +548,20 @@ public class FormEntryActivity extends CollectAbstractActivity implements Animat
         // Check to see if this is a screen flip or a new form load.
         Object data = getLastCustomNonConfigurationInstance();
         if (data instanceof FormLoaderTask) {
+            Log.i("QWERTY", "data instanceof FormLoaderTask");
             formLoaderTask = (FormLoaderTask) data;
         } else if (data == null) {
+            Log.i("QWERTY", "data = null");
             if (!newForm) {
+                Log.i("QWERTY", "newForm: " + newForm);
                 FormController formController = getFormController();
 
                 if (formController != null) {
+                    Log.i("QWERTY", "formController != null");
                     formControllerAvailable(formController);
                     onScreenRefresh();
                 } else {
+                    Log.i("QWERTY", "formController == null");
                     Timber.w("Reloading form and restoring state.");
                     formLoaderTask = new FormLoaderTask(instancePath, startingXPath, waitingXPath);
                     showIfNotShowing(FormLoadingDialogFragment.class, getSupportFragmentManager());
@@ -566,6 +575,7 @@ public class FormEntryActivity extends CollectAbstractActivity implements Animat
             Collect.getInstance().setFormController(null);
             Intent intent = getIntent();
             if (intent != null) {
+                Log.i("QWERTY", "intent != null");
                 loadFromIntent(intent);
             }
         }
@@ -2091,6 +2101,7 @@ public class FormEntryActivity extends CollectAbstractActivity implements Animat
     @Override
     protected void onResume() {
         super.onResume();
+        Log.i("QWERTY", "onResume");
 
         if (!areStoragePermissionsGranted(this)) {
             onResumeWasCalledWithoutPermissions = true;
@@ -2279,8 +2290,11 @@ public class FormEntryActivity extends CollectAbstractActivity implements Animat
 
         final FormController formController = task.getFormController();
 
+        Log.i("QWERTY", "loadingComplete");
         if (formController != null) {
+            Log.i("QWERTY", "formController != null");
             if (readPhoneStatePermissionRequestNeeded) {
+                Log.i("QWERTY", "readPhoneStatePermissionRequestNeeded");
                 new PermissionUtils(R.style.Theme_Collect_Dialog_PermissionAlert).requestReadPhoneStatePermission(this, true, new PermissionListener() {
                     @Override
                     public void granted() {
@@ -2295,6 +2309,7 @@ public class FormEntryActivity extends CollectAbstractActivity implements Animat
                     }
                 });
             } else {
+                Log.i("QWERTY", "not readPhoneStatePermissionRequestNeeded");
                 formLoaderTask.setFormLoaderListener(null);
                 FormLoaderTask t = formLoaderTask;
                 formLoaderTask = null;
@@ -2323,16 +2338,6 @@ public class FormEntryActivity extends CollectAbstractActivity implements Animat
                     Timber.i("Done in %.3f seconds.", (System.currentTimeMillis() - start) / 1000F);
                 }
 
-                boolean pendingActivityResult = task.hasPendingActivityResult();
-
-                if (pendingActivityResult) {
-                    // set the current view to whatever group we were at...
-                    onScreenRefresh();
-                    // process the pending activity request...
-                    onActivityResult(task.getRequestCode(), task.getResultCode(), task.getIntent());
-                    return;
-                }
-
                 // it can be a normal flow for a pending activity result to restore from a savepoint
                 // (the call flow handled by the above if statement). For all other use cases, the
                 // user should be notified, as it means they wandered off doing other things then
@@ -2341,10 +2346,12 @@ public class FormEntryActivity extends CollectAbstractActivity implements Animat
                 boolean hasUsedSavepoint = task.hasUsedSavepoint();
 
                 if (hasUsedSavepoint) {
+                    Log.i("QWERTY", "hasUsedSavepoint");
                     runOnUiThread(() -> showLongToast(R.string.savepoint_used));
                 }
 
                 if (formController.getInstanceFile() == null) {
+                    Log.i("QWERTY", "formController.getInstanceFile() == null");
                     FormInstanceFileCreator formInstanceFileCreator = new FormInstanceFileCreator(
                             storagePathProvider,
                             System::currentTimeMillis
@@ -2352,6 +2359,7 @@ public class FormEntryActivity extends CollectAbstractActivity implements Animat
 
                     File instanceFile = formInstanceFileCreator.createInstanceFile(formPath);
                     if (instanceFile != null) {
+                        Log.i("QWERTY", "instanceFile != null");
                         formController.setInstanceFile(instanceFile);
                     } else {
                         showFormLoadErrorAndExit(getString(R.string.loading_form_failed));
@@ -2366,13 +2374,17 @@ public class FormEntryActivity extends CollectAbstractActivity implements Animat
                         }
                     });
                 } else {
+                    Log.i("QWERTY", "formController.getInstanceFile() != null");
                     Intent reqIntent = getIntent();
                     boolean showFirst = reqIntent.getBooleanExtra("start", false);
 
                     if (!showFirst) {
+                        Log.i("QWERTY", "!showFirst");
                         // we've just loaded a saved form, so start in the hierarchy view
                         String formMode = reqIntent.getStringExtra(ApplicationConstants.BundleKeys.FORM_MODE);
                         if (formMode == null || ApplicationConstants.FormModes.EDIT_SAVED.equalsIgnoreCase(formMode)) {
+                            Log.i("QWERTY", "formMode == null || ApplicationConstants.FormModes.EDIT_SAVED.equalsIgnoreCase(formMode)");
+
                             formControllerAvailable(formController);
 
                             identityPromptViewModel.requiresIdentityToContinue().observe(this, requiresIdentity -> {
@@ -2399,12 +2411,14 @@ public class FormEntryActivity extends CollectAbstractActivity implements Animat
 
                             formSaveViewModel.editingForm();
                         } else {
+                            Log.i("QWERTY", "!!! formMode == null || ApplicationConstants.FormModes.EDIT_SAVED.equalsIgnoreCase(formMode)");
                             if (ApplicationConstants.FormModes.VIEW_SENT.equalsIgnoreCase(formMode)) {
                                 startActivity(new Intent(this, ViewOnlyFormHierarchyActivity.class));
                             }
                             finish();
                         }
                     } else {
+                        Log.i("QWERTY", "showFirst");
                         formControllerAvailable(formController);
 
                         identityPromptViewModel.requiresIdentityToContinue().observe(this, requiresIdentity -> {
@@ -2415,9 +2429,20 @@ public class FormEntryActivity extends CollectAbstractActivity implements Animat
                         });
                     }
                 }
+
+                boolean pendingActivityResult = task.hasPendingActivityResult();
+
+                if (pendingActivityResult) {
+                    Log.i("QWERTY", "pendingActivityResult");
+                    // set the current view to whatever group we were at...
+                    onScreenRefresh();
+                    // process the pending activity request...
+                    onActivityResult(task.getRequestCode(), task.getResultCode(), task.getIntent());
+                }
             }
 
         } else {
+            Log.i("QWERTY", "formController = null");
             Timber.e("FormController is null");
             showLongToast(R.string.loading_form_failed);
             finish();
