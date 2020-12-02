@@ -369,6 +369,19 @@ public class FormSaveViewModel extends ViewModel implements ProgressDialogFragme
         recentFiles.clear();
     }
 
+    public void removeMediaFilesForIndex(FormIndex deletedIndex) {
+        for (Map.Entry<String, String> entry : recentFiles.entrySet()) {
+            if (entry.getKey().startsWith(deletedIndex.getPreviousLevel().toString())) {
+                mediaUtils.deleteMediaFile(entry.getValue());
+            }
+        }
+        for (Map.Entry<String, String> entry : originalFiles.entrySet()) {
+            if (entry.getKey().startsWith(deletedIndex.getPreviousLevel().toString())) {
+                mediaUtils.deleteMediaFile(entry.getValue());
+            }
+        }
+    }
+
     public static class SaveResult {
         private final State state;
         private final String message;

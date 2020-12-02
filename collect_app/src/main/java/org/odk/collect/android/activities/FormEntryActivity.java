@@ -1166,7 +1166,8 @@ public class FormEntryActivity extends CollectAbstractActivity implements Animat
     }
 
     @Override
-    public void deleteGroup() {
+    public void deleteGroup(FormIndex deletedIndex) {
+        formSaveViewModel.removeMediaFilesForIndex(deletedIndex);
         FormController formController = getFormController();
         if (formController != null && !formController.indexIsInFieldList()) {
             swipeHandler.setBeenSwiped(true);

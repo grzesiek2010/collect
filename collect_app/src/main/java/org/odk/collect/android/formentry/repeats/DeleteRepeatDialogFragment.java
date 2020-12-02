@@ -10,6 +10,7 @@ import androidx.annotation.Nullable;
 import androidx.appcompat.app.AlertDialog;
 import androidx.fragment.app.DialogFragment;
 
+import org.javarosa.core.model.FormIndex;
 import org.odk.collect.android.R;
 import org.odk.collect.android.application.Collect;
 import org.odk.collect.android.formentry.audit.AuditEvent;
@@ -48,9 +49,10 @@ public class DeleteRepeatDialogFragment extends DialogFragment {
         alertDialog.setMessage(getActivity().getString(R.string.delete_repeat_confirm, name));
         DialogInterface.OnClickListener quitListener = (dialog, i) -> {
             if (i == BUTTON_POSITIVE) { // yes
+                FormIndex deletedIndex = formController.getFormIndex();
                 formController.getAuditEventLogger().logEvent(AuditEvent.AuditEventType.DELETE_REPEAT, true, System.currentTimeMillis());
                 formController.deleteRepeat();
-                callback.deleteGroup();
+                callback.deleteGroup(deletedIndex);
             }
             alertDialog.cancel();
             dismiss();
@@ -64,6 +66,6 @@ public class DeleteRepeatDialogFragment extends DialogFragment {
     }
 
     public interface DeleteRepeatDialogCallback {
-        void deleteGroup();
+        void deleteGroup(FormIndex deletedIndex);
     }
 }

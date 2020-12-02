@@ -796,7 +796,7 @@ public class FormHierarchyActivity extends CollectAbstractActivity implements De
     }
 
     @Override
-    public void deleteGroup() {
+    public void deleteGroup(FormIndex deletedIndex) {
         if (didDeleteLastRepeatItem()) {
             // goUpLevel would put us in a weird state after deleting the last item;
             // just go back one event instead.
