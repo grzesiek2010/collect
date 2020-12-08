@@ -2300,16 +2300,6 @@ public class FormEntryActivity extends CollectAbstractActivity implements Animat
                     Timber.i("Done in %.3f seconds.", (System.currentTimeMillis() - start) / 1000F);
                 }
 
-                boolean pendingActivityResult = task.hasPendingActivityResult();
-
-                if (pendingActivityResult) {
-                    // set the current view to whatever group we were at...
-                    onScreenRefresh();
-                    // process the pending activity request...
-                    onActivityResult(task.getRequestCode(), task.getResultCode(), task.getIntent());
-                    return;
-                }
-
                 // it can be a normal flow for a pending activity result to restore from a savepoint
                 // (the call flow handled by the above if statement). For all other use cases, the
                 // user should be notified, as it means they wandered off doing other things then
@@ -2351,6 +2341,10 @@ public class FormEntryActivity extends CollectAbstractActivity implements Animat
                         if (formController.getFormIndex().isInForm()) {
                             formControllerAvailable(formController);
                             onScreenRefresh();
+
+                            if (task.hasPendingActivityResult()) {
+                                onActivityResult(task.getRequestCode(), task.getResultCode(), task.getIntent());
+                            }
                             return;
                         }
 
