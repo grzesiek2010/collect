@@ -2347,6 +2347,13 @@ public class FormEntryActivity extends CollectAbstractActivity implements Animat
                     boolean showFirst = reqIntent.getBooleanExtra("start", false);
 
                     if (!showFirst) {
+                        // Returning to the app after process death
+                        if (formController.getFormIndex().isInForm()) {
+                            formControllerAvailable(formController);
+                            onScreenRefresh();
+                            return;
+                        }
+
                         // we've just loaded a saved form, so start in the hierarchy view
                         String formMode = reqIntent.getStringExtra(ApplicationConstants.BundleKeys.FORM_MODE);
                         if (formMode == null || ApplicationConstants.FormModes.EDIT_SAVED.equalsIgnoreCase(formMode)) {
