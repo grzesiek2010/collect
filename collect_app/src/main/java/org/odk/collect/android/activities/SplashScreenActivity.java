@@ -85,12 +85,15 @@ public class SplashScreenActivity extends Activity {
         requestWindowFeature(Window.FEATURE_NO_TITLE);
         DaggerUtils.getComponent(this).inject(this);
 
+        if (appStateProvider.isFreshInstall(this)) {
+            storageStateProvider.enableUsingScopedStorage();
+        }
+
         permissionUtils.requestStoragePermissions(this, new PermissionListener() {
             @Override
             public void granted() {
                 // must be at the beginning of any activity that can be called from an external intent
                 try {
-                    enableScopedStorageForFreshInstalls();
                     new StorageInitializer().createOdkDirsOnStorage();
                 } catch (RuntimeException e) {
                     DialogUtils.showDialog(DialogUtils.createErrorDialog(SplashScreenActivity.this,
@@ -191,11 +194,5 @@ public class SplashScreenActivity extends Activity {
         }
 
         new Handler().postDelayed(this::endSplashScreen, SPLASH_TIMEOUT);
-    }
-
-    private void enableScopedStorageForFreshInstalls() {
-        if (!storageStateProvider.isScopedStorageUsed() && !new File(storagePathProvider.getUnscopedStorageRootDirPath()).exists()) {
-            storageStateProvider.enableUsingScopedStorage();
-        }
     }
 }
