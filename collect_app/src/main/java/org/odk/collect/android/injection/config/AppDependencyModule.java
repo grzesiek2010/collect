@@ -23,6 +23,7 @@ import org.odk.collect.android.BuildConfig;
 import org.odk.collect.android.R;
 import org.odk.collect.android.analytics.Analytics;
 import org.odk.collect.android.analytics.FirebaseAnalytics;
+import org.odk.collect.android.application.AppStateProvider;
 import org.odk.collect.android.application.CollectSettingsChangeHandler;
 import org.odk.collect.android.application.initialization.ApplicationInitializer;
 import org.odk.collect.android.application.initialization.CollectSettingsPreferenceMigrator;
@@ -486,5 +487,10 @@ public class AppDependencyModule {
     @Provides
     public Clock providesClock() {
         return System::currentTimeMillis;
+    }
+
+    @Provides
+    public AppStateProvider providesAppStateProvider() {
+        return new AppStateProvider();
     }
 }
