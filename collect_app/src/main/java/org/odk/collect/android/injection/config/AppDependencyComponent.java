@@ -11,6 +11,7 @@ import org.odk.collect.android.activities.FormHierarchyActivity;
 import org.odk.collect.android.activities.FormMapActivity;
 import org.odk.collect.android.activities.GeoPointMapActivity;
 import org.odk.collect.android.activities.GeoPolyActivity;
+import org.odk.collect.android.activities.InstanceChooserList;
 import org.odk.collect.android.activities.InstanceUploaderActivity;
 import org.odk.collect.android.activities.InstanceUploaderListActivity;
 import org.odk.collect.android.activities.MainMenuActivity;
@@ -219,6 +220,8 @@ public interface AppDependencyComponent {
     void inject(AudioRecordingControllerFragment audioRecordingControllerFragment);
 
     void inject(SaveAnswerFileErrorDialogFragment saveAnswerFileErrorDialogFragment);
+
+    void inject(InstanceChooserList InstanceChooserList);
 
     OpenRosaHttpInterface openRosaHttpInterface();
 

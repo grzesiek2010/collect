@@ -88,6 +88,9 @@ public class ServerPreferencesFragment extends BasePreferenceFragment implements
     @Inject
     ServerRepository serverRepository;
 
+    @Inject
+    PermissionUtils permissionUtils;
+
     private ListPopupWindow listPopupWindow;
     private Preference selectedGoogleAccountPreference;
     private boolean allowClickSelectedGoogleAccountPreference = true;
@@ -239,7 +242,7 @@ public class ServerPreferencesFragment extends BasePreferenceFragment implements
     }
 
     private void requestAccountsPermission() {
-        new PermissionUtils(R.style.Theme_Collect_Dialog_PermissionAlert).requestGetAccountsPermission(getActivity(), new PermissionListener() {
+        permissionUtils.requestGetAccountsPermission(getActivity(), new PermissionListener() {
             @Override
             public void granted() {
                 Intent intent = accountsManager.getAccountChooserIntent();

@@ -78,7 +78,6 @@ public abstract class QuestionWidget extends FrameLayout implements Widget {
     private final View guidanceTextLayout;
     private final View textLayout;
     private final TextView warningText;
-    private PermissionUtils permissionUtils;
     private AtomicBoolean expanded;
     protected final ThemeUtils themeUtils;
     protected AudioHelper audioHelper;
@@ -99,6 +98,9 @@ public abstract class QuestionWidget extends FrameLayout implements Widget {
     @Inject
     public ScreenUtils screenUtils;
 
+    @Inject
+    PermissionUtils permissionUtils;
+
     public QuestionWidget(Context context, QuestionDetails questionDetails) {
         super(context);
         getComponent(context).inject(this);
@@ -106,10 +108,6 @@ public abstract class QuestionWidget extends FrameLayout implements Widget {
         this.audioHelper = audioHelperFactory.create(context);
 
         themeUtils = new ThemeUtils(context);
-
-        if (context instanceof FormEntryActivity) {
-            permissionUtils = new PermissionUtils(R.style.Theme_Collect_Dialog_PermissionAlert);
-        }
 
         this.questionDetails = questionDetails;
         formEntryPrompt = questionDetails.getPrompt();
