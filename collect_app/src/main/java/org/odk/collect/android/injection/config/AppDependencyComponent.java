@@ -222,7 +222,7 @@ public interface AppDependencyComponent {
 
     void inject(SaveAnswerFileErrorDialogFragment saveAnswerFileErrorDialogFragment);
 
-    void inject(InstanceChooserList InstanceChooserList);
+    void inject(InstanceChooserList instanceChooserList);
 
     void inject(CollectAbstractActivity collectAbstractActivity);
 
