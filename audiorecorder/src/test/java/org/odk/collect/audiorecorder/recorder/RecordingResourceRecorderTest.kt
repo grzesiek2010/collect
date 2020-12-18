@@ -2,9 +2,9 @@ package org.odk.collect.audiorecorder.recorder
 
 import com.google.common.io.Files
 import org.hamcrest.MatcherAssert.assertThat
-import org.hamcrest.Matchers.endsWith
-import org.hamcrest.Matchers.equalTo
-import org.hamcrest.Matchers.not
+import org.hamcrest.core.IsEqual.equalTo
+import org.hamcrest.core.IsNot.not
+import org.hamcrest.core.StringEndsWith.endsWith
 import org.junit.Test
 import org.odk.collect.audiorecorder.recording.MicInUseException
 import org.odk.collect.audiorecorder.recording.SetupException

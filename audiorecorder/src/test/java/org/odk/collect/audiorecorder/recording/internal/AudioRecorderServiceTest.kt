@@ -6,9 +6,9 @@ import android.content.Context
 import android.content.Intent
 import androidx.test.core.app.ApplicationProvider
 import org.hamcrest.MatcherAssert.assertThat
-import org.hamcrest.Matchers.equalTo
-import org.hamcrest.Matchers.not
-import org.hamcrest.Matchers.nullValue
+import org.hamcrest.core.IsEqual.equalTo
+import org.hamcrest.core.IsNot.not
+import org.hamcrest.core.IsNull.nullValue
 import org.junit.Before
 import org.junit.Test
 import org.junit.runner.RunWith

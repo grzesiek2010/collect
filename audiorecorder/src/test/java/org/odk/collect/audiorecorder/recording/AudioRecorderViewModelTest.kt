@@ -1,7 +1,7 @@
 package org.odk.collect.audiorecorder.recording
 
 import org.hamcrest.MatcherAssert.assertThat
-import org.hamcrest.Matchers.equalTo
+import org.hamcrest.core.IsEqual.equalTo
 import org.junit.After
 import org.junit.Test
 import org.odk.collect.audiorecorder.recorder.Output
