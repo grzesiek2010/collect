@@ -14,7 +14,6 @@
 
 package org.odk.collect.android.activities;
 
-import android.app.Activity;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
@@ -35,7 +34,6 @@ import org.odk.collect.android.preferences.GeneralSharedPreferences;
 import org.odk.collect.android.storage.StorageInitializer;
 import org.odk.collect.android.utilities.DialogUtils;
 import org.odk.collect.android.utilities.FileUtils;
-import org.odk.collect.android.permissions.PermissionsProvider;
 
 import java.io.ByteArrayInputStream;
 import java.io.File;
@@ -50,7 +48,7 @@ import timber.log.Timber;
 import static org.odk.collect.android.analytics.AnalyticsEvents.SHOW_SPLASH_SCREEN;
 import static org.odk.collect.android.preferences.GeneralKeys.KEY_SPLASH_PATH;
 
-public class SplashScreenActivity extends Activity {
+public class SplashScreenActivity extends CollectAbstractActivity {
 
     private static final int SPLASH_TIMEOUT = 2000; // milliseconds
     private static final boolean EXIT = true;
@@ -59,9 +57,6 @@ public class SplashScreenActivity extends Activity {
 
     @Inject
     Analytics analytics;
-
-    @Inject
-    PermissionsProvider permissionsProvider;
 
     @Inject
     GeneralSharedPreferences generalSharedPreferences;
