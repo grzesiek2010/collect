@@ -20,14 +20,11 @@ import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
-import android.net.Uri;
 import androidx.annotation.NonNull;
 
 import android.util.TypedValue;
 import android.view.View;
 
-import org.javarosa.core.model.data.IAnswerData;
-import org.javarosa.core.model.data.StringData;
 import org.javarosa.form.api.FormEntryPrompt;
 import org.odk.collect.android.databinding.ArbitraryFileWidgetAnswerBinding;
 import org.odk.collect.android.formentry.questions.QuestionDetails;
@@ -35,40 +32,17 @@ import org.odk.collect.android.utilities.ApplicationConstants;
 import org.odk.collect.android.utilities.FileUtil;
 import org.odk.collect.android.utilities.MediaUtils;
 import org.odk.collect.android.utilities.QuestionMediaManager;
-import org.odk.collect.android.widgets.interfaces.WidgetDataReceiver;
-import org.odk.collect.android.widgets.interfaces.FileWidget;
 import org.odk.collect.android.widgets.utilities.WaitingForDataRegistry;
 
 import java.io.File;
 
-import timber.log.Timber;
-
 @SuppressLint("ViewConstructor")
-public class ArbitraryFileWidget extends QuestionWidget implements FileWidget, WidgetDataReceiver {
+public class ArbitraryFileWidget extends BaseArbitraryFileWidget {
     ArbitraryFileWidgetAnswerBinding binding;
-
-    @NonNull
-    private final FileUtil fileUtil;
-
-    @NonNull
-    private final MediaUtils mediaUtils;
-
-    private final QuestionMediaManager questionMediaManager;
-    private final WaitingForDataRegistry waitingForDataRegistry;
-
-    private String binaryName;
-
-    public ArbitraryFileWidget(Context context, QuestionDetails prompt, QuestionMediaManager questionMediaManager, WaitingForDataRegistry waitingForDataRegistry) {
-        this(context, prompt, new FileUtil(), new MediaUtils(), questionMediaManager, waitingForDataRegistry);
-    }
 
     ArbitraryFileWidget(Context context, QuestionDetails questionDetails, @NonNull FileUtil fileUtil, @NonNull MediaUtils mediaUtils,
                         QuestionMediaManager questionMediaManager, WaitingForDataRegistry waitingForDataRegistry) {
-        super(context, questionDetails);
-        this.fileUtil = fileUtil;
-        this.mediaUtils = mediaUtils;
-        this.questionMediaManager = questionMediaManager;
-        this.waitingForDataRegistry = waitingForDataRegistry;
+        super(context, questionDetails, fileUtil, mediaUtils, questionMediaManager, waitingForDataRegistry);
     }
 
     @Override
@@ -94,23 +68,22 @@ public class ArbitraryFileWidget extends QuestionWidget implements FileWidget, W
     }
 
     @Override
-    public void deleteFile() {
-        questionMediaManager.deleteAnswerFile(getFormEntryPrompt().getIndex().toString(),
-                getInstanceFolder() + File.separator + binaryName);
-        binaryName = null;
-    }
-
-    @Override
-    public IAnswerData getAnswer() {
-        return binaryName != null ? new StringData(binaryName) : null;
-    }
-
-    @Override
     public void clearAnswer() {
         binding.arbitraryFileAnswerText.setVisibility(GONE);
         deleteFile();
-
         widgetValueChanged();
+    }
+
+    @Override
+    public void setOnLongClickListener(OnLongClickListener l) {
+        binding.arbitraryFileButton.setOnLongClickListener(l);
+        binding.arbitraryFileAnswerText.setOnLongClickListener(l);
+    }
+
+    @Override
+    protected void showAnswerText() {
+        binding.arbitraryFileAnswerText.setText(binaryName);
+        binding.arbitraryFileAnswerText.setVisibility(VISIBLE);
     }
 
     private void onButtonClick() {
@@ -119,46 +92,5 @@ public class ArbitraryFileWidget extends QuestionWidget implements FileWidget, W
         intent.addCategory(Intent.CATEGORY_OPENABLE);
         intent.setType("*/*"); // all file types
         ((Activity) getContext()).startActivityForResult(intent, ApplicationConstants.RequestCodes.ARBITRARY_FILE_CHOOSER);
-    }
-
-    @Override
-    public void setData(Object object) {
-        if (binaryName != null) {
-            deleteFile();
-        }
-
-        File newFile;
-        // get the file path and create a copy in the instance folder
-        if (object instanceof Uri) {
-            String sourcePath = mediaUtils.getPath(getContext(), (Uri) object);
-            String destinationPath = mediaUtils.getDestinationPathFromSourcePath(sourcePath, getInstanceFolder());
-            File source = fileUtil.getFileAtPath(sourcePath);
-            newFile = fileUtil.getFileAtPath(destinationPath);
-            fileUtil.copyFile(source, newFile);
-        } else if (object instanceof File) {
-            // Getting a file indicates we've done the copy in the before step
-            newFile = (File) object;
-        } else {
-            Timber.w("FileWidget's setBinaryData must receive a File or Uri object.");
-            return;
-        }
-
-        if (newFile.exists()) {
-            questionMediaManager.replaceAnswerFile(getFormEntryPrompt().getIndex().toString(), newFile.getAbsolutePath());
-            binaryName = newFile.getName();
-            binding.arbitraryFileAnswerText.setText(binaryName);
-            binding.arbitraryFileAnswerText.setVisibility(VISIBLE);
-            Timber.i("Setting current answer to %s", newFile.getName());
-
-            widgetValueChanged();
-        } else {
-            Timber.e("Inserting Arbitrary file FAILED");
-        }
-    }
-
-    @Override
-    public void setOnLongClickListener(OnLongClickListener l) {
-        binding.arbitraryFileButton.setOnLongClickListener(l);
-        binding.arbitraryFileAnswerText.setOnLongClickListener(l);
     }
 }
