@@ -22,6 +22,7 @@ import android.content.Context;
 import android.content.Intent;
 import androidx.annotation.NonNull;
 
+import android.net.Uri;
 import android.util.TypedValue;
 import android.view.View;
 
@@ -40,9 +41,13 @@ import java.io.File;
 public class ArbitraryFileWidget extends BaseArbitraryFileWidget {
     ArbitraryFileWidgetAnswerBinding binding;
 
+    @NonNull
+    private final FileUtil fileUtil;
+
     ArbitraryFileWidget(Context context, QuestionDetails questionDetails, @NonNull FileUtil fileUtil, @NonNull MediaUtils mediaUtils,
                         QuestionMediaManager questionMediaManager, WaitingForDataRegistry waitingForDataRegistry) {
-        super(context, questionDetails, fileUtil, mediaUtils, questionMediaManager, waitingForDataRegistry);
+        super(context, questionDetails, mediaUtils, questionMediaManager, waitingForDataRegistry);
+        this.fileUtil = fileUtil;
     }
 
     @Override
@@ -84,6 +89,16 @@ public class ArbitraryFileWidget extends BaseArbitraryFileWidget {
     protected void showAnswerText() {
         binding.arbitraryFileAnswerText.setText(binaryName);
         binding.arbitraryFileAnswerText.setVisibility(VISIBLE);
+    }
+
+    @Override
+    protected File saveFileFromUri(Uri uri) {
+        String sourcePath = mediaUtils.getPath(getContext(), uri);
+        String destinationPath = mediaUtils.getDestinationPathFromSourcePath(sourcePath, getInstanceFolder());
+        File source = fileUtil.getFileAtPath(sourcePath);
+        File file = fileUtil.getFileAtPath(destinationPath);
+        fileUtil.copyFile(source, file);
+        return file;
     }
 
     private void onButtonClick() {

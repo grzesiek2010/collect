@@ -8,7 +8,6 @@ import androidx.annotation.NonNull;
 import org.javarosa.core.model.data.IAnswerData;
 import org.javarosa.core.model.data.StringData;
 import org.odk.collect.android.formentry.questions.QuestionDetails;
-import org.odk.collect.android.utilities.FileUtil;
 import org.odk.collect.android.utilities.MediaUtils;
 import org.odk.collect.android.utilities.QuestionMediaManager;
 import org.odk.collect.android.widgets.interfaces.FileWidget;
@@ -21,9 +20,6 @@ import timber.log.Timber;
 
 public abstract class BaseArbitraryFileWidget extends QuestionWidget implements FileWidget, WidgetDataReceiver  {
     @NonNull
-    private final FileUtil fileUtil;
-
-    @NonNull
     protected final MediaUtils mediaUtils;
 
     private final QuestionMediaManager questionMediaManager;
@@ -31,10 +27,9 @@ public abstract class BaseArbitraryFileWidget extends QuestionWidget implements 
 
     protected String binaryName;
 
-    public BaseArbitraryFileWidget(Context context, QuestionDetails questionDetails, @NonNull FileUtil fileUtil, @NonNull MediaUtils mediaUtils,
+    public BaseArbitraryFileWidget(Context context, QuestionDetails questionDetails, @NonNull MediaUtils mediaUtils,
                                    QuestionMediaManager questionMediaManager, WaitingForDataRegistry waitingForDataRegistry) {
         super(context, questionDetails);
-        this.fileUtil = fileUtil;
         this.mediaUtils = mediaUtils;
         this.questionMediaManager = questionMediaManager;
         this.waitingForDataRegistry = waitingForDataRegistry;
@@ -61,11 +56,7 @@ public abstract class BaseArbitraryFileWidget extends QuestionWidget implements 
         File newFile;
         // get the file path and create a copy in the instance folder
         if (object instanceof Uri) {
-            String sourcePath = mediaUtils.getPath(getContext(), (Uri) object);
-            String destinationPath = mediaUtils.getDestinationPathFromSourcePath(sourcePath, getInstanceFolder());
-            File source = fileUtil.getFileAtPath(sourcePath);
-            newFile = fileUtil.getFileAtPath(destinationPath);
-            fileUtil.copyFile(source, newFile);
+            newFile = saveFileFromUri((Uri) object);
         } else if (object instanceof File) {
             // Getting a file indicates we've done the copy in the before step
             newFile = (File) object;
@@ -87,4 +78,6 @@ public abstract class BaseArbitraryFileWidget extends QuestionWidget implements 
     }
 
     protected abstract void showAnswerText();
+
+    protected abstract File saveFileFromUri(Uri uri);
 }
