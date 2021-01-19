@@ -26,7 +26,7 @@ import org.odk.collect.android.application.Collect;
 import org.odk.collect.android.location.client.GoogleFusedLocationClient;
 import org.odk.collect.android.location.client.MaxAccuracyWithinTimeoutLocationClient;
 import org.odk.collect.android.preferences.GeneralSharedPreferences;
-import org.odk.collect.android.utilities.GeoUtils;
+import org.odk.collect.android.utilities.LocationStringProvider;
 import org.odk.collect.android.utilities.PlayServicesChecker;
 
 import timber.log.Timber;
@@ -91,7 +91,7 @@ public class CollectSetGeopointAction extends SetGeopointAction implements Locat
         if (GeneralSharedPreferences.getInstance().getBoolean(KEY_BACKGROUND_LOCATION, true)) {
             Timber.i("Setgeopoint action for " + getContextualizedTargetReference() + ": location update");
 
-            String formattedLocation = GeoUtils.formatLocationResultString(location);
+            String formattedLocation = new LocationStringProvider(location).getLocationAsString();
             saveLocationValue(formattedLocation);
         } else {
             saveLocationValue("");

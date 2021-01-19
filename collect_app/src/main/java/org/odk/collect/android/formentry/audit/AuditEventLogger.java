@@ -7,6 +7,7 @@ import android.os.SystemClock;
 import org.javarosa.core.model.FormIndex;
 import org.javarosa.core.model.data.IAnswerData;
 import org.odk.collect.android.javarosawrapper.FormController;
+import org.odk.collect.android.utilities.LocationStringProvider;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -109,10 +110,8 @@ public class AuditEventLogger {
 
     private void addLocationCoordinatesToAuditEvent(AuditEvent auditEvent, long currentTime) {
         Location location = getMostAccurateLocation(currentTime);
-        String latitude = location != null ? Double.toString(location.getLatitude()) : "";
-        String longitude = location != null ? Double.toString(location.getLongitude()) : "";
-        String accuracy = location != null ? Double.toString(location.getAccuracy()) : "";
-        auditEvent.setLocationCoordinates(latitude, longitude, accuracy);
+        LocationStringProvider locationStringProvider = new LocationStringProvider(location);
+        auditEvent.setLocationCoordinates(locationStringProvider.getLatitude(), locationStringProvider.getLongitude(), locationStringProvider.getAccuracy());
     }
 
     private void addNewValueToQuestionAuditEvent(AuditEvent aev, FormController formController) {

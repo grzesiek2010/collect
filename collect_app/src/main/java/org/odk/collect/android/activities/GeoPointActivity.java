@@ -36,6 +36,7 @@ import org.odk.collect.android.location.client.GoogleFusedLocationClient;
 import org.odk.collect.android.location.client.LocationClient;
 import org.odk.collect.android.location.client.LocationClientProvider;
 import org.odk.collect.android.utilities.GeoUtils;
+import org.odk.collect.android.utilities.LocationStringProvider;
 import org.odk.collect.android.utilities.PlayServicesChecker;
 import org.odk.collect.android.utilities.ToastUtils;
 
@@ -314,7 +315,7 @@ public class GeoPointActivity extends CollectAbstractActivity implements Locatio
     }
 
     public String getAccuracyMessage(@NonNull Location location) {
-        return getString(R.string.location_accuracy, truncateDouble(location.getAccuracy()));
+        return getString(R.string.location_accuracy, truncateDouble(location.isFromMockProvider() ? 0 : location.getAccuracy()));
     }
 
     public String getProviderMessage(@NonNull Location location) {
@@ -322,7 +323,7 @@ public class GeoPointActivity extends CollectAbstractActivity implements Locatio
     }
 
     public String getResultStringForLocation(@NonNull Location location) {
-        return GeoUtils.formatLocationResultString(location);
+        return new LocationStringProvider(location).getLocationAsString();
     }
 
     private String truncateDouble(float number) {

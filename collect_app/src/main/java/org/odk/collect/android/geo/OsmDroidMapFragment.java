@@ -435,7 +435,7 @@ public class OsmDroidMapFragment extends Fragment implements MapFragment,
         }
         return new MapPoint(
             geoPoint.getLatitude(), geoPoint.getLongitude(),
-            geoPoint.getAltitude(), overlay.getLastFix().getAccuracy()
+            geoPoint.getAltitude(), overlay.getLastFix().isFromMockProvider() ? 0 : overlay.getLastFix().getAccuracy()
         );
     }
 

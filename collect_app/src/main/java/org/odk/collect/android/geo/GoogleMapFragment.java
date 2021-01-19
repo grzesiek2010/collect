@@ -353,7 +353,7 @@ public class GoogleMapFragment extends SupportMapFragment implements
         }
 
         if (getActivity() != null) {
-            updateLocationIndicator(toLatLng(lastLocationFix), location.getAccuracy());
+            updateLocationIndicator(toLatLng(lastLocationFix), location.isFromMockProvider() ? 0 : location.getAccuracy());
         }
     }
 
@@ -442,7 +442,7 @@ public class GoogleMapFragment extends SupportMapFragment implements
             return null;
         }
         return new MapPoint(location.getLatitude(), location.getLongitude(),
-            location.getAltitude(), location.getAccuracy());
+            location.getAltitude(), location.isFromMockProvider() ? 0 : location.getAccuracy());
     }
 
     private static @NonNull MapPoint fromMarker(@NonNull Marker marker) {

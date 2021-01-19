@@ -20,7 +20,7 @@ import org.odk.collect.android.activities.MainMenuActivity;
 import org.odk.collect.android.support.pages.MainMenuPage;
 import org.odk.collect.android.support.CopyFormRule;
 import org.odk.collect.android.support.ResetStateRule;
-import org.odk.collect.android.utilities.GeoUtils;
+import org.odk.collect.android.utilities.LocationStringProvider;
 
 import static androidx.test.espresso.intent.Intents.intending;
 import static androidx.test.espresso.intent.matcher.IntentMatchers.hasComponent;
@@ -48,7 +48,7 @@ public class FormMapTest {
         location.setAltitude(5);
 
         Intent intent = new Intent();
-        intent.putExtra(FormEntryActivity.LOCATION_RESULT, GeoUtils.formatLocationResultString(location));
+        intent.putExtra(FormEntryActivity.LOCATION_RESULT, new LocationStringProvider(location).getLocationAsString());
         Instrumentation.ActivityResult result = new Instrumentation.ActivityResult(Activity.RESULT_OK, intent);
 
         intending(hasComponent("org.odk.collect.android.activities.GeoPointActivity"))
