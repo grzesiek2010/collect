@@ -79,6 +79,10 @@ public class PermissionsProvider {
             return;
         }
 
+        forceRequestStoragePermissions(activity, action);
+    }
+
+    public void forceRequestStoragePermissions(Activity activity, @NonNull PermissionListener action) {
         requestPermissions(activity, new PermissionListener() {
             @Override
             public void granted() {
@@ -259,6 +263,27 @@ public class PermissionsProvider {
             return true;
         } catch (SecurityException | NullPointerException e) {
             return false;
+        }
+    }
+
+    public void requestReadUriPermission(Activity activity, Uri uri, ContentResolver contentResolver, PermissionListener listener) {
+        try (Cursor ignored = contentResolver.query(uri, null, null, null, null)) {
+            listener.granted();
+        } catch (SecurityExceptio
+                n e) {
+            forceRequestStoragePermissions(activity, new PermissionListener() {
+                @Override
+                public void granted() {
+                    listener.granted();
+                }
+
+                @Override
+                public void denied() {
+                    listener.denied();
+                }
+            });
+        } catch (Exception | Error e) {
+            listener.denied();
         }
     }
 }
