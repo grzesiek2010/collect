@@ -143,6 +143,7 @@ import org.odk.collect.android.tasks.SavePointTask;
 import org.odk.collect.android.utilities.ApplicationConstants;
 import org.odk.collect.android.utilities.DestroyableLifecyleOwner;
 import org.odk.collect.android.utilities.DialogUtils;
+import org.odk.collect.android.utilities.ExternalAppIntentProvider;
 import org.odk.collect.android.utilities.FormNameUtils;
 import org.odk.collect.android.utilities.MultiClickGuard;
 import org.odk.collect.android.utilities.PlayServicesChecker;
@@ -337,6 +338,9 @@ public class FormEntryActivity extends CollectAbstractActivity implements Animat
 
     @Inject
     SoftKeyboardController softKeyboardController;
+
+    @Inject
+    ExternalAppIntentProvider externalAppIntentProvider;
 
     private final LocationProvidersReceiver locationProvidersReceiver = new LocationProvidersReceiver();
 
@@ -800,13 +804,16 @@ public class FormEntryActivity extends CollectAbstractActivity implements Animat
             case RequestCodes.EX_STRING_CAPTURE:
             case RequestCodes.EX_INT_CAPTURE:
             case RequestCodes.EX_DECIMAL_CAPTURE:
-                Object externalValue = getValueFromExternalApp(intent);
+                Object externalValue = externalAppIntentProvider.getValueFromIntent(intent);
                 if (getCurrentViewIfODKView() != null) {
                     setWidgetData(externalValue);
                 }
                 break;
             case RequestCodes.EX_ARBITRARY_FILE_CHOOSER:
-                loadFile((Uri) getValueFromExternalApp(intent));
+                externalValue = externalAppIntentProvider.getValueFromIntent(intent);
+                if (externalValue instanceof Uri) {
+                    loadFile((Uri) externalValue);
+                }
                 break;
             case RequestCodes.EX_GROUP_CAPTURE:
                 try {
@@ -866,13 +873,6 @@ public class FormEntryActivity extends CollectAbstractActivity implements Animat
         } else {
             ToastUtils.showLongToast(R.string.read_file_permission_not_granted);
         }
-    }
-
-    @Nullable
-    private Object getValueFromExternalApp(Intent intent) {
-        return intent.getExtras().containsKey("value")
-                ? intent.getExtras().get("value")
-                : null;
     }
 
     public QuestionWidget getWidgetWaitingForBinaryData() {
