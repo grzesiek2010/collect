@@ -4,6 +4,7 @@ import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.robolectric.RobolectricTestRunner;
 
+import static org.hamcrest.Matchers.is;
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.equalTo;
 import static org.junit.Assert.assertEquals;
@@ -17,6 +18,12 @@ public class StringUtilsTest {
     public void textToHtml_nullBecomesEmptyString() {
         CharSequence observed = StringUtils.textToHtml(null);
         assertThat(observed, equalTo(""));
+    }
+
+    @Test
+    public void textToHtml_shouldBeTrimmed() {
+        CharSequence observed = StringUtils.textToHtml("<p style=\"text-align:center\">Text</p>");
+        assertThat(observed.toString(), is("Text"));
     }
 
     @Test
