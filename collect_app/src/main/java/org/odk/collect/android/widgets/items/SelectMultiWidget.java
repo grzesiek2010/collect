@@ -26,7 +26,6 @@ import org.odk.collect.android.formentry.questions.QuestionDetails;
 import org.odk.collect.android.utilities.Appearances;
 import org.odk.collect.android.widgets.warnings.SpacesInUnderlyingValuesWarning;
 
-import java.util.ArrayList;
 import java.util.List;
 
 import static org.odk.collect.android.formentry.media.FormMediaUtils.getPlayColor;
@@ -51,7 +50,7 @@ public class SelectMultiWidget extends BaseSelectListWidget {
         int numColumns = Appearances.getNumberOfColumns(getFormEntryPrompt(), screenUtils);
         boolean noButtonsMode = Appearances.isCompactAppearance(getFormEntryPrompt()) || Appearances.isNoButtonsAppearance(getFormEntryPrompt());
 
-        recyclerViewAdapter = new SelectMultipleListAdapter(getSelectedItems(), this, getContext(),
+        recyclerViewAdapter = new SelectMultipleListAdapter(questionDetails.getWidgetAnswerRepository().getSelectMultiAnswer(), this, getContext(),
                 items, getFormEntryPrompt(), getReferenceManager(), getAudioHelper(),
                 getPlayColor(getFormEntryPrompt(), themeUtils), numColumns, noButtonsMode);
         return recyclerViewAdapter;
@@ -72,12 +71,6 @@ public class SelectMultiWidget extends BaseSelectListWidget {
         } else {
             ((SelectMultipleListAdapter) recyclerViewAdapter).removeItem(items.get(choiceIndex).selection());
         }
-    }
-
-    private List<Selection> getSelectedItems() {
-        return getFormEntryPrompt().getAnswerValue() == null
-                ? new ArrayList<>() :
-                (List<Selection>) getFormEntryPrompt().getAnswerValue().getValue();
     }
 
     @Override
