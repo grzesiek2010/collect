@@ -70,4 +70,8 @@ public class MediaUtils {
         intent.setType(mimeType);
         activity.startActivityForResult(intent, requestCode);
     }
+
+    public boolean isImageFile(File file) {
+        return ContentResolverHelper.getMimeType(file).startsWith("image");
+    }
 }
