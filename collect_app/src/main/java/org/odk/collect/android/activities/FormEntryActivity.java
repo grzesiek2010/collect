@@ -217,10 +217,6 @@ public class FormEntryActivity extends CollectAbstractActivity implements Animat
     private static final boolean EVALUATE_CONSTRAINTS = true;
     public static final boolean DO_NOT_EVALUATE_CONSTRAINTS = false;
 
-    // Extra returned from gp activity
-    public static final String LOCATION_RESULT = "LOCATION_RESULT";
-    public static final String BEARING_RESULT = "BEARING_RESULT";
-    public static final String GEOSHAPE_RESULTS = "GEOSHAPE_RESULTS";
     public static final String ANSWER_KEY = "ANSWER_KEY";
 
     public static final String KEY_INSTANCES = "instances";
@@ -866,23 +862,13 @@ public class FormEntryActivity extends CollectAbstractActivity implements Animat
             case RequestCodes.IMAGE_CHOOSER:
                 loadFile(intent.getData());
                 break;
+            case RequestCodes.BEARING_CAPTURE:
             case RequestCodes.LOCATION_CAPTURE:
-                String sl = intent.getStringExtra(LOCATION_RESULT);
-                if (getCurrentViewIfODKView() != null) {
-                    setWidgetData(sl);
-                }
-                break;
             case RequestCodes.GEOSHAPE_CAPTURE:
             case RequestCodes.GEOTRACE_CAPTURE:
-                String gshr = intent.getStringExtra(ANSWER_KEY);
+                String answer = intent.getStringExtra(ANSWER_KEY);
                 if (getCurrentViewIfODKView() != null) {
-                    setWidgetData(gshr);
-                }
-                break;
-            case RequestCodes.BEARING_CAPTURE:
-                String bearing = intent.getStringExtra(BEARING_RESULT);
-                if (getCurrentViewIfODKView() != null) {
-                    setWidgetData(bearing);
+                    setWidgetData(answer);
                 }
                 break;
         }

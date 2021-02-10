@@ -16,7 +16,7 @@ import org.robolectric.android.controller.ActivityController;
 import static android.app.Activity.RESULT_OK;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
-import static org.odk.collect.android.activities.FormEntryActivity.LOCATION_RESULT;
+import static org.odk.collect.android.activities.FormEntryActivity.ANSWER_KEY;
 import static org.odk.collect.android.location.LocationTestUtils.createLocation;
 import static org.robolectric.Shadows.shadowOf;
 
@@ -45,7 +45,7 @@ public class GeoPointMapActivityTest extends BaseGeoActivityTest {
         activity.findViewById(R.id.accept_location).performClick();
         assertTrue(activity.isFinishing());
         assertEquals(RESULT_OK, shadowOf(activity).getResultCode());
-        String result = shadowOf(activity).getResultIntent().getStringExtra(LOCATION_RESULT);
+        String result = shadowOf(activity).getResultIntent().getStringExtra(ANSWER_KEY);
         assertEquals(activity.formatResult(new MapPoint(5, 6, 7, 8)), result);
     }
 }

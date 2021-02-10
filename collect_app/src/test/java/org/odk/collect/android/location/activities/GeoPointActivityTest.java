@@ -27,7 +27,7 @@ import static org.junit.Assert.assertTrue;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
-import static org.odk.collect.android.activities.FormEntryActivity.LOCATION_RESULT;
+import static org.odk.collect.android.activities.FormEntryActivity.ANSWER_KEY;
 import static org.odk.collect.android.widgets.utilities.GeoWidgetUtils.DEFAULT_LOCATION_ACCURACY;
 import static org.robolectric.Shadows.shadowOf;
 
@@ -107,7 +107,7 @@ public class GeoPointActivityTest extends BaseGeoActivityTest {
         assertEquals(shadowOf(activity).getResultCode(), RESULT_OK);
 
         Intent resultIntent = shadowOf(activity).getResultIntent();
-        String resultString = resultIntent.getStringExtra(LOCATION_RESULT);
+        String resultString = resultIntent.getStringExtra(ANSWER_KEY);
 
         assertEquals(resultString, activity.getResultStringForLocation(thirdLocation));
     }
