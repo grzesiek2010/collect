@@ -215,7 +215,7 @@ public class FormEntryActivity extends CollectAbstractActivity implements Animat
     private static final boolean EVALUATE_CONSTRAINTS = true;
     public static final boolean DO_NOT_EVALUATE_CONSTRAINTS = false;
 
-    public static final String ANSWER_KEY = "ANSWER_KEY";
+    public static final String ANSWER_KEY = "value";
 
     public static final String KEY_INSTANCES = "instances";
     public static final String KEY_SUCCESS = "success";
@@ -796,14 +796,6 @@ public class FormEntryActivity extends CollectAbstractActivity implements Animat
                     setWidgetData(osmFileName);
                 }
                 break;
-            case RequestCodes.EX_STRING_CAPTURE:
-            case RequestCodes.EX_INT_CAPTURE:
-            case RequestCodes.EX_DECIMAL_CAPTURE:
-                Object externalValue = externalAppIntentProvider.getValueFromIntent(intent);
-                if (getCurrentViewIfODKView() != null) {
-                    setWidgetData(externalValue);
-                }
-                break;
             case RequestCodes.EX_ARBITRARY_FILE_CHOOSER:
             case RequestCodes.EX_VIDEO_CHOOSER:
             case RequestCodes.EX_IMAGE_CHOOSER:
@@ -841,12 +833,15 @@ public class FormEntryActivity extends CollectAbstractActivity implements Animat
             case RequestCodes.IMAGE_CHOOSER:
                 loadFile(intent.getData());
                 break;
+            case RequestCodes.EX_STRING_CAPTURE:
+            case RequestCodes.EX_INT_CAPTURE:
+            case RequestCodes.EX_DECIMAL_CAPTURE:
             case IntentIntegrator.REQUEST_CODE:
             case RequestCodes.BEARING_CAPTURE:
             case RequestCodes.LOCATION_CAPTURE:
             case RequestCodes.GEOSHAPE_CAPTURE:
             case RequestCodes.GEOTRACE_CAPTURE:
-                String answer = intent.getStringExtra(ANSWER_KEY);
+                Object answer = intent.getExtras().get(ANSWER_KEY);
                 if (getCurrentViewIfODKView() != null) {
                     setWidgetData(answer);
                 }
