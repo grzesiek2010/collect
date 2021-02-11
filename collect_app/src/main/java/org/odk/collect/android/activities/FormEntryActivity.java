@@ -811,10 +811,7 @@ public class FormEntryActivity extends CollectAbstractActivity implements Animat
 
         switch (requestCode) {
             case RequestCodes.OSM_CAPTURE:
-                String osmFileName = intent.getStringExtra("OSM_FILE_NAME");
-                if (getCurrentViewIfODKView() != null) {
-                    setWidgetData(osmFileName);
-                }
+                setWidgetData(intent.getStringExtra("OSM_FILE_NAME"));
                 break;
             case RequestCodes.EX_ARBITRARY_FILE_CHOOSER:
             case RequestCodes.EX_VIDEO_CHOOSER:
@@ -862,10 +859,7 @@ public class FormEntryActivity extends CollectAbstractActivity implements Animat
             case RequestCodes.EX_STRING_CAPTURE:
             case RequestCodes.EX_INT_CAPTURE:
             case RequestCodes.EX_DECIMAL_CAPTURE:
-                Object answer = intent.getExtras().get(ANSWER_KEY);
-                if (getCurrentViewIfODKView() != null) {
-                    setWidgetData(answer);
-                }
+                setWidgetData(intent.getExtras().get(ANSWER_KEY));
                 break;
         }
     }
