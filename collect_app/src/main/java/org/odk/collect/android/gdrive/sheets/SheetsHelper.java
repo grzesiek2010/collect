@@ -17,8 +17,11 @@ package org.odk.collect.android.gdrive.sheets;
 import androidx.annotation.NonNull;
 
 import com.google.api.services.sheets.v4.model.AddSheetRequest;
+import com.google.api.services.sheets.v4.model.AppendCellsRequest;
+import com.google.api.services.sheets.v4.model.DataSourceSheetProperties;
 import com.google.api.services.sheets.v4.model.GridProperties;
 import com.google.api.services.sheets.v4.model.Request;
+import com.google.api.services.sheets.v4.model.RowData;
 import com.google.api.services.sheets.v4.model.SheetProperties;
 import com.google.api.services.sheets.v4.model.Spreadsheet;
 import com.google.api.services.sheets.v4.model.SpreadsheetProperties;
@@ -28,6 +31,7 @@ import com.google.api.services.sheets.v4.model.ValueRange;
 
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
 
@@ -90,6 +94,15 @@ public class SheetsHelper {
         }
 
         sheetsAPI.insertRow(spreadsheetId, sheetName, row);
+    }
+
+    public void insertRow(String spreadsheetId, RowData rowData) throws IOException {
+        AppendCellsRequest request = new AppendCellsRequest();
+        request.setRows(Collections.singletonList(rowData));
+        request.setFields("*");
+        List<Request> requests = new ArrayList<>();
+        requests.add(new Request().setAppendCells(request));
+        sheetsAPI.batchUpdate(spreadsheetId, requests);
     }
 
     public void updateRow(String spreadsheetId, String sheetName, ValueRange row) throws IOException {
