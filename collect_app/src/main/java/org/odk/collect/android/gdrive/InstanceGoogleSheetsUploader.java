@@ -19,8 +19,14 @@ import android.database.Cursor;
 import androidx.annotation.NonNull;
 
 import com.google.api.client.googleapis.json.GoogleJsonResponseException;
+import com.google.api.services.sheets.v4.model.CellData;
+import com.google.api.services.sheets.v4.model.CellFormat;
+import com.google.api.services.sheets.v4.model.ExtendedValue;
+import com.google.api.services.sheets.v4.model.NumberFormat;
+import com.google.api.services.sheets.v4.model.RowData;
 import com.google.api.services.sheets.v4.model.Sheet;
 import com.google.api.services.sheets.v4.model.Spreadsheet;
+import com.google.api.services.sheets.v4.model.TextFormat;
 import com.google.api.services.sheets.v4.model.ValueRange;
 
 import org.javarosa.core.model.Constants;
@@ -214,11 +220,15 @@ public class InstanceGoogleSheetsUploader extends InstanceUploader {
                 sheetCells = getSheetCells(sheetTitle); // read sheet cells again to update
             }
 
-            HashMap<String, String> answers = getAnswers(instance, element, columnTitles, instanceFile, parentKey, key);
+            //HashMap<String, String> answers = getAnswers(instance, element, columnTitles, instanceFile, parentKey, key);
+            HashMap<String, CellData> answers = getAnswers(instance, element, columnTitles, instanceFile, parentKey, key);
+            RowData rowData = prepareListOfValues(sheetCells.get(0), columnTitles, answers);
 
-            if (shouldRowBeInserted(answers)) {
-                sheetsHelper.insertRow(spreadsheet.getSpreadsheetId(), sheetTitle,
-                        new ValueRange().setValues(Collections.singletonList(prepareListOfValues(sheetCells.get(0), columnTitles, answers))));
+            if (true) {
+                //sheetsHelper.insertRow(spreadsheet.getSpreadsheetId(), sheetTitle,
+                        //new ValueRange().setValues(Collections.singletonList(prepareListOfValues(sheetCells.get(0), columnTitles, answers))));
+
+                sheetsHelper.insertRow(spreadsheet.getSpreadsheetId(), rowData);
             }
         } catch (GoogleJsonResponseException e) {
             throw new UploadException(getErrorMessageFromGoogleJsonResponseException(e));
@@ -343,47 +353,53 @@ public class InstanceGoogleSheetsUploader extends InstanceUploader {
         return sheetTitles;
     }
 
-    private HashMap<String, String> getAnswers(Instance instance, TreeElement element, List<Object> columnTitles, File instanceFile, String parentKey, String key)
+    private HashMap<String, CellData> getAnswers(Instance instance, TreeElement element, List<Object> columnTitles, File instanceFile, String parentKey, String key)
             throws UploadException {
-        HashMap<String, String> answers = new HashMap<>();
+        HashMap<String, CellData> answers = new HashMap<>();
         for (TreeElement childElement : getChildElements(element, false)) {
             String elementTitle = getElementTitle(childElement);
             if (childElement.isRepeatable()) {
-                answers.put(elementTitle, getHyperlink(getSheetUrl(getSheetId(StringUtils.ellipsizeBeginning(elementTitle))), elementTitle));
+                answers.put(elementTitle, getCellData(getHyperlink(getSheetUrl(getSheetId(StringUtils.ellipsizeBeginning(elementTitle))), elementTitle), childElement));
             } else {
                 String answer = getFormattingResistantAnswer(childElement);
 
                 if (new File(instanceFile.getParentFile() + "/" + answer).isFile()) {
                     String mediaUrl = uploadMediaFile(instance, answer);
-                    answers.put(elementTitle, mediaUrl);
+                    answers.put(elementTitle, getCellData(mediaUrl, childElement));
                 } else {
                     if (isLocationValid(answer)) {
-                        answers.putAll(parseGeopoint(columnTitles, elementTitle, answer));
+                        answers.putAll(parseGeopoint(columnTitles, elementTitle, answer, childElement));
                     } else {
-                        answers.put(elementTitle, answer);
+                        answers.put(elementTitle, getCellData(answer, childElement));
                     }
                 }
             }
         }
         if (element.isRepeatable()) {
-            answers.put(PARENT_KEY, parentKey);
-            answers.put(KEY, key);
+            answers.put(PARENT_KEY, getCellData(parentKey, element));
+            answers.put(KEY, getCellData(key, element));
         } else if (hasRepeatableGroups(element)) {
-            answers.put(KEY, key);
+            answers.put(KEY, getCellData(key, element));
         }
         return answers;
     }
 
-    public static String getFormattingResistantAnswer(TreeElement childElement) {
-        String answer = childElement.getValue() != null ? childElement.getValue().getDisplayText() : "";
-
-        if (!answer.isEmpty() && (childElement.getDataType() == Constants.DATATYPE_TEXT
-                || childElement.getDataType() == Constants.DATATYPE_MULTIPLE_ITEMS
-                || childElement.getDataType() == Constants.DATATYPE_BARCODE)) {
-            answer = "'" + answer;
+    private CellData getCellData(String value, TreeElement element) {
+        CellData cellData = new CellData();
+        cellData.setUserEnteredValue(new ExtendedValue().setNumberValue(42198.0));
+        switch (element.getDataType()) {
+            case Constants.DATATYPE_DATE:
+                NumberFormat format = new NumberFormat();
+                format.setType("DATE");
+                format.setPattern("yyyy-mm-dd");
+                cellData.setUserEnteredFormat(new CellFormat().setNumberFormat(format));
+                break;
         }
+        return cellData;
+    }
 
-        return answer;
+    public static String getFormattingResistantAnswer(TreeElement childElement) {
+        return childElement.getValue() != null ? childElement.getValue().getDisplayText() : "";
     }
 
     /**
@@ -397,8 +413,8 @@ public class InstanceGoogleSheetsUploader extends InstanceUploader {
      *         titles exist in the columnTitles parameter).
      */
     private @NonNull
-    Map<String, String> parseGeopoint(@NonNull List<Object> columnTitles, @NonNull String elementTitle, @NonNull String geoData) {
-        Map<String, String> geoFieldsMap = new HashMap<>();
+    Map<String, CellData> parseGeopoint(@NonNull List<Object> columnTitles, @NonNull String elementTitle, @NonNull String geoData, TreeElement element) {
+        Map<String, CellData> geoFieldsMap = new HashMap<>();
 
         // Accuracy
         int accuracyLocation = geoData.lastIndexOf(' ');
@@ -406,7 +422,7 @@ public class InstanceGoogleSheetsUploader extends InstanceUploader {
         geoData = geoData.substring(0, accuracyLocation).trim();
         final String accuracyTitle = elementTitle + ACCURACY_TITLE_POSTFIX;
         if (columnTitles.contains(accuracyTitle)) {
-            geoFieldsMap.put(accuracyTitle, accuracyStr);
+            geoFieldsMap.put(accuracyTitle, getCellData(accuracyStr, element));
         }
 
         // Altitude
@@ -415,13 +431,13 @@ public class InstanceGoogleSheetsUploader extends InstanceUploader {
         geoData = geoData.substring(0, altitudeLocation).trim();
         final String altitudeTitle = elementTitle + ALTITUDE_TITLE_POSTFIX;
         if (columnTitles.contains(altitudeTitle)) {
-            geoFieldsMap.put(altitudeTitle, altitudeStr);
+            geoFieldsMap.put(altitudeTitle, getCellData(altitudeStr, element));
         }
 
         geoData = geoData.replace(' ', ',');
 
         // Put the modified geo location (Just lat/long) into the geo fields Map
-        geoFieldsMap.put(elementTitle, geoData);
+        geoFieldsMap.put(elementTitle, getCellData(geoData, element));
 
         return geoFieldsMap;
     }
@@ -528,20 +544,19 @@ public class InstanceGoogleSheetsUploader extends InstanceUploader {
         return prior != null && prior.getName().equals(current.getName());
     }
 
-    private List<Object> prepareListOfValues(List<Object> columnHeaders, List<Object> columnTitles,
-                                             HashMap<String, String> answers) {
-        List<Object> list = new ArrayList<>();
+    private RowData prepareListOfValues(List<Object> columnHeaders, List<Object> columnTitles,
+                                             HashMap<String, CellData> answers) {
+        List<CellData> cells = new ArrayList<>();
         for (Object path : columnHeaders) {
-            String answer = "";
             if (!path.equals(" ") && columnTitles.contains(path.toString())) {
                 if (answers.containsKey(path.toString())) {
-                    answer = answers.get(path.toString());
+                    cells.add(answers.get(path.toString()));
                 }
             }
-            // https://github.com/getodk/collect/issues/931
-            list.add(answer.isEmpty() ? " " : answer);
         }
-        return list;
+        RowData rowData = new RowData();
+        rowData.setValues(cells);
+        return rowData;
     }
 
     private List<List<Object>> getSheetCells(String sheetTitle) throws IOException {
