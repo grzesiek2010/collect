@@ -228,7 +228,7 @@ public class AppDependencyModule {
 
     @Provides
     InstallIDProvider providesInstallIDProvider(PreferencesProvider preferencesProvider) {
-        return new SharedPreferencesInstallIDProvider(preferencesProvider.getMetaSharedPreferences(), KEY_INSTALL_ID);
+        return new SharedPreferencesInstallIDProvider(preferencesProvider.getMetaSharedPreferences().getSharedPreferences(), KEY_INSTALL_ID);
     }
 
     @Provides
@@ -328,7 +328,7 @@ public class AppDependencyModule {
 
     @Provides
     public SettingsPreferenceMigrator providesPreferenceMigrator(PreferencesProvider preferencesProvider) {
-        return new CollectSettingsPreferenceMigrator(preferencesProvider.getMetaSharedPreferences());
+        return new CollectSettingsPreferenceMigrator(preferencesProvider.getMetaSharedPreferences().getSharedPreferences());
     }
 
     @Provides
@@ -339,7 +339,7 @@ public class AppDependencyModule {
 
     @Provides
     public ServerRepository providesServerRepository(Context context, PreferencesProvider preferencesProvider) {
-        return new SharedPreferencesServerRepository(context.getString(R.string.default_server_url), preferencesProvider.getMetaSharedPreferences());
+        return new SharedPreferencesServerRepository(context.getString(R.string.default_server_url), preferencesProvider.getMetaSharedPreferences().getSharedPreferences());
     }
 
     @Provides

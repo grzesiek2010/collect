@@ -10,13 +10,15 @@ public class PreferencesProvider {
     private static final String ADMIN_PREFS_NAME = "admin_prefs";
 
     private final Context context;
+    private final MetaPreferences metaPreferences;
 
     public PreferencesProvider(Context context) {
         this.context = context;
+        this.metaPreferences = new MetaPreferences(context.getSharedPreferences(META_PREFS_NAME, Context.MODE_PRIVATE));
     }
 
-    public SharedPreferences getMetaSharedPreferences() {
-        return context.getSharedPreferences(META_PREFS_NAME, Context.MODE_PRIVATE);
+    public MetaPreferences getMetaSharedPreferences() {
+        return metaPreferences;
     }
 
     public SharedPreferences getGeneralSharedPreferences() {

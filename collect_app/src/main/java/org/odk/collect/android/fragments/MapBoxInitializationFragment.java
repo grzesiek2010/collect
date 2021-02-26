@@ -1,6 +1,5 @@
 package org.odk.collect.android.fragments;
 
-import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -16,6 +15,7 @@ import com.mapbox.mapboxsdk.maps.Style;
 import org.odk.collect.android.R;
 import org.odk.collect.android.injection.DaggerUtils;
 import org.odk.collect.android.network.NetworkStateProvider;
+import org.odk.collect.android.preferences.MetaPreferences;
 import org.odk.collect.android.preferences.PreferencesProvider;
 
 import javax.inject.Inject;
@@ -102,8 +102,8 @@ public class MapBoxInitializationFragment extends Fragment {
     }
 
     private void initMapBox(View rootView) {
-        SharedPreferences metaSharedPreferences = preferencesProvider.getMetaSharedPreferences();
-        if (!metaSharedPreferences.getBoolean(KEY_MAPBOX_INITIALIZED, false) && connectivityProvider.isDeviceOnline()) {
+        MetaPreferences metaSharedPreferences = preferencesProvider.getMetaSharedPreferences();
+        if (!metaSharedPreferences.getBoolean(KEY_MAPBOX_INITIALIZED) && connectivityProvider.isDeviceOnline()) {
             // This "one weird trick" lets us initialize MapBox at app start when the internet is
             // most likely to be available. This is annoyingly needed for offline tiles to work.
             try {
@@ -111,7 +111,7 @@ public class MapBoxInitializationFragment extends Fragment {
                 FrameLayout mapBoxContainer = rootView.findViewById(R.id.map_box_container);
                 mapBoxContainer.addView(mapView);
                 mapView.getMapAsync(mapBoxMap -> mapBoxMap.setStyle(Style.MAPBOX_STREETS, style -> {
-                    metaSharedPreferences.edit().putBoolean(KEY_MAPBOX_INITIALIZED, true).apply();
+                    metaSharedPreferences.save(KEY_MAPBOX_INITIALIZED, true);
                 }));
             } catch (Exception | Error ignored) {
                 // This will crash on devices where the arch for MapBox is not included
