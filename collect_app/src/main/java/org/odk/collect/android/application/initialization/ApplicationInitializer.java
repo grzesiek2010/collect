@@ -23,8 +23,9 @@ import org.odk.collect.android.preferences.FormUpdateMode;
 import org.odk.collect.android.geo.MapboxUtils;
 import org.odk.collect.android.logic.PropertyManager;
 import org.odk.collect.android.logic.actions.setgeopoint.CollectSetGeopointActionHandler;
-import org.odk.collect.android.preferences.AdminSharedPreferences;
 import org.odk.collect.android.preferences.GeneralSharedPreferences;
+import org.odk.collect.android.preferences.PreferencesDataSource;
+import org.odk.collect.android.preferences.PreferencesRepository;
 import org.odk.collect.android.storage.StorageInitializer;
 import org.odk.collect.utilities.UserAgentProvider;
 
@@ -42,11 +43,11 @@ public class ApplicationInitializer {
     private final PropertyManager propertyManager;
     private final Analytics analytics;
     private final GeneralSharedPreferences generalSharedPreferences;
-    private final AdminSharedPreferences adminSharedPreferences;
+    private final PreferencesDataSource adminPrefs;
     private final StorageInitializer storageInitializer;
 
     public ApplicationInitializer(Application context, UserAgentProvider userAgentProvider, SettingsPreferenceMigrator preferenceMigrator,
-                                  PropertyManager propertyManager, Analytics analytics, StorageInitializer storageInitializer) {
+                                  PropertyManager propertyManager, Analytics analytics, StorageInitializer storageInitializer, PreferencesRepository preferencesRepository) {
         this.context = context;
         this.userAgentProvider = userAgentProvider;
         this.preferenceMigrator = preferenceMigrator;
@@ -55,7 +56,7 @@ public class ApplicationInitializer {
         this.storageInitializer = storageInitializer;
 
         generalSharedPreferences = GeneralSharedPreferences.getInstance();
-        adminSharedPreferences = AdminSharedPreferences.getInstance();
+        adminPrefs = preferencesRepository.getAdminPreferences();
     }
 
     public void initialize() {
@@ -117,11 +118,11 @@ public class ApplicationInitializer {
 
     private void reloadSharedPreferences() {
         generalSharedPreferences.reloadPreferences();
-        adminSharedPreferences.reloadPreferences();
+        adminPrefs.loadDefaultPreferences();
     }
 
     private void performMigrations() {
-        preferenceMigrator.migrate(generalSharedPreferences.getSharedPreferences(), adminSharedPreferences.getSharedPreferences());
+        preferenceMigrator.migrate(generalSharedPreferences.getSharedPreferences(), adminPrefs.getSharedPreferences());
     }
 
     private void initializeMapFrameworks() {
