@@ -20,7 +20,7 @@ import org.odk.collect.android.instances.InstancesRepository;
 import org.odk.collect.android.notifications.Notifier;
 import org.odk.collect.android.forms.FormSourceException;
 import org.odk.collect.android.preferences.GeneralSharedPreferences;
-import org.odk.collect.android.preferences.PreferencesProvider;
+import org.odk.collect.android.preferences.PreferencesRepository;
 import org.odk.collect.android.support.BooleanChangeLock;
 import org.odk.collect.android.support.RobolectricHelpers;
 import org.robolectric.RobolectricTestRunner;
@@ -62,7 +62,7 @@ public class SyncFormsTaskSpecTest {
             }
 
             @Override
-            public Notifier providesNotifier(Application application, PreferencesProvider preferencesProvider) {
+            public Notifier providesNotifier(Application application, PreferencesRepository preferencesRepository) {
                 return notifier;
             }
 
