@@ -17,7 +17,7 @@ import org.odk.collect.android.R;
 import org.odk.collect.android.analytics.Analytics;
 import org.odk.collect.android.analytics.AnalyticsEvents;
 import org.odk.collect.android.dao.FormsDao;
-import org.odk.collect.android.preferences.GeneralSharedPreferences;
+import org.odk.collect.android.preferences.PreferencesRepository;
 import org.odk.collect.android.storage.StorageInitializer;
 import org.robolectric.shadows.ShadowEnvironment;
 
@@ -69,7 +69,7 @@ public class FormDownloadListActivityTest {
         }
 
         @Override
-        public Analytics providesAnalytics(Application application, GeneralSharedPreferences generalSharedPreferences) {
+        public Analytics providesAnalytics(Application application, PreferencesRepository preferencesRepository) {
             return analytics;
         }
 
