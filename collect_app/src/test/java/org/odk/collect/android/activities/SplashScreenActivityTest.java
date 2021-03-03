@@ -5,7 +5,6 @@ import android.view.View;
 
 import androidx.lifecycle.Lifecycle;
 import androidx.test.core.app.ActivityScenario;
-import androidx.test.core.app.ApplicationProvider;
 import androidx.test.ext.junit.runners.AndroidJUnit4;
 
 import org.junit.Before;
@@ -13,17 +12,15 @@ import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.odk.collect.android.R;
 import org.odk.collect.android.analytics.Analytics;
-import org.odk.collect.android.application.Collect;
 import org.odk.collect.android.application.initialization.ApplicationInitializer;
 import org.odk.collect.android.application.initialization.SettingsPreferenceMigrator;
-import org.odk.collect.android.injection.DaggerUtils;
-import org.odk.collect.android.injection.config.AppDependencyComponent;
 import org.odk.collect.android.injection.config.AppDependencyModule;
 import org.odk.collect.android.logic.PropertyManager;
 import org.odk.collect.android.preferences.GeneralKeys;
 import org.odk.collect.android.preferences.PreferencesRepository;
 import org.odk.collect.android.storage.StorageInitializer;
 import org.odk.collect.android.support.RobolectricHelpers;
+import org.odk.collect.utilities.PreferencesUtils;
 import org.odk.collect.utilities.UserAgentProvider;
 import org.robolectric.annotation.LooperMode;
 
@@ -36,7 +33,6 @@ import static org.mockito.Mockito.mock;
 public class SplashScreenActivityTest {
 
     private ApplicationInitializer applicationInitializer;
-    private PreferencesRepository preferencesRepository;
 
     @Before
     public void setup() {
@@ -51,13 +47,11 @@ public class SplashScreenActivityTest {
                 return applicationInitializer;
             }
         });
-        AppDependencyComponent component = DaggerUtils.getComponent(ApplicationProvider.<Collect>getApplicationContext());
-        preferencesRepository = component.preferencesRepository();
     }
 
     @Test
     public void whenShowSplashScreenEnabled_showSplashScreen() {
-        preferencesRepository.getGeneralPreferences().save(GeneralKeys.KEY_SHOW_SPLASH, true);
+        PreferencesUtils.getGeneralPreferences().save(GeneralKeys.KEY_SHOW_SPLASH, true);
 
         ActivityScenario<SplashScreenActivity> scenario1 = ActivityScenario.launch(SplashScreenActivity.class);
         assertThat(scenario1.getState(), is(Lifecycle.State.RESUMED));
