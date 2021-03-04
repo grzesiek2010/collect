@@ -17,6 +17,7 @@ import org.odk.collect.android.javarosawrapper.FormController;
 import org.odk.collect.android.preferences.PreferencesActivity;
 import org.odk.collect.android.utilities.ApplicationConstants;
 import org.odk.collect.audiorecorder.recording.AudioRecorder;
+import org.odk.collect.utilities.TestPreferencesProvider;
 import org.robolectric.Robolectric;
 import org.robolectric.annotation.LooperMode;
 import org.robolectric.fakes.RoboMenu;
@@ -35,7 +36,6 @@ import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.never;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
-import static org.odk.collect.android.injection.DaggerUtils.getComponent;
 import static org.odk.collect.android.support.RobolectricHelpers.createThemedActivity;
 import static org.odk.collect.android.support.RobolectricHelpers.getFragmentByClass;
 import static org.robolectric.Shadows.shadowOf;
@@ -78,7 +78,7 @@ public class FormEntryMenuDelegateTest {
                 audioRecorder,
                 backgroundLocationViewModel,
                 backgroundAudioViewModel,
-                getComponent(activity).preferencesRepository()
+                TestPreferencesProvider.getPreferencesRepository()
         );
         formEntryMenuDelegate.formLoaded(formController);
     }
