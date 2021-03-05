@@ -15,7 +15,8 @@ public class MediaLoadingFragment extends Fragment {
     private MediaLoadingTask mediaLoadingTask;
     private FormEntryActivity formEntryActivity;
 
-    public void beginMediaLoadingTask(Uri uri) {
+    public void beginMediaLoadingTask(Uri uri, FormEntryActivity activity) {
+        formEntryActivity = activity;
         mediaLoadingTask = new MediaLoadingTask(formEntryActivity);
         mediaLoadingTask.execute(uri);
     }
