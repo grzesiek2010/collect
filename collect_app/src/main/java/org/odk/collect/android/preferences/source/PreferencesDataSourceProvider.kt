@@ -4,6 +4,7 @@ import android.content.Context
 import androidx.preference.PreferenceManager
 import org.odk.collect.android.preferences.keys.AdminKeys
 import org.odk.collect.android.preferences.keys.GeneralKeys
+import org.odk.collect.android.preferences.keys.MetaKeys.CURRENT_PROJECT
 
 class PreferencesDataSourceProvider(private val context: Context) {
     fun getMetaPreferences(): PreferencesDataSource {
@@ -14,10 +15,10 @@ class PreferencesDataSourceProvider(private val context: Context) {
 
     @JvmOverloads
     fun getGeneralPreferences(projectId: String = ""): PreferencesDataSource {
-        val preferenceId = GENERAL_PREFS_NAME + projectId
+        val preferenceId = getProjectPreferenceId(GENERAL_PREFS_NAME, projectId)
 
         return preferences.getOrPut(preferenceId) {
-            if (projectId.isBlank()) {
+            if (projectId == GENERAL_PREFS_NAME) {
                 SharedPreferencesDataSource(PreferenceManager.getDefaultSharedPreferences(context), GeneralKeys.DEFAULTS)
             } else {
                 SharedPreferencesDataSource(context.getSharedPreferences(preferenceId, Context.MODE_PRIVATE), GeneralKeys.DEFAULTS)
@@ -27,10 +28,18 @@ class PreferencesDataSourceProvider(private val context: Context) {
 
     @JvmOverloads
     fun getAdminPreferences(projectId: String = ""): PreferencesDataSource {
-        val preferenceId = ADMIN_PREFS_NAME + projectId
+        val preferenceId = getProjectPreferenceId(ADMIN_PREFS_NAME, projectId)
 
         return preferences.getOrPut(preferenceId) {
             SharedPreferencesDataSource(context.getSharedPreferences(preferenceId, Context.MODE_PRIVATE), AdminKeys.getDefaults())
+        }
+    }
+
+    private fun getProjectPreferenceId(preferenceName: String, projectId: String): String {
+        return if (projectId.isBlank()) {
+            preferenceName + getMetaPreferences().getString(CURRENT_PROJECT)
+        } else {
+            preferenceName + projectId
         }
     }
 
