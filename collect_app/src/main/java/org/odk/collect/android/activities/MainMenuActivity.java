@@ -33,6 +33,7 @@ import org.odk.collect.android.R;
 import org.odk.collect.android.activities.viewmodels.MainMenuViewModel;
 import org.odk.collect.android.application.Collect;
 import org.odk.collect.android.configure.qr.QRCodeTabsActivity;
+import org.odk.collect.android.fragments.dialogs.ProjectSettingsDialog;
 import org.odk.collect.android.gdrive.GoogleDriveActivity;
 import org.odk.collect.android.injection.DaggerUtils;
 import org.odk.collect.android.instances.Instance;
@@ -66,7 +67,8 @@ import static org.odk.collect.android.utilities.DialogUtils.showIfNotShowing;
  * @author Carl Hartung (carlhartung@gmail.com)
  * @author Yaw Anokwa (yanokwa@gmail.com)
  */
-public class MainMenuActivity extends CollectAbstractActivity implements AdminPasswordDialogFragment.AdminPasswordDialogCallback {
+public class MainMenuActivity extends CollectAbstractActivity
+        implements AdminPasswordDialogFragment.AdminPasswordDialogCallback, ProjectSettingsDialog.ProjectSettingsDialogListener {
     // buttons
     private Button manageFilesButton;
     private Button sendDataButton;
@@ -239,6 +241,9 @@ public class MainMenuActivity extends CollectAbstractActivity implements AdminPa
         }
 
         switch (item.getItemId()) {
+            case R.id.projects:
+                new ProjectSettingsDialog().show(getSupportFragmentManager(), ProjectSettingsDialog.TAG);
+                return true;
             case R.id.menu_configure_qr_code:
                 if (adminPasswordProvider.isAdminPasswordSet()) {
                     Bundle args = new Bundle();
@@ -250,18 +255,6 @@ public class MainMenuActivity extends CollectAbstractActivity implements AdminPa
                 return true;
             case R.id.menu_about:
                 startActivity(new Intent(this, AboutActivity.class));
-                return true;
-            case R.id.menu_general_preferences:
-                startActivity(new Intent(this, GeneralPreferencesActivity.class));
-                return true;
-            case R.id.menu_admin_preferences:
-                if (adminPasswordProvider.isAdminPasswordSet()) {
-                    Bundle args = new Bundle();
-                    args.putSerializable(AdminPasswordDialogFragment.ARG_ACTION, Action.ADMIN_SETTINGS);
-                    showIfNotShowing(AdminPasswordDialogFragment.class, args, getSupportFragmentManager());
-                } else {
-                    startActivity(new Intent(this, AdminPreferencesActivity.class));
-                }
                 return true;
         }
         return super.onOptionsItemSelected(item);
@@ -312,6 +305,22 @@ public class MainMenuActivity extends CollectAbstractActivity implements AdminPa
     @Override
     public void onIncorrectAdminPassword() {
         ToastUtils.showShortToast(R.string.admin_password_incorrect);
+    }
+
+    @Override
+    public void openGeneralSettings() {
+        startActivity(new Intent(this, GeneralPreferencesActivity.class));
+    }
+
+    @Override
+    public void openAdminSettings() {
+        if (adminPasswordProvider.isAdminPasswordSet()) {
+            Bundle args = new Bundle();
+            args.putSerializable(AdminPasswordDialogFragment.ARG_ACTION, Action.ADMIN_SETTINGS);
+            showIfNotShowing(AdminPasswordDialogFragment.class, args, getSupportFragmentManager());
+        } else {
+            startActivity(new Intent(this, AdminPreferencesActivity.class));
+        }
     }
 
     /*
