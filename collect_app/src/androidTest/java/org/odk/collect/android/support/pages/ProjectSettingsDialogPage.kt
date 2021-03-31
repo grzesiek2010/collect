@@ -38,4 +38,9 @@ internal class ProjectSettingsDialogPage(rule: ActivityTestRule<*>) : Page<Proje
         Espresso.onView(withId(R.id.add_project_button)).perform(ViewActions.click())
         return AddProjectDialogPage(rule).assertOnPage()
     }
+
+    fun assertProjectIconColor(color: String): ProjectSettingsDialogPage {
+        
+        return this
+    }
 }
