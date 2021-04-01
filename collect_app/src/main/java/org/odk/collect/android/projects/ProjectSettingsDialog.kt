@@ -18,7 +18,6 @@ import org.odk.collect.android.activities.AboutActivity
 import org.odk.collect.android.databinding.ProjectSettingsDialogLayoutBinding
 import org.odk.collect.android.injection.DaggerUtils
 import org.odk.collect.android.preferences.dialogs.AdminPasswordDialogFragment
-import org.odk.collect.android.preferences.keys.MetaKeys
 import org.odk.collect.android.preferences.keys.MetaKeys.CURRENT_PROJECT_ID
 import org.odk.collect.android.preferences.screens.AdminPreferencesActivity
 import org.odk.collect.android.preferences.screens.GeneralPreferencesActivity
@@ -116,7 +115,7 @@ class ProjectSettingsDialog : DialogFragment() {
     }
 
     private fun switchProject(project: Project) {
-        settingsProvider.getMetaSettings().save(MetaKeys.CURRENT_PROJECT_ID, project.uuid)
+        settingsProvider.getMetaSettings().save(CURRENT_PROJECT_ID, project.uuid)
         dismiss()
         ToastUtils.showLongToast(getString(R.string.switched_project, project.name))
     }
