@@ -19,6 +19,7 @@ import org.odk.collect.android.databinding.ProjectSettingsDialogLayoutBinding
 import org.odk.collect.android.injection.DaggerUtils
 import org.odk.collect.android.preferences.dialogs.AdminPasswordDialogFragment
 import org.odk.collect.android.preferences.keys.MetaKeys
+import org.odk.collect.android.preferences.keys.MetaKeys.CURRENT_PROJECT_ID
 import org.odk.collect.android.preferences.screens.AdminPreferencesActivity
 import org.odk.collect.android.preferences.screens.GeneralPreferencesActivity
 import org.odk.collect.android.preferences.source.SettingsProvider
@@ -91,7 +92,9 @@ class ProjectSettingsDialog : DialogFragment() {
     private fun inflateListOfInActiveProjects() {
         binding.topDivider.visibility = if (projectsRepository.getAll().isEmpty()) GONE else VISIBLE
 
-        projectsRepository.getAll().forEach { project ->
+        projectsRepository.getAll().filter {
+            it.uuid != settingsProvider.getMetaSettings().getString(CURRENT_PROJECT_ID)
+        }.forEach { project ->
             val projectView = LayoutInflater.from(context).inflate(R.layout.project_list_item, null)
 
             projectView.setOnClickListener {
