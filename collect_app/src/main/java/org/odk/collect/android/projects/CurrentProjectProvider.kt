@@ -5,12 +5,12 @@ import org.odk.collect.android.preferences.source.SettingsProvider
 
 class CurrentProjectProvider(private val settingsProvider: SettingsProvider, private val projectsRepository: ProjectsRepository) {
 
-    fun getCurrentProjectId(): String? {
-        return settingsProvider.getMetaSettings().getString(MetaKeys.CURRENT_PROJECT_ID)
+    fun getCurrentProjectId(): String {
+        return settingsProvider.getMetaSettings().getString(MetaKeys.CURRENT_PROJECT_ID) ?: ""
     }
 
     fun getCurrentProject(): Project? {
-        return projectsRepository.get(getCurrentProjectId()!!)
+        return projectsRepository.get(getCurrentProjectId())
     }
 
     fun setCurrentProject(uuid: String) {
