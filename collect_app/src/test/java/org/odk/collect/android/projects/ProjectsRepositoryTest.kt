@@ -50,8 +50,9 @@ abstract class ProjectsRepositoryTest {
         projectsRepository.add(projectX)
         projectsRepository.add(projectY)
 
-        val projects = projectsRepository.getAll()
+        var projects = projectsRepository.getAll()
         projectsRepository.delete(projects.first { it.name == "ProjectX" }.uuid)
+        projects = projectsRepository.getAll()
 
         assertThat(projects.size, `is`(1))
         assertThat(projects[0], `is`(projectY.copy(uuid = projects[0].uuid)))
