@@ -16,6 +16,7 @@ import androidx.work.WorkManager;
 import com.google.api.client.googleapis.extensions.android.gms.auth.GoogleAccountCredential;
 import com.google.api.client.util.ExponentialBackOff;
 import com.google.api.services.drive.DriveScopes;
+import com.google.gson.Gson;
 
 import org.javarosa.core.reference.ReferenceManager;
 import org.odk.collect.analytics.Analytics;
@@ -85,8 +86,8 @@ import org.odk.collect.android.preferences.keys.GeneralKeys;
 import org.odk.collect.android.preferences.source.SettingsProvider;
 import org.odk.collect.android.preferences.source.SettingsStore;
 import org.odk.collect.android.projects.CurrentProjectProvider;
-import org.odk.collect.android.projects.InMemProjectsRepository;
 import org.odk.collect.android.projects.ProjectsRepository;
+import org.odk.collect.android.projects.SharedPreferencesProjectsRepository;
 import org.odk.collect.android.storage.StorageInitializer;
 import org.odk.collect.android.storage.StoragePathProvider;
 import org.odk.collect.android.storage.StorageSubdirectory;
@@ -503,8 +504,14 @@ public class AppDependencyModule {
 
     @Provides
     @Singleton
-    public ProjectsRepository providesProjectsRepository(UUIDGenerator uuidGenerator) {
-        return new InMemProjectsRepository(uuidGenerator);
+    public ProjectsRepository providesProjectsRepository(UUIDGenerator uuidGenerator, Gson gson, SettingsProvider settingsProvider) {
+        return new SharedPreferencesProjectsRepository(uuidGenerator, gson, settingsProvider.getAdminSettings());
+    }
+
+    @Provides
+    @Singleton
+    public Gson providesGson() {
+        return new Gson();
     }
 
     @Provides
