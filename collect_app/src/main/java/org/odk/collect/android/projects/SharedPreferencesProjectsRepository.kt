@@ -7,16 +7,17 @@ import org.odk.collect.android.preferences.source.Settings
 import org.odk.collect.android.utilities.UUIDGenerator
 
 class SharedPreferencesProjectsRepository(
-        private val uuidGenerator: UUIDGenerator,
-        private val gson: Gson,
-        private val adminSettings: Settings): ProjectsRepository {
+    private val uuidGenerator: UUIDGenerator,
+    private val gson: Gson,
+    private val adminSettings: Settings
+) : ProjectsRepository {
 
     override fun get(uuid: String): Project? {
-        return getAll().firstOrNull() { it.uuid == uuid }
+        return getAll().firstOrNull { it.uuid == uuid }
     }
 
     override fun getAll(): List<Project> {
-        val projects = adminSettings.getString(AdminKeys.KEY_PROJECTS);
+        val projects = adminSettings.getString(AdminKeys.KEY_PROJECTS)
         return if (projects != null && projects.isNotBlank()) {
             gson.fromJson(projects, TypeToken.getParameterized(ArrayList::class.java, Project::class.java).type)
         } else {
