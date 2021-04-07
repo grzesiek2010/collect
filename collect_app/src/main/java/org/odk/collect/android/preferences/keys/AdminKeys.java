@@ -64,8 +64,6 @@ public final class AdminKeys {
     public static final String KEY_IMPORT_SETTINGS                     = "import_settings";
     public static final String ALLOW_OTHER_WAYS_OF_EDITING_FORM        = "allow_other_ways_of_editing_form";
 
-    public static final String KEY_PROJECTS                     = "projects";
-
     /**
      * The admin preferences allow removing general preferences. This array contains
      * tuples of admin keys and the keys of general preferences that are removed if the admin
@@ -117,8 +115,7 @@ public final class AdminKeys {
             KEY_MOVING_BACKWARDS,
             ALLOW_OTHER_WAYS_OF_EDITING_FORM,
             KEY_MAPS,
-            KEY_ADMIN_PW,
-            KEY_PROJECTS
+            KEY_ADMIN_PW
     );
 
     public static Collection<String> serverKeys = Collections.singletonList(
@@ -158,8 +155,6 @@ public final class AdminKeys {
 
         for (String key : allKeys()) {
             if (key.equals(KEY_ADMIN_PW)) {
-                defaults.put(key, "");
-            } else if (key.equals(KEY_PROJECTS)) {
                 defaults.put(key, "");
             } else {
                 defaults.put(key, true);

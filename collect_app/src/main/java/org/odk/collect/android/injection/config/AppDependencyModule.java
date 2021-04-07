@@ -505,7 +505,7 @@ public class AppDependencyModule {
     @Provides
     @Singleton
     public ProjectsRepository providesProjectsRepository(UUIDGenerator uuidGenerator, Gson gson, SettingsProvider settingsProvider) {
-        return new SharedPreferencesProjectsRepository(uuidGenerator, gson, settingsProvider.getAdminSettings());
+        return new SharedPreferencesProjectsRepository(uuidGenerator, gson, settingsProvider.getMetaSettings());
     }
 
     @Provides
