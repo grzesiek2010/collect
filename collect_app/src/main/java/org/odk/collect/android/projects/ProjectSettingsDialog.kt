@@ -108,6 +108,7 @@ class ProjectSettingsDialog : DialogFragment() {
                 text = project.icon
             }
             projectView.findViewById<TextView>(R.id.project_name).text = project.name
+            projectView.contentDescription = getString(R.string.switch_to_project)
 
             binding.projectList.addView(projectView)
         }
@@ -122,6 +123,7 @@ class ProjectSettingsDialog : DialogFragment() {
     private fun setupCurrentProjectView() {
         val currentProject = currentProjectProvider.getCurrentProject() ?: return
 
+        binding.currentProject.root.contentDescription = getString(R.string.using_project)
         binding.currentProject.projectIcon.apply {
             (background as GradientDrawable).setColor(Color.parseColor(currentProject.color))
             text = currentProject.icon

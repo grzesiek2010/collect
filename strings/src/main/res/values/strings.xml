@@ -993,4 +993,6 @@
     <string name="project_icon">Project icon</string>
     <string name="project_color">Project color</string>
     <string name="switched_project">Switched to %s</string>
+    <string name="using_project">Using project</string>
+    <string name="switch_to_project">Switch to project</string>
 </resources>
