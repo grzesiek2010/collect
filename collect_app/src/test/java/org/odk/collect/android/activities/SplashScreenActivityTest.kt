@@ -18,6 +18,7 @@ import org.hamcrest.CoreMatchers.notNullValue
 import org.hamcrest.CoreMatchers.nullValue
 import org.hamcrest.MatcherAssert
 import org.hamcrest.Matchers
+import org.junit.After
 import org.junit.Before
 import org.junit.Test
 import org.junit.runner.RunWith
@@ -56,6 +57,11 @@ class SplashScreenActivityTest {
                 }
             }
         })
+    }
+
+    @After
+    fun teardown() {
+        Intents.release()
     }
 
     @Test

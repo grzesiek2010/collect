@@ -13,6 +13,7 @@ import androidx.test.espresso.matcher.ViewMatchers.withText
 import androidx.test.ext.junit.runners.AndroidJUnit4
 import org.hamcrest.CoreMatchers
 import org.hamcrest.MatcherAssert
+import org.junit.After
 import org.junit.Test
 import org.junit.runner.RunWith
 import org.mockito.Mockito.`when`
@@ -31,6 +32,11 @@ import org.odk.collect.android.version.VersionInformation
 
 @RunWith(AndroidJUnit4::class)
 class FirstLaunchDialogTest {
+
+    @After
+    fun teardown() {
+        Intents.release()
+    }
 
     @Test
     fun clickingDeviceBackButton_shouldNotDismissDialog() {
