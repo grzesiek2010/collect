@@ -30,6 +30,8 @@ import org.odk.collect.android.fragments.dialogs.FirstLaunchDialog
 import org.odk.collect.android.injection.config.AppDependencyModule
 import org.odk.collect.android.preferences.source.Settings
 import org.odk.collect.android.preferences.source.SettingsProvider
+import org.odk.collect.android.projects.ProjectImporter
+import org.odk.collect.android.projects.ProjectsRepository
 import org.odk.collect.android.support.RobolectricHelpers
 
 @RunWith(AndroidJUnit4::class)
@@ -42,11 +44,11 @@ class SplashScreenActivityTest {
     fun setup() {
         Dispatchers.setMain(testDispatcher)
 
-        splashScreenViewModel = spy(SplashScreenViewModel(mock(Settings::class.java), mock(Settings::class.java)))
+        splashScreenViewModel = spy(SplashScreenViewModel(mock(Settings::class.java), mock(Settings::class.java), mock(ProjectsRepository::class.java), mock(ProjectImporter::class.java)))
 
         RobolectricHelpers.overrideAppDependencyModule(object : AppDependencyModule() {
-            override fun providesSplashScreenViewModel(settingsProvider: SettingsProvider): SplashScreenViewModel.Factory {
-                return object : SplashScreenViewModel.Factory(settingsProvider.getGeneralSettings(), settingsProvider.getMetaSettings()) {
+            override fun providesSplashScreenViewModel(settingsProvider: SettingsProvider, projectsRepository: ProjectsRepository, projectImporter: ProjectImporter): SplashScreenViewModel.Factory {
+                return object : SplashScreenViewModel.Factory(settingsProvider.getGeneralSettings(), settingsProvider.getMetaSettings(), projectsRepository, projectImporter) {
                     override fun <T : ViewModel?> create(modelClass: Class<T>): T {
                         return splashScreenViewModel as T
                     }
