@@ -5,6 +5,8 @@ import androidx.preference.PreferenceManager
 import org.odk.collect.android.preferences.keys.AdminKeys
 import org.odk.collect.android.preferences.keys.GeneralKeys
 import org.odk.collect.android.preferences.keys.MetaKeys.CURRENT_PROJECT_ID
+import org.odk.collect.android.projects.NOT_SPECIFIED_UUID
+import org.odk.collect.android.projects.ProjectImporter.Companion.DEMO_PROJECT_ID
 
 class SettingsProvider(private val context: Context) {
     fun getMetaSettings() = settings.getOrPut(META_SETTINGS_NAME) {
@@ -12,7 +14,7 @@ class SettingsProvider(private val context: Context) {
     }
 
     @JvmOverloads
-    fun getGeneralSettings(projectId: String = ""): Settings {
+    fun getGeneralSettings(projectId: String = NOT_SPECIFIED_UUID): Settings {
         val settingsId = getSettingsId(GENERAL_SETTINGS_NAME, projectId)
 
         return settings.getOrPut(settingsId) {
@@ -25,7 +27,7 @@ class SettingsProvider(private val context: Context) {
     }
 
     @JvmOverloads
-    fun getAdminSettings(projectId: String = ""): Settings {
+    fun getAdminSettings(projectId: String = NOT_SPECIFIED_UUID): Settings {
         val settingsId = getSettingsId(ADMIN_SETTINGS_NAME, projectId)
 
         return settings.getOrPut(settingsId) {
@@ -33,8 +35,8 @@ class SettingsProvider(private val context: Context) {
         }
     }
 
-    private fun getSettingsId(settingName: String, projectId: String) = if (projectId.isBlank()) {
-        settingName + (getMetaSettings().getString(CURRENT_PROJECT_ID) ?: "")
+    private fun getSettingsId(settingName: String, projectId: String) = if (projectId == NOT_SPECIFIED_UUID) {
+        settingName + (getMetaSettings().getString(CURRENT_PROJECT_ID) ?: DEMO_PROJECT_ID)
     } else {
         settingName + projectId
     }
