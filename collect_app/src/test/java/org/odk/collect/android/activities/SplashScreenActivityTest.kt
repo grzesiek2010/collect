@@ -8,20 +8,17 @@ import androidx.test.espresso.intent.Intents
 import androidx.test.espresso.intent.matcher.IntentMatchers.hasComponent
 import androidx.test.espresso.matcher.ViewMatchers.assertThat
 import androidx.test.ext.junit.runners.AndroidJUnit4
-import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.ExperimentalCoroutinesApi
-import kotlinx.coroutines.test.TestCoroutineDispatcher
-import kotlinx.coroutines.test.resetMain
 import kotlinx.coroutines.test.runBlockingTest
-import kotlinx.coroutines.test.setMain
 import org.hamcrest.CoreMatchers.`is`
 import org.hamcrest.CoreMatchers.notNullValue
 import org.hamcrest.CoreMatchers.nullValue
-import org.junit.After
 import org.junit.Before
+import org.junit.Rule
 import org.junit.Test
 import org.junit.runner.RunWith
 import org.mockito.Mockito.*
+import org.odk.collect.android.rules.MainCoroutineScopeRule
 import org.odk.collect.android.R
 import org.odk.collect.android.activities.viewmodels.SplashScreenViewModel
 import org.odk.collect.android.fragments.dialogs.FirstLaunchDialog
@@ -34,14 +31,13 @@ import org.odk.collect.android.support.RobolectricHelpers
 
 @RunWith(AndroidJUnit4::class)
 class SplashScreenActivityTest {
-    private val testDispatcher = TestCoroutineDispatcher()
+    @get:Rule
+    val coroutineScope =  MainCoroutineScopeRule()
 
     private lateinit var splashScreenViewModel: SplashScreenViewModel
 
     @Before
     fun setup() {
-        Dispatchers.setMain(testDispatcher)
-
         splashScreenViewModel = spy(SplashScreenViewModel(mock(Settings::class.java), mock(Settings::class.java), mock(ProjectsRepository::class.java), mock(ProjectImporter::class.java)))
 
         RobolectricHelpers.overrideAppDependencyModule(object : AppDependencyModule() {
@@ -53,11 +49,6 @@ class SplashScreenActivityTest {
                 }
             }
         })
-    }
-
-    @After
-    fun teardown() {
-        Dispatchers.resetMain()
     }
 
     @Test
@@ -118,7 +109,7 @@ class SplashScreenActivityTest {
 
     @ExperimentalCoroutinesApi
     @Test
-    fun `The main menu should be displayed automatically after 2s if the Splash screen is enabled and the app is not newly installed`() = testDispatcher.runBlockingTest {
+    fun `The main menu should be displayed automatically after 2s if the Splash screen is enabled and the app is not newly installed`() = coroutineScope.runBlockingTest {
         doReturn(false).`when`(splashScreenViewModel).isFirstLaunch()
         doReturn(true).`when`(splashScreenViewModel).shouldDisplaySplashScreen
         doReturn(false).`when`(splashScreenViewModel).doesLogoFileExist
