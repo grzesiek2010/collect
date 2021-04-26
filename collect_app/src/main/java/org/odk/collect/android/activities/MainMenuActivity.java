@@ -28,7 +28,6 @@ import androidx.lifecycle.ViewModelProvider;
 
 import org.odk.collect.android.R;
 import org.odk.collect.android.activities.viewmodels.MainMenuViewModel;
-import org.odk.collect.android.configure.qr.QRCodeTabsActivity;
 import org.odk.collect.android.gdrive.GoogleDriveActivity;
 import org.odk.collect.android.injection.DaggerUtils;
 import org.odk.collect.android.preferences.dialogs.AdminPasswordDialogFragment;
@@ -200,7 +199,6 @@ public class MainMenuActivity extends CollectAbstractActivity implements AdminPa
         viewModel.resume();
 
         setButtonsVisibility();
-        invalidateOptionsMenu();
     }
 
     private void setButtonsVisibility() {
@@ -249,13 +247,8 @@ public class MainMenuActivity extends CollectAbstractActivity implements AdminPa
 
     @Override
     public void onCorrectAdminPassword(Action action) {
-        switch (action) {
-            case ADMIN_SETTINGS:
-                startActivity(new Intent(this, AdminPreferencesActivity.class));
-                break;
-            case SCAN_QR_CODE:
-                startActivity(new Intent(this, QRCodeTabsActivity.class));
-                break;
+        if (action == Action.ADMIN_SETTINGS) {
+            startActivity(new Intent(this, AdminPreferencesActivity.class));
         }
     }
 
