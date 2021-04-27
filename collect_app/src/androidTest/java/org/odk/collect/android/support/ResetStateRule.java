@@ -53,7 +53,6 @@ public class ResetStateRule implements TestRule {
             resetDagger();
             clearPrefs();
             clearDisk();
-            clearProjects();
             setTestState();
 
             // Reinitialize any application state with new deps/state
@@ -93,10 +92,5 @@ public class ResetStateRule implements TestRule {
         settingsProvider.getAdminSettings().clear();
         settingsProvider.getAdminSettings().setDefaultForAllSettingsWithoutValues();
         settingsProvider.getMetaSettings().clear();
-    }
-
-    private void clearProjects() {
-        DaggerUtils.getComponent(InstrumentationRegistry.getInstrumentation().getTargetContext()).projectsRepository().deleteAll();
-        DaggerUtils.getComponent(InstrumentationRegistry.getInstrumentation().getTargetContext()).projectImporter().importDemoProject();
     }
 }
