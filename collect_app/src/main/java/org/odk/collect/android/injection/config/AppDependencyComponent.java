@@ -73,6 +73,7 @@ import org.odk.collect.android.projects.ProjectImporter;
 import org.odk.collect.android.projects.ProjectSettingsDialog;
 import org.odk.collect.android.provider.FormsProvider;
 import org.odk.collect.android.provider.InstanceProvider;
+import org.odk.collect.android.provider.ProjectsProvider;
 import org.odk.collect.android.storage.StorageInitializer;
 import org.odk.collect.android.tasks.InstanceServerUploaderTask;
 import org.odk.collect.android.tasks.MediaLoadingTask;
@@ -264,6 +265,8 @@ public interface AppDependencyComponent {
     void inject(FirstLaunchDialog firstLaunchDialog);
 
     void inject(AdminPreferencesFragment adminPreferencesFragment);
+
+    void inject(ProjectsProvider projectsProvider);
 
     OpenRosaHttpInterface openRosaHttpInterface();
 
