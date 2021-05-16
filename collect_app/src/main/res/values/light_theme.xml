@@ -63,8 +63,4 @@
         <item name="buttonBarPositiveButtonStyle">@style/PositiveButtonStyle</item>
         <item name="dialogCornerRadius">8dp</item>
     </style>
-
-    <style name="Theme.Collect.Light.Dialog" parent="android:Theme.Material.Light.Dialog">
-        <item name="android:colorAccent">?attr/colorSecondary</item>
-    </style>
 </resources>

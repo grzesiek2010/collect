@@ -102,7 +102,7 @@ public final class ThemeUtils {
     public int getMaterialDialogTheme() {
         return isDarkTheme()
                 ? R.style.Theme_Collect_Dark_Dialog
-                : R.style.Theme_Collect_Light_Dialog;
+                : R.style.Theme_Collect_BaseLight_Dialog;
     }
 
     @StyleRes
