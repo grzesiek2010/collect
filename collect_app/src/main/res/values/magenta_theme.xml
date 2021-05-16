@@ -60,7 +60,7 @@
         <item name="android:textDirection">locale</item>
     </style>
 
-    <style name="Theme.Collect.Magenta.Dialog" parent="Theme.AppCompat.Light.Dialog.Alert">
+    <style name="Theme.Collect.Magenta.Dialog" parent="Theme.AppCompat.Light.Dialog">
         <item name="colorAccent">?attr/colorSecondary</item>
         <item name="buttonBarNegativeButtonStyle">@style/NegativeButtonStyle</item>
         <item name="buttonBarPositiveButtonStyle">@style/PositiveButtonStyle</item>

@@ -63,7 +63,7 @@
         <item name="android:tintMode" tools:targetApi="21">src_in</item>
     </style>
 
-    <style name="Theme.Collect.Dark.Dialog" parent="Theme.AppCompat.Dialog.Alert">
+    <style name="Theme.Collect.Dark.Dialog" parent="Theme.AppCompat.Dialog">
         <item name="colorAccent">?attr/colorSecondary</item>
         <item name="buttonBarNegativeButtonStyle">@style/NegativeButtonStyle</item>
         <item name="buttonBarPositiveButtonStyle">@style/PositiveButtonStyle</item>
