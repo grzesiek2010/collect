@@ -58,6 +58,7 @@ dependencies {
     implementation 'com.google.code.gson:gson:2.8.6'
     implementation "com.google.android.material:material:${rootProject.materialVersion}"
     implementation project(':material')
+    implementation project(':strings')
     implementation "com.google.dagger:dagger:${rootProject.daggerVersion}"
     kapt "com.google.dagger:dagger-compiler:${rootProject.daggerVersion}"
 

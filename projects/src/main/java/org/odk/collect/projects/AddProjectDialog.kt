@@ -5,6 +5,8 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.ArrayAdapter
+import android.widget.AutoCompleteTextView
 import androidx.appcompat.widget.Toolbar
 import org.odk.collect.androidshared.OneSignTextWatcher
 import org.odk.collect.material.MaterialFullScreenDialogFragment
@@ -38,6 +40,10 @@ class AddProjectDialog : MaterialFullScreenDialogFragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         setUpToolbar()
+
+        val items = listOf("ODK", getString(R.string.server_platform_google_sheets))
+        val adapter = ArrayAdapter(requireContext(), R.layout.list_item, items)
+        (binding.serverType.editText as? AutoCompleteTextView)?.setAdapter(adapter)
 
         binding.projectIconInputText.addTextChangedListener(OneSignTextWatcher(binding.projectIconInputText))
 
