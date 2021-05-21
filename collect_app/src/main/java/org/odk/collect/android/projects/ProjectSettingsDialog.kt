@@ -39,9 +39,6 @@ class ProjectSettingsDialog : DialogFragment() {
     lateinit var projectsRepository: ProjectsRepository
 
     @Inject
-    lateinit var currentProjectProvider: CurrentProjectProvider
-
-    @Inject
     lateinit var currentProjectViewModelFactory: CurrentProjectViewModel.Factory
 
     @Inject
@@ -55,10 +52,17 @@ class ProjectSettingsDialog : DialogFragment() {
         super.onAttach(context)
         DaggerUtils.getComponent(context).inject(this)
 
-        currentProjectViewModel = ViewModelProvider(requireActivity(), currentProjectViewModelFactory)[CurrentProjectViewModel::class.java]
+        currentProjectViewModel = ViewModelProvider(
+            requireActivity(),
+            currentProjectViewModelFactory
+        )[CurrentProjectViewModel::class.java]
     }
 
-    override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
+    override fun onCreateView(
+        inflater: LayoutInflater,
+        container: ViewGroup?,
+        savedInstanceState: Bundle?
+    ): View? {
         dialog?.window?.setBackgroundDrawable(ColorDrawable(Color.TRANSPARENT))
         binding = ProjectSettingsDialogLayoutBinding.inflate(inflater)
         return binding.root
@@ -67,8 +71,12 @@ class ProjectSettingsDialog : DialogFragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        setupCurrentProjectView()
-        inflateListOfInActiveProjects(view.context)
+        currentProjectViewModel.currentProject.observe(viewLifecycleOwner) { project ->
+            binding.currentProject.project = project
+            binding.currentProject.contentDescription =
+                getString(R.string.using_project, project.name)
+            inflateListOfInActiveProjects(view.context, project)
+        }
 
         binding.closeIcon.setOnClickListener {
             dismiss()
@@ -82,9 +90,16 @@ class ProjectSettingsDialog : DialogFragment() {
         binding.adminSettingsButton.setOnClickListener {
             if (adminPasswordProvider.isAdminPasswordSet) {
                 val args = Bundle().also {
-                    it.putSerializable(AdminPasswordDialogFragment.ARG_ACTION, AdminPasswordDialogFragment.Action.ADMIN_SETTINGS)
+                    it.putSerializable(
+                        AdminPasswordDialogFragment.ARG_ACTION,
+                        AdminPasswordDialogFragment.Action.ADMIN_SETTINGS
+                    )
                 }
-                DialogUtils.showIfNotShowing(AdminPasswordDialogFragment::class.java, args, requireActivity().supportFragmentManager)
+                DialogUtils.showIfNotShowing(
+                    AdminPasswordDialogFragment::class.java,
+                    args,
+                    requireActivity().supportFragmentManager
+                )
             } else {
                 startActivity(Intent(requireContext(), AdminPreferencesActivity::class.java))
             }
@@ -92,7 +107,10 @@ class ProjectSettingsDialog : DialogFragment() {
         }
 
         binding.addProjectButton.setOnClickListener {
-            DialogUtils.showIfNotShowing(AddProjectDialog::class.java, requireActivity().supportFragmentManager)
+            DialogUtils.showIfNotShowing(
+                AddProjectDialog::class.java,
+                requireActivity().supportFragmentManager
+            )
             dismiss()
         }
 
@@ -102,15 +120,15 @@ class ProjectSettingsDialog : DialogFragment() {
         }
     }
 
-    private fun inflateListOfInActiveProjects(context: Context) {
-        if (projectsRepository.getAll().none { it.uuid != currentProjectProvider.getCurrentProjectId() }) {
+    private fun inflateListOfInActiveProjects(context: Context, currentProject: Project.Saved) {
+        if (projectsRepository.getAll().none { it.uuid != currentProject.uuid }) {
             binding.topDivider.visibility = INVISIBLE
         } else {
             binding.topDivider.visibility = VISIBLE
         }
 
         projectsRepository.getAll().filter {
-            it.uuid != currentProjectProvider.getCurrentProjectId()
+            it.uuid != currentProject.uuid
         }.forEach { project ->
             val projectView = ProjectListItemView(context)
 
@@ -125,18 +143,10 @@ class ProjectSettingsDialog : DialogFragment() {
     }
 
     private fun switchProject(project: Project.Saved) {
-        currentProjectProvider.setCurrentProject(project.uuid)
         Collect.resetDatabaseConnections()
-
         currentProjectViewModel.setCurrentProject(project)
+
         ToastUtils.showLongToast(getString(R.string.switched_project, project.name))
         dismiss()
-    }
-
-    private fun setupCurrentProjectView() {
-        val currentProject = currentProjectProvider.getCurrentProject() ?: return
-
-        binding.currentProject.project = currentProject
-        binding.currentProject.contentDescription = getString(R.string.using_project, currentProject.name)
     }
 }
