@@ -2,12 +2,15 @@ package org.odk.collect.projects
 
 import android.content.Context
 import android.os.Bundle
+import android.text.Editable
+import android.text.TextWatcher
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.appcompat.widget.Toolbar
 import org.odk.collect.material.MaterialFullScreenDialogFragment
 import org.odk.collect.projects.databinding.AddProjectDialogLayoutBinding
+import org.odk.collect.shared.Validator
 import javax.inject.Inject
 
 class AddProjectDialog : MaterialFullScreenDialogFragment() {
@@ -37,6 +40,22 @@ class AddProjectDialog : MaterialFullScreenDialogFragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         setUpToolbar()
+
+        binding.urlInputText.addTextChangedListener(object : TextWatcher {
+            override fun beforeTextChanged(s: CharSequence?, start: Int, count: Int, after: Int) {}
+
+            override fun onTextChanged(s: CharSequence?, start: Int, before: Int, count: Int) {
+                if (Validator.isUrlValid(s.toString())) {
+                    binding.urlInputText.error = null
+                    binding.addButton.isEnabled = true
+                } else {
+                    binding.urlInputText.error = getString(R.string.url_error)
+                    binding.addButton.isEnabled = false
+                }
+            }
+
+            override fun afterTextChanged(s: Editable?) {}
+        })
 
         binding.cancelButton.setOnClickListener {
             dismiss()
