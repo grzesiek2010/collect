@@ -7,6 +7,7 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.appcompat.widget.Toolbar
 import androidx.core.widget.doOnTextChanged
+import org.odk.collect.androidshared.SoftKeyboardController
 import org.odk.collect.material.MaterialFullScreenDialogFragment
 import org.odk.collect.projects.databinding.AddProjectDialogLayoutBinding
 import org.odk.collect.shared.Validator
@@ -16,6 +17,9 @@ class AddProjectDialog : MaterialFullScreenDialogFragment() {
 
     @Inject
     lateinit var projectsRepository: ProjectsRepository
+
+    @Inject
+    lateinit var softKeyboardController: SoftKeyboardController
 
     private lateinit var binding: AddProjectDialogLayoutBinding
 
@@ -39,6 +43,8 @@ class AddProjectDialog : MaterialFullScreenDialogFragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         setUpToolbar()
+
+        softKeyboardController.showSoftKeyboard(binding.url.editText!!)
 
         binding.urlInputText.doOnTextChanged { text, _, _, _ ->
             if (Validator.isUrlValid(text.toString())) {

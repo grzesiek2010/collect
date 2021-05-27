@@ -40,8 +40,6 @@ import org.odk.collect.forms.Form;
 import org.odk.collect.projects.DaggerProjectsDependencyComponent;
 import org.odk.collect.projects.ProjectsDependencyComponent;
 import org.odk.collect.projects.ProjectsDependencyComponentProvider;
-import org.odk.collect.projects.ProjectsDependencyModule;
-import org.odk.collect.projects.ProjectsRepository;
 import org.odk.collect.shared.Md5;
 import org.odk.collect.shared.Settings;
 import org.odk.collect.strings.LocalizedApplication;
@@ -71,9 +69,6 @@ public class Collect extends Application implements
 
     @Inject
     SettingsProvider settingsProvider;
-
-    @Inject
-    ProjectsRepository projectsRepository;
 
     private AudioRecorderDependencyComponent audioRecorderDependencyComponent;
     private ProjectsDependencyComponent projectsDependencyComponent;
@@ -170,13 +165,7 @@ public class Collect extends Application implements
                 .build();
 
         projectsDependencyComponent = DaggerProjectsDependencyComponent.builder()
-                .projectsDependencyModule(new ProjectsDependencyModule() {
-                    @NotNull
-                    @Override
-                    public ProjectsRepository providesProjectsRepository() {
-                        return projectsRepository;
-                    }
-                })
+                .application(this)
                 .build();
     }
 
