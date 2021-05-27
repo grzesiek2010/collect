@@ -47,7 +47,7 @@ import org.odk.collect.android.preferences.source.SettingsProvider;
 import org.odk.collect.android.utilities.AnimationUtils;
 import org.odk.collect.android.utilities.FormEntryPromptUtils;
 import org.odk.collect.android.utilities.ScreenUtils;
-import org.odk.collect.android.utilities.SoftKeyboardController;
+import org.odk.collect.androidshared.SoftKeyboardController;
 import org.odk.collect.android.utilities.StringUtils;
 import org.odk.collect.android.utilities.ThemeUtils;
 import org.odk.collect.android.utilities.ViewUtils;

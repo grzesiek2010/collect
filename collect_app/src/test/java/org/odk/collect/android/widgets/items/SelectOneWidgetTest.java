@@ -1,6 +1,7 @@
 package org.odk.collect.android.widgets.items;
 
 import android.app.Application;
+import android.content.Context;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.FrameLayout;
@@ -34,7 +35,7 @@ import org.odk.collect.android.listeners.AdvanceToNextListener;
 import org.odk.collect.android.support.CollectHelpers;
 import org.odk.collect.android.support.MockFormEntryPromptBuilder;
 import org.odk.collect.android.utilities.Appearances;
-import org.odk.collect.android.utilities.SoftKeyboardController;
+import org.odk.collect.androidshared.SoftKeyboardController;
 import org.odk.collect.android.widgets.base.GeneralSelectOneWidgetTest;
 import org.odk.collect.async.Scheduler;
 import org.odk.collect.audioclips.Clip;
@@ -329,7 +330,7 @@ public class SelectOneWidgetTest extends GeneralSelectOneWidgetTest<SelectOneWid
             }
 
             @Override
-            public SoftKeyboardController provideSoftKeyboardController() {
+            public SoftKeyboardController provideSoftKeyboardController(Context context) {
                 return mock(SoftKeyboardController.class);
             }
         });

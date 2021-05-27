@@ -109,7 +109,7 @@ import org.odk.collect.android.utilities.FormsRepositoryProvider;
 import org.odk.collect.android.utilities.InstancesRepositoryProvider;
 import org.odk.collect.android.utilities.MediaUtils;
 import org.odk.collect.android.utilities.ScreenUtils;
-import org.odk.collect.android.utilities.SoftKeyboardController;
+import org.odk.collect.androidshared.SoftKeyboardController;
 import org.odk.collect.android.utilities.WebCredentialsUtils;
 import org.odk.collect.android.version.VersionInformation;
 import org.odk.collect.android.views.BarcodeViewDecoder;
@@ -457,8 +457,8 @@ public class AppDependencyModule {
     }
 
     @Provides
-    public SoftKeyboardController provideSoftKeyboardController() {
-        return new SoftKeyboardController();
+    public SoftKeyboardController provideSoftKeyboardController(Context context) {
+        return new SoftKeyboardController(context);
     }
 
     @Provides

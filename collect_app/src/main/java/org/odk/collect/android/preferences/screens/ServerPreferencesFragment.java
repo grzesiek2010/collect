@@ -51,7 +51,7 @@ import org.odk.collect.android.preferences.filters.WhitespaceFilter;
 import org.odk.collect.android.utilities.MultiClickGuard;
 import org.odk.collect.android.permissions.PermissionsProvider;
 import org.odk.collect.android.utilities.PlayServicesChecker;
-import org.odk.collect.android.utilities.SoftKeyboardController;
+import org.odk.collect.androidshared.SoftKeyboardController;
 import org.odk.collect.android.utilities.ToastUtils;
 import org.odk.collect.shared.Validator;
 import org.odk.collect.shared.Md5;

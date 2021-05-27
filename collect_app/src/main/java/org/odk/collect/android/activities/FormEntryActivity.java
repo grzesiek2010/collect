@@ -140,7 +140,7 @@ import org.odk.collect.android.utilities.MultiClickGuard;
 import org.odk.collect.android.utilities.PlayServicesChecker;
 import org.odk.collect.android.utilities.ScreenContext;
 import org.odk.collect.android.utilities.SnackbarUtils;
-import org.odk.collect.android.utilities.SoftKeyboardController;
+import org.odk.collect.androidshared.SoftKeyboardController;
 import org.odk.collect.android.utilities.ToastUtils;
 import org.odk.collect.android.widgets.DateTimeWidget;
 import org.odk.collect.android.widgets.QuestionWidget;

@@ -14,16 +14,20 @@
  * limitations under the License.
  */
 
-package org.odk.collect.android.utilities;
+package org.odk.collect.androidshared;
 
 import android.content.Context;
 import androidx.annotation.NonNull;
 import android.view.View;
 import android.view.inputmethod.InputMethodManager;
 
-import org.odk.collect.android.application.Collect;
-
 public class SoftKeyboardController {
+    private final Context context;
+
+    public SoftKeyboardController(Context context) {
+        this.context = context;
+    }
+
     public void showSoftKeyboard(@NonNull View view) {
         if (view.requestFocus()) {
             getInputMethodManager().showSoftInput(view, 0);
@@ -35,6 +39,6 @@ public class SoftKeyboardController {
     }
 
     private InputMethodManager getInputMethodManager() {
-        return (InputMethodManager) Collect.getInstance().getSystemService(Context.INPUT_METHOD_SERVICE);
+        return (InputMethodManager) context.getSystemService(Context.INPUT_METHOD_SERVICE);
     }
 }
