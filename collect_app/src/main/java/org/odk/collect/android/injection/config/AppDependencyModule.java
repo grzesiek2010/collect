@@ -41,6 +41,7 @@ import org.odk.collect.android.backgroundwork.SchedulerFormUpdateAndSubmitManage
 import org.odk.collect.android.configure.ServerRepository;
 import org.odk.collect.android.configure.SettingsChangeHandler;
 import org.odk.collect.android.configure.SettingsImporter;
+import org.odk.collect.android.configure.SettingsValidator;
 import org.odk.collect.android.configure.SharedPreferencesServerRepository;
 import org.odk.collect.android.configure.StructureAndTypeSettingsValidator;
 import org.odk.collect.android.configure.qr.CachingQRCodeGenerator;
@@ -346,18 +347,22 @@ public class AppDependencyModule {
     }
 
     @Provides
-    public SettingsImporter providesCollectSettingsImporter(SettingsProvider settingsProvider, SettingsPreferenceMigrator preferenceMigrator, SettingsChangeHandler settingsChangeHandler) {
+    public SettingsImporter providesCollectSettingsImporter(SettingsProvider settingsProvider, SettingsPreferenceMigrator preferenceMigrator, SettingsValidator settingsValidator, SettingsChangeHandler settingsChangeHandler) {
         HashMap<String, Object> generalDefaults = GeneralKeys.getDefaults();
         Map<String, Object> adminDefaults = AdminKeys.getDefaults();
         return new SettingsImporter(
-                settingsProvider.getGeneralSettings(),
-                settingsProvider.getAdminSettings(),
+                settingsProvider,
                 preferenceMigrator,
-                new StructureAndTypeSettingsValidator(generalDefaults, adminDefaults),
+                settingsValidator,
                 generalDefaults,
                 adminDefaults,
                 settingsChangeHandler
         );
+    }
+
+    @Provides
+    public SettingsValidator providesSettingsValidator() {
+        return new StructureAndTypeSettingsValidator(GeneralKeys.getDefaults(), AdminKeys.getDefaults());
     }
 
     @Provides

@@ -5,6 +5,7 @@ import androidx.annotation.NonNull;
 import org.json.JSONException;
 import org.json.JSONObject;
 import org.odk.collect.android.application.initialization.SettingsPreferenceMigrator;
+import org.odk.collect.android.preferences.source.SettingsProvider;
 import org.odk.collect.shared.Settings;
 
 import java.util.Iterator;
@@ -13,17 +14,15 @@ import java.util.Set;
 
 public class SettingsImporter {
 
-    private final Settings generalSettings;
-    private final Settings adminSettings;
+    private final SettingsProvider settingsProvider;
     private final SettingsPreferenceMigrator preferenceMigrator;
     private final SettingsValidator settingsValidator;
     private final Map<String, Object> generalDefaults;
     private final Map<String, Object> adminDefaults;
     private final SettingsChangeHandler settingsChangedHandler;
 
-    public SettingsImporter(Settings generalSettings, Settings adminSettings, SettingsPreferenceMigrator preferenceMigrator, SettingsValidator settingsValidator, Map<String, Object> generalDefaults, Map<String, Object> adminDefaults, SettingsChangeHandler settingsChangedHandler) {
-        this.generalSettings = generalSettings;
-        this.adminSettings = adminSettings;
+    public SettingsImporter(SettingsProvider settingsProvider, SettingsPreferenceMigrator preferenceMigrator, SettingsValidator settingsValidator, Map<String, Object> generalDefaults, Map<String, Object> adminDefaults, SettingsChangeHandler settingsChangedHandler) {
+        this.settingsProvider = settingsProvider;
         this.preferenceMigrator = preferenceMigrator;
         this.settingsValidator = settingsValidator;
         this.generalDefaults = generalDefaults;
@@ -36,34 +35,34 @@ public class SettingsImporter {
             return false;
         }
 
-        generalSettings.clear();
-        adminSettings.clear();
+        settingsProvider.getGeneralSettings().clear();
+        settingsProvider.getAdminSettings().clear();
 
         try {
             JSONObject jsonObject = new JSONObject(json);
 
             JSONObject general = jsonObject.getJSONObject("general");
-            importToPrefs(general, generalSettings);
+            importToPrefs(general, settingsProvider.getGeneralSettings());
 
             JSONObject admin = jsonObject.getJSONObject("admin");
-            importToPrefs(admin, adminSettings);
+            importToPrefs(admin, settingsProvider.getAdminSettings());
         } catch (JSONException ignored) {
             // Ignored
         }
 
-        preferenceMigrator.migrate(generalSettings, adminSettings);
+        preferenceMigrator.migrate(settingsProvider.getGeneralSettings(), settingsProvider.getAdminSettings());
 
-        clearUnknownKeys(generalSettings, generalDefaults);
-        clearUnknownKeys(adminSettings, adminDefaults);
+        clearUnknownKeys(settingsProvider.getGeneralSettings(), generalDefaults);
+        clearUnknownKeys(settingsProvider.getAdminSettings(), adminDefaults);
 
-        loadDefaults(generalSettings, generalDefaults);
-        loadDefaults(adminSettings, adminDefaults);
+        loadDefaults(settingsProvider.getGeneralSettings(), generalDefaults);
+        loadDefaults(settingsProvider.getAdminSettings(), adminDefaults);
 
-        for (Map.Entry<String, ?> entry: generalSettings.getAll().entrySet()) {
+        for (Map.Entry<String, ?> entry: settingsProvider.getGeneralSettings().getAll().entrySet()) {
             settingsChangedHandler.onSettingChanged(entry.getKey(), entry.getValue());
         }
 
-        for (Map.Entry<String, ?> entry: adminSettings.getAll().entrySet()) {
+        for (Map.Entry<String, ?> entry: settingsProvider.getAdminSettings().getAll().entrySet()) {
             settingsChangedHandler.onSettingChanged(entry.getKey(), entry.getValue());
         }
 
