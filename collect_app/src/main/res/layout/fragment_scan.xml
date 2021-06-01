@@ -5,7 +5,6 @@
     android:layout_height="match_parent"
     tools:context="org.odk.collect.android.fragments.BarCodeScannerFragment">
 
-
     <com.journeyapps.barcodescanner.DecoratedBarcodeView
         android:id="@+id/barcode_view"
         android:layout_width="match_parent"
