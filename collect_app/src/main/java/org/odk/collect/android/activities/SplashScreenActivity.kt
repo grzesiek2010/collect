@@ -21,36 +21,17 @@ import androidx.lifecycle.lifecycleScope
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 import org.odk.collect.android.activities.viewmodels.SplashScreenViewModel
-import org.odk.collect.android.application.Collect
 import org.odk.collect.android.databinding.SplashScreenBinding
 import org.odk.collect.android.fragments.dialogs.FirstLaunchDialog
 import org.odk.collect.android.injection.DaggerUtils
-import org.odk.collect.android.preferences.keys.GeneralKeys
-import org.odk.collect.android.preferences.source.SettingsProvider
-import org.odk.collect.android.projects.CurrentProjectProvider
-import org.odk.collect.android.projects.ProjectImporter
-import org.odk.collect.android.utilities.DialogUtils
 import org.odk.collect.android.projects.ManualProjectCreatorDialog
-import org.odk.collect.projects.Project
-import org.odk.collect.projects.ProjectsRepository
+import org.odk.collect.android.utilities.DialogUtils
 import javax.inject.Inject
 
 class SplashScreenActivity : AppCompatActivity(), ManualProjectCreatorDialog.AddProjectDialogListener {
 
     @Inject
     lateinit var splashScreenViewModelFactoryFactory: SplashScreenViewModel.Factory
-
-    @Inject
-    lateinit var currentProjectProvider: CurrentProjectProvider
-
-    @Inject
-    lateinit var projectsRepository: ProjectsRepository
-
-    @Inject
-    lateinit var projectImporter: ProjectImporter
-
-    @Inject
-    lateinit var settingsProvider: SettingsProvider
 
     lateinit var viewModel: SplashScreenViewModel
 
@@ -92,15 +73,7 @@ class SplashScreenActivity : AppCompatActivity(), ManualProjectCreatorDialog.Add
         }
     }
 
-    override fun onProjectAdded(project: Project.Saved, url: String, username: String, password: String) {
-        projectImporter.setupProject(project)
-        currentProjectProvider.setCurrentProject(project.uuid)
-        Collect.resetDatabaseConnections()
-
-        settingsProvider.getGeneralSettings(project.uuid).save(GeneralKeys.KEY_SERVER_URL, url)
-        settingsProvider.getGeneralSettings(project.uuid).save(GeneralKeys.KEY_USERNAME, username)
-        settingsProvider.getGeneralSettings(project.uuid).save(GeneralKeys.KEY_PASSWORD, password)
-
+    override fun onProjectAdded() {
         endSplashScreen()
     }
 }
