@@ -8,7 +8,7 @@ import org.odk.collect.android.support.AdbFormLoadingUtils;
 import org.odk.collect.android.support.CopyFormRule;
 import org.odk.collect.android.support.FormActivityTestRule;
 import org.odk.collect.android.support.ResetStateRule;
-import org.odk.collect.android.support.matchers.RecyclerViewMatcher;
+import org.odk.collect.testshared.espresso.matchers.RecyclerViewMatcher;
 import org.odk.collect.android.support.pages.FormEndPage;
 import org.odk.collect.android.support.pages.FormEntryPage;
 import org.odk.collect.android.support.pages.FormHierarchyPage;

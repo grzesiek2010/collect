@@ -1,4 +1,4 @@
-package org.odk.collect.android.support
+package org.odk.collect.testshared.espresso.matchers
 
 import android.text.method.PasswordTransformationMethod
 import android.view.View
@@ -7,7 +7,7 @@ import androidx.test.espresso.matcher.BoundedMatcher
 import org.hamcrest.Description
 import org.hamcrest.Matcher
 
-object Matchers {
+object TextInputMatcher {
     fun isPasswordHidden(): Matcher<View> {
         return object : BoundedMatcher<View, EditText>(EditText::class.java) {
             override fun describeTo(description: Description) {

@@ -1,4 +1,4 @@
-package org.odk.collect.android.support.matchers;
+package org.odk.collect.testshared.espresso.matchers;
 
 import android.os.IBinder;
 import android.view.WindowManager;

@@ -19,8 +19,8 @@ import junit.framework.AssertionFailedError;
 import org.odk.collect.android.R;
 import org.odk.collect.android.support.AdbFormLoadingUtils;
 import org.odk.collect.android.support.actions.RotateAction;
-import org.odk.collect.android.support.matchers.RecyclerViewMatcher;
-import org.odk.collect.android.support.matchers.ToastMatcher;
+import org.odk.collect.testshared.espresso.matchers.RecyclerViewMatcher;
+import org.odk.collect.testshared.espresso.matchers.ToastMatcher;
 
 import java.io.IOException;
 import java.util.List;
@@ -56,7 +56,7 @@ import static org.hamcrest.core.StringContains.containsString;
 import static org.hamcrest.core.StringEndsWith.endsWith;
 import static org.odk.collect.android.support.CustomMatchers.withIndex;
 import static org.odk.collect.android.support.actions.NestedScrollToAction.nestedScrollTo;
-import static org.odk.collect.android.support.matchers.RecyclerViewMatcher.withRecyclerView;
+import static org.odk.collect.testshared.espresso.matchers.RecyclerViewMatcher.withRecyclerView;
 
 /**
  * Base class for Page Objects used in Espresso tests. Provides shared helpers/setup.

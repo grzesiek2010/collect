@@ -40,6 +40,8 @@ dependencies {
     implementation project(path: ':async')
     implementation project(path: ':shared')
     implementation "org.robolectric:robolectric:4.5.1"
+    implementation 'org.hamcrest:hamcrest:2.2'
+    implementation 'androidx.test.espresso:espresso-core:3.3.0'
     testImplementation 'androidx.test.ext:junit:1.1.2'
     debugImplementation("androidx.fragment:fragment-testing:${rootProject.fragmentVersion}") {
         exclude group: 'androidx.test', module: 'monitor' //fixes issue https://github.com/android/android-test/issues/731

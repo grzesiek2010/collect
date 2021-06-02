@@ -36,8 +36,8 @@ import static androidx.test.espresso.matcher.ViewMatchers.withText;
 import static java.util.Arrays.asList;
 import static java.util.Collections.singletonList;
 import static junit.framework.TestCase.assertNotSame;
-import static org.odk.collect.android.support.matchers.DrawableMatcher.withImageDrawable;
-import static org.odk.collect.android.support.matchers.RecyclerViewMatcher.withRecyclerView;
+import static org.odk.collect.testshared.espresso.matchers.DrawableMatcher.withImageDrawable;
+import static org.odk.collect.testshared.espresso.matchers.RecyclerViewMatcher.withRecyclerView;
 
 //Issue NODK-244
 @RunWith(AndroidJUnit4.class)

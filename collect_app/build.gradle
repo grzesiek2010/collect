@@ -394,6 +394,8 @@ dependencies {
     testImplementation 'org.jetbrains.kotlinx:kotlinx-coroutines-test:1.4.3'
 
     testImplementation project(':formstest')
+    testImplementation project(':testshared')
+    androidTestImplementation project(':testshared')
 
     androidTestImplementation "org.mockito:mockito-android:3.7.7"
     androidTestImplementation 'androidx.test.ext:junit:1.1.2'

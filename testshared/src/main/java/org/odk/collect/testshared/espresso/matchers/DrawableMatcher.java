@@ -1,4 +1,4 @@
-package org.odk.collect.android.support.matchers;
+package org.odk.collect.testshared.espresso.matchers;
 
 import android.view.View;
 import android.widget.ImageView;
