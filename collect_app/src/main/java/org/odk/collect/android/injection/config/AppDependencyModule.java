@@ -93,6 +93,7 @@ import org.odk.collect.android.preferences.keys.MetaKeys;
 import org.odk.collect.android.preferences.source.SettingsProvider;
 import org.odk.collect.android.preferences.source.SettingsStore;
 import org.odk.collect.android.projects.CurrentProjectProvider;
+import org.odk.collect.android.projects.ProjectCreator;
 import org.odk.collect.android.projects.ProjectImporter;
 import org.odk.collect.android.storage.StorageInitializer;
 import org.odk.collect.android.storage.StoragePathProvider;
@@ -510,6 +511,13 @@ public class AppDependencyModule {
     @Singleton
     public ProjectsRepository providesProjectsRepository(UUIDGenerator uuidGenerator, Gson gson, SettingsProvider settingsProvider) {
         return new SharedPreferencesProjectsRepository(uuidGenerator, gson, settingsProvider.getMetaSettings(), MetaKeys.KEY_PROJECTS);
+    }
+
+    @Provides
+    public ProjectCreator providesNewProjectCreator(ProjectImporter projectImporter, ProjectsRepository projectsRepository,
+                                                    CurrentProjectProvider currentProjectProvider, SettingsImporter settingsImporter,
+                                                    FormsDatabaseProvider formsDatabaseProvider, InstancesDatabaseProvider instancesDatabaseProvider) {
+        return new ProjectCreator(projectImporter, projectsRepository, currentProjectProvider, settingsImporter, formsDatabaseProvider, instancesDatabaseProvider);
     }
 
     @Provides
