@@ -300,15 +300,6 @@
         </androidx.constraintlayout.widget.ConstraintLayout>
 
         <com.google.android.material.textview.MaterialTextView
-            style="?textAppearanceHeadline5"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="@string/hex"
-            app:layout_constraintBottom_toBottomOf="@+id/materialTextView"
-            app:layout_constraintStart_toEndOf="@+id/current_color"
-            app:layout_constraintTop_toTopOf="@+id/materialTextView" />
-
-        <com.google.android.material.textview.MaterialTextView
             android:id="@+id/materialTextView"
             style="?textAppearanceHeadline5"
             android:layout_width="wrap_content"
