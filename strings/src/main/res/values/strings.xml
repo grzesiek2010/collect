@@ -1009,4 +1009,5 @@
      ##############################################
      -->
     <string name="hex_color">Hex color</string>
+    <string name="invalid_hex_code">Invalid hex code</string>
 </resources>
