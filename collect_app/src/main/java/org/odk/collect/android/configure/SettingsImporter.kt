@@ -1,6 +1,5 @@
 package org.odk.collect.android.configure
 
-import org.json.JSONException
 import org.json.JSONObject
 import org.odk.collect.android.application.initialization.SettingsPreferenceMigrator
 import org.odk.collect.android.configure.qr.AppConfigurationKeys
@@ -30,28 +29,22 @@ class SettingsImporter(
         generalSettings.clear()
         adminSettings.clear()
 
-        try {
-            val jsonObject = JSONObject(json)
+        val jsonObject = JSONObject(json)
 
-            val general = jsonObject.getJSONObject(AppConfigurationKeys.GENERAL)
-            importToPrefs(general, generalSettings)
+        val general = jsonObject.getJSONObject(AppConfigurationKeys.GENERAL)
+        importToPrefs(general, generalSettings)
 
-            val admin = jsonObject.getJSONObject(AppConfigurationKeys.ADMIN)
-            importToPrefs(admin, adminSettings)
+        val admin = jsonObject.getJSONObject(AppConfigurationKeys.ADMIN)
+        importToPrefs(admin, adminSettings)
 
-            if (jsonObject.has(AppConfigurationKeys.PROJECT)) {
-                importProjectDetails(jsonObject.getJSONObject(AppConfigurationKeys.PROJECT), project)
-            }
-        } catch (ignored: JSONException) {
-            // Ignored
+        if (jsonObject.has(AppConfigurationKeys.PROJECT)) {
+            importProjectDetails(jsonObject.getJSONObject(AppConfigurationKeys.PROJECT), project)
         }
 
         preferenceMigrator.migrate(generalSettings, adminSettings)
 
         clearUnknownKeys(generalSettings, generalDefaults)
         clearUnknownKeys(adminSettings, adminDefaults)
-        loadDefaults(generalSettings, generalDefaults)
-        loadDefaults(adminSettings, adminDefaults)
 
         for ((key, value) in generalSettings.getAll()) {
             settingsChangedHandler.onSettingChanged(project.uuid, value, key)
@@ -62,22 +55,13 @@ class SettingsImporter(
         return true
     }
 
-    private fun importToPrefs(`object`: JSONObject, preferences: Settings) {
-        val generalKeys = `object`.keys()
-        while (generalKeys.hasNext()) {
-            val key = generalKeys.next()
-            preferences.save(key, `object`[key])
+    private fun importToPrefs(jsonObject: JSONObject, preferences: Settings) {
+        jsonObject.keys().forEach {
+            preferences.save(it, jsonObject[it])
         }
     }
 
-    private fun loadDefaults(preferences: Settings, defaults: Map<String, Any>) {
-        for ((key, value) in defaults) {
-            if (!preferences.contains(key)) {
-                preferences.save(key, value)
-            }
-        }
-    }
-
+    // should be called after migrating settings so that relevant settings are not removed
     private fun clearUnknownKeys(preferences: Settings, defaults: Map<String, Any>) {
         for (key in preferences.getAll().keys) {
             if (!defaults.containsKey(key)) {
