@@ -24,13 +24,12 @@ class ColorPickerDialog : DialogFragment() {
 
     override fun onCreateDialog(savedInstanceState: Bundle?): Dialog {
         binding = ColorPickerDialogLayoutBinding.inflate(LayoutInflater.from(context))
-
-        setListeners()
-        setCurrentColor(requireArguments().getString(CURRENT_COLOR)!!)
-
         binding.hexColor.doOnTextChanged { color, _, _, _ ->
             updateCurrentColorCircle("#$color")
         }
+
+        setListeners()
+        setCurrentColor(requireArguments().getString(CURRENT_COLOR)!!)
 
         return AlertDialog.Builder(requireContext())
             .setView(binding.root)
@@ -63,7 +62,6 @@ class ColorPickerDialog : DialogFragment() {
     }
 
     private fun setCurrentColor(color: String) {
-        updateCurrentColorCircle(color)
         binding.hexColor.setText(color.substring(1))
     }
 
