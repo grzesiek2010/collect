@@ -36,6 +36,7 @@ import org.odk.collect.android.activities.SplashScreenActivity;
 import org.odk.collect.android.backgroundwork.FormUpdateScheduler;
 import org.odk.collect.android.backgroundwork.InstanceSubmitScheduler;
 import org.odk.collect.android.configure.qr.QRCodeTabsActivity;
+import org.odk.collect.android.utilities.InstancesRepositoryProvider;
 import org.odk.collect.androidshared.ColorPickerViewModel;
 import org.odk.collect.android.injection.DaggerUtils;
 import org.odk.collect.android.preferences.dialogs.ChangeAdminPasswordDialog;
@@ -73,6 +74,9 @@ public class AdminPreferencesFragment extends BaseAdminPreferencesFragment
 
     @Inject
     InstanceSubmitScheduler instanceSubmitScheduler;
+
+    @Inject
+    InstancesRepositoryProvider instancesRepositoryProvider;
 
     @Override
     public void onAttach(@NonNull Context context) {
@@ -153,12 +157,20 @@ public class AdminPreferencesFragment extends BaseAdminPreferencesFragment
                     startActivity(pref);
                     break;
                 case DELETE_PROJECT_KEY:
-                    new AlertDialog.Builder(requireActivity())
-                            .setTitle(R.string.delete_project_confirm_message)
-                            .setNegativeButton(R.string.delete_project_no, (dialog, which) -> {
-                            })
-                            .setPositiveButton(R.string.delete_project_yes, (dialog, which) -> deleteProject())
-                            .show();
+                    if (instancesRepositoryProvider.get().getAll().isEmpty()) {
+                        new AlertDialog.Builder(requireActivity())
+                                .setTitle(R.string.delete_project_confirm_message)
+                                .setNegativeButton(R.string.delete_project_no, (dialog, which) -> {
+                                })
+                                .setPositiveButton(R.string.delete_project_yes, (dialog, which) -> deleteProject())
+                                .show();
+                    } else {
+                        new AlertDialog.Builder(requireActivity())
+                                .setTitle(R.string.cannot_delete_project_title)
+                                .setMessage(R.string.cannot_delete_project_message)
+                                .setPositiveButton(R.string.ok, null)
+                                .show();
+                    }
                     break;
                 case "main_menu":
                     displayPreferences(new MainMenuAccessPreferencesFragment());
