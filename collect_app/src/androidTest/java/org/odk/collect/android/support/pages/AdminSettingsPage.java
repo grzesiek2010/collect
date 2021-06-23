@@ -90,6 +90,12 @@ public class AdminSettingsPage extends Page<AdminSettingsPage> {
         return new MainMenuPage();
     }
 
+    public AdminSettingsPage deleteProjectWithInstances() {
+        clickOnString(R.string.delete_project);
+        clickOnString(R.string.ok);
+        return this;
+    }
+
     public FirstLaunchPage deleteLastProject() {
         clickOnString(R.string.delete_project);
         clickOnString(R.string.delete_project_yes);
