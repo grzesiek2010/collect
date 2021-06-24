@@ -7,7 +7,7 @@ import org.odk.collect.android.R
 import org.odk.collect.android.configure.qr.AppConfigurationKeys
 import org.odk.collect.projects.Project
 import java.net.URL
-import java.util.*
+import java.util.Locale
 import java.util.regex.Pattern
 import kotlin.math.abs
 
