@@ -6,7 +6,6 @@ import org.odk.collect.android.application.initialization.SettingsMigrator
 import org.odk.collect.android.configure.qr.AppConfigurationKeys
 import org.odk.collect.android.preferences.source.SettingsProvider
 import org.odk.collect.projects.Project
-import org.odk.collect.projects.ProjectsRepository
 import org.odk.collect.shared.Settings
 
 class SettingsImporter(
@@ -15,8 +14,7 @@ class SettingsImporter(
     private val settingsValidator: SettingsValidator,
     private val generalDefaults: Map<String, Any>,
     private val adminDefaults: Map<String, Any>,
-    private val settingsChangedHandler: SettingsChangeHandler,
-    private val projectsRepository: ProjectsRepository
+    private val settingsChangedHandler: SettingsChangeHandler
 ) {
 
     fun fromJSON(json: String, project: Project.Saved): Boolean {
@@ -38,10 +36,6 @@ class SettingsImporter(
 
             val admin = jsonObject.getJSONObject(AppConfigurationKeys.ADMIN)
             importToPrefs(admin, adminSettings)
-
-            if (jsonObject.has(AppConfigurationKeys.PROJECT)) {
-                importProjectDetails(jsonObject.getJSONObject(AppConfigurationKeys.PROJECT), project)
-            }
         } catch (ignored: JSONException) {
             // Ignored
         }
@@ -83,19 +77,5 @@ class SettingsImporter(
                 preferences.remove(key)
             }
         }
-    }
-
-    private fun importProjectDetails(projectJson: JSONObject, project: Project.Saved) {
-        val projectName = if (projectJson.has(AppConfigurationKeys.PROJECT_NAME)) projectJson.get(AppConfigurationKeys.PROJECT_NAME).toString() else project.name
-        val projectIcon = if (projectJson.has(AppConfigurationKeys.PROJECT_ICON)) projectJson.get(AppConfigurationKeys.PROJECT_ICON).toString() else project.icon
-        val projectColor = if (projectJson.has(AppConfigurationKeys.PROJECT_COLOR)) projectJson.get(AppConfigurationKeys.PROJECT_COLOR).toString() else project.color
-
-        projectsRepository.save(
-            project.copy(
-                name = projectName,
-                icon = projectIcon,
-                color = projectColor
-            )
-        )
     }
 }

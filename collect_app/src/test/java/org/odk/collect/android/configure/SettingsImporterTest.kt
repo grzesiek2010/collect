@@ -9,7 +9,6 @@ import org.json.JSONObject
 import org.junit.Before
 import org.junit.Test
 import org.junit.runner.RunWith
-import org.mockito.Mockito
 import org.mockito.kotlin.any
 import org.mockito.kotlin.doReturn
 import org.mockito.kotlin.mock
@@ -19,7 +18,6 @@ import org.odk.collect.android.application.initialization.migration.SharedPrefer
 import org.odk.collect.android.configure.qr.AppConfigurationKeys
 import org.odk.collect.android.support.InMemSettingsProvider
 import org.odk.collect.projects.Project
-import org.odk.collect.projects.ProjectsRepository
 import org.odk.collect.shared.Settings
 
 @RunWith(AndroidJUnit4::class)
@@ -31,7 +29,6 @@ class SettingsImporterTest {
     private val generalSettings = settingsProvider.getGeneralSettings(currentProject.uuid)
     private val adminSettings = settingsProvider.getAdminSettings(currentProject.uuid)
 
-    private val projectsRepository = mock<ProjectsRepository> {}
     private var settingsValidator = mock<SettingsValidator> {
         on { isValid(any()) } doReturn true
     }
@@ -55,8 +52,7 @@ class SettingsImporterTest {
             settingsValidator,
             generalDefaults,
             adminDefaults,
-            { _: String?, _: Any?, _: String? -> },
-            projectsRepository
+            { _: String?, _: Any?, _: String? -> }
         )
     }
 
@@ -128,8 +124,7 @@ class SettingsImporterTest {
             settingsValidator,
             generalDefaults,
             adminDefaults,
-            { _: String?, _: Any?, _: String? -> },
-            projectsRepository
+            { _: String?, _: Any?, _: String? -> }
         )
         assertThat(importer.fromJSON(emptySettings(), currentProject), `is`(true))
     }
@@ -153,8 +148,7 @@ class SettingsImporterTest {
             settingsValidator,
             generalDefaults,
             adminDefaults,
-            { _: String?, _: Any?, _: String? -> },
-            projectsRepository
+            { _: String?, _: Any?, _: String? -> }
         )
         assertThat(importer.fromJSON(json.toString(), currentProject), `is`(true))
     }
@@ -168,8 +162,7 @@ class SettingsImporterTest {
             settingsValidator,
             generalDefaults,
             adminDefaults,
-            handler,
-            projectsRepository
+            handler
         )
         assertThat(importer.fromJSON(emptySettings(), currentProject), `is`(true))
         assertThat<List<Pair<String, Any>>>(
@@ -180,30 +173,6 @@ class SettingsImporterTest {
                 Pair("key1", 5)
             )
         )
-    }
-
-    @Test
-    fun projectDetailsShouldBeImportedIfIncludedInJson() {
-        val projectJson = JSONObject()
-            .put(AppConfigurationKeys.PROJECT_NAME, "Project X")
-            .put(AppConfigurationKeys.PROJECT_ICON, "X")
-            .put(AppConfigurationKeys.PROJECT_COLOR, "#cccccc")
-        val settings = JSONObject()
-            .put(AppConfigurationKeys.GENERAL, JSONObject())
-            .put(AppConfigurationKeys.ADMIN, JSONObject())
-            .put(AppConfigurationKeys.PROJECT, projectJson)
-        importer = SettingsImporter(
-            settingsProvider,
-            { _: Settings?, _: Settings? -> },
-            settingsValidator,
-            generalDefaults,
-            adminDefaults,
-            { _: String?, _: Any?, _: String? -> },
-            projectsRepository
-        )
-        importer.fromJSON(settings.toString(), currentProject)
-        Mockito.verify(projectsRepository)
-            .save(Project.Saved(currentProject.uuid, "Project X", "X", "#cccccc"))
     }
 
     private fun emptySettings(): String {
