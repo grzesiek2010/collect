@@ -8,7 +8,7 @@ import org.odk.collect.android.preferences.keys.GeneralKeys
 import org.odk.collect.android.preferences.keys.MetaKeys
 import org.odk.collect.android.preferences.source.SettingsProvider
 import org.odk.collect.android.projects.CurrentProjectProvider
-import org.odk.collect.android.projects.ProjectDetailsCreator
+import org.odk.collect.android.projects.ProjectGenerator
 import org.odk.collect.android.storage.StoragePathProvider
 import org.odk.collect.projects.Project
 import org.odk.collect.projects.ProjectsRepository
@@ -27,7 +27,7 @@ class ExistingProjectMigrator(
     private val projectsRepository: ProjectsRepository,
     private val settingsProvider: SettingsProvider,
     private val currentProjectProvider: CurrentProjectProvider,
-    private val projectDetailsCreator: ProjectDetailsCreator
+    private val projectGenerator: ProjectGenerator
 ) : Upgrade {
 
     override fun key(): String {
@@ -37,7 +37,7 @@ class ExistingProjectMigrator(
     override fun run() {
         val generalSharedPrefs = PreferenceManager.getDefaultSharedPreferences(context)
 
-        val newProject = projectDetailsCreator.getProject(generalSharedPrefs.getString(GeneralKeys.KEY_SERVER_URL, "") ?: "")
+        val newProject = projectGenerator.generateProjectFromDetails(generalSharedPrefs.getString(GeneralKeys.KEY_SERVER_URL, "") ?: "")
         val project = projectsRepository.save(newProject)
 
         val rootDir = storagePathProvider.odkRootDirPath

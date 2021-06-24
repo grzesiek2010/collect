@@ -90,7 +90,7 @@ import org.odk.collect.android.preferences.source.SettingsStore;
 import org.odk.collect.android.preferences.source.SharedPreferencesSettingsProvider;
 import org.odk.collect.android.projects.CurrentProjectProvider;
 import org.odk.collect.android.projects.ProjectCreator;
-import org.odk.collect.android.projects.ProjectDetailsCreator;
+import org.odk.collect.android.projects.ProjectGenerator;
 import org.odk.collect.android.projects.ProjectImporter;
 import org.odk.collect.android.storage.StorageInitializer;
 import org.odk.collect.android.storage.StoragePathProvider;
@@ -475,7 +475,7 @@ public class AppDependencyModule {
     @Provides
     public ProjectCreator providesProjectCreator(ProjectImporter projectImporter, ProjectsRepository projectsRepository,
                                                  CurrentProjectProvider currentProjectProvider, SettingsImporter settingsImporter, Context context) {
-        return new ProjectCreator(projectImporter, projectsRepository, currentProjectProvider, settingsImporter, new ProjectDetailsCreator(context));
+        return new ProjectCreator(projectImporter, projectsRepository, currentProjectProvider, settingsImporter, new ProjectGenerator(context));
     }
 
     @Provides
@@ -563,7 +563,7 @@ public class AppDependencyModule {
 
     @Provides
     public ExistingProjectMigrator providesExistingProjectMigrator(Context context, StoragePathProvider storagePathProvider, ProjectsRepository projectsRepository, SettingsProvider settingsProvider, CurrentProjectProvider currentProjectProvider) {
-        return new ExistingProjectMigrator(context, storagePathProvider, projectsRepository, settingsProvider, currentProjectProvider, new ProjectDetailsCreator(context));
+        return new ExistingProjectMigrator(context, storagePathProvider, projectsRepository, settingsProvider, currentProjectProvider, new ProjectGenerator(context));
     }
 
     @Provides

@@ -2,41 +2,33 @@ package org.odk.collect.android.projects
 
 import android.content.Context
 import androidx.core.content.ContextCompat
-import org.json.JSONObject
 import org.odk.collect.android.R
-import org.odk.collect.android.configure.qr.AppConfigurationKeys
 import org.odk.collect.projects.Project
 import java.net.URL
 import java.util.Locale
 import java.util.regex.Pattern
 import kotlin.math.abs
 
-class ProjectDetailsCreator(private val context: Context) {
-
-    fun getProject(url: String): Project {
-        return getProject(url, JSONObject())
-    }
-
-    fun getProject(url: String, projectDetailsJson: JSONObject): Project {
-        val projectName = if (projectDetailsJson.has(AppConfigurationKeys.PROJECT_NAME) && projectDetailsJson.get(AppConfigurationKeys.PROJECT_NAME).toString().isNotBlank()) {
-            projectDetailsJson.get(AppConfigurationKeys.PROJECT_NAME).toString()
+class ProjectGenerator(private val context: Context) {
+    fun generateProjectFromDetails(url: String = "", name: String = "", icon: String = "", color: String = ""): Project {
+        val projectName = if (name.isNotBlank()) {
+            name
         } else {
             getProjectNameFromUrl(url)
         }
 
-        val projectIcon = if (projectDetailsJson.has(AppConfigurationKeys.PROJECT_ICON) && projectDetailsJson.get(AppConfigurationKeys.PROJECT_ICON).toString().isNotBlank()) {
-            val value = projectDetailsJson.get(AppConfigurationKeys.PROJECT_ICON).toString()
-            if (Character.codePointCount(value, 0, value.length) == 1) {
-                value.toUpperCase(Locale.US)
+        val projectIcon = if (icon.isNotBlank()) {
+            if (Character.codePointCount(icon, 0, icon.length) == 1) {
+                icon.toUpperCase(Locale.US)
             } else {
-                getFirstSing(value)
+                getFirstSing(icon)
             }
         } else {
             projectName.first().toUpperCase().toString()
         }
 
-        val projectColor = if (projectDetailsJson.has(AppConfigurationKeys.PROJECT_COLOR) && isProjectColorValid(projectDetailsJson.get(AppConfigurationKeys.PROJECT_COLOR).toString())) {
-            projectDetailsJson.get(AppConfigurationKeys.PROJECT_COLOR).toString()
+        val projectColor = if (isProjectColorValid(color)) {
+            color
         } else {
             getProjectColorFromProjectName(projectName)
         }

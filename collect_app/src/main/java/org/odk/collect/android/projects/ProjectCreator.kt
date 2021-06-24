@@ -12,15 +12,27 @@ class ProjectCreator(
     private val projectsRepository: ProjectsRepository,
     private val currentProjectProvider: CurrentProjectProvider,
     private val settingsImporter: SettingsImporter,
-    private val projectDetailsCreator: ProjectDetailsCreator
+    private val projectGenerator: ProjectGenerator
 ) {
 
     fun createNewProject(settingsJson: String): Boolean {
-        val newProject = if (JSONObject(settingsJson).has(AppConfigurationKeys.PROJECT)) {
-            projectDetailsCreator.getProject(getServerUrl(settingsJson), JSONObject(settingsJson).getJSONObject(AppConfigurationKeys.PROJECT))
-        } else {
-            projectDetailsCreator.getProject(getServerUrl(settingsJson))
+        var projectName = ""
+        var projectIcon = ""
+        var projectColor = ""
+        if (JSONObject(settingsJson).has(AppConfigurationKeys.PROJECT)) {
+            val projectDetails = JSONObject(settingsJson).getJSONObject(AppConfigurationKeys.PROJECT)
+            if (projectDetails.has(AppConfigurationKeys.PROJECT_NAME)) {
+                projectName = projectDetails.getString(AppConfigurationKeys.PROJECT_NAME)
+            }
+            if (projectDetails.has(AppConfigurationKeys.PROJECT_ICON)) {
+                projectIcon = projectDetails.getString(AppConfigurationKeys.PROJECT_ICON)
+            }
+            if (projectDetails.has(AppConfigurationKeys.PROJECT_COLOR)) {
+                projectColor = projectDetails.getString(AppConfigurationKeys.PROJECT_COLOR)
+            }
         }
+
+        val newProject = projectGenerator.generateProjectFromDetails(getServerUrl(settingsJson), projectName, projectIcon, projectColor)
         val savedProject = projectImporter.importNewProject(newProject)
 
         val settingsImportedSuccessfully = settingsImporter.fromJSON(settingsJson, savedProject)
