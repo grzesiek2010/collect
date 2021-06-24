@@ -10,7 +10,7 @@ import org.odk.collect.shared.Settings
 
 class SettingsImporter(
     private val settingsProvider: SettingsProvider,
-    private val settngsMigrator: SettingsMigrator,
+    private val settingsMigrator: SettingsMigrator,
     private val settingsValidator: SettingsValidator,
     private val generalDefaults: Map<String, Any>,
     private val adminDefaults: Map<String, Any>,
@@ -31,16 +31,18 @@ class SettingsImporter(
         try {
             val jsonObject = JSONObject(json)
 
+            // import general settings
             val general = jsonObject.getJSONObject(AppConfigurationKeys.GENERAL)
             importToPrefs(general, generalSettings)
 
+            // import admin settings
             val admin = jsonObject.getJSONObject(AppConfigurationKeys.ADMIN)
             importToPrefs(admin, adminSettings)
         } catch (ignored: JSONException) {
             // Ignored
         }
 
-        settngsMigrator.migrate(generalSettings, adminSettings)
+        settingsMigrator.migrate(generalSettings, adminSettings)
 
         clearUnknownKeys(generalSettings, generalDefaults)
         clearUnknownKeys(adminSettings, adminDefaults)
