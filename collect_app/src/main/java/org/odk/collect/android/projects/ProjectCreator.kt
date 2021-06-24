@@ -16,7 +16,11 @@ class ProjectCreator(
 ) {
 
     fun createNewProject(settingsJson: String): Boolean {
-        val newProject = projectDetailsCreator.getProject(getServerUrl(settingsJson), JSONObject(settingsJson).getJSONObject(AppConfigurationKeys.PROJECT))
+        val newProject = if (JSONObject(settingsJson).has(AppConfigurationKeys.PROJECT)) {
+            projectDetailsCreator.getProject(getServerUrl(settingsJson), JSONObject(settingsJson).getJSONObject(AppConfigurationKeys.PROJECT))
+        } else {
+            projectDetailsCreator.getProject(getServerUrl(settingsJson))
+        }
         val savedProject = projectImporter.importNewProject(newProject)
 
         val settingsImportedSuccessfully = settingsImporter.fromJSON(settingsJson, savedProject)
