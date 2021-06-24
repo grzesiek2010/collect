@@ -13,7 +13,11 @@ import kotlin.math.abs
 
 class ProjectDetailsCreator(private val context: Context) {
 
-    fun getProject(url: String, projectDetailsJson: JSONObject = JSONObject()): Project {
+    fun getProject(url: String): Project {
+        return getProject(url, JSONObject())
+    }
+
+    fun getProject(url: String, projectDetailsJson: JSONObject): Project {
         val projectName = if (projectDetailsJson.has(AppConfigurationKeys.PROJECT_NAME) && projectDetailsJson.get(AppConfigurationKeys.PROJECT_NAME).toString().isNotBlank()) {
             projectDetailsJson.get(AppConfigurationKeys.PROJECT_NAME).toString()
         } else {
