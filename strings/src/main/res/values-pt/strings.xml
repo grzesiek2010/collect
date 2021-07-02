@@ -534,7 +534,7 @@ Escolher Imagem</string>
   <!--Title of a settings section-->
   <string name="form_management_settings_title">Gestão de formulários</string>
   <!--Title of a settings section-->
-  <string name="user_and_device_identity_title">Identificação de usuário e dispositivo</string>
+  <string name="user_and_device_identity_settings_title">Identificação de usuário e dispositivo</string>
   <!--Title of a settings section only available in beta or development builds.-->
   <string name="experimental">Experimental</string>
   <string name="server_preferences">Servidor</string>

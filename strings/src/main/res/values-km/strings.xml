@@ -428,7 +428,7 @@
   <!--Title of a settings section-->
   <string name="form_management_settings_title">ការគ្រប់គ្រងទម្រង់</string>
   <!--Title of a settings section-->
-  <string name="user_and_device_identity_title">អត្តសញ្ញាណ​អ្នក​ប្រើ​ប្រាស់ និងឧបករណ៍</string>
+  <string name="user_and_device_identity_settings_title">អត្តសញ្ញាណ​អ្នក​ប្រើ​ប្រាស់ និងឧបករណ៍</string>
   <!--Title of a settings section only available in beta or development builds.-->
   <string name="server_preferences">ការកំណត់ម៉ាស៊ីនមេ</string>
   <!--Label for server type setting-->

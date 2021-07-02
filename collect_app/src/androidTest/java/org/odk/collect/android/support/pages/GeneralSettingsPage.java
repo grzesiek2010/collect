@@ -56,7 +56,7 @@ public class GeneralSettingsPage extends Page<GeneralSettingsPage> {
 
 
     public UserAndDeviceIdentitySettingsPage clickUserAndDeviceIdentity() {
-        clickOnString(R.string.user_and_device_identity_title);
+        clickOnString(R.string.user_and_device_identity_settings_title);
         return new UserAndDeviceIdentitySettingsPage().assertOnPage();
     }
 
@@ -81,7 +81,7 @@ public class GeneralSettingsPage extends Page<GeneralSettingsPage> {
     }
 
     public GeneralSettingsPage checkIfUserAndDeviceIdentityIsDisplayed() {
-        onView(withText(getTranslatedString(R.string.user_and_device_identity_title))).check(matches(isDisplayed()));
+        onView(withText(getTranslatedString(R.string.user_and_device_identity_settings_title))).check(matches(isDisplayed()));
         return this;
     }
 

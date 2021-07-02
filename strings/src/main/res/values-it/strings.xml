@@ -473,7 +473,7 @@
   <!--Title of a settings section-->
   <string name="form_management_settings_title">Gestione modulo</string>
   <!--Title of a settings section-->
-  <string name="user_and_device_identity_title">Identità user e dispositivo</string>
+  <string name="user_and_device_identity_settings_title">Identità user e dispositivo</string>
   <!--Title of a settings section only available in beta or development builds.-->
   <string name="server_preferences">Impostazioni Server</string>
   <!--Label for server type setting-->

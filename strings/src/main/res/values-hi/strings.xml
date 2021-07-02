@@ -340,7 +340,7 @@
   <!--Title of a settings section-->
   <string name="form_management_settings_title">फॉर्म मैनेजमेंट</string>
   <!--Title of a settings section-->
-  <string name="user_and_device_identity_title">प्रयोगकर्ता और डिवाइस पहचान</string>
+  <string name="user_and_device_identity_settings_title">प्रयोगकर्ता और डिवाइस पहचान</string>
   <!--Title of a settings section only available in beta or development builds.-->
   <string name="server_preferences">सर्वर सेटिंग</string>
   <!--Label for server type setting-->

@@ -439,7 +439,7 @@
   <!--Title of a settings section-->
   <string name="form_management_settings_title">Formulärhantering</string>
   <!--Title of a settings section-->
-  <string name="user_and_device_identity_title">Användar- och enhetsidentitet</string>
+  <string name="user_and_device_identity_settings_title">Användar- och enhetsidentitet</string>
   <!--Title of a settings section only available in beta or development builds.-->
   <string name="server_preferences">Serverinställningar</string>
   <!--Label for server type setting-->

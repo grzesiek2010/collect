@@ -36,7 +36,7 @@ limitations under the License.
     <Preference
         android:icon="@drawable/ic_face"
         android:key="user_and_device_identity"
-        android:title="@string/user_and_device_identity_title"
+        android:title="@string/user_and_device_identity_settings_title"
         app:iconSpaceReserved="false" />
     <Preference
         android:icon="@drawable/ic_baseline_warning_24"

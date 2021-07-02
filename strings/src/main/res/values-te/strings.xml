@@ -509,7 +509,7 @@
   <!--Title of a settings section-->
   <string name="form_management_settings_title">ఫారం నిర్వహణ</string>
   <!--Title of a settings section-->
-  <string name="user_and_device_identity_title">వినియోగదారు, పరికరం గుర్తింపు</string>
+  <string name="user_and_device_identity_settings_title">వినియోగదారు, పరికరం గుర్తింపు</string>
   <!--Title of a settings section only available in beta or development builds.-->
   <string name="experimental">ప్రయోగాత్మక</string>
   <string name="server_preferences">సర్వర్ సెట్టింగులు</string>

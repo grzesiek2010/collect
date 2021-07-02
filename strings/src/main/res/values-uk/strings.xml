@@ -468,7 +468,7 @@
   <!--Title of a settings section-->
   <string name="form_management_settings_title">Управління анкетою</string>
   <!--Title of a settings section-->
-  <string name="user_and_device_identity_title">Ідентифікація користувача та пристрою</string>
+  <string name="user_and_device_identity_settings_title">Ідентифікація користувача та пристрою</string>
   <!--Title of a settings section only available in beta or development builds.-->
   <string name="server_preferences">Налаштування сервера</string>
   <!--Label for server type setting-->

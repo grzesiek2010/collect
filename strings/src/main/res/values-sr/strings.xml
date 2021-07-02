@@ -468,7 +468,7 @@
   <!--Title of a settings section-->
   <string name="form_management_settings_title">Upravljanje formularima</string>
   <!--Title of a settings section-->
-  <string name="user_and_device_identity_title">Identitet uređaja i korisnika</string>
+  <string name="user_and_device_identity_settings_title">Identitet uređaja i korisnika</string>
   <!--Title of a settings section only available in beta or development builds.-->
   <string name="server_preferences">Podešavanje servera</string>
   <!--Label for server type setting-->

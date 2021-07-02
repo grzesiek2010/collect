@@ -6,7 +6,7 @@ public class UserAndDeviceIdentitySettingsPage extends Page<UserAndDeviceIdentit
 
     @Override
     public UserAndDeviceIdentitySettingsPage assertOnPage() {
-        assertText(R.string.user_and_device_identity_title);
+        assertText(R.string.user_and_device_identity_settings_title);
         return this;
     }
 

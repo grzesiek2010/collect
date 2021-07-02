@@ -424,7 +424,7 @@
   <!--Title of a settings section-->
   <string name="form_management_settings_title">Управление опросниками</string>
   <!--Title of a settings section-->
-  <string name="user_and_device_identity_title">ID пользователя и устройства</string>
+  <string name="user_and_device_identity_settings_title">ID пользователя и устройства</string>
   <!--Title of a settings section only available in beta or development builds.-->
   <string name="server_preferences">Настройки сервера</string>
   <!--Label for server type setting-->

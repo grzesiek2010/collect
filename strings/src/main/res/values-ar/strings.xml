@@ -554,7 +554,7 @@
   <!--Title of a settings section-->
   <string name="form_management_settings_title">إدارة الاستمارة</string>
   <!--Title of a settings section-->
-  <string name="user_and_device_identity_title">معرف المستخدم والجهاز</string>
+  <string name="user_and_device_identity_settings_title">معرف المستخدم والجهاز</string>
   <!--Title of a settings section only available in beta or development builds.-->
   <string name="experimental">تجريبي</string>
   <string name="server_preferences">إعدادات الخادم</string>

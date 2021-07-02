@@ -314,7 +314,7 @@
   <!--Title of a settings section-->
   <string name="form_management_settings_title">फारम व्यवस्थापन</string>
   <!--Title of a settings section-->
-  <string name="user_and_device_identity_title">प्रयोगकर्ता तथा यन्त्र पहिचान</string>
+  <string name="user_and_device_identity_settings_title">प्रयोगकर्ता तथा यन्त्र पहिचान</string>
   <!--Title of a settings section only available in beta or development builds.-->
   <string name="server_preferences">सर्भर सेटिङ्स</string>
   <!--Label for server type setting-->
