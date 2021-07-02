@@ -505,7 +505,7 @@
   <!--Title of a settings section-->
   <string name="user_interface_settings_title">Interfejs użytkownika</string>
   <!--Title of a settings section-->
-  <string name="maps">Mapy</string>
+  <string name="maps_settings_title">Mapy</string>
   <!--Title of a settings section-->
   <string name="form_management_preferences">Zarządzanie formularzem</string>
   <!--Title of a settings section-->

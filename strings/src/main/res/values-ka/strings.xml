@@ -263,7 +263,7 @@
   <!--Title of a settings section-->
   <string name="user_interface_settings_title">მომხმარებლის ინტერფეისი</string>
   <!--Title of a settings section-->
-  <string name="maps">რუკები</string>
+  <string name="maps_settings_title">რუკები</string>
   <!--Title of a settings section-->
   <!--Title of a settings section-->
   <!--Title of a settings section only available in beta or development builds.-->

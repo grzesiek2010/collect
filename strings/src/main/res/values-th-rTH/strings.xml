@@ -299,7 +299,7 @@
   <!--Title of a settings section-->
   <!--Title of a settings section-->
   <!--Title of a settings section-->
-  <string name="maps">แผนที่</string>
+  <string name="maps_settings_title">แผนที่</string>
   <!--Title of a settings section-->
   <!--Title of a settings section-->
   <!--Title of a settings section only available in beta or development builds.-->

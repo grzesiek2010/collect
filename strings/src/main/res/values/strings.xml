@@ -658,7 +658,7 @@
     <!-- Title of a settings section -->
     <string name="user_interface_settings_title">User interface</string>
     <!-- Title of a settings section -->
-    <string name="maps">Maps</string>
+    <string name="maps_settings_title">Maps</string>
     <!-- Title of a settings section -->
     <string name="form_management_preferences">Form management</string>
     <!-- Title of a settings section -->

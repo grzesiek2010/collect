@@ -284,7 +284,7 @@
   <string name="server_settings_title">سرور</string>
   <!--Title of a settings section-->
   <!--Title of a settings section-->
-  <string name="maps">نقشه ها</string>
+  <string name="maps_settings_title">نقشه ها</string>
   <!--Title of a settings section-->
   <string name="form_management_preferences">از مدیریت</string>
   <!--Title of a settings section-->

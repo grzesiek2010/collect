@@ -424,7 +424,7 @@
   <!--Title of a settings section-->
   <string name="user_interface_settings_title">ចំណុច​ប្រទាក់​អ្នក​ប្រើប្រាស់​</string>
   <!--Title of a settings section-->
-  <string name="maps">ផែនទី</string>
+  <string name="maps_settings_title">ផែនទី</string>
   <!--Title of a settings section-->
   <string name="form_management_preferences">ការគ្រប់គ្រងទម្រង់</string>
   <!--Title of a settings section-->

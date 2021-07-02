@@ -550,7 +550,7 @@
   <!--Title of a settings section-->
   <string name="user_interface_settings_title">إعدادات واجهة المستخدم</string>
   <!--Title of a settings section-->
-  <string name="maps">خرائط</string>
+  <string name="maps_settings_title">خرائط</string>
   <!--Title of a settings section-->
   <string name="form_management_preferences">إدارة الاستمارة</string>
   <!--Title of a settings section-->

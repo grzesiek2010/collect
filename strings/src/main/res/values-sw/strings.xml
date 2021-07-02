@@ -451,7 +451,7 @@
   <!--Title of a settings section-->
   <string name="user_interface_settings_title">Kiolesura \"interface\" cha mtumiaji</string>
   <!--Title of a settings section-->
-  <string name="maps">Ramani</string>
+  <string name="maps_settings_title">Ramani</string>
   <!--Title of a settings section-->
   <string name="form_management_preferences">Usimamizi wa fomu</string>
   <!--Title of a settings section-->

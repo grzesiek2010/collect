@@ -32,7 +32,7 @@
             app:iconSpaceReserved="false" />
         <CheckBoxPreference
             android:key="maps"
-            android:title="@string/maps"
+            android:title="@string/maps_settings_title"
             app:iconSpaceReserved="false" />
         <CheckBoxPreference
             android:key="form_update_mode"

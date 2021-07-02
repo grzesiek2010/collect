@@ -420,7 +420,7 @@
   <!--Title of a settings section-->
   <string name="user_interface_settings_title">Интерфейс</string>
   <!--Title of a settings section-->
-  <string name="maps">Карты</string>
+  <string name="maps_settings_title">Карты</string>
   <!--Title of a settings section-->
   <string name="form_management_preferences">Управление опросниками</string>
   <!--Title of a settings section-->

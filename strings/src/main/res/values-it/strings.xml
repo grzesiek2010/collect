@@ -469,7 +469,7 @@
   <!--Title of a settings section-->
   <string name="user_interface_settings_title">Interfaccia utente</string>
   <!--Title of a settings section-->
-  <string name="maps">Mappe</string>
+  <string name="maps_settings_title">Mappe</string>
   <!--Title of a settings section-->
   <string name="form_management_preferences">Gestione modulo</string>
   <!--Title of a settings section-->

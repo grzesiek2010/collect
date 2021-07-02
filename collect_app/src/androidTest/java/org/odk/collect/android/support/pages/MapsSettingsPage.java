@@ -6,7 +6,7 @@ public class MapsSettingsPage extends Page<MapsSettingsPage> {
 
     @Override
     public MapsSettingsPage assertOnPage() {
-        assertText(R.string.maps);
+        assertText(R.string.maps_settings_title);
         return this;
     }
 }

@@ -50,7 +50,7 @@ public class GeneralSettingsPage extends Page<GeneralSettingsPage> {
     }
 
     public MapsSettingsPage clickMaps() {
-        clickOnString(R.string.maps);
+        clickOnString(R.string.maps_settings_title);
         return new MapsSettingsPage().assertOnPage();
     }
 
@@ -71,7 +71,7 @@ public class GeneralSettingsPage extends Page<GeneralSettingsPage> {
     }
 
     public GeneralSettingsPage checkIfMapsOptionIsDisplayed() {
-        onView(withText(getTranslatedString(R.string.maps))).check(matches(isDisplayed()));
+        onView(withText(getTranslatedString(R.string.maps_settings_title))).check(matches(isDisplayed()));
         return this;
     }
 
