@@ -30,7 +30,7 @@ public class GeneralSettingsPage extends Page<GeneralSettingsPage> {
     }
 
     public GeneralSettingsPage openFormManagement() {
-        clickOnString(R.string.form_management_preferences);
+        clickOnString(R.string.form_management_settings_title);
         return this;
     }
 
@@ -76,7 +76,7 @@ public class GeneralSettingsPage extends Page<GeneralSettingsPage> {
     }
 
     public GeneralSettingsPage checkIfFormManagementOptionIsDisplayed() {
-        onView(withText(getTranslatedString(R.string.form_management_preferences))).check(matches(isDisplayed()));
+        onView(withText(getTranslatedString(R.string.form_management_settings_title))).check(matches(isDisplayed()));
         return this;
     }
 
@@ -112,7 +112,7 @@ public class GeneralSettingsPage extends Page<GeneralSettingsPage> {
     }
 
     public FormManagementPage clickFormManagement() {
-        onView(withText(getTranslatedString(R.string.form_management_preferences))).perform(click());
+        onView(withText(getTranslatedString(R.string.form_management_settings_title))).perform(click());
         return new FormManagementPage();
     }
 

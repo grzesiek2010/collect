@@ -6,7 +6,7 @@ public class FormManagementPage extends Page<FormManagementPage> {
 
     @Override
     public FormManagementPage assertOnPage() {
-        assertToolbarTitle(getTranslatedString(R.string.form_management_preferences));
+        assertToolbarTitle(getTranslatedString(R.string.form_management_settings_title));
         return this;
     }
 

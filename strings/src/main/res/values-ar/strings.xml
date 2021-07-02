@@ -552,7 +552,7 @@
   <!--Title of a settings section-->
   <string name="maps_settings_title">خرائط</string>
   <!--Title of a settings section-->
-  <string name="form_management_preferences">إدارة الاستمارة</string>
+  <string name="form_management_settings_title">إدارة الاستمارة</string>
   <!--Title of a settings section-->
   <string name="user_and_device_identity_title">معرف المستخدم والجهاز</string>
   <!--Title of a settings section only available in beta or development builds.-->

@@ -433,7 +433,7 @@
   <!--Title of a settings section-->
   <string name="maps_settings_title">نقشہ جات</string>
   <!--Title of a settings section-->
-  <string name="form_management_preferences">فارم مینجمنٹ</string>
+  <string name="form_management_settings_title">فارم مینجمنٹ</string>
   <!--Title of a settings section-->
   <string name="user_and_device_identity_title">صارف اور ڈیوائس کی شناخت</string>
   <!--Title of a settings section only available in beta or development builds.-->

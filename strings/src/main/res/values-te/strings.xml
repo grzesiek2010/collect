@@ -507,7 +507,7 @@
   <!--Title of a settings section-->
   <string name="maps_settings_title">మ్యాప్స్</string>
   <!--Title of a settings section-->
-  <string name="form_management_preferences">ఫారం నిర్వహణ</string>
+  <string name="form_management_settings_title">ఫారం నిర్వహణ</string>
   <!--Title of a settings section-->
   <string name="user_and_device_identity_title">వినియోగదారు, పరికరం గుర్తింపు</string>
   <!--Title of a settings section only available in beta or development builds.-->

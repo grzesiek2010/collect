@@ -540,7 +540,7 @@
   <!--Title of a settings section-->
   <string name="maps_settings_title">Karten</string>
   <!--Title of a settings section-->
-  <string name="form_management_preferences">Formularverwaltung</string>
+  <string name="form_management_settings_title">Formularverwaltung</string>
   <!--Title of a settings section-->
   <string name="user_and_device_identity_title">Benutzer- und Geräteidentität</string>
   <!--Title of a settings section only available in beta or development builds.-->

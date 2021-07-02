@@ -660,7 +660,7 @@
     <!-- Title of a settings section -->
     <string name="maps_settings_title">Maps</string>
     <!-- Title of a settings section -->
-    <string name="form_management_preferences">Form management</string>
+    <string name="form_management_settings_title">Form management</string>
     <!-- Title of a settings section -->
     <string name="user_and_device_identity_title">User and device identity</string>
     <!-- Title of a settings section only available in beta or development builds. -->

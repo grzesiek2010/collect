@@ -466,7 +466,7 @@
   <string name="user_interface_settings_title">Korisnički interfejs </string>
   <!--Title of a settings section-->
   <!--Title of a settings section-->
-  <string name="form_management_preferences">Upravljanje formularima</string>
+  <string name="form_management_settings_title">Upravljanje formularima</string>
   <!--Title of a settings section-->
   <string name="user_and_device_identity_title">Identitet uređaja i korisnika</string>
   <!--Title of a settings section only available in beta or development builds.-->

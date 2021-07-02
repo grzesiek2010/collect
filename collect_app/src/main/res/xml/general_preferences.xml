@@ -31,7 +31,7 @@ limitations under the License.
     <Preference
         android:icon="@drawable/ic_assignment"
         android:key="form_management"
-        android:title="@string/form_management_preferences"
+        android:title="@string/form_management_settings_title"
         app:iconSpaceReserved="false" />
     <Preference
         android:icon="@drawable/ic_face"

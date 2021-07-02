@@ -507,7 +507,7 @@
   <!--Title of a settings section-->
   <string name="maps_settings_title">Mapy</string>
   <!--Title of a settings section-->
-  <string name="form_management_preferences">Zarządzanie formularzem</string>
+  <string name="form_management_settings_title">Zarządzanie formularzem</string>
   <!--Title of a settings section-->
   <string name="user_and_device_identity_title">Tożsamość użytkownika i urządzenia</string>
   <!--Title of a settings section only available in beta or development builds.-->

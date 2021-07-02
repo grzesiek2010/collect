@@ -327,7 +327,7 @@
   <string name="user_interface_settings_title">वापरकर्ता इंटरफेस</string>
   <!--Title of a settings section-->
   <!--Title of a settings section-->
-  <string name="form_management_preferences">फॉर्म व्यवस्थापन</string>
+  <string name="form_management_settings_title">फॉर्म व्यवस्थापन</string>
   <!--Title of a settings section-->
   <string name="user_and_device_identity_title">वापरकर्ता आणि डिव्हाइस ओळख</string>
   <!--Title of a settings section only available in beta or development builds.-->

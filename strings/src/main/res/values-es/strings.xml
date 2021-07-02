@@ -540,7 +540,7 @@
   <!--Title of a settings section-->
   <string name="maps_settings_title">Mapas</string>
   <!--Title of a settings section-->
-  <string name="form_management_preferences">Manejo de formularios</string>
+  <string name="form_management_settings_title">Manejo de formularios</string>
   <!--Title of a settings section-->
   <string name="user_and_device_identity_title">Metadatos del formulario</string>
   <!--Title of a settings section only available in beta or development builds.-->

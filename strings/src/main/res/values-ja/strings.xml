@@ -537,7 +537,7 @@
   <!--Title of a settings section-->
   <string name="maps_settings_title">地図</string>
   <!--Title of a settings section-->
-  <string name="form_management_preferences">フォーム管理</string>
+  <string name="form_management_settings_title">フォーム管理</string>
   <!--Title of a settings section-->
   <string name="user_and_device_identity_title">ユーザーとデバイスの識別</string>
   <!--Title of a settings section only available in beta or development builds.-->

@@ -537,7 +537,7 @@
   <!--Title of a settings section-->
   <string name="maps_settings_title">Peta</string>
   <!--Title of a settings section-->
-  <string name="form_management_preferences">Manajemen Formulir</string>
+  <string name="form_management_settings_title">Manajemen Formulir</string>
   <!--Title of a settings section-->
   <string name="user_and_device_identity_title">Identitas perangkat dan pengguna</string>
   <!--Title of a settings section only available in beta or development builds.-->
