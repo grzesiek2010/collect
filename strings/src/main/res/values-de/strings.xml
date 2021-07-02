@@ -544,7 +544,7 @@
   <!--Title of a settings section-->
   <string name="user_and_device_identity_settings_title">Benutzer- und Geräteidentität</string>
   <!--Title of a settings section only available in beta or development builds.-->
-  <string name="experimental">Experimentell</string>
+  <string name="experimental_settings_title">Experimentell</string>
   <string name="server_preferences">Servereinstellungen</string>
   <!--Label for server type setting-->
   <string name="type">Typ</string>

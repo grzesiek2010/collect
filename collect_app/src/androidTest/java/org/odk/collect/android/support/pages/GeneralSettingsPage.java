@@ -117,7 +117,7 @@ public class GeneralSettingsPage extends Page<GeneralSettingsPage> {
     }
 
     public ExperimentalPage clickExperimental() {
-        onView(withText(getTranslatedString(R.string.experimental))).perform(click());
+        onView(withText(getTranslatedString(R.string.experimental_settings_title))).perform(click());
         return new ExperimentalPage().assertOnPage();
     }
 }

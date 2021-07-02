@@ -41,6 +41,6 @@ limitations under the License.
     <Preference
         android:icon="@drawable/ic_baseline_warning_24"
         android:key="experimental"
-        android:title="@string/experimental"
+        android:title="@string/experimental_settings_title"
         app:iconSpaceReserved="false" />
 </PreferenceScreen>

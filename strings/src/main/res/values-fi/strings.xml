@@ -544,7 +544,7 @@
   <!--Title of a settings section-->
   <string name="user_and_device_identity_settings_title">Käyttäjän ja laitteen tunnistaminen</string>
   <!--Title of a settings section only available in beta or development builds.-->
-  <string name="experimental">Kokeellinen</string>
+  <string name="experimental_settings_title">Kokeellinen</string>
   <string name="server_preferences">Palvelinasetukset</string>
   <!--Label for server type setting-->
   <string name="type">Tyyppi</string>

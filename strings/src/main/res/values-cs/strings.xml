@@ -550,7 +550,7 @@
   <!--Title of a settings section-->
   <string name="user_and_device_identity_settings_title">Identita uživatele a zařízení</string>
   <!--Title of a settings section only available in beta or development builds.-->
-  <string name="experimental">Experimentální</string>
+  <string name="experimental_settings_title">Experimentální</string>
   <string name="server_preferences">Nastavení serveru</string>
   <!--Label for server type setting-->
   <string name="type">Typ</string>

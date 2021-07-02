@@ -6,7 +6,7 @@ public class ExperimentalPage extends Page<ExperimentalPage> {
 
     @Override
     public ExperimentalPage assertOnPage() {
-        assertToolbarTitle(getTranslatedString(R.string.experimental));
+        assertToolbarTitle(getTranslatedString(R.string.experimental_settings_title));
         return this;
     }
 }

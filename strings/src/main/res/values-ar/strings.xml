@@ -556,7 +556,7 @@
   <!--Title of a settings section-->
   <string name="user_and_device_identity_settings_title">معرف المستخدم والجهاز</string>
   <!--Title of a settings section only available in beta or development builds.-->
-  <string name="experimental">تجريبي</string>
+  <string name="experimental_settings_title">تجريبي</string>
   <string name="server_preferences">إعدادات الخادم</string>
   <!--Label for server type setting-->
   <string name="type">النوع</string>

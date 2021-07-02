@@ -541,7 +541,7 @@
   <!--Title of a settings section-->
   <string name="user_and_device_identity_settings_title">Identitas perangkat dan pengguna</string>
   <!--Title of a settings section only available in beta or development builds.-->
-  <string name="experimental">Eksperimental</string>
+  <string name="experimental_settings_title">Eksperimental</string>
   <string name="server_preferences">Pengaturan Server</string>
   <!--Label for server type setting-->
   <string name="type">Tipe</string>
