@@ -307,7 +307,7 @@
   <!--Title of a settings section-->
   <string name="server_settings_title">Server</string>
   <!--Title of a settings section-->
-  <string name="client">Gebruikersinterface</string>
+  <string name="user_interface_settings_title">Gebruikersinterface</string>
   <!--Title of a settings section-->
   <!--Title of a settings section-->
   <!--Title of a settings section-->

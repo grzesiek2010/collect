@@ -309,7 +309,7 @@
   <string name="general_preferences">जनरल सेटिङ्स </string>
   <!--Title of a settings section-->
   <!--Title of a settings section-->
-  <string name="client">प्रयोगकर्ता अन्तरक्रिया पृष्‍ठ</string>
+  <string name="user_interface_settings_title">प्रयोगकर्ता अन्तरक्रिया पृष्‍ठ</string>
   <!--Title of a settings section-->
   <!--Title of a settings section-->
   <string name="form_management_preferences">फारम व्यवस्थापन</string>

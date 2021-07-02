@@ -300,7 +300,7 @@
   <string name="general_preferences">Splošne nastavitve</string>
   <!--Title of a settings section-->
   <!--Title of a settings section-->
-  <string name="client">Uporabniški vmesnik</string>
+  <string name="user_interface_settings_title">Uporabniški vmesnik</string>
   <!--Title of a settings section-->
   <!--Title of a settings section-->
   <!--Title of a settings section-->

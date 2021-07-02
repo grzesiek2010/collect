@@ -363,7 +363,7 @@
   <string name="general_preferences">Generelle Indstilinger</string>
   <!--Title of a settings section-->
   <!--Title of a settings section-->
-  <string name="client">Brugergrænseflade</string>
+  <string name="user_interface_settings_title">Brugergrænseflade</string>
   <!--Title of a settings section-->
   <string name="maps">Kort</string>
   <!--Title of a settings section-->

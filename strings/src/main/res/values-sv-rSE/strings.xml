@@ -433,7 +433,7 @@
   <!--Title of a settings section-->
   <string name="server_settings_title">Server</string>
   <!--Title of a settings section-->
-  <string name="client">Användargränssnitt</string>
+  <string name="user_interface_settings_title">Användargränssnitt</string>
   <!--Title of a settings section-->
   <string name="maps">Kartor</string>
   <!--Title of a settings section-->

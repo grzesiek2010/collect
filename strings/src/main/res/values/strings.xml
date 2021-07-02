@@ -656,7 +656,7 @@
     <!-- Title of a settings section -->
     <string name="server_settings_title">Server</string>
     <!-- Title of a settings section -->
-    <string name="client">User interface</string>
+    <string name="user_interface_settings_title">User interface</string>
     <!-- Title of a settings section -->
     <string name="maps">Maps</string>
     <!-- Title of a settings section -->

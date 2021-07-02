@@ -261,7 +261,7 @@
   <string name="general_preferences">შეცვლა</string>
   <!--Title of a settings section-->
   <!--Title of a settings section-->
-  <string name="client">მომხმარებლის ინტერფეისი</string>
+  <string name="user_interface_settings_title">მომხმარებლის ინტერფეისი</string>
   <!--Title of a settings section-->
   <string name="maps">რუკები</string>
   <!--Title of a settings section-->

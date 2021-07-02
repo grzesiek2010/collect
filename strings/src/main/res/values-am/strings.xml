@@ -271,7 +271,7 @@
   <string name="general_preferences">አጠቃላይ ቅንብሮች</string>
   <!--Title of a settings section-->
   <!--Title of a settings section-->
-  <string name="client">የተጠቃሚ በይነገጽ</string>
+  <string name="user_interface_settings_title">የተጠቃሚ በይነገጽ</string>
   <!--Title of a settings section-->
   <!--Title of a settings section-->
   <string name="form_management_preferences">የቅጽ ማስተዳደር</string>

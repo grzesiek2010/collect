@@ -422,7 +422,7 @@
   <!--Title of a settings section-->
   <string name="server_settings_title">ម៉ាស៊ីនមេ</string>
   <!--Title of a settings section-->
-  <string name="client">ចំណុច​ប្រទាក់​អ្នក​ប្រើប្រាស់​</string>
+  <string name="user_interface_settings_title">ចំណុច​ប្រទាក់​អ្នក​ប្រើប្រាស់​</string>
   <!--Title of a settings section-->
   <string name="maps">ផែនទី</string>
   <!--Title of a settings section-->

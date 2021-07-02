@@ -12,7 +12,7 @@ public class UserInterfacePage extends Page<UserInterfacePage> {
 
     @Override
     public UserInterfacePage assertOnPage() {
-        assertText(R.string.client);
+        assertText(R.string.user_interface_settings_title);
         return this;
     }
 

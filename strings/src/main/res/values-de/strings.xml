@@ -536,7 +536,7 @@
   <!--Title of a settings section-->
   <string name="server_settings_title">Server</string>
   <!--Title of a settings section-->
-  <string name="client">Bedienung</string>
+  <string name="user_interface_settings_title">Bedienung</string>
   <!--Title of a settings section-->
   <string name="maps">Karten</string>
   <!--Title of a settings section-->

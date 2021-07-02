@@ -25,7 +25,7 @@ public class GeneralSettingsPage extends Page<GeneralSettingsPage> {
     }
 
     public UserInterfacePage clickOnUserInterface() {
-        clickOnString(R.string.client);
+        clickOnString(R.string.user_interface_settings_title);
         return new UserInterfacePage().assertOnPage();
     }
 
@@ -66,7 +66,7 @@ public class GeneralSettingsPage extends Page<GeneralSettingsPage> {
     }
 
     public GeneralSettingsPage checkIfUserInterfaceOptionIsDisplayed() {
-        onView(withText(getTranslatedString(R.string.client))).check(matches(isDisplayed()));
+        onView(withText(getTranslatedString(R.string.user_interface_settings_title))).check(matches(isDisplayed()));
         return this;
     }
 

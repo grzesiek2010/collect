@@ -536,7 +536,7 @@
   <!--Title of a settings section-->
   <string name="server_settings_title">Palvelin</string>
   <!--Title of a settings section-->
-  <string name="client">Käyttöliittymä</string>
+  <string name="user_interface_settings_title">Käyttöliittymä</string>
   <!--Title of a settings section-->
   <string name="maps">Kartat</string>
   <!--Title of a settings section-->

@@ -463,7 +463,7 @@
   <!--Title of a settings section-->
   <string name="server_settings_title">Сервер</string>
   <!--Title of a settings section-->
-  <string name="client">Користувацький інтерфейс</string>
+  <string name="user_interface_settings_title">Користувацький інтерфейс</string>
   <!--Title of a settings section-->
   <!--Title of a settings section-->
   <string name="form_management_preferences">Управління анкетою</string>

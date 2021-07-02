@@ -335,7 +335,7 @@
   <!--Title of a settings section-->
   <string name="server_settings_title">सर्वर</string>
   <!--Title of a settings section-->
-  <string name="client">यूजर इंटरफेस</string>
+  <string name="user_interface_settings_title">यूजर इंटरफेस</string>
   <!--Title of a settings section-->
   <!--Title of a settings section-->
   <string name="form_management_preferences">फॉर्म मैनेजमेंट</string>

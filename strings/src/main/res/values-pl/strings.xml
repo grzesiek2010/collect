@@ -503,7 +503,7 @@
   <!--Title of a settings section-->
   <string name="server_settings_title">Serwer</string>
   <!--Title of a settings section-->
-  <string name="client">Interfejs użytkownika</string>
+  <string name="user_interface_settings_title">Interfejs użytkownika</string>
   <!--Title of a settings section-->
   <string name="maps">Mapy</string>
   <!--Title of a settings section-->

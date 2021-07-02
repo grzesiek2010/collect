@@ -429,7 +429,7 @@
   <!--Title of a settings section-->
   <string name="server_settings_title">سرور </string>
   <!--Title of a settings section-->
-  <string name="client">یوزر انٹرفیس</string>
+  <string name="user_interface_settings_title">یوزر انٹرفیس</string>
   <!--Title of a settings section-->
   <string name="maps">نقشہ جات</string>
   <!--Title of a settings section-->

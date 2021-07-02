@@ -548,7 +548,7 @@
   <!--Title of a settings section-->
   <string name="server_settings_title">الخادم</string>
   <!--Title of a settings section-->
-  <string name="client">إعدادات واجهة المستخدم</string>
+  <string name="user_interface_settings_title">إعدادات واجهة المستخدم</string>
   <!--Title of a settings section-->
   <string name="maps">خرائط</string>
   <!--Title of a settings section-->

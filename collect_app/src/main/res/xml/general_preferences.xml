@@ -21,7 +21,7 @@ limitations under the License.
     <Preference
         android:icon="@drawable/ic_phonelink_setup"
         android:key="user_interface"
-        android:title="@string/client"
+        android:title="@string/user_interface_settings_title"
         app:iconSpaceReserved="false" />
     <Preference
         android:icon="@drawable/ic_map_accent_color"

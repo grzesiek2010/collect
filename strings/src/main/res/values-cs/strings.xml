@@ -542,7 +542,7 @@
   <!--Title of a settings section-->
   <string name="server_settings_title">Server</string>
   <!--Title of a settings section-->
-  <string name="client">Uživatelské rozhraní</string>
+  <string name="user_interface_settings_title">Uživatelské rozhraní</string>
   <!--Title of a settings section-->
   <string name="maps">Mapy</string>
   <!--Title of a settings section-->

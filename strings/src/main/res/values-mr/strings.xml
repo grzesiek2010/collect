@@ -324,7 +324,7 @@
   <!--Title of a settings section-->
   <string name="server_settings_title">सर्व्हर</string>
   <!--Title of a settings section-->
-  <string name="client">वापरकर्ता इंटरफेस</string>
+  <string name="user_interface_settings_title">वापरकर्ता इंटरफेस</string>
   <!--Title of a settings section-->
   <!--Title of a settings section-->
   <string name="form_management_preferences">फॉर्म व्यवस्थापन</string>

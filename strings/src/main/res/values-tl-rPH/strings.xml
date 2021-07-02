@@ -91,7 +91,7 @@
   <string name="username">Username</string>
   <string name="view_hierarchy">Pumunta sa Udyok</string>
   <string name="general_preferences">Palitan ang Settings</string>
-  <string name="client">Client</string>
+  <string name="user_interface_settings_title">Client</string>
     <string name="show_splash_summary">Pinapakita sa umpisa ng application</string>
   <string name="splash_path">Piniling larawan para sa Panimulang Tabing</string>
   <string name="default_splash_path">Paunang natukoy ng ODK</string>

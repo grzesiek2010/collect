@@ -449,7 +449,7 @@
   <!--Title of a settings section-->
   <string name="server_settings_title">Seva</string>
   <!--Title of a settings section-->
-  <string name="client">Kiolesura \"interface\" cha mtumiaji</string>
+  <string name="user_interface_settings_title">Kiolesura \"interface\" cha mtumiaji</string>
   <!--Title of a settings section-->
   <string name="maps">Ramani</string>
   <!--Title of a settings section-->
