@@ -258,7 +258,7 @@
   <!--##############################################
     # GENERAL SETTINGS
     ##############################################-->
-  <string name="general_preferences">შეცვლა</string>
+  <string name="general_settings_title">შეცვლა</string>
   <!--Title of a settings section-->
   <!--Title of a settings section-->
   <string name="user_interface_settings_title">მომხმარებლის ინტერფეისი</string>

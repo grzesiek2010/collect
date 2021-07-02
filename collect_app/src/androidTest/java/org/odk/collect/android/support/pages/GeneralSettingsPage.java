@@ -20,7 +20,7 @@ public class GeneralSettingsPage extends Page<GeneralSettingsPage> {
 
     @Override
     public GeneralSettingsPage assertOnPage() {
-        assertText(R.string.general_preferences);
+        assertText(R.string.general_settings_title);
         return this;
     }
 

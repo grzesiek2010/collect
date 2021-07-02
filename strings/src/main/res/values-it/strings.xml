@@ -463,7 +463,7 @@
   <!--##############################################
     # GENERAL SETTINGS
     ##############################################-->
-  <string name="general_preferences">Impostazioni Generali</string>
+  <string name="general_settings_title">Impostazioni Generali</string>
   <!--Title of a settings section-->
   <string name="server_settings_title">Server</string>
   <!--Title of a settings section-->

@@ -27,7 +27,7 @@ public class AdminSettingsPage extends Page<AdminSettingsPage> {
     }
 
     public GeneralSettingsPage clickGeneralSettings() {
-        scrollToRecyclerViewItemAndClickText(getTranslatedString(R.string.general_preferences));
+        scrollToRecyclerViewItemAndClickText(getTranslatedString(R.string.general_settings_title));
         return new GeneralSettingsPage().assertOnPage();
     }
 

@@ -219,7 +219,7 @@
   <!--##############################################
     # GENERAL SETTINGS
     ##############################################-->
-  <string name="general_preferences">সাধারন সেটীংস।</string>
+  <string name="general_settings_title">সাধারন সেটীংস।</string>
   <!--Title of a settings section-->
   <!--Title of a settings section-->
   <!--Title of a settings section-->

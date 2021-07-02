@@ -245,7 +245,7 @@
   <!--##############################################
     # GENERAL SETTINGS
     ##############################################-->
-  <string name="general_preferences">Mazingira ya Jumla</string>
+  <string name="general_settings_title">Mazingira ya Jumla</string>
   <!--Title of a settings section-->
   <!--Title of a settings section-->
   <!--Title of a settings section-->

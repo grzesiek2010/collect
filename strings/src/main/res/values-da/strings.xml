@@ -360,7 +360,7 @@
   <!--##############################################
     # GENERAL SETTINGS
     ##############################################-->
-  <string name="general_preferences">Generelle Indstilinger</string>
+  <string name="general_settings_title">Generelle Indstilinger</string>
   <!--Title of a settings section-->
   <!--Title of a settings section-->
   <string name="user_interface_settings_title">Brugergrænseflade</string>
