@@ -422,7 +422,7 @@ Birashoboka ko ari zimwe zashyizwemo mubihe bitandukanye cgw ziturutse ahatanduk
   <string name="switched_project">Byihinduye kuri %s</string>
   <string name="using_project">Gukoresha %s</string>
   <string name="switch_to_project">Imukira kuri %s</string>
-  <string name="delete_project">Siba Project</string>
+  <string name="delete_project_settings_title">Siba Project</string>
   <string name="delete_project_confirm_message">Nibyo koko wiyemeje gusiba iyi project?</string>
   <string name="delete_project_yes">Yego</string>
   <string name="delete_project_no">Oya</string>

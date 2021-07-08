@@ -829,7 +829,7 @@
   <string name="switched_project">Přepnuto na %s</string>
   <string name="using_project">S pomocí %s</string>
   <string name="switch_to_project">Přepnout na %s</string>
-  <string name="delete_project">Smazat projekt</string>
+  <string name="delete_project_settings_title">Smazat projekt</string>
   <string name="delete_project_confirm_message">Opravdu chcete odstranit aktuální projekt?</string>
   <string name="delete_project_yes">Ano</string>
   <string name="delete_project_no">Ne</string>

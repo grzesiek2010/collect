@@ -824,7 +824,7 @@
   <string name="switched_project">Cambiado a %s</string>
   <string name="using_project">Usando %s</string>
   <string name="switch_to_project">Cambiar a %s</string>
-  <string name="delete_project">Eliminar proyecto</string>
+  <string name="delete_project_settings_title">Eliminar proyecto</string>
   <string name="delete_project_confirm_message">¿Está seguro de que desea eliminar el proyecto actual?</string>
   <string name="delete_project_yes">Si</string>
   <string name="delete_project_no">No</string>

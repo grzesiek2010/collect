@@ -823,7 +823,7 @@
   <string name="switched_project">Projekti vaihdettu, nyt %s</string>
   <string name="using_project">%s käytössä</string>
   <string name="switch_to_project">Vaihda projektiin %s</string>
-  <string name="delete_project">Poista projekti</string>
+  <string name="delete_project_settings_title">Poista projekti</string>
   <string name="delete_project_confirm_message">Haluatko varmasti poistaa tämän projektin?</string>
   <string name="delete_project_yes">Kyllä</string>
   <string name="delete_project_no">Ei</string>
