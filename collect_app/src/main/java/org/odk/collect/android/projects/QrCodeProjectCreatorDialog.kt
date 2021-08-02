@@ -26,11 +26,7 @@ import org.odk.collect.android.injection.DaggerUtils
 import org.odk.collect.android.listeners.PermissionListener
 import org.odk.collect.android.permissions.PermissionsProvider
 import org.odk.collect.android.preferences.source.SettingsProvider
-import org.odk.collect.android.utilities.ActivityAvailability
-import org.odk.collect.android.utilities.CodeCaptureManagerFactory
-import org.odk.collect.android.utilities.CompressionUtils
-import org.odk.collect.android.utilities.DialogUtils
-import org.odk.collect.android.utilities.ToastUtils
+import org.odk.collect.android.utilities.*
 import org.odk.collect.android.utilities.ToastUtils.showShortToast
 import org.odk.collect.android.views.BarcodeViewDecoder
 import org.odk.collect.material.MaterialFullScreenDialogFragment
@@ -83,16 +79,26 @@ class QrCodeProjectCreatorDialog :
         registerForActivityResult(ActivityResultContracts.StartActivityForResult()) { result: ActivityResult ->
             val imageUri: Uri? = result.data?.data
             if (imageUri != null) {
-                requireActivity().contentResolver.openInputStream(imageUri).use {
-                    try {
-                        val settingsJson = qrCodeDecoder.decode(it)
-                        createProjectOrError(settingsJson)
-                    } catch (e: QRCodeDecoder.InvalidException) {
-                        showShortToast(R.string.invalid_qrcode)
-                    } catch (e: QRCodeDecoder.NotFoundException) {
-                        showShortToast(R.string.qr_code_not_found)
-                    }
-                }
+                permissionsProvider.requestReadUriPermission(
+                    requireActivity(),
+                    imageUri,
+                    requireActivity().contentResolver,
+                    object : PermissionListener {
+                        override fun granted() {
+                            requireActivity().contentResolver.openInputStream(imageUri).use {
+                                try {
+                                    val settingsJson = qrCodeDecoder.decode(it)
+                                    createProjectOrError(settingsJson)
+                                } catch (e: QRCodeDecoder.InvalidException) {
+                                    showShortToast(R.string.invalid_qrcode)
+                                } catch (e: QRCodeDecoder.NotFoundException) {
+                                    showShortToast(R.string.qr_code_not_found)
+                                }
+                            }
+                        }
+
+                        override fun denied() {}
+                    })
             }
         }
 
