@@ -1,6 +1,7 @@
 package org.odk.collect.android.listeners;
 
 import android.content.Context;
+import android.util.Log;
 import android.view.GestureDetector;
 import android.view.MotionEvent;
 
@@ -88,6 +89,7 @@ public class SwipeHandler {
 
         @Override
         public boolean onFling(MotionEvent e1, MotionEvent e2, float velocityX, float velocityY) {
+            Log.i("QWERTY", "onFling");
             FlingRegister.flingDetected();
 
             if (e1 != null && e2 != null
