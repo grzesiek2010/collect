@@ -63,7 +63,7 @@ import timber.log.Timber;
  * Represents a label for a prompt/question or a select choice. The label can have media
  * attached to it as well as text (such as audio, video or an image).
  */
-public class AudioVideoImageTextLabel extends RelativeLayout implements View.OnClickListener {
+public class AudioVideoImageTextLabel extends RelativeLayout {
 
     @BindView(R.id.audioButton)
     AudioButton audioButton;
@@ -151,7 +151,7 @@ public class AudioVideoImageTextLabel extends RelativeLayout implements View.OnC
                     .into(imageView);
 
             imageView.setVisibility(VISIBLE);
-            imageView.setOnClickListener(this);
+            imageView.setOnClickListener(v -> onImageClick());
         } else {
             missingImage.setVisibility(VISIBLE);
             missingImage.setText(getContext().getString(R.string.file_missing, imageFile));
@@ -214,18 +214,6 @@ public class AudioVideoImageTextLabel extends RelativeLayout implements View.OnC
     }
 
     @Override
-    public void onClick(View v) {
-        switch (v.getId()) {
-            case R.id.videoButton:
-                playVideo();
-                break;
-            case R.id.imageView:
-                onImageClick();
-                break;
-        }
-    }
-
-    @Override
     public void setEnabled(boolean enabled) {
         labelTextView.setEnabled(enabled);
         imageView.setEnabled(enabled);
@@ -274,7 +262,7 @@ public class AudioVideoImageTextLabel extends RelativeLayout implements View.OnC
     private void setupVideoButton() {
         videoButton.setVisibility(VISIBLE);
         mediaButtonsContainer.setVisibility(VISIBLE);
-        videoButton.setOnClickListener(this);
+        videoButton.setOnClickListener(v -> playVideo());
     }
 
     private void setupAudioButton(String audioURI, AudioHelper audioHelper) {
