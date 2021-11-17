@@ -48,6 +48,8 @@ import static android.view.View.VISIBLE;
 import static org.odk.collect.android.preferences.keys.ProtectedProjectKeys.KEY_ADMIN_PW;
 import static org.odk.collect.android.preferences.keys.ProjectKeys.KEY_PASSWORD;
 
+import com.google.android.material.dialog.MaterialAlertDialogBuilder;
+
 public class ShowQRCodeFragment extends Fragment {
 
     private final boolean[] checkedItems = {true, true};
@@ -127,7 +129,7 @@ public class ShowQRCodeFragment extends Fragment {
                     getString(R.string.admin_password),
                     getString(R.string.server_password)};
 
-            dialog = new AlertDialog.Builder(getActivity())
+            dialog = new MaterialAlertDialogBuilder(getActivity())
                     .setTitle(R.string.include_password_dialog)
                     .setMultiChoiceItems(items, checkedItems, (dialog, which, isChecked) -> checkedItems[which] = isChecked)
                     .setCancelable(false)
