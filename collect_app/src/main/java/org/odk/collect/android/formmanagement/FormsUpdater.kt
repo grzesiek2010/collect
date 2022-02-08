@@ -77,7 +77,8 @@ class FormsUpdater(
      * Downloads new forms, updates existing forms and deletes forms that are no longer part of
      * the project's form list.
      */
-    fun matchFormsWithServer(projectId: String): Boolean {
+    @JvmOverloads
+    fun matchFormsWithServer(projectId: String, immediatelyNotifyAllExceptions: Boolean = true): Boolean {
         val sandbox = getProjectSandbox(projectId)
 
         val diskFormsSynchronizer = diskFormsSynchronizer(sandbox)
@@ -95,19 +96,28 @@ class FormsUpdater(
             if (acquiredLock) {
                 syncStatusAppState.startSync(projectId)
 
-                val exception = try {
+                try {
                     serverFormsSynchronizer.synchronize()
                     syncStatusAppState.finishSync(projectId, null)
                     notifier.onSync(null, projectId)
-                    null
+                    AnalyticsUtils.logMatchExactlyCompleted(analytics, null)
+                    numberOfUnreachableExceptionsInARow = 0
+                    true
+                } catch (e: FormSourceException.Unreachable) {
+                    syncStatusAppState.finishSync(projectId, e)
+                    if (immediatelyNotifyAllExceptions || ++numberOfUnreachableExceptionsInARow > 2) {
+                        notifier.onSync(e, projectId)
+                        numberOfUnreachableExceptionsInARow = 0
+                    }
+                    AnalyticsUtils.logMatchExactlyCompleted(analytics, e)
+                    false
                 } catch (e: FormSourceException) {
                     syncStatusAppState.finishSync(projectId, e)
                     notifier.onSync(e, projectId)
-                    e
+                    AnalyticsUtils.logMatchExactlyCompleted(analytics, e)
+                    numberOfUnreachableExceptionsInARow = 0
+                    false
                 }
-
-                AnalyticsUtils.logMatchExactlyCompleted(analytics, exception)
-                exception == null
             } else {
                 false
             }
@@ -123,6 +133,10 @@ class FormsUpdater(
         changeLockProvider,
         formSourceProvider
     )
+
+    companion object {
+        private var numberOfUnreachableExceptionsInARow = 0
+    }
 }
 
 /**

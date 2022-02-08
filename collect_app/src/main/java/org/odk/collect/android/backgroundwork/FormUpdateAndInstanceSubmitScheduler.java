@@ -15,6 +15,8 @@ import static org.odk.collect.android.configure.SettingsUtils.getFormUpdateMode;
 import static org.odk.collect.android.preferences.keys.ProjectKeys.KEY_PERIODIC_FORM_UPDATES_CHECK;
 import static org.odk.collect.android.preferences.keys.ProjectKeys.KEY_PROTOCOL;
 
+import androidx.work.BackoffPolicy;
+
 public class FormUpdateAndInstanceSubmitScheduler implements FormUpdateScheduler, InstanceSubmitScheduler {
 
     private final Scheduler scheduler;
@@ -66,7 +68,7 @@ public class FormUpdateAndInstanceSubmitScheduler implements FormUpdateScheduler
     private void scheduleMatchExactly(long periodInMilliseconds, String projectId) {
         HashMap<String, String> inputData = new HashMap<>();
         inputData.put(SyncFormsTaskSpec.DATA_PROJECT_ID, projectId);
-        scheduler.networkDeferred(getMatchExactlyTag(projectId), new SyncFormsTaskSpec(), periodInMilliseconds, inputData);
+        scheduler.networkDeferred(getMatchExactlyTag(projectId), new SyncFormsTaskSpec(), periodInMilliseconds, BackoffPolicy.LINEAR, periodInMilliseconds / 10, inputData);
     }
 
     @Override

@@ -28,7 +28,7 @@ public class SyncFormsTaskSpec implements TaskSpec {
         DaggerUtils.getComponent(context).inject(this);
 
         return () -> {
-            formsUpdater.matchFormsWithServer(inputData.get(DATA_PROJECT_ID));
+            formsUpdater.matchFormsWithServer(inputData.get(DATA_PROJECT_ID), false);
             return true;
         };
     }
