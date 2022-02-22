@@ -22,7 +22,6 @@ import androidx.exifinterface.media.ExifInterface
 import org.odk.collect.android.R
 import org.odk.collect.android.widgets.QuestionWidget
 import timber.log.Timber
-import java.io.IOException
 
 object ImageConverter {
     /**
@@ -36,20 +35,9 @@ object ImageConverter {
         context: Context,
         imageSizeMode: String
     ) {
-        var exif: ExifInterface? = null
-        try {
-            exif = ExifInterface(imagePath)
-        } catch (e: IOException) {
-            Timber.w(e)
-        }
+        val originalExif: ExifInterface? = ExifHelper.getExifFromFile(imagePath)
         scaleDownImageIfNeeded(imagePath, questionWidget, context, imageSizeMode)
-        if (exif != null) {
-            try {
-                exif.saveAttributes()
-            } catch (e: IOException) {
-                Timber.w(e)
-            }
-        }
+        ExifHelper.copyExifAttributesToFile(originalExif, imagePath)
     }
 
     private fun scaleDownImageIfNeeded(
