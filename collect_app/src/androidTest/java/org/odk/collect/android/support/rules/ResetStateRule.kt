@@ -7,7 +7,6 @@ import org.junit.rules.TestRule
 import org.junit.runner.Description
 import org.junit.runners.model.Statement
 import org.odk.collect.android.TestSettingsProvider.getSettingsProvider
-import org.odk.collect.android.database.DatabaseConnection.Companion.closeAll
 import org.odk.collect.android.injection.DaggerUtils
 import org.odk.collect.android.injection.config.AppDependencyModule
 import org.odk.collect.android.storage.StoragePathProvider
@@ -57,7 +56,6 @@ private class ResetStateStatement(
         } catch (e: IOException) {
             throw RuntimeException(e)
         }
-        closeAll()
     }
 
     private fun resetDagger() {

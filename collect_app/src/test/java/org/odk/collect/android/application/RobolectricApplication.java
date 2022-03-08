@@ -7,7 +7,6 @@ import androidx.test.core.app.ApplicationProvider;
 import androidx.work.Configuration;
 import androidx.work.WorkManager;
 
-import org.odk.collect.android.database.DatabaseConnection;
 import org.odk.collect.androidshared.ui.multiclicksafe.MultiClickGuard;
 import org.robolectric.shadows.ShadowApplication;
 import org.robolectric.shadows.ShadowEnvironment;
@@ -42,9 +41,6 @@ public class RobolectricApplication extends Collect {
         shadowApplication.grantPermissions("android.permission.READ_PHONE_STATE");
         shadowApplication.grantPermissions("android.permission.RECORD_AUDIO");
         shadowApplication.grantPermissions("android.permission.GET_ACCOUNTS");
-
-        // These clear static state that can't persist from test to test
-        DatabaseConnection.closeAll();
 
         // We don't want any clicks to be blocked
         MultiClickGuard.test = true;

@@ -27,33 +27,13 @@ open class DatabaseConnection(
         get() = dbHelper.readableDatabase
 
     private val dbHelper: SQLiteOpenHelper by lazy {
-        getOpenHelper(path + name) {
-            DatabaseMigratorSQLiteOpenHelper(
-                AltDatabasePathContext(path, context),
-                name,
-                null,
-                databaseVersion,
-                migrator
-            )
-        }
-    }
-
-    companion object {
-
-        private val openHelpers = mutableMapOf<String, SQLiteOpenHelper>()
-
-        private fun getOpenHelper(
-            name: String,
-            helperFactory: () -> SQLiteOpenHelper
-        ): SQLiteOpenHelper {
-            return openHelpers.getOrPut(name, helperFactory)
-        }
-
-        @JvmStatic
-        fun closeAll() {
-            openHelpers.forEach { (_, openHelper) -> openHelper.close() }
-            openHelpers.clear()
-        }
+        DatabaseMigratorSQLiteOpenHelper(
+            AltDatabasePathContext(path, context),
+            name,
+            null,
+            databaseVersion,
+            migrator
+        )
     }
 }
 
