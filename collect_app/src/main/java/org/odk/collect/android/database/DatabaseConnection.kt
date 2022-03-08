@@ -31,9 +31,7 @@ open class DatabaseConnection(
         get() {
             val databasePath = path + File.separator + name
             if (openHelpers.containsKey(databasePath) && !File(databasePath).exists()) {
-                openHelpers
-                    .remove(databasePath)
-                    ?.close()
+                openHelpers.remove(databasePath)
             }
 
             return openHelpers.getOrPut(databasePath) {
