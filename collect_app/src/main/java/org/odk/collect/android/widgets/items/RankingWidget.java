@@ -33,6 +33,7 @@ import org.odk.collect.android.formentry.questions.QuestionDetails;
 import org.odk.collect.android.formentry.questions.WidgetViewUtils;
 import org.odk.collect.android.fragments.dialogs.RankingWidgetDialog;
 import org.odk.collect.android.javarosawrapper.FormController;
+import org.odk.collect.android.utilities.HtmlUtils;
 import org.odk.collect.android.widgets.interfaces.WidgetDataReceiver;
 import org.odk.collect.android.widgets.interfaces.ButtonClickListener;
 import org.odk.collect.android.widgets.warnings.SpacesInUnderlyingValuesWarning;
@@ -150,7 +151,7 @@ public class RankingWidget extends ItemsWidget implements WidgetDataReceiver, Bu
                 .renderWarningIfNecessary(items);
     }
 
-    private String getAnswerText() {
+    private CharSequence getAnswerText() {
         StringBuilder answerText = new StringBuilder();
         if (savedItems != null) {
             for (SelectChoice item : savedItems) {
@@ -159,10 +160,10 @@ public class RankingWidget extends ItemsWidget implements WidgetDataReceiver, Bu
                         .append(". ")
                         .append(getFormEntryPrompt().getSelectChoiceText(item));
                 if ((savedItems.size() - 1) > savedItems.indexOf(item)) {
-                    answerText.append('\n');
+                    answerText.append("<br>");
                 }
             }
         }
-        return answerText.toString();
+        return HtmlUtils.textToHtml(answerText.toString());
     }
 }
