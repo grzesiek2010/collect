@@ -7,9 +7,11 @@ import org.odk.collect.android.R;
 
 import static androidx.test.espresso.Espresso.onView;
 import static androidx.test.espresso.action.ViewActions.click;
+import static androidx.test.espresso.assertion.ViewAssertions.matches;
 import static androidx.test.espresso.matcher.ViewMatchers.hasDescendant;
 import static androidx.test.espresso.matcher.ViewMatchers.withId;
 import static androidx.test.espresso.matcher.ViewMatchers.withText;
+import static org.odk.collect.android.support.matchers.RecyclerViewMatcher.withRecyclerView;
 
 public class FormHierarchyPage extends Page<FormHierarchyPage> {
 
@@ -51,6 +53,19 @@ public class FormHierarchyPage extends Page<FormHierarchyPage> {
     public FormEndPage clickJumpEndButton() {
         onView(withId(R.id.jumpEndButton)).perform(click());
         return new FormEndPage(formName).assertOnPage();
+    }
+
+    public FormHierarchyPage assertHierarchyItem(int position, String primaryText, String secondaryText) {
+        onView(withRecyclerView(R.id.list)
+                .atPositionOnView(position, R.id.primary_text))
+                .check(matches(withText(primaryText)));
+
+        if (secondaryText != null) {
+            onView(withRecyclerView(R.id.list)
+                    .atPositionOnView(position, R.id.secondary_text))
+                    .check(matches(withText(secondaryText)));
+        }
+        return this;
     }
 
     public FormEntryPage clickOnQuestion(String questionLabel) {
