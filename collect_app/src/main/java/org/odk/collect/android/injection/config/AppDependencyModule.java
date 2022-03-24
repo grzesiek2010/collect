@@ -54,6 +54,7 @@ import org.odk.collect.android.formentry.media.AudioHelperFactory;
 import org.odk.collect.android.formentry.media.ScreenContextAudioHelperFactory;
 import org.odk.collect.android.formentry.saving.DiskFormSaver;
 import org.odk.collect.android.formentry.saving.FormSaveViewModel;
+import org.odk.collect.android.formlist.FormListViewModel;
 import org.odk.collect.android.formmanagement.FormDownloader;
 import org.odk.collect.android.formmanagement.FormMetadataParser;
 import org.odk.collect.android.formmanagement.FormSourceProvider;
@@ -637,5 +638,10 @@ public class AppDependencyModule {
     @Provides
     public PenColorPickerViewModel.Factory providesPenColorPickerViewModel(SettingsProvider settingsProvider) {
         return new PenColorPickerViewModel.Factory(settingsProvider.getMetaSettings());
+    }
+
+    @Provides
+    public FormListViewModel.Factory providesFormListViewModel(FormsRepositoryProvider formsRepositoryProvider) {
+        return new FormListViewModel.Factory(formsRepositoryProvider.get());
     }
 }
