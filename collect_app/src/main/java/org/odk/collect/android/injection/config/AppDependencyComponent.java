@@ -41,6 +41,7 @@ import org.odk.collect.android.formentry.ODKView;
 import org.odk.collect.android.formentry.QuitFormDialogFragment;
 import org.odk.collect.android.formentry.saving.SaveAnswerFileErrorDialogFragment;
 import org.odk.collect.android.formentry.saving.SaveFormProgressDialogFragment;
+import org.odk.collect.android.formlist.FormListActivity;
 import org.odk.collect.android.formmanagement.FormSourceProvider;
 import org.odk.collect.android.formmanagement.InstancesAppState;
 import org.odk.collect.android.formmanagement.matchexactly.SyncStatusAppState;
@@ -295,6 +296,8 @@ public interface AppDependencyComponent {
     void inject(DrawActivity drawActivity);
 
     void inject(PenColorPickerDialog colorPickerDialog);
+
+    void inject(FormListActivity formListActivity);
 
     OpenRosaHttpInterface openRosaHttpInterface();
 
