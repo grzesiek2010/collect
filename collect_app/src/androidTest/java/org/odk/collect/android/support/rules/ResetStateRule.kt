@@ -7,11 +7,12 @@ import org.junit.rules.TestRule
 import org.junit.runner.Description
 import org.junit.runners.model.Statement
 import org.odk.collect.android.TestSettingsProvider.getSettingsProvider
+import org.odk.collect.android.application.Collect
 import org.odk.collect.android.database.DatabaseConnection.Companion.closeAll
 import org.odk.collect.android.injection.DaggerUtils
 import org.odk.collect.android.injection.config.AppDependencyModule
+import org.odk.collect.android.injection.config.DaggerAppDependencyComponent
 import org.odk.collect.android.storage.StoragePathProvider
-import org.odk.collect.android.support.CollectHelpers
 import org.odk.collect.android.views.DecoratedBarcodeView
 import org.odk.collect.androidshared.data.getState
 import org.odk.collect.androidshared.ui.ToastUtils.recordToasts
@@ -61,7 +62,12 @@ private class ResetStateStatement(
     }
 
     private fun resetDagger() {
-        CollectHelpers.overrideAppDependencyModule(appDependencyModule ?: AppDependencyModule())
+        ApplicationProvider.getApplicationContext<Collect>().apply {
+            component = DaggerAppDependencyComponent.builder()
+                .application(this)
+                .appDependencyModule(appDependencyModule ?: AppDependencyModule())
+                .build()
+        }
     }
 
     private fun clearPrefs() {
