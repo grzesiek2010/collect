@@ -133,6 +133,8 @@ public class TestMapFragment implements MapFragment {
         return lastFeatureId++;
     }
 
+    @Override public void displayMarkers() {}
+
     @Override
     public void setMarkerIcon(int featureId, int drawableId) {
 

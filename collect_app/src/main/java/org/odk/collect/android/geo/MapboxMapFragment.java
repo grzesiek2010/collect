@@ -355,6 +355,16 @@ public class MapboxMapFragment extends org.odk.collect.android.geo.mapboxsdk.Map
         }
     }
 
+    public void displayMarkers() {
+        List<SymbolOptions> optionsList = new ArrayList<>();
+
+        for (Map.Entry<Integer, MapFeature> entry : features.entrySet()) {
+            MarkerFeature markerFeature = (MarkerFeature) entry.getValue();
+            optionsList.add(markerFeature.symbolOptions);
+        }
+        List<Symbol> symbols = symbolManager.create(optionsList);
+    }
+
     @Override public int addMarker(MapPoint point, boolean draggable, @IconAnchor String iconAnchor, int iconDrawableId) {
         int featureId = nextFeatureId++;
         features.put(featureId, new MarkerFeature(featureId, symbolManager, point, draggable, iconAnchor, iconDrawableId));
@@ -524,6 +534,18 @@ public class MapboxMapFragment extends org.odk.collect.android.geo.mapboxsdk.Map
             .withDraggable(draggable)
             .withTextOpacity(0f)
             .withIconAnchor(getIconAnchorValue(iconAnchor))
+        );
+    }
+
+    private SymbolOptions createSymbolOptions(MapPoint point, boolean draggable, @IconAnchor String iconAnchor, int iconDrawableId) {
+        return new SymbolOptions()
+                .withLatLng(toLatLng(point))
+                .withIconImage(addIconImage(iconDrawableId))
+                .withIconSize(1f)
+                .withSymbolSortKey(10f)
+                .withDraggable(draggable)
+                .withTextOpacity(0f)
+                .withIconAnchor(getIconAnchorValue(iconAnchor)
         );
     }
 
@@ -772,14 +794,20 @@ public class MapboxMapFragment extends org.odk.collect.android.geo.mapboxsdk.Map
         private final DragListener dragListener = new DragListener();
         private MapPoint point;
         private Symbol symbol;
+        private SymbolOptions symbolOptions;
 
         MarkerFeature(int featureId, SymbolManager symbolManager, MapPoint point, boolean draggable, @IconAnchor String iconAnchor, int iconDrawableId) {
             this.featureId = featureId;
             this.symbolManager = symbolManager;
             this.point = point;
             this.symbol = createSymbol(symbolManager, point, draggable, iconAnchor, iconDrawableId);
+            this.symbolOptions = createSymbolOptions(point, draggable, iconAnchor, iconDrawableId);
             symbolManager.addClickListener(clickListener);
             symbolManager.addDragListener(dragListener);
+        }
+
+        public void setupSymbol(Symbol symbol) {
+            this.symbol = symbol;
         }
 
         public void setIcon(int drawableId) {

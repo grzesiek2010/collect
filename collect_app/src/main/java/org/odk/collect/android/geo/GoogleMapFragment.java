@@ -264,6 +264,8 @@ public class GoogleMapFragment extends SupportMapFragment implements
         return featureId;
     }
 
+    @Override public void displayMarkers() {}
+
     @Override public void setMarkerIcon(int featureId, int drawableId) {
         MapFeature feature = features.get(featureId);
         if (feature instanceof MarkerFeature) {

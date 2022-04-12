@@ -4,6 +4,7 @@ import android.Manifest
 import android.annotation.SuppressLint
 import android.content.Context
 import android.os.Bundle
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -344,12 +345,15 @@ class SelectionMapFragment(
         map.clearFeatures()
         itemsByFeatureId.clear()
 
+        Log.i("QWERTY", "1")
         for (item in items) {
             val point = MapPoint(item.latitude, item.longitude)
             val featureId = map.addMarker(point, false, MapFragment.BOTTOM, item.smallIcon)
             itemsByFeatureId[featureId] = item
             points.add(point)
         }
+        map.displayMarkers()
+        Log.i("QWERTY", "2")
         selectedFeatureViewModel.getSelectedFeatureId()?.let {
             onFeatureClicked(it)
         }

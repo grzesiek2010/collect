@@ -323,6 +323,8 @@ public class OsmDroidMapFragment extends Fragment implements MapFragment,
         return featureId;
     }
 
+    @Override public void displayMarkers() {}
+
     @Override
     public void setMarkerIcon(int featureId, int drawableId) {
         MapFeature feature = features.get(featureId);
