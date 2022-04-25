@@ -18,4 +18,6 @@
     {@deprecated These components should be replaced with material ones and this
     color should be deleted} -->
     <color name="surfaceButtonColor">#f7f7f7</color>
+
+    <color name="ic_launcher_background">#ffffff</color>
 </resources>

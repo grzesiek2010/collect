@@ -69,7 +69,7 @@
 
     <style name="Theme.Collect.SplashScreen" parent="Theme.SplashScreen">
         <item name="windowSplashScreenBackground">@color/colorSurface</item>
-        <item name="windowSplashScreenAnimatedIcon">@drawable/notes</item>
+        <item name="windowSplashScreenAnimatedIcon">@mipmap/ic_launcher_foreground</item>
         <item name="postSplashScreenTheme">@style/Theme.Collect</item>
     </style>
 
