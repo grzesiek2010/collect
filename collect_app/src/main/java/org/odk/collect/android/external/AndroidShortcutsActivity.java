@@ -86,7 +86,7 @@ public class AndroidShortcutsActivity extends AppCompatActivity {
         Intent intent = new Intent();
         intent.putExtra(Intent.EXTRA_SHORTCUT_INTENT, shortcutIntent);
         intent.putExtra(Intent.EXTRA_SHORTCUT_NAME, forms.get(item).getName());
-        Parcelable iconResource = Intent.ShortcutIconResource.fromContext(this, R.drawable.notes);
+        Parcelable iconResource = Intent.ShortcutIconResource.fromContext(this, R.mipmap.ic_launcher);
         intent.putExtra(Intent.EXTRA_SHORTCUT_ICON_RESOURCE, iconResource);
         return intent;
     }
