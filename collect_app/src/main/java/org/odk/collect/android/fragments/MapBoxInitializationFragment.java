@@ -11,8 +11,8 @@ import android.widget.FrameLayout;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 
-import com.mapbox.mapboxsdk.maps.MapView;
-import com.mapbox.mapboxsdk.maps.Style;
+import com.mapbox.maps.MapView;
+import com.mapbox.maps.Style;
 
 import org.odk.collect.android.R;
 import org.odk.collect.android.injection.DaggerUtils;
@@ -53,35 +53,12 @@ public class MapBoxInitializationFragment extends Fragment {
         }
     }
 
-    @Override
-    public void onResume() {
-        super.onResume();
-        if (mapView != null) {
-            mapView.onResume();
-        }
-    }
-
-    @Override
-    public void onPause() {
-        super.onPause();
-        if (mapView != null) {
-            mapView.onPause();
-        }
-    }
 
     @Override
     public void onStop() {
         super.onStop();
         if (mapView != null) {
             mapView.onStop();
-        }
-    }
-
-    @Override
-    public void onSaveInstanceState(Bundle outState) {
-        super.onSaveInstanceState(outState);
-        if (mapView != null) {
-            mapView.onSaveInstanceState(outState);
         }
     }
 
@@ -110,9 +87,7 @@ public class MapBoxInitializationFragment extends Fragment {
                 mapView = new MapView(getContext());
                 FrameLayout mapBoxContainer = rootView.findViewById(R.id.map_box_container);
                 mapBoxContainer.addView(mapView);
-                mapView.getMapAsync(mapBoxMap -> mapBoxMap.setStyle(Style.MAPBOX_STREETS, style -> {
-                    metaSharedPreferences.save(KEY_MAPBOX_INITIALIZED, true);
-                }));
+                mapView.getMapboxMap().loadStyleUri(Style.MAPBOX_STREETS, style -> metaSharedPreferences.save(KEY_MAPBOX_INITIALIZED, true));
             } catch (Exception | Error ignored) {
                 // This will crash on devices where the arch for MapBox is not included
             }
