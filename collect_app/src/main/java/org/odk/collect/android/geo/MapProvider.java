@@ -17,7 +17,7 @@ import android.content.Context;
 import androidx.annotation.NonNull;
 
 import com.google.android.gms.maps.GoogleMap;
-import com.mapbox.mapboxsdk.maps.Style;
+import com.mapbox.maps.Style;
 
 import org.odk.collect.android.R;
 import org.odk.collect.android.geo.GoogleMapConfigurator.GoogleMapTypeOption;
