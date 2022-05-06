@@ -133,15 +133,7 @@ public class MapboxMapFragment extends org.odk.collect.android.geo.mapboxsdk.Map
     @Override public void addTo(
             FragmentManager fragmentManager, int containerId,
             @Nullable ReadyListener readyListener, @Nullable ErrorListener errorListener) {
-        Context context = getContext();
         mapReadyListener = readyListener;
-        if (MapboxUtils.initMapbox() == null) {
-            MapProvider.getConfigurator().showUnavailableMessage(context);
-            if (errorListener != null) {
-                errorListener.onError();
-            }
-            return;
-        }
 
         // Mapbox SDK only knows how to fetch tiles via HTTP.  If we want it to
         // display tiles from a local file, we have to serve them locally over HTTP.

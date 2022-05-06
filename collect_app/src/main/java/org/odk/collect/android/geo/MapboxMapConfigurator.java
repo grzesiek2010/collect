@@ -34,7 +34,8 @@ class MapboxMapConfigurator implements MapConfigurator {
     }
 
     @Override public boolean isAvailable(Context context) {
-        return MapboxUtils.initMapbox() != null;
+        // If the app builds that means mapbox is available
+        return true;
     }
 
     @Override public void showUnavailableMessage(Context context) {
@@ -43,7 +44,7 @@ class MapboxMapConfigurator implements MapConfigurator {
     }
 
     @Override public MapFragment createMapFragment(Context context) {
-        return MapboxUtils.initMapbox() != null ? new MapboxMapFragment() : null;
+        return new MapboxMapFragment();
     }
 
     @Override public List<Preference> createPrefs(Context context) {
