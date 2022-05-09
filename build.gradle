@@ -26,6 +26,16 @@ buildscript {
 }
 
 allprojects {
+    ext.getSecrets = { ->
+        def secretsFile = file('secrets.properties')
+        def secrets = new Properties()
+        if (secretsFile.exists()) {
+            secrets.load(new FileInputStream(secretsFile))
+        }
+
+        return secrets
+    }
+
     repositories {
         // Needs to go first to get specialty libraries https://stackoverflow.com/a/48438866/137744
         google()
@@ -46,7 +56,7 @@ allprojects {
             }
             credentials {
                 username = "mapbox"
-                password = project.properties['MAPBOX_DOWNLOADS_TOKEN'] ?: "sk.eyJ1IjoiZ3J6ZXNpZWsyMDEwIiwiYSI6ImNsMnN2djRtajAycXozYmxyNGs4dmZqNWUifQ.Ujl7Lc0T3NUtg-apo1V0Bw"
+                password = getSecrets().getProperty('MAPBOX_DOWNLOADS_TOKEN', '')
             }
         }
 
