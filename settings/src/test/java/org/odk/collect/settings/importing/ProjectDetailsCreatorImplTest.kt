@@ -32,6 +32,7 @@ class ProjectDetailsCreatorImplTest {
 
     @Test
     fun `When no project name is specified and the connection identifier is not a valid URL, the project name is the connection identifier`() {
+        assertThat(projectDetailsCreator.createProjectFromDetails(connectionIdentifier = "https:/\\/kc.humanitarianresponse.info").name, `is`("https:/\\/kc.humanitarianresponse.info"))
         assertThat(projectDetailsCreator.createProjectFromDetails(connectionIdentifier = "foo@bar.baz").name, `is`("foo@bar.baz"))
         assertThat(projectDetailsCreator.createProjectFromDetails(connectionIdentifier = "something").name, `is`("something"))
     }
@@ -60,6 +61,11 @@ class ProjectDetailsCreatorImplTest {
     @Test
     fun `If project icon is not included in project details should be generated based on project name`() {
         assertThat(projectDetailsCreator.createProjectFromDetails(name = "Project X").icon, `is`("P"))
+    }
+
+    @Test
+    fun `If project icon is not included in project details and there is no project name should be empty`() {
+        assertThat(projectDetailsCreator.createProjectFromDetails().icon, `is`(""))
     }
 
     @Test
