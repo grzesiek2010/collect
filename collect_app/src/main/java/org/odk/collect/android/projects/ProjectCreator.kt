@@ -12,7 +12,12 @@ class ProjectCreator(
 
     fun createNewProject(settingsJson: String): Boolean {
         val savedProject = projectsRepository.save(Project.New("", "", ""))
-        val settingsImportedSuccessfully = settingsImporter.fromJSON(settingsJson, savedProject)
+
+        val settingsImportedSuccessfully = try {
+            settingsImporter.fromJSON(settingsJson, savedProject)
+        } catch (e: Throwable) {
+            false
+        }
 
         return if (settingsImportedSuccessfully) {
             currentProjectProvider.setCurrentProject(savedProject.uuid)
