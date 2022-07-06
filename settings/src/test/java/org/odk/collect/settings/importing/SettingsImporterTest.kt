@@ -69,7 +69,13 @@ class SettingsImporterTest {
     }
 
     @Test
-    fun forSettingsKeysNotINJSON_savesDefaults() {
+    fun whenJSONSettingsAreInvalid_returnsFalse2() {
+        whenever(settingsValidator.isValid(emptySettings())).thenThrow(Error::class.java)
+        assertThat(importer.fromJSON(emptySettings(), currentProject), `is`(false))
+    }
+
+    @Test
+    fun forSettingsKeysNotInJSON_savesDefaults() {
         assertThat(importer.fromJSON(emptySettings(), currentProject), `is`(true))
         assertSettings(
             generalSettings,

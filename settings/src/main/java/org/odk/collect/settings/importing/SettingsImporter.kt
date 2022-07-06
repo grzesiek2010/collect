@@ -20,56 +20,64 @@ internal class SettingsImporter(
 ) {
 
     fun fromJSON(json: String, project: Project.Saved): Boolean {
-        if (!settingsValidator.isValid(json)) {
-            return false
+        return try {
+            if (!settingsValidator.isValid(json)) {
+                return false
+            }
+
+            val generalSettings = settingsProvider.getUnprotectedSettings(project.uuid)
+            val adminSettings = settingsProvider.getProtectedSettings(project.uuid)
+
+            generalSettings.clear()
+            adminSettings.clear()
+
+            val jsonObject = JSONObject(json)
+
+            // Import unprotected settings
+            val general = jsonObject.getJSONObject(AppConfigurationKeys.GENERAL)
+            importToPrefs(general, generalSettings)
+
+            // Import protected settings
+            val admin = jsonObject.getJSONObject(AppConfigurationKeys.ADMIN)
+            importToPrefs(admin, adminSettings)
+
+            // Import project details
+            val projectDetails = if (jsonObject.has(AppConfigurationKeys.PROJECT)) {
+                jsonObject.getJSONObject(AppConfigurationKeys.PROJECT)
+            } else {
+                JSONObject()
+            }
+
+            val connectionIdentifier = if (generalSettings.getString(ProjectKeys.KEY_PROTOCOL).equals(ProjectKeys.PROTOCOL_GOOGLE_SHEETS)) {
+                generalSettings.getString(ProjectKeys.KEY_SELECTED_GOOGLE_ACCOUNT) ?: ""
+            } else {
+                generalSettings.getString(ProjectKeys.KEY_SERVER_URL) ?: ""
+            }
+
+            importProjectDetails(
+                project,
+                projectDetails,
+                connectionIdentifier
+            )
+
+            settingsMigrator.migrate(generalSettings, adminSettings)
+
+            clearUnknownKeys(generalSettings, generalDefaults)
+            clearUnknownKeys(adminSettings, adminDefaults)
+
+            loadDefaults(generalSettings, generalDefaults)
+            loadDefaults(adminSettings, adminDefaults)
+
+            settingsChangedHandler.onSettingsChanged(project.uuid)
+
+            true
+        } catch (e: Throwable) {
+            /**
+             * Although we have a scheme validator it might be still possible in some strange cases
+             * that it accepts settings that cause exceptions in next steps for example during importing.
+             */
+            false
         }
-
-        val generalSettings = settingsProvider.getUnprotectedSettings(project.uuid)
-        val adminSettings = settingsProvider.getProtectedSettings(project.uuid)
-
-        generalSettings.clear()
-        adminSettings.clear()
-
-        val jsonObject = JSONObject(json)
-
-        // Import unprotected settings
-        val general = jsonObject.getJSONObject(AppConfigurationKeys.GENERAL)
-        importToPrefs(general, generalSettings)
-
-        // Import protected settings
-        val admin = jsonObject.getJSONObject(AppConfigurationKeys.ADMIN)
-        importToPrefs(admin, adminSettings)
-
-        // Import project details
-        val projectDetails = if (jsonObject.has(AppConfigurationKeys.PROJECT)) {
-            jsonObject.getJSONObject(AppConfigurationKeys.PROJECT)
-        } else {
-            JSONObject()
-        }
-
-        val connectionIdentifier = if (generalSettings.getString(ProjectKeys.KEY_PROTOCOL).equals(ProjectKeys.PROTOCOL_GOOGLE_SHEETS)) {
-            generalSettings.getString(ProjectKeys.KEY_SELECTED_GOOGLE_ACCOUNT) ?: ""
-        } else {
-            generalSettings.getString(ProjectKeys.KEY_SERVER_URL) ?: ""
-        }
-
-        importProjectDetails(
-            project,
-            projectDetails,
-            connectionIdentifier
-        )
-
-        settingsMigrator.migrate(generalSettings, adminSettings)
-
-        clearUnknownKeys(generalSettings, generalDefaults)
-        clearUnknownKeys(adminSettings, adminDefaults)
-
-        loadDefaults(generalSettings, generalDefaults)
-        loadDefaults(adminSettings, adminDefaults)
-
-        settingsChangedHandler.onSettingsChanged(project.uuid)
-
-        return true
     }
 
     private fun importToPrefs(jsonObject: JSONObject, preferences: Settings) {
