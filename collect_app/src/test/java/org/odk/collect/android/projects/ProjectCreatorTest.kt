@@ -53,14 +53,6 @@ class ProjectCreatorTest {
     }
 
     @Test
-    fun `When importing settings throws error createNewProject() should return false`() {
-        whenever(settingsImporter.fromJSON(json, savedProject)).thenThrow(Error::class.java)
-
-        projectCreator.createNewProject(json)
-        assertThat(projectCreator.createNewProject(json), `is`(false))
-    }
-
-    @Test
     fun `When importing settings succeeded createNewProject() should return true`() {
         whenever(settingsImporter.fromJSON(json, savedProject)).thenReturn(true)
 

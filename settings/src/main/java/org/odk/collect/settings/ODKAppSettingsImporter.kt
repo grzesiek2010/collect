@@ -28,6 +28,14 @@ class ODKAppSettingsImporter(
     )
 
     fun fromJSON(json: String, project: Project.Saved): Boolean {
-        return settingsImporter.fromJSON(json, project)
+        return try {
+            settingsImporter.fromJSON(json, project)
+        } catch (e: Throwable) {
+            /**
+             * Although we have a scheme validator it might be still possible in some strange cases
+             * that it accepts settings that cause exceptions in next steps for example during importing.
+            */
+            false
+        }
     }
 }
