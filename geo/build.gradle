@@ -69,7 +69,7 @@ dependencies {
     implementation project(path: ':maps')
     implementation project(path: ':material')
 
-    debugImplementation project(path: ':fragmentstest')
+    testImplementation project(':fragmentstest')
     testImplementation project(path: ':androidtest')
     testImplementation project(path: ':testshared')
     testImplementation Dependencies.junit
