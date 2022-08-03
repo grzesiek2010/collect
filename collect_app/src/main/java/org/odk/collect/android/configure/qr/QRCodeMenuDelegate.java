@@ -70,7 +70,11 @@ public class QRCodeMenuDelegate implements MenuDelegate {
                     intent.setAction(Intent.ACTION_SEND);
                     intent.setType("image/*");
                     intent.putExtra(Intent.EXTRA_STREAM, fileProvider.getURIForFile(qrFilePath));
-                    activity.startActivity(intent);
+                    intentLauncher.launch(activity, intent, () -> {
+                        ToastUtils.showShortToast(activity, activity.getString(R.string.activity_not_found, activity.getString(R.string.share_image)));
+                        Timber.w(activity.getString(R.string.activity_not_found, activity.getString(R.string.share_image)));
+                        return null;
+                    });
                 }
 
                 return true;
