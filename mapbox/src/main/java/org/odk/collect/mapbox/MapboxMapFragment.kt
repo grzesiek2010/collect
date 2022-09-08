@@ -309,6 +309,7 @@ class MapboxMapFragment :
                     featureId,
                     featureClickListener,
                     featureDragEndListener,
+                    marker,
                     marker.point
                 )
 

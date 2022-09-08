@@ -8,6 +8,7 @@ import com.mapbox.maps.plugin.annotation.generated.PointAnnotationManager
 import org.odk.collect.maps.MapFragment
 import org.odk.collect.maps.MapPoint
 import org.odk.collect.maps.MapsMarkerCache
+import org.odk.collect.maps.MarkerDescription
 
 /** A point annotation that can optionally be dragged by the user. */
 class MarkerFeature(
@@ -17,6 +18,7 @@ class MarkerFeature(
     val featureId: Int,
     private val featureClickListener: MapFragment.FeatureListener?,
     private val featureDragEndListener: MapFragment.FeatureListener?,
+    private val markerDescription: MarkerDescription,
     var point: MapPoint
 ) : MapFeature {
     private val clickListener = ClickListener()
