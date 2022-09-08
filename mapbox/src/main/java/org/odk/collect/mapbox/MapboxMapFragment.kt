@@ -280,19 +280,14 @@ class MapboxMapFragment :
         hasCenter = true
     }
 
-    override fun addMarker(
-        point: MapPoint,
-        draggable: Boolean,
-        iconAnchor: String,
-        iconDrawableId: Int,
-    ): Int {
+    override fun addMarker(markerDescription: MarkerDescription): Int {
         return addMarkers(
             listOf(
                 MarkerDescription(
-                    point,
-                    draggable,
-                    iconAnchor,
-                    iconDrawableId
+                    markerDescription.point,
+                    markerDescription.isDraggable,
+                    markerDescription.iconAnchor,
+                    markerDescription.iconDrawableId
                 )
             )
         ).first()
