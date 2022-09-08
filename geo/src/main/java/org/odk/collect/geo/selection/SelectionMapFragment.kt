@@ -27,6 +27,7 @@ import org.odk.collect.maps.MapFragment
 import org.odk.collect.maps.MapFragmentFactory
 import org.odk.collect.maps.MapPoint
 import org.odk.collect.maps.MarkerDescription
+import org.odk.collect.maps.MarkerIconDescription
 import org.odk.collect.material.BottomSheetBehavior
 import org.odk.collect.material.MaterialProgressDialogFragment
 import org.odk.collect.permissions.PermissionsChecker
@@ -234,7 +235,7 @@ class SelectionMapFragment(
                     selectedFeatureViewModel.setSelectedFeatureId(null)
                     map.setMarkerIcon(
                         selectedFeatureId,
-                        itemsByFeatureId[selectedFeatureId]!!.smallIcon
+                        MarkerIconDescription(itemsByFeatureId[selectedFeatureId]!!.smallIcon, itemsByFeatureId[selectedFeatureId]!!.color, itemsByFeatureId[selectedFeatureId]!!.symbol)
                     )
 
                     onBackPressedCallback.isEnabled = false
@@ -273,7 +274,7 @@ class SelectionMapFragment(
                 } else {
                     map.zoomToPoint(MapPoint(item.latitude, item.longitude), true)
                 }
-                map.setMarkerIcon(featureId, item.largeIcon)
+                map.setMarkerIcon(featureId, MarkerIconDescription(item.largeIcon, item.color, item.symbol))
                 summarySheet.setItem(item)
 
                 summarySheetBehavior.state = STATE_COLLAPSED
@@ -332,7 +333,7 @@ class SelectionMapFragment(
         if (selectedFeatureId != null && selectedFeatureId != itemId) {
             map.setMarkerIcon(
                 selectedFeatureId,
-                itemsByFeatureId[selectedFeatureId]!!.smallIcon
+                MarkerIconDescription(itemsByFeatureId[selectedFeatureId]!!.smallIcon, itemsByFeatureId[selectedFeatureId]!!.color, itemsByFeatureId[selectedFeatureId]!!.symbol)
             )
         }
     }
@@ -350,9 +351,7 @@ class SelectionMapFragment(
                 MapPoint(it.latitude, it.longitude),
                 false,
                 MapFragment.BOTTOM,
-                it.smallIcon,
-                it.color,
-                it.symbol
+                MarkerIconDescription(it.smallIcon, it.color, it.symbol)
             )
         }
 

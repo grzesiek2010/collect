@@ -20,7 +20,8 @@ object MarkerIconCreator {
     private val cache = LruCache<Int, Bitmap>(10)
 
     @JvmStatic
-    fun getMarkerIconBitmap(context: Context, drawableId: Int, color: String?, symbol: String?): Bitmap? {
+    fun getMarkerIconBitmap(context: Context, markerIconDescription: MarkerIconDescription): Bitmap? {
+        val(drawableId, color, symbol) = markerIconDescription
         val bitmapId = drawableId + color.hashCode() + symbol.hashCode()
 
         if (cache[bitmapId] == null) {

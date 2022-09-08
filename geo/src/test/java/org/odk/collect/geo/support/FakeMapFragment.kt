@@ -7,6 +7,7 @@ import org.odk.collect.maps.MapFragment.PointListener
 import org.odk.collect.maps.MapFragment.ReadyListener
 import org.odk.collect.maps.MapPoint
 import org.odk.collect.maps.MarkerDescription
+import org.odk.collect.maps.MarkerIconDescription
 
 class FakeMapFragment : Fragment(), MapFragment {
 
@@ -79,7 +80,7 @@ class FakeMapFragment : Fragment(), MapFragment {
     override fun addMarker(markerDescription: MarkerDescription): Int {
         markers.add(markerDescription.point)
         markerIcons.add(null)
-        markerIcons[markers.size - 1] = markerDescription.iconDrawableId
+        markerIcons[markers.size - 1] = markerDescription.markerIconDescription.iconDrawableId
         return markers.size - 1
     }
 
@@ -89,8 +90,8 @@ class FakeMapFragment : Fragment(), MapFragment {
         }
     }
 
-    override fun setMarkerIcon(featureId: Int, drawableId: Int) {
-        markerIcons[featureId] = drawableId
+    override fun setMarkerIcon(featureId: Int, markerIconDescription: MarkerIconDescription) {
+        markerIcons[featureId] = markerIconDescription.iconDrawableId
     }
 
     override fun getMarkerPoint(featureId: Int): MapPoint {

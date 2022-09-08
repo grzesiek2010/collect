@@ -24,6 +24,7 @@ import android.graphics.Bitmap;
 import android.graphics.Canvas;
 import android.graphics.Color;
 import android.graphics.Paint;
+import android.graphics.drawable.BitmapDrawable;
 import android.graphics.drawable.Drawable;
 import android.location.Location;
 import android.os.Bundle;
@@ -48,6 +49,8 @@ import org.odk.collect.maps.MapFragment;
 import org.odk.collect.maps.MapFragmentDelegate;
 import org.odk.collect.maps.MapPoint;
 import org.odk.collect.maps.MarkerDescription;
+import org.odk.collect.maps.MarkerIconCreator;
+import org.odk.collect.maps.MarkerIconDescription;
 import org.odk.collect.maps.layers.MapFragmentReferenceLayerUtils;
 import org.odk.collect.maps.layers.ReferenceLayerRepository;
 import org.odk.collect.settings.SettingsProvider;
@@ -311,10 +314,10 @@ public class OsmDroidMapFragment extends Fragment implements MapFragment,
     }
 
     @Override
-    public void setMarkerIcon(int featureId, int drawableId) {
+    public void setMarkerIcon(int featureId, MarkerIconDescription markerIconDescription) {
         MapFeature feature = features.get(featureId);
         if (feature instanceof MarkerFeature) {
-            ((MarkerFeature) feature).setIcon(drawableId);
+            ((MarkerFeature) feature).setIcon(markerIconDescription);
         }
     }
 
@@ -587,7 +590,7 @@ public class OsmDroidMapFragment extends Fragment implements MapFragment,
                         map.getController().setCenter(lastMapCenter));
     }
 
-    private Marker createMarker(MapView map, MapPoint point, MapFeature feature, @IconAnchor String iconAnchor, int iconDrawableId) {
+    private Marker createMarker(MapView map, MapPoint point, MapFeature feature, @IconAnchor String iconAnchor, MarkerIconDescription markerIconDescription) {
         // A Marker's position is a GeoPoint with latitude, longitude, and
         // altitude fields.  We need to store the standard deviation value
         // somewhere, so it goes in the marker's sub-description field.
@@ -595,7 +598,7 @@ public class OsmDroidMapFragment extends Fragment implements MapFragment,
         marker.setPosition(toGeoPoint(point));
         marker.setSubDescription(Double.toString(point.sd));
         marker.setDraggable(feature != null);
-        marker.setIcon(ContextCompat.getDrawable(map.getContext(), iconDrawableId));
+        marker.setIcon(new BitmapDrawable(getResources(), MarkerIconCreator.getMarkerIconBitmap(requireContext(), markerIconDescription)));
         marker.setAnchor(getIconAnchorValueX(iconAnchor), getIconAnchorValueY(iconAnchor));
         marker.setOnMarkerClickListener((clickedMarker, mapView) -> {
             int featureId = findFeature(clickedMarker);
@@ -747,11 +750,11 @@ public class OsmDroidMapFragment extends Fragment implements MapFragment,
 
         MarkerFeature(MapView map, MarkerDescription markerDescription) {
             this.map = map;
-            this.marker = createMarker(map, markerDescription.getPoint(), markerDescription.isDraggable() ? this : null, markerDescription.getIconAnchor(), markerDescription.getIconDrawableId());
+            this.marker = createMarker(map, markerDescription.getPoint(), markerDescription.isDraggable() ? this : null, markerDescription.getIconAnchor(), markerDescription.getMarkerIconDescription());
         }
 
-        public void setIcon(int drawableId) {
-            marker.setIcon(ContextCompat.getDrawable(map.getContext(), drawableId));
+        public void setIcon(MarkerIconDescription markerIconDescription) {
+            marker.setIcon(new BitmapDrawable(getResources(), MarkerIconCreator.getMarkerIconBitmap(requireContext(), markerIconDescription)));
         }
 
         public MapPoint getPoint() {
@@ -802,7 +805,7 @@ public class OsmDroidMapFragment extends Fragment implements MapFragment,
             paint.setStrokeWidth(STROKE_WIDTH);
             map.getOverlays().add(polyline);
             for (MapPoint point : points) {
-                markers.add(createMarker(map, point, this, CENTER, R.drawable.ic_map_point));
+                markers.add(createMarker(map, point, this, CENTER, new MarkerIconDescription(R.drawable.ic_map_point, null, null)));
             }
             update();
         }
@@ -844,7 +847,7 @@ public class OsmDroidMapFragment extends Fragment implements MapFragment,
         }
 
         public void addPoint(MapPoint point) {
-            markers.add(createMarker(map, point, this, CENTER, R.drawable.ic_map_point));
+            markers.add(createMarker(map, point, this, CENTER, new MarkerIconDescription(R.drawable.ic_map_point, null, null)));
             update();
         }
 
