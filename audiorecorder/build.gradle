@@ -1,9 +1,12 @@
 import dependencies.Dependencies
 import dependencies.Versions
 
-apply plugin: 'com.android.library'
-apply plugin: 'kotlin-android'
-apply plugin: 'kotlin-kapt'
+plugins {
+    id 'com.android.library'
+    id 'kotlin-android'
+    id 'kotlin-kapt'
+    id 'com.google.dagger.hilt.android'
+}
 
 apply from: '../config/quality.gradle'
 
@@ -52,6 +55,10 @@ dependencies {
     kapt Dependencies.dagger_compiler
     implementation Dependencies.timber
 
+    // Dagger Hilt
+    implementation Dependencies.dagger_hilt_android
+    kapt Dependencies.dagger_hilt_compiler
+
     testImplementation project(path: ':androidtest')
     testImplementation project(path: ':testshared')
     testImplementation project(path: ':servicetest')
@@ -63,4 +70,11 @@ dependencies {
     testImplementation Dependencies.androidx_arch_core_testing
     testImplementation Dependencies.mockito_core
     testImplementation Dependencies.hamcrest
+
+    testImplementation("com.google.dagger:hilt-android-testing:2.44")
+    kaptTest("com.google.dagger:hilt-android-compiler:2.44")
+}
+
+kapt {
+    correctErrorTypes = true
 }

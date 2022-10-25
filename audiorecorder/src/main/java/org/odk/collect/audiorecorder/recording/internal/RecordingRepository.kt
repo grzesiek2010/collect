@@ -8,7 +8,7 @@ import org.odk.collect.audiorecorder.recording.RecordingSession
 import java.io.File
 import java.io.Serializable
 
-internal class RecordingRepository(appState: AppState) {
+class RecordingRepository(appState: AppState) {
 
     private val _failedToStart =
         appState.get("failedToStart", MutableLiveData<Consumable<Exception?>>(Consumable(null)))

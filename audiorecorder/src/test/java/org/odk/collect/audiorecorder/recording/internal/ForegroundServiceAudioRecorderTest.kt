@@ -1,21 +1,19 @@
 package org.odk.collect.audiorecorder.recording.internal
 
-import android.app.Application
 import androidx.arch.core.executor.testing.InstantTaskExecutorRule
 import androidx.test.core.app.ApplicationProvider.getApplicationContext
 import androidx.test.ext.junit.runners.AndroidJUnit4
+import dagger.hilt.android.testing.BindValue
+import dagger.hilt.android.testing.HiltAndroidTest
+import dagger.hilt.android.testing.UninstallModules
 import org.hamcrest.MatcherAssert.assertThat
 import org.hamcrest.Matchers.equalTo
 import org.junit.After
-import org.junit.Before
 import org.junit.Rule
 import org.junit.Test
 import org.junit.runner.RunWith
 import org.odk.collect.androidshared.data.Consumable
-import org.odk.collect.async.Scheduler
-import org.odk.collect.audiorecorder.AudioRecorderDependencyModule
 import org.odk.collect.audiorecorder.recorder.Output
-import org.odk.collect.audiorecorder.recorder.Recorder
 import org.odk.collect.audiorecorder.recording.AudioRecorder
 import org.odk.collect.audiorecorder.recording.AudioRecorderFactory
 import org.odk.collect.audiorecorder.recording.AudioRecorderTest
@@ -25,16 +23,21 @@ import org.odk.collect.audiorecorder.testsupport.RobolectricApplication
 import org.odk.collect.testshared.FakeScheduler
 import org.odk.collect.testshared.RobolectricHelpers
 import java.io.File
+import org.odk.collect.audiorecorder.DaggerHiltModule
 
 @RunWith(AndroidJUnit4::class)
+@UninstallModules(DaggerHiltModule::class)
+@HiltAndroidTest
 class ForegroundServiceAudioRecorderTest : AudioRecorderTest() {
 
     @get:Rule
     val instantTaskExecutor = InstantTaskExecutorRule()
     private val application by lazy { getApplicationContext<RobolectricApplication>() }
 
-    private val fakeRecorder = FakeRecorder()
-    private val scheduler = FakeScheduler()
+    @BindValue
+    val fakeRecorder = FakeRecorder()
+    @BindValue
+    val scheduler = FakeScheduler()
 
     override val viewModel: AudioRecorder by lazy {
         AudioRecorderFactory(application).create()
@@ -46,21 +49,6 @@ class ForegroundServiceAudioRecorderTest : AudioRecorderTest() {
 
     override fun getLastRecordedFile(): File? {
         return fakeRecorder.file
-    }
-
-    @Before
-    fun setup() {
-        application.setupDependencies(
-            object : AudioRecorderDependencyModule() {
-                override fun providesRecorder(cacheDir: File): Recorder {
-                    return fakeRecorder
-                }
-
-                override fun providesScheduler(application: Application): Scheduler {
-                    return scheduler
-                }
-            }
-        )
     }
 
     @After

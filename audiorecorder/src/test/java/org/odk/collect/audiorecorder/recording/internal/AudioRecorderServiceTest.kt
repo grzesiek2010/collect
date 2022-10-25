@@ -1,22 +1,20 @@
 package org.odk.collect.audiorecorder.recording.internal
 
-import android.app.Application
 import android.content.Intent
 import androidx.lifecycle.Lifecycle
 import androidx.test.core.app.ApplicationProvider
+import dagger.hilt.android.testing.BindValue
+import dagger.hilt.android.testing.HiltAndroidTest
+import dagger.hilt.android.testing.UninstallModules
 import org.hamcrest.MatcherAssert.assertThat
 import org.hamcrest.Matchers.equalTo
 import org.hamcrest.Matchers.not
 import org.hamcrest.Matchers.nullValue
-import org.junit.Before
 import org.junit.Test
 import org.junit.runner.RunWith
 import org.odk.collect.androidshared.ui.ReturnToAppActivity
-import org.odk.collect.async.Scheduler
-import org.odk.collect.audiorecorder.AudioRecorderDependencyModule
 import org.odk.collect.audiorecorder.R
 import org.odk.collect.audiorecorder.recorder.Output
-import org.odk.collect.audiorecorder.recorder.Recorder
 import org.odk.collect.audiorecorder.recording.AudioRecorderService
 import org.odk.collect.audiorecorder.support.FakeRecorder
 import org.odk.collect.audiorecorder.testsupport.RobolectricApplication
@@ -25,36 +23,22 @@ import org.odk.collect.testshared.FakeScheduler
 import org.robolectric.Robolectric.buildService
 import org.robolectric.RobolectricTestRunner
 import org.robolectric.Shadows.shadowOf
-import java.io.File
+import org.odk.collect.audiorecorder.DaggerHiltModule
 
 @RunWith(RobolectricTestRunner::class)
+@UninstallModules(DaggerHiltModule::class)
+@HiltAndroidTest
 class AudioRecorderServiceTest {
 
     private val application: RobolectricApplication by lazy { ApplicationProvider.getApplicationContext() }
-    private val recorder = FakeRecorder()
-    private val scheduler = FakeScheduler()
-    private val recordingRepository = RecordingRepository(application.getState())
+    @BindValue
+    val recorder = FakeRecorder()
+    @BindValue
+    val scheduler = FakeScheduler()
+    @BindValue
+    internal val recordingRepository = RecordingRepository(application.getState())
 
     private var serviceInstance: ServiceScenario<AudioRecorderService>? = null
-
-    @Before
-    fun setup() {
-        application.setupDependencies(
-            object : AudioRecorderDependencyModule() {
-                override fun providesRecorder(cacheDir: File): Recorder {
-                    return recorder
-                }
-
-                override fun providesScheduler(application: Application): Scheduler {
-                    return scheduler
-                }
-
-                override fun providesRecordingRepository(application: Application): RecordingRepository {
-                    return recordingRepository
-                }
-            }
-        )
-    }
 
     @Test
     fun startAction_startsInForegroundWithNotification() {

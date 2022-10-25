@@ -1,7 +1,12 @@
-apply plugin: 'com.android.application'
+plugins {
+    id 'com.android.application'
+    id 'kotlin-android'
+    id 'kotlin-kapt'
+    id 'com.google.dagger.hilt.android'
+}
+
 apply from: '../config/quality.gradle'
 apply from: '../config/jacoco.gradle'
-apply plugin: 'kotlin-android'
 
 import com.android.ddmlib.DdmPreferences
 import dependencies.Dependencies
@@ -342,6 +347,10 @@ dependencies {
     implementation Dependencies.dagger
     annotationProcessor Dependencies.dagger_compiler
 
+    // Dagger Hilt
+    implementation Dependencies.dagger_hilt_android
+    annotationProcessor Dependencies.dagger_hilt_compiler
+
     // Needed for injection into Robolectric tests
     testAnnotationProcessor Dependencies.dagger_compiler
 
@@ -408,6 +417,10 @@ dependencies {
 
     // Real LeakCanary for debug builds only: notifications, analysis, etc
     debugImplementation Dependencies.leakcanary
+}
+
+kapt {
+    correctErrorTypes = true
 }
 
 // Must be at bottom to prevent dependency collisions
