@@ -259,6 +259,7 @@ dependencies {
     implementation project(':errors')
     implementation project(':upgrade')
     implementation project(':permissions')
+    implementation project(':hilttest')
     implementation(project(':settings')) {
         exclude group: 'joda-time'
     }

@@ -41,6 +41,7 @@ import org.odk.collect.android.utilities.ApplicationConstants;
 import org.odk.collect.android.utilities.PlayServicesChecker;
 import org.odk.collect.android.utilities.ThemeUtils;
 import org.odk.collect.androidshared.ui.multiclicksafe.MultiClickGuard;
+import org.odk.collect.hilttest.HiltTestActivity;
 import org.odk.collect.settings.SettingsProvider;
 import org.odk.collect.settings.keys.MetaKeys;
 import org.odk.collect.settings.keys.ProjectKeys;
@@ -97,7 +98,7 @@ public class MainMenuActivity extends CollectAbstractActivity {
 
         Button enterDataButtonNew = findViewById(R.id.enter_data);
         enterDataButtonNew.setOnClickListener(v -> {
-            Intent intent = new Intent(this, BlankFormListActivity.class);
+            Intent intent = new Intent(this, HiltTestActivity.class);
             startActivity(intent);
         });
 
