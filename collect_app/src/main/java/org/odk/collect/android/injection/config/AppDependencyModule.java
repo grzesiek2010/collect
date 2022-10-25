@@ -153,6 +153,8 @@ import javax.inject.Singleton;
 
 import dagger.Module;
 import dagger.Provides;
+import dagger.hilt.InstallIn;
+import dagger.hilt.components.SingletonComponent;
 import okhttp3.OkHttpClient;
 
 /**
@@ -160,6 +162,7 @@ import okhttp3.OkHttpClient;
  * for objects you need to inject
  */
 @Module
+@InstallIn(SingletonComponent.class)
 @SuppressWarnings("PMD.CouplingBetweenObjects")
 public class AppDependencyModule {
 

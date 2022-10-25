@@ -68,7 +68,10 @@ import java.util.Locale;
 
 import javax.inject.Inject;
 
+import dagger.hilt.android.HiltAndroidApp;
+
 @SuppressWarnings("PMD.CouplingBetweenObjects")
+@HiltAndroidApp
 public class Collect extends Application implements
         LocalizedApplication,
         AudioRecorderDependencyComponentProvider,

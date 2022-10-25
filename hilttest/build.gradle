@@ -5,6 +5,7 @@ plugins {
     id 'com.android.library'
     id 'kotlin-android'
     id 'kotlin-kapt'
+    id 'com.google.dagger.hilt.android'
 }
 
 apply from: '../config/quality.gradle'
@@ -49,9 +50,27 @@ android {
 }
 
 dependencies {
+    implementation 'androidx.test:runner:1.4.0'
     coreLibraryDesugaring Dependencies.desugar
 
     implementation Dependencies.kotlin_stdlib
-    implementation Dependencies.androidx_annotations
     implementation Dependencies.androidx_preference_ktx
+    implementation Dependencies.androidx_lifecycle_viewmodel_ktx
+    implementation Dependencies.android_material
+    implementation Dependencies.dagger_hilt_android
+    kapt Dependencies.dagger_hilt_compiler
+
+    testImplementation Dependencies.junit
+    testImplementation Dependencies.robolectric
+    testImplementation Dependencies.androidx_test_ext_junit
+    testImplementation Dependencies.androidx_test_core_ktx
+    testImplementation Dependencies.mockito_kotlin
+    testImplementation Dependencies.mockito_inline
+
+    testImplementation 'com.google.dagger:hilt-android-testing:2.44'
+    kaptTest 'com.google.dagger:hilt-android-compiler:2.44'
+}
+
+kapt {
+    correctErrorTypes true
 }

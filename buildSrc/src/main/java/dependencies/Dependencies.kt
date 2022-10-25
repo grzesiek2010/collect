@@ -67,6 +67,8 @@ object Dependencies {
     const val emoji_java = "com.vdurmont:emoji-java:5.1.1"
     const val json_schema_validator = "com.networknt:json-schema-validator:1.0.72"
     const val splashscreen = "androidx.core:core-splashscreen:1.0.0-rc01"
+    const val dagger_hilt_android = "com.google.dagger:hilt-android:2.44"
+    const val dagger_hilt_compiler = "com.google.dagger:hilt-compiler:2.44"
 
     // Test dependencies
     const val junit = "junit:junit:4.13.2"

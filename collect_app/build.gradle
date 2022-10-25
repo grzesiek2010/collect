@@ -1,3 +1,8 @@
+plugins {
+    id 'kotlin-kapt'
+    id 'com.google.dagger.hilt.android'
+}
+
 apply plugin: 'com.android.application'
 apply from: '../config/quality.gradle'
 apply from: '../config/jacoco.gradle'
@@ -350,6 +355,9 @@ dependencies {
     implementation Dependencies.dagger_android
     annotationProcessor Dependencies.dagger_android_processor
 
+    implementation Dependencies.dagger_hilt_android
+    kapt Dependencies.dagger_hilt_compiler
+
     implementation Dependencies.armen101_audio_recorder_view
 
     implementation(Dependencies.mp4parser_muxer) {
@@ -409,6 +417,10 @@ dependencies {
 
     // Real LeakCanary for debug builds only: notifications, analysis, etc
     debugImplementation Dependencies.leakcanary
+}
+
+kapt {
+    correctErrorTypes true
 }
 
 // Must be at bottom to prevent dependency collisions

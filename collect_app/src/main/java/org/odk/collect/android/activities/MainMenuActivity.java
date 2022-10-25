@@ -98,6 +98,12 @@ public class MainMenuActivity extends CollectAbstractActivity {
 
         Button enterDataButtonNew = findViewById(R.id.enter_data);
         enterDataButtonNew.setOnClickListener(v -> {
+            Intent intent = new Intent(this, BlankFormListActivity.class);
+            startActivity(intent);
+        });
+
+        Button testHiltButton = findViewById(R.id.test_hilt_button);
+        testHiltButton.setOnClickListener(v -> {
             Intent intent = new Intent(this, HiltTestActivity.class);
             startActivity(intent);
         });

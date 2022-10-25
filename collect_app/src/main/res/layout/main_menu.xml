@@ -110,6 +110,18 @@
                     android:layout_marginEnd="@dimen/margin_standard"
                     tools:text="@string/manage_files" />
 
+                <org.odk.collect.androidshared.ui.multiclicksafe.MultiClickSafeButton
+                    android:id="@+id/test_hilt_button"
+                    style="@style/Widget.Collect.Button.FullWidth"
+                    android:backgroundTint="@color/surfaceButtonColor"
+                    android:textColor="?colorOnSurface"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="@dimen/margin_extra_small"
+                    android:layout_marginStart="@dimen/margin_standard"
+                    android:layout_marginEnd="@dimen/margin_standard"
+                    android:text="Test Hilt" />
+
                 <TextView
                     android:id="@+id/app_name"
                     android:textAppearance="?textAppearanceBody1"

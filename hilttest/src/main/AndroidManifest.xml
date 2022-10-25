@@ -4,10 +4,8 @@
     <application>
         <activity
             android:name=".HiltTestActivity"
+            android:theme="@style/Theme.MaterialComponents"
             android:exported="false">
-            <meta-data
-                android:name="android.app.lib_name"
-                android:value="" />
         </activity>
     </application>
 
