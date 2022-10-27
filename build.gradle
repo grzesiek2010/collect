@@ -23,6 +23,7 @@ buildscript {
 plugins {
     // Plugin for detecting outdated dependencies. Run './gradlew dependencyUpdates' to generate a report.
     id 'com.github.ben-manes.versions' version '0.43.0'
+    id 'com.google.dagger.hilt.android' version '2.44' apply false
 }
 
 apply from: 'secrets.gradle'
