@@ -48,6 +48,8 @@ object Dependencies {
     const val dagger_compiler = "com.google.dagger:dagger-compiler:${Versions.dagger}"
     const val dagger_android = "com.google.dagger:dagger-android:${Versions.dagger}"
     const val dagger_android_processor = "com.google.dagger:dagger-android-processor:${Versions.dagger}"
+    const val dagger_hilt = "com.google.dagger:hilt-android:${Versions.dagger_hilt}"
+    const val dagger_hilt_compiler = "com.google.dagger:hilt-compiler:${Versions.dagger_hilt}"
     const val kotlinx_coroutines_android = "org.jetbrains.kotlinx:kotlinx-coroutines-android:1.6.4"
     const val armen101_audio_recorder_view = "com.github.Armen101:AudioRecordView:1.0.5"
     const val glide = "com.github.bumptech.glide:glide:${Versions.glide}"

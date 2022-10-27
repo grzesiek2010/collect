@@ -7,6 +7,7 @@ object Versions {
 
     const val androidx_fragment = "1.5.3"
     const val dagger = "2.42"
+    const val dagger_hilt = "2.44"
     const val espresso = "3.5.0-beta01"
     const val glide = "4.13.2"
     const val mockito = "4.6.1"
