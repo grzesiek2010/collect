@@ -66,6 +66,8 @@ dependencies {
     testImplementation Dependencies.androidx_arch_core_testing
     testImplementation Dependencies.mockito_core
     testImplementation Dependencies.hamcrest
+    testImplementation Dependencies.dagger_hilt_android_testing
+    kaptTest Dependencies.dagger_hilt_android_compiler
 }
 
 kapt {
