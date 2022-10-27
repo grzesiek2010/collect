@@ -6,6 +6,8 @@ import dagger.BindsInstance
 import dagger.Component
 import dagger.Module
 import dagger.Provides
+import dagger.hilt.InstallIn
+import dagger.hilt.android.components.ServiceComponent
 import kotlinx.coroutines.Dispatchers
 import org.odk.collect.androidshared.data.getState
 import org.odk.collect.async.CoroutineScheduler
@@ -53,6 +55,7 @@ interface AudioRecorderDependencyComponent {
 }
 
 @Module
+@InstallIn(ServiceComponent::class)
 open class AudioRecorderDependencyModule {
 
     @Provides
