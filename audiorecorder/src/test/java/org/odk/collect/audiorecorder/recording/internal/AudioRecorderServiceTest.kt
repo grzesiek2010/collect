@@ -1,59 +1,62 @@
 package org.odk.collect.audiorecorder.recording.internal
 
 import android.app.Application
+import android.content.Context
 import android.content.Intent
 import androidx.lifecycle.Lifecycle
 import androidx.test.core.app.ApplicationProvider
+import dagger.Module
+import dagger.Provides
+import dagger.hilt.InstallIn
+import dagger.hilt.android.components.ServiceComponent
+import dagger.hilt.android.qualifiers.ApplicationContext
+import dagger.hilt.android.testing.HiltAndroidRule
+import dagger.hilt.android.testing.HiltAndroidTest
+import dagger.hilt.android.testing.HiltTestApplication
+import dagger.hilt.android.testing.UninstallModules
+import java.io.File
 import org.hamcrest.MatcherAssert.assertThat
 import org.hamcrest.Matchers.equalTo
 import org.hamcrest.Matchers.not
 import org.hamcrest.Matchers.nullValue
 import org.junit.Before
+import org.junit.Rule
 import org.junit.Test
 import org.junit.runner.RunWith
 import org.odk.collect.androidshared.ui.ReturnToAppActivity
-import org.odk.collect.async.Scheduler
-import org.odk.collect.audiorecorder.AudioRecorderDependencyModule
 import org.odk.collect.audiorecorder.R
 import org.odk.collect.audiorecorder.recorder.Output
-import org.odk.collect.audiorecorder.recorder.Recorder
 import org.odk.collect.audiorecorder.recording.AudioRecorderService
 import org.odk.collect.audiorecorder.support.FakeRecorder
-import org.odk.collect.audiorecorder.testsupport.RobolectricApplication
 import org.odk.collect.servicetest.ServiceScenario
 import org.odk.collect.testshared.FakeScheduler
 import org.robolectric.Robolectric.buildService
 import org.robolectric.RobolectricTestRunner
 import org.robolectric.Shadows.shadowOf
-import java.io.File
+import org.odk.collect.androidshared.data.AppState
+import org.odk.collect.async.Scheduler
+import org.odk.collect.audiorecorder.AudioRecorderDependencyModule
+import org.odk.collect.audiorecorder.recorder.Recorder
+import org.robolectric.annotation.Config
 
 @RunWith(RobolectricTestRunner::class)
+@UninstallModules(AudioRecorderDependencyModule::class)
+@Config(application = HiltTestApplication::class)
+@HiltAndroidTest
 class AudioRecorderServiceTest {
 
-    private val application: RobolectricApplication by lazy { ApplicationProvider.getApplicationContext() }
-    private val recorder = FakeRecorder()
-    private val scheduler = FakeScheduler()
-    private val recordingRepository = RecordingRepository(application.getState())
+    @get:Rule
+    var hiltRule = HiltAndroidRule(this)
+
+    private val application by lazy { ApplicationProvider.getApplicationContext<Application>() }
 
     private var serviceInstance: ServiceScenario<AudioRecorderService>? = null
 
     @Before
     fun setup() {
-        application.setupDependencies(
-            object : AudioRecorderDependencyModule() {
-                override fun providesRecorder(cacheDir: File): Recorder {
-                    return recorder
-                }
-
-                override fun providesScheduler(application: Application): Scheduler {
-                    return scheduler
-                }
-
-                override fun providesRecordingRepository(application: Application): RecordingRepository {
-                    return recordingRepository
-                }
-            }
-        )
+        recorder = FakeRecorder()
+        scheduler = FakeScheduler()
+        recordingRepository = RecordingRepository(AppState())
     }
 
     @Test
@@ -309,6 +312,37 @@ class AudioRecorderServiceTest {
             } else {
                 instance.startWithNewIntent(intent)
             }
+        }
+    }
+
+    companion object {
+        private var recorder = FakeRecorder()
+        private var scheduler = FakeScheduler()
+        private var recordingRepository = RecordingRepository(AppState())
+    }
+
+    @Module
+    @InstallIn(ServiceComponent::class)
+    object TestModule {
+        @Provides
+        fun providesCacheDir(@ApplicationContext application: Context): File {
+            val externalFilesDir = application.getExternalFilesDir(null)
+            return File(externalFilesDir, "recordings").also { it.mkdirs() }
+        }
+
+        @Provides
+        fun providesRecorder(): Recorder {
+            return recorder
+        }
+
+        @Provides
+        fun providesScheduler(): Scheduler {
+            return scheduler
+        }
+
+        @Provides
+        internal fun providesRecordingRepository(): RecordingRepository {
+            return recordingRepository
         }
     }
 }

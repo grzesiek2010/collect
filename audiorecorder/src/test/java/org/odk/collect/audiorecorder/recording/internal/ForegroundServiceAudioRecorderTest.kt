@@ -1,13 +1,22 @@
 package org.odk.collect.audiorecorder.recording.internal
 
 import android.app.Application
+import android.content.Context
 import androidx.arch.core.executor.testing.InstantTaskExecutorRule
 import androidx.test.core.app.ApplicationProvider.getApplicationContext
 import androidx.test.ext.junit.runners.AndroidJUnit4
+import dagger.Module
+import dagger.Provides
+import dagger.hilt.InstallIn
+import dagger.hilt.android.components.ServiceComponent
+import dagger.hilt.android.qualifiers.ApplicationContext
+import dagger.hilt.android.testing.HiltAndroidRule
+import dagger.hilt.android.testing.HiltAndroidTest
+import dagger.hilt.android.testing.HiltTestApplication
+import dagger.hilt.android.testing.UninstallModules
 import org.hamcrest.MatcherAssert.assertThat
 import org.hamcrest.Matchers.equalTo
 import org.junit.After
-import org.junit.Before
 import org.junit.Rule
 import org.junit.Test
 import org.junit.runner.RunWith
@@ -21,20 +30,26 @@ import org.odk.collect.audiorecorder.recording.AudioRecorderFactory
 import org.odk.collect.audiorecorder.recording.AudioRecorderTest
 import org.odk.collect.audiorecorder.recording.MicInUseException
 import org.odk.collect.audiorecorder.support.FakeRecorder
-import org.odk.collect.audiorecorder.testsupport.RobolectricApplication
 import org.odk.collect.testshared.FakeScheduler
 import org.odk.collect.testshared.RobolectricHelpers
 import java.io.File
+import org.junit.Before
+import org.junit.rules.RuleChain
+import org.odk.collect.androidshared.data.AppState
+import org.robolectric.annotation.Config
 
 @RunWith(AndroidJUnit4::class)
+@UninstallModules(AudioRecorderDependencyModule::class)
+@Config(application = HiltTestApplication::class)
+@HiltAndroidTest
 class ForegroundServiceAudioRecorderTest : AudioRecorderTest() {
 
     @get:Rule
-    val instantTaskExecutor = InstantTaskExecutorRule()
-    private val application by lazy { getApplicationContext<RobolectricApplication>() }
+    var rule: RuleChain = RuleChain
+        .outerRule(HiltAndroidRule(this))
+        .around(InstantTaskExecutorRule())
 
-    private val fakeRecorder = FakeRecorder()
-    private val scheduler = FakeScheduler()
+    private val application by lazy { getApplicationContext<Application>() }
 
     override val viewModel: AudioRecorder by lazy {
         AudioRecorderFactory(application).create()
@@ -50,17 +65,8 @@ class ForegroundServiceAudioRecorderTest : AudioRecorderTest() {
 
     @Before
     fun setup() {
-        application.setupDependencies(
-            object : AudioRecorderDependencyModule() {
-                override fun providesRecorder(cacheDir: File): Recorder {
-                    return fakeRecorder
-                }
-
-                override fun providesScheduler(application: Application): Scheduler {
-                    return scheduler
-                }
-            }
-        )
+        fakeRecorder = FakeRecorder()
+        scheduler = FakeScheduler()
     }
 
     @After
@@ -142,5 +148,36 @@ class ForegroundServiceAudioRecorderTest : AudioRecorderTest() {
         runBackground()
 
         assertThat(viewModel.failedToStart().value, equalTo(Consumable(null)))
+    }
+
+    companion object {
+        private var fakeRecorder = FakeRecorder()
+        private var scheduler = FakeScheduler()
+        private var recordingRepository = RecordingRepository(AppState())
+    }
+
+    @Module
+    @InstallIn(ServiceComponent::class)
+    object TestModule {
+        @Provides
+        fun providesCacheDir(@ApplicationContext application: Context): File {
+            val externalFilesDir = application.getExternalFilesDir(null)
+            return File(externalFilesDir, "recordings").also { it.mkdirs() }
+        }
+
+        @Provides
+        fun providesRecorder(): Recorder {
+            return fakeRecorder
+        }
+
+        @Provides
+        fun providesScheduler(): Scheduler {
+            return scheduler
+        }
+
+        @Provides
+        internal fun providesRecordingRepository(): RecordingRepository {
+            return recordingRepository
+        }
     }
 }

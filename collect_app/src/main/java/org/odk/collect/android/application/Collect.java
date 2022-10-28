@@ -40,9 +40,6 @@ import org.odk.collect.androidshared.data.AppState;
 import org.odk.collect.androidshared.data.StateStore;
 import org.odk.collect.androidshared.network.NetworkStateProvider;
 import org.odk.collect.androidshared.system.ExternalFilesUtils;
-import org.odk.collect.audiorecorder.AudioRecorderDependencyComponent;
-import org.odk.collect.audiorecorder.AudioRecorderDependencyComponentProvider;
-import org.odk.collect.audiorecorder.DaggerAudioRecorderDependencyComponent;
 import org.odk.collect.forms.Form;
 import org.odk.collect.geo.DaggerGeoDependencyComponent;
 import org.odk.collect.geo.GeoDependencyComponent;
@@ -74,7 +71,6 @@ import dagger.hilt.android.HiltAndroidApp;
 @HiltAndroidApp
 public class Collect extends Application implements
         LocalizedApplication,
-        AudioRecorderDependencyComponentProvider,
         ProjectsDependencyComponentProvider,
         GeoDependencyComponentProvider,
         OsmDroidDependencyComponentProvider,
@@ -96,7 +92,6 @@ public class Collect extends Application implements
     @Inject
     SettingsProvider settingsProvider;
 
-    private AudioRecorderDependencyComponent audioRecorderDependencyComponent;
     private ProjectsDependencyComponent projectsDependencyComponent;
     private GeoDependencyComponent geoDependencyComponent;
     private OsmDroidDependencyComponent osmDroidDependencyComponent;
@@ -167,10 +162,6 @@ public class Collect extends Application implements
                 .application(this)
                 .build();
 
-        audioRecorderDependencyComponent = DaggerAudioRecorderDependencyComponent.builder()
-                .application(this)
-                .build();
-
         projectsDependencyComponent = DaggerProjectsDependencyComponent.builder()
                 .projectsDependencyModule(new CollectProjectsDependencyModule(applicationComponent.projectsRepository()))
                 .build();
@@ -178,12 +169,6 @@ public class Collect extends Application implements
         mapboxDependencies.addSupplier(SettingsProvider.class, applicationComponent::settingsProvider);
         mapboxDependencies.addSupplier(NetworkStateProvider.class, applicationComponent::networkStateProvider);
         mapboxDependencies.addSupplier(ReferenceLayerRepository.class, applicationComponent::referenceLayerRepository);
-    }
-
-    @NotNull
-    @Override
-    public AudioRecorderDependencyComponent getAudioRecorderDependencyComponent() {
-        return audioRecorderDependencyComponent;
     }
 
     @NotNull

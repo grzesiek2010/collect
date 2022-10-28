@@ -1,20 +1,26 @@
 package org.odk.collect.audiorecorder.recording
 
 import android.app.Application
-import org.odk.collect.audiorecorder.AudioRecorderDependencyComponentProvider
+import dagger.hilt.EntryPoint
+import dagger.hilt.InstallIn
+import dagger.hilt.android.EntryPointAccessors
+import dagger.hilt.android.components.ServiceComponent
+import org.odk.collect.androidshared.data.AppState
 import org.odk.collect.audiorecorder.recording.internal.ForegroundServiceAudioRecorder
 import org.odk.collect.audiorecorder.recording.internal.RecordingRepository
-import javax.inject.Inject
 
 open class AudioRecorderFactory(private val application: Application) {
 
-    @Inject
-    internal lateinit var recordingRepository: RecordingRepository
+//    @EntryPoint
+//    @InstallIn(ServiceComponent::class)
+//    interface AudioRecorderFactoryEntryPoint {
+//        fun providesRecordingRepository(): RecordingRepository
+//    }
 
     open fun create(): AudioRecorder {
-        val provider = application.applicationContext as AudioRecorderDependencyComponentProvider
-        provider.audioRecorderDependencyComponent.inject(this)
+//        val hiltEntryPoint =
+//            EntryPointAccessors.fromApplication(application, AudioRecorderFactoryEntryPoint::class.java)
 
-        return ForegroundServiceAudioRecorder(application, recordingRepository)
+        return ForegroundServiceAudioRecorder(application, RecordingRepository(AppState()))
     }
 }

@@ -3,9 +3,9 @@ package org.odk.collect.audiorecorder.recording
 import android.app.Service
 import android.content.Intent
 import android.os.IBinder
+import dagger.hilt.android.AndroidEntryPoint
 import org.odk.collect.async.Cancellable
 import org.odk.collect.async.Scheduler
-import org.odk.collect.audiorecorder.AudioRecorderDependencyComponentProvider
 import org.odk.collect.audiorecorder.recorder.Output
 import org.odk.collect.audiorecorder.recorder.Recorder
 import org.odk.collect.audiorecorder.recording.internal.RecordingForegroundServiceNotification
@@ -13,6 +13,7 @@ import org.odk.collect.audiorecorder.recording.internal.RecordingRepository
 import java.io.Serializable
 import javax.inject.Inject
 
+@AndroidEntryPoint
 class AudioRecorderService : Service() {
 
     @Inject
@@ -31,8 +32,6 @@ class AudioRecorderService : Service() {
 
     override fun onCreate() {
         super.onCreate()
-        val provider = applicationContext as AudioRecorderDependencyComponentProvider
-        provider.audioRecorderDependencyComponent.inject(this)
 
         notification = RecordingForegroundServiceNotification(this, recordingRepository)
     }
