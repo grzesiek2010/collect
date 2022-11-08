@@ -23,7 +23,6 @@ import org.odk.collect.android.javarosawrapper.FormController;
 import org.odk.collect.android.utilities.DummyFormController;
 import org.odk.collect.android.widgets.support.FakeQuestionMediaManager;
 import org.odk.collect.androidtest.FakeLifecycleOwner;
-import org.odk.collect.audiorecorder.recording.AudioRecorder;
 import org.odk.collect.audiorecorder.recording.RecordingSession;
 
 import java.io.File;
@@ -46,7 +45,7 @@ public class RecordingHandlerTest {
 
     @Before
     public void setup() {
-        recordingHandler = new RecordingHandler(questionMediaManager, new FakeLifecycleOwner(), mock(AudioRecorder.class), amrAppender, m4aAppender);
+        recordingHandler = new RecordingHandler(questionMediaManager, new FakeLifecycleOwner(), amrAppender, m4aAppender);
     }
 
     @Test

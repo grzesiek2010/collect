@@ -65,6 +65,10 @@ class StubAudioRecorder(private val stubRecordingPath: String) : AudioRecorder()
         }
     }
 
+    override fun restart() {
+        TODO("Not yet implemented")
+    }
+
     override fun pause() {
         currentSession.value?.let {
             currentSession.value = it.copy(paused = true)

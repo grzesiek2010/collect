@@ -9,6 +9,7 @@ import org.odk.collect.audiorecorder.recording.AudioRecorder
 import org.odk.collect.audiorecorder.recording.AudioRecorderService
 import org.odk.collect.audiorecorder.recording.AudioRecorderService.Companion.ACTION_CLEAN_UP
 import org.odk.collect.audiorecorder.recording.AudioRecorderService.Companion.ACTION_PAUSE
+import org.odk.collect.audiorecorder.recording.AudioRecorderService.Companion.ACTION_RESTART
 import org.odk.collect.audiorecorder.recording.AudioRecorderService.Companion.ACTION_RESUME
 import org.odk.collect.audiorecorder.recording.AudioRecorderService.Companion.ACTION_START
 import org.odk.collect.audiorecorder.recording.AudioRecorderService.Companion.ACTION_STOP
@@ -38,6 +39,14 @@ internal class ForegroundServiceAudioRecorder internal constructor(private val a
                 action = ACTION_START
                 putExtra(EXTRA_SESSION_ID, sessionId)
                 putExtra(EXTRA_OUTPUT, output)
+            }
+        )
+    }
+
+    override fun restart() {
+        application.startService(
+            Intent(application, AudioRecorderService::class.java).apply {
+                action = ACTION_RESTART
             }
         )
     }

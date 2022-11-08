@@ -9,7 +9,6 @@ import org.odk.collect.android.audio.AudioFileAppender;
 import org.odk.collect.android.exception.JavaRosaException;
 import org.odk.collect.android.javarosawrapper.FormController;
 import org.odk.collect.android.utilities.QuestionMediaManager;
-import org.odk.collect.audiorecorder.recording.AudioRecorder;
 import org.odk.collect.audiorecorder.recording.RecordingSession;
 import org.odk.collect.utilities.Result;
 
@@ -24,14 +23,12 @@ public class RecordingHandler {
 
     private final QuestionMediaManager questionMediaManager;
     private final LifecycleOwner lifecycleOwner;
-    private final AudioRecorder audioRecorder;
     private final AudioFileAppender amrAppender;
     private final AudioFileAppender m4aAppender;
 
-    public RecordingHandler(QuestionMediaManager questionMediaManager, LifecycleOwner lifecycleOwner, AudioRecorder audioRecorder, AudioFileAppender amrAppender, AudioFileAppender m4aAppender) {
+    public RecordingHandler(QuestionMediaManager questionMediaManager, LifecycleOwner lifecycleOwner, AudioFileAppender amrAppender, AudioFileAppender m4aAppender) {
         this.questionMediaManager = questionMediaManager;
         this.lifecycleOwner = lifecycleOwner;
-        this.audioRecorder = audioRecorder;
         this.amrAppender = amrAppender;
         this.m4aAppender = m4aAppender;
     }
@@ -39,8 +36,6 @@ public class RecordingHandler {
     public void handle(FormController formController, RecordingSession session, Consumer<Boolean> onRecordingHandled) {
         questionMediaManager.createAnswerFile(session.getFile()).observe(lifecycleOwner, result -> {
             if (result != null && result.isSuccess()) {
-                audioRecorder.cleanUp();
-
                 try {
                     if (session.getId() instanceof FormIndex) {
                         handleForegroundRecording(formController, session, result);

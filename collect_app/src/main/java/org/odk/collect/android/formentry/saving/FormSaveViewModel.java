@@ -129,6 +129,9 @@ public class FormSaveViewModel extends ViewModel implements MaterialProgressDial
         } else {
             this.saveResult.setValue(new SaveResult(SaveResult.State.SAVING, saveRequest));
             saveToDisk(saveRequest);
+            if (audioRecorder.isRecording()) {
+                audioRecorder.restart();
+            }
         }
     }
 
