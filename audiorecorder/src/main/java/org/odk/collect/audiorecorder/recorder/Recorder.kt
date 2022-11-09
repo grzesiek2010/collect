@@ -8,6 +8,7 @@ interface Recorder {
 
     @Throws(SetupException::class, MicInUseException::class)
     fun start(output: Output)
+    fun restart(output: Output): File
     fun pause()
     fun resume()
     fun stop(): File

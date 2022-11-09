@@ -47,6 +47,13 @@ internal class RecordingResourceRecorder(private val cacheDir: File, private val
         }
     }
 
+    override fun restart(output: Output): File {
+        val file = stop()
+        start(output)
+        return file
+    }
+
+
     override fun pause() {
         recordingResource?.pause()
     }

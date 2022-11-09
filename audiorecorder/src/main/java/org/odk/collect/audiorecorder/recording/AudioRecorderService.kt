@@ -49,11 +49,9 @@ class AudioRecorderService : Service() {
             }
 
             ACTION_RESTART -> {
-                val file = recorder.stop()
-                recordingRepository.recordingReady(file)
-
                 try {
-                    recorder.start(lastUsedOutput)
+                    val file = recorder.restart(lastUsedOutput)
+                    recordingRepository.recordingReady(file)
                     recordingRepository.restart()
                 } catch (e: Exception) {
                     notification.dismiss()

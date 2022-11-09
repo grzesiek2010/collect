@@ -39,7 +39,7 @@ public class RecordingHandler {
     public void handle(FormController formController, RecordingSession session, Consumer<Boolean> onRecordingHandled) {
         questionMediaManager.createAnswerFile(session.getFile()).observe(lifecycleOwner, result -> {
             if (result != null && result.isSuccess()) {
-                audioRecorder.cleanUp();
+                //audioRecorder.cleanUp();
 
                 try {
                     if (session.getId() instanceof FormIndex) {

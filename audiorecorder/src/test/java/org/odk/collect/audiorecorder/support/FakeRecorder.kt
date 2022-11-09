@@ -52,6 +52,12 @@ class FakeRecorder : Recorder {
         }
     }
 
+    override fun restart(output: Output): File {
+        val file = stop()
+        start(output)
+        return file
+    }
+
     override fun pause() {
         _paused = true
     }
