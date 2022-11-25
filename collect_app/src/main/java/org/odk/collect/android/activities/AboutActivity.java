@@ -25,6 +25,9 @@ import androidx.recyclerview.widget.DefaultItemAnimator;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.google.android.gms.oss.licenses.OssLicensesMenuActivity;
+import com.mikepenz.aboutlibraries.LibsBuilder;
+
 import org.odk.collect.android.R;
 import org.odk.collect.android.adapters.AboutListAdapter;
 import org.odk.collect.android.injection.DaggerUtils;
@@ -61,6 +64,7 @@ public class AboutActivity extends CollectAbstractActivity implements
                 {R.drawable.ic_outline_forum_24, R.string.odk_forum, R.string.odk_forum_summary},
                 {R.drawable.ic_outline_share_24, R.string.tell_your_friends, R.string.tell_your_friends_msg},
                 {R.drawable.ic_outline_rate_review_24, R.string.leave_a_review, R.string.leave_a_review_msg},
+                {R.drawable.ic_outline_stars_24, R.string.all_open_source_licenses, R.string.all_open_source_licenses_msg},
                 {R.drawable.ic_outline_stars_24, R.string.all_open_source_licenses, R.string.all_open_source_licenses_msg}
         };
 
@@ -112,9 +116,10 @@ public class AboutActivity extends CollectAbstractActivity implements
                     });
                     break;
                 case 4:
-                    intent = new Intent(this, WebViewActivity.class);
-                    intent.putExtra(ExternalWebPageHelper.OPEN_URL, LICENSES_HTML_PATH);
-                    startActivity(intent);
+                    new LibsBuilder().start(this);
+                    break;
+                case 5:
+                    startActivity(new Intent(this, OssLicensesMenuActivity.class));
                     break;
             }
         }

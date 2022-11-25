@@ -24,6 +24,8 @@ buildscript {
         classpath "org.jlleitschuh.gradle:ktlint-gradle:10.1.0"
         classpath "com.github.ben-manes:gradle-versions-plugin:0.42.0"
         classpath "androidx.navigation:navigation-safe-args-gradle-plugin:2.5.1"
+        classpath "com.mikepenz.aboutlibraries.plugin:aboutlibraries-plugin:8.9.4"
+        classpath("com.google.android.gms:oss-licenses-plugin:0.10.5")
     }
 }
 

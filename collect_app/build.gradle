@@ -2,6 +2,8 @@ apply plugin: 'com.android.application'
 apply from: '../config/quality.gradle'
 apply from: '../config/jacoco.gradle'
 apply plugin: 'kotlin-android'
+apply plugin: 'com.mikepenz.aboutlibraries.plugin'
+apply plugin: "com.google.android.gms.oss-licenses-plugin"
 
 import com.android.ddmlib.DdmPreferences
 import dependencies.Dependencies
@@ -279,6 +281,7 @@ dependencies {
     implementation Dependencies.androidx_work_runtime
 
     implementation Dependencies.androidx_cardview
+    implementation Dependencies.androidx_recyclerview
     implementation Dependencies.androidx_exinterface
     implementation Dependencies.androidx_multidex
     implementation Dependencies.androidx_preference_ktx
@@ -357,6 +360,9 @@ dependencies {
     }
 
     implementation Dependencies.splashscreen
+    implementation "com.mikepenz:aboutlibraries-core:8.9.4"
+    implementation "com.mikepenz:aboutlibraries:8.9.4"
+    implementation("com.google.android.gms:play-services-oss-licenses:17.0.0")
 
     testImplementation project(':formstest')
 
