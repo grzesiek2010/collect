@@ -16,15 +16,17 @@
 package org.odk.collect.selfiecamera
 
 import android.Manifest
+import android.net.Uri
 import android.os.Bundle
 import android.view.View
 import androidx.core.view.WindowCompat
 import androidx.core.view.WindowInsetsCompat
+import java.io.File
+import javax.inject.Inject
 import org.odk.collect.androidshared.ui.ToastUtils.showLongToast
 import org.odk.collect.externalapp.ExternalAppUtils
 import org.odk.collect.permissions.PermissionsChecker
 import org.odk.collect.strings.localization.LocalizedActivity
-import javax.inject.Inject
 
 class CaptureSelfieActivity : LocalizedActivity() {
 
@@ -73,7 +75,7 @@ class CaptureSelfieActivity : LocalizedActivity() {
                 if (!camera.isRecording()) {
                     camera.startVideo(
                         videoPath,
-                        { ExternalAppUtils.returnSingleValue(this, videoPath) },
+                        { ExternalAppUtils.returnData(this, Uri.fromFile(File(videoPath))) },
                         { showLongToast(this, R.string.camera_error) }
                     )
 
@@ -89,7 +91,7 @@ class CaptureSelfieActivity : LocalizedActivity() {
             previewView.setOnClickListener {
                 camera.takePicture(
                     imagePath,
-                    { ExternalAppUtils.returnSingleValue(this, imagePath) },
+                    { ExternalAppUtils.returnData(this, Uri.fromFile(File(imagePath))) },
                     { showLongToast(this, R.string.camera_error) }
                 )
             }

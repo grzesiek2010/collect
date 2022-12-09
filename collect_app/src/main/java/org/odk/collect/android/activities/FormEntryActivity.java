@@ -888,6 +888,7 @@ public class FormEntryActivity extends CollectAbstractActivity implements Animat
             case RequestCodes.VIDEO_CAPTURE:
             case RequestCodes.VIDEO_CHOOSER:
             case RequestCodes.IMAGE_CHOOSER:
+            case RequestCodes.MEDIA_FILE_PATH:
                 loadMedia(intent.getData());
                 break;
             case RequestCodes.LOCATION_CAPTURE:
@@ -899,9 +900,6 @@ public class FormEntryActivity extends CollectAbstractActivity implements Animat
             case RequestCodes.EX_INT_CAPTURE:
             case RequestCodes.EX_DECIMAL_CAPTURE:
                 setWidgetData(ExternalAppUtils.getReturnedSingleValue(intent));
-                break;
-            case RequestCodes.MEDIA_FILE_PATH:
-                loadMedia(Uri.fromFile(new File((String) ExternalAppUtils.getReturnedSingleValue(intent))));
                 break;
         }
     }
