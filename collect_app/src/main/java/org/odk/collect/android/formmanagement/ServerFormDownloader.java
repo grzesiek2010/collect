@@ -35,13 +35,15 @@ public class ServerFormDownloader implements FormDownloader {
     private final File cacheDir;
     private final String formsDirPath;
     private final FormMetadataParser formMetadataParser;
+    private final Supplier<Long> clock;
 
-    public ServerFormDownloader(FormSource formSource, FormsRepository formsRepository, File cacheDir, String formsDirPath, FormMetadataParser formMetadataParser) {
+    public ServerFormDownloader(FormSource formSource, FormsRepository formsRepository, File cacheDir, String formsDirPath, FormMetadataParser formMetadataParser, Supplier<Long> clock) {
         this.formSource = formSource;
         this.cacheDir = cacheDir;
         this.formsDirPath = formsDirPath;
         this.formsRepository = formsRepository;
         this.formMetadataParser = formMetadataParser;
+        this.clock = clock;
     }
 
     @Override
@@ -86,6 +88,7 @@ public class ServerFormDownloader implements FormDownloader {
         // use a temporary media path until everything is ok.
         String tempMediaPath = new File(tempDir, "media").getAbsolutePath();
         FileResult fileResult = null;
+        boolean newAttachmentsDetected = false;
 
         try {
             // get the xml file
@@ -95,7 +98,7 @@ public class ServerFormDownloader implements FormDownloader {
             // download media files if there are any
             if (fd.getManifest() != null && !fd.getManifest().getMediaFiles().isEmpty()) {
                 FormMediaDownloader mediaDownloader = new FormMediaDownloader(formsRepository, formSource);
-                mediaDownloader.download(fd, fd.getManifest().getMediaFiles(), tempMediaPath, tempDir, stateListener);
+                newAttachmentsDetected = mediaDownloader.download(fd, fd.getManifest().getMediaFiles(), tempMediaPath, tempDir, stateListener);
             }
         } catch (FormDownloadException.DownloadingInterrupted | InterruptedException e) {
             Timber.i(e);
@@ -134,7 +137,7 @@ public class ServerFormDownloader implements FormDownloader {
         }
 
         try {
-            installEverything(tempMediaPath, fileResult, parsedFields, formsDirPath);
+            installEverything(tempMediaPath, fileResult, parsedFields, formsDirPath, newAttachmentsDetected);
         } catch (FormDownloadException.DiskError e) {
             cleanUp(fileResult, tempMediaPath);
             throw e;
@@ -146,7 +149,7 @@ public class ServerFormDownloader implements FormDownloader {
         return submission == null || Validator.isUrlValid(submission);
     }
 
-    private void installEverything(String tempMediaPath, FileResult fileResult, Map<String, String> parsedFields, String formsDirPath) throws FormDownloadException.DiskError {
+    private void installEverything(String tempMediaPath, FileResult fileResult, Map<String, String> parsedFields, String formsDirPath, boolean newAttachmentsDetected) throws FormDownloadException.DiskError {
         FormResult formResult;
 
         File formFile;
@@ -160,7 +163,7 @@ public class ServerFormDownloader implements FormDownloader {
         }
 
         // Save form in database
-        formResult = findOrCreateForm(formFile, parsedFields);
+        formResult = findOrCreateForm(formFile, parsedFields, newAttachmentsDetected);
 
         // move the media files in the media folder
         if (tempMediaPath != null) {
@@ -197,7 +200,7 @@ public class ServerFormDownloader implements FormDownloader {
         }
     }
 
-    private FormResult findOrCreateForm(File formFile, Map<String, String> formInfo) {
+    private FormResult findOrCreateForm(File formFile, Map<String, String> formInfo, boolean newAttachmentsDetected) {
         final String formFilePath = formFile.getAbsolutePath();
         String mediaPath = FileUtils.constructMediaPath(formFilePath);
 
@@ -205,9 +208,10 @@ public class ServerFormDownloader implements FormDownloader {
 
         if (existingForm == null) {
             Form newForm = saveNewForm(formInfo, formFile, mediaPath);
-            return new FormResult(newForm, true);
+            return new FormResult(newForm, true, newAttachmentsDetected);
         } else {
-            return new FormResult(existingForm, false);
+            formsRepository.save(new Form.Builder(existingForm).lastDetectedAttachmentsUpdateDate(clock.get()));
+            return new FormResult(existingForm, false, newAttachmentsDetected);
         }
     }
 
@@ -290,14 +294,20 @@ public class ServerFormDownloader implements FormDownloader {
 
         private final Form form;
         private final boolean isNew;
+        private final boolean hasNewAttachments;
 
-        private FormResult(Form form, boolean isNew) {
+        private FormResult(Form form, boolean isNew, boolean hasNewAttachments) {
             this.form = form;
             this.isNew = isNew;
+            this.hasNewAttachments = hasNewAttachments;
         }
 
         private boolean isNew() {
             return isNew;
+        }
+
+        private boolean hasNewAttachments() {
+            return hasNewAttachments;
         }
 
         public Form getForm() {
