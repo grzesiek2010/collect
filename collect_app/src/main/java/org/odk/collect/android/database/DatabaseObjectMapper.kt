@@ -33,6 +33,7 @@ object DatabaseObjectMapper {
         values.put(DatabaseFormColumns.AUTO_SEND, form.autoSend)
         values.put(DatabaseFormColumns.AUTO_DELETE, form.autoDelete)
         values.put(DatabaseFormColumns.GEOMETRY_XPATH, form.geometryXpath)
+        values.put(DatabaseFormColumns.LAST_DETECTED_ATTACHMENTS_UPDATE_DATE, form.lastDetectedAttachmentsUpdateDate)
         return values
     }
 
@@ -97,6 +98,7 @@ object DatabaseObjectMapper {
         val autoDeleteColumnIndex = cursor.getColumnIndex(DatabaseFormColumns.AUTO_DELETE)
         val geometryXpathColumnIndex = cursor.getColumnIndex(DatabaseFormColumns.GEOMETRY_XPATH)
         val deletedDateColumnIndex = cursor.getColumnIndex(DatabaseFormColumns.DELETED_DATE)
+        val lastDetectedAttachmentsUpdateDate = cursor.getColumnIndex(DatabaseFormColumns.LAST_DETECTED_ATTACHMENTS_UPDATE_DATE)
         return Form.Builder()
             .dbId(cursor.getLong(idColumnIndex))
             .displayName(cursor.getString(displayNameColumnIndex))
@@ -130,6 +132,7 @@ object DatabaseObjectMapper {
             .autoDelete(cursor.getString(autoDeleteColumnIndex))
             .geometryXpath(cursor.getString(geometryXpathColumnIndex))
             .deleted(!cursor.isNull(deletedDateColumnIndex))
+            .lastDetectedAttachmentsUpdateDate(cursor.getLong(lastDetectedAttachmentsUpdateDate))
             .build()
     }
 
