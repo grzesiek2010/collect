@@ -73,4 +73,7 @@ object ProjectKeys {
     const val BASEMAP_SOURCE_USGS = "usgs"
     const val BASEMAP_SOURCE_STAMEN = "stamen"
     const val BASEMAP_SOURCE_CARTO = "carto"
+
+    const val GD_LEARN_MORE_CLICKED = "gd_lear_more_clicked"
+    const val GD_BANNER_DISMISSED = "gd_banner_dismissed"
 }
