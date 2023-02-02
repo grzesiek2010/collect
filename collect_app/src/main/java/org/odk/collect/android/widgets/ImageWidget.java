@@ -67,7 +67,7 @@ public class ImageWidget extends BaseImageWidget implements ButtonClickListener 
         imageClickHandler = new ViewImageClickHandler();
         imageCaptureHandler = new ImageCaptureHandler();
         setUpLayout();
-        addCurrentImageToLayout();
+        updateAnswer();
         addAnswerView(answerLayout, WidgetViewUtils.getStandardMargin(context));
     }
 

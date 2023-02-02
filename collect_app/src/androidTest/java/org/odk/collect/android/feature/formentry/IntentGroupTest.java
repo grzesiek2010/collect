@@ -25,11 +25,13 @@ import static androidx.test.espresso.intent.matcher.IntentMatchers.isInternal;
 import static androidx.test.espresso.matcher.ViewMatchers.isDisplayed;
 import static androidx.test.espresso.matcher.ViewMatchers.isEnabled;
 import static androidx.test.espresso.matcher.ViewMatchers.withClassName;
+import static androidx.test.espresso.matcher.ViewMatchers.withEffectiveVisibility;
 import static androidx.test.espresso.matcher.ViewMatchers.withId;
 import static androidx.test.espresso.matcher.ViewMatchers.withTagValue;
 import static androidx.test.espresso.matcher.ViewMatchers.withText;
 import static org.hamcrest.CoreMatchers.not;
 import static org.hamcrest.Matchers.is;
+import static org.hamcrest.core.AllOf.allOf;
 import static org.hamcrest.core.StringEndsWith.endsWith;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
@@ -47,6 +49,7 @@ import android.os.Environment;
 
 import androidx.core.content.FileProvider;
 import androidx.test.core.app.ApplicationProvider;
+import androidx.test.espresso.matcher.ViewMatchers;
 
 import org.junit.Rule;
 import org.junit.Test;
@@ -54,9 +57,12 @@ import org.junit.rules.RuleChain;
 import org.odk.collect.android.BuildConfig;
 import org.odk.collect.android.R;
 import org.odk.collect.android.application.Collect;
+import org.odk.collect.android.support.TestDependencies;
 import org.odk.collect.android.support.rules.FormActivityTestRule;
 import org.odk.collect.android.support.rules.TestRuleChain;
 import org.odk.collect.androidtest.RecordedIntentsRule;
+import org.odk.collect.imageloader.ImageLoader;
+import org.odk.collect.testshared.SynchronousImageLoader;
 
 import java.io.File;
 import java.io.IOException;
@@ -70,7 +76,12 @@ public class IntentGroupTest {
     public FormActivityTestRule rule = new FormActivityTestRule(INTENT_GROUP_FORM, "intent-group");
 
     @Rule
-    public RuleChain copyFormChain = TestRuleChain.chain()
+    public RuleChain copyFormChain = TestRuleChain.chain(new TestDependencies() {
+                @Override
+                public ImageLoader providesImageLoader() {
+                    return new SynchronousImageLoader();
+                }
+            })
             .around(new RecordedIntentsRule())
             .around(rule);
 
@@ -204,7 +215,7 @@ public class IntentGroupTest {
     }
 
     private void assertImageWidgetWithoutAnswer() {
-        onView(withTagValue(is("ImageView"))).check(doesNotExist());
+        onView(allOf(withTagValue(is("ImageView")), withEffectiveVisibility(ViewMatchers.Visibility.VISIBLE))).check(doesNotExist());
         onView(withId(R.id.capture_image)).check(doesNotExist());
         onView(withId(R.id.choose_image)).check(doesNotExist());
     }
@@ -223,7 +234,7 @@ public class IntentGroupTest {
     }
 
     private void assertImageWidgetWithAnswer() {
-        onView(withTagValue(is("ImageView"))).perform(nestedScrollTo()).check(matches(isDisplayed()));
+        onView(allOf(withTagValue(is("ImageView")), withEffectiveVisibility(ViewMatchers.Visibility.VISIBLE))).check(matches(not(doesNotExist())));
         onView(withId(R.id.capture_image)).check(doesNotExist());
         onView(withId(R.id.choose_image)).check(doesNotExist());
     }

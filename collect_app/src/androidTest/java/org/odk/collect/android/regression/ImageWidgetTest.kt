@@ -10,6 +10,7 @@ import androidx.test.espresso.intent.Intents.intending
 import androidx.test.espresso.intent.matcher.IntentMatchers
 import androidx.test.espresso.matcher.ViewMatchers.isDisplayed
 import androidx.test.espresso.matcher.ViewMatchers.withTagValue
+import java.io.File
 import org.hamcrest.Matchers.`is`
 import org.hamcrest.Matchers.not
 import org.junit.Rule
@@ -20,17 +21,23 @@ import org.odk.collect.android.R
 import org.odk.collect.android.application.Collect
 import org.odk.collect.android.storage.StoragePathProvider
 import org.odk.collect.android.support.FileUtils
+import org.odk.collect.android.support.TestDependencies
 import org.odk.collect.android.support.rules.CollectTestRule
-import org.odk.collect.android.support.rules.TestRuleChain
+import org.odk.collect.android.support.rules.TestRuleChain.chain
 import org.odk.collect.androidtest.NestedScrollToAction.nestedScrollTo
 import org.odk.collect.androidtest.RecordedIntentsRule
-import java.io.File
+import org.odk.collect.imageloader.ImageLoader
+import org.odk.collect.testshared.SynchronousImageLoader
 
 class ImageWidgetTest {
     var rule = CollectTestRule()
 
     @get:Rule
-    var copyFormChain: RuleChain = TestRuleChain.chain()
+    var copyFormChain: RuleChain = chain(object : TestDependencies() {
+        override fun providesImageLoader(): ImageLoader {
+            return SynchronousImageLoader()
+        }
+    })
         .around(RecordedIntentsRule())
         .around(rule)
 

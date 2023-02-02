@@ -47,7 +47,7 @@ public class SignatureWidget extends BaseImageWidget implements ButtonClickListe
 
         imageClickHandler = new DrawImageClickHandler(DrawActivity.OPTION_SIGNATURE, RequestCodes.SIGNATURE_CAPTURE, R.string.signature_capture);
         setUpLayout();
-        addCurrentImageToLayout();
+        updateAnswer();
         addAnswerView(answerLayout, WidgetViewUtils.getStandardMargin(context));
     }
 

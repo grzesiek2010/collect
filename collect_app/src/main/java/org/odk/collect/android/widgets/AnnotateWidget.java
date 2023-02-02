@@ -67,7 +67,7 @@ public class AnnotateWidget extends BaseImageWidget implements ButtonClickListen
         imageClickHandler = new DrawImageClickHandler(DrawActivity.OPTION_ANNOTATE, RequestCodes.ANNOTATE_IMAGE, R.string.annotate_image);
         imageCaptureHandler = new ImageCaptureHandler();
         setUpLayout();
-        addCurrentImageToLayout();
+        updateAnswer();
         adjustAnnotateButtonAvailability();
         addAnswerView(answerLayout, WidgetViewUtils.getStandardMargin(context));
     }
@@ -141,7 +141,7 @@ public class AnnotateWidget extends BaseImageWidget implements ButtonClickListen
     }
 
     private void adjustAnnotateButtonAvailability() {
-        if (binaryName == null || imageView == null || imageView.getVisibility() == GONE) {
+        if (binaryName == null || imageView.getVisibility() == GONE) {
             annotateButton.setEnabled(false);
         }
     }
@@ -155,7 +155,7 @@ public class AnnotateWidget extends BaseImageWidget implements ButtonClickListen
 
     private int calculateScreenOrientation() {
         Bitmap bmp = null;
-        if (imageView != null) {
+        if (imageView.getDrawable() != null) {
             bmp = ((BitmapDrawable) imageView.getDrawable()).getBitmap();
         }
 

@@ -5,7 +5,6 @@ import android.graphics.drawable.BitmapDrawable;
 import android.graphics.drawable.Drawable;
 import android.provider.MediaStore;
 import android.view.View;
-import android.widget.ImageView;
 
 import androidx.annotation.NonNull;
 import androidx.core.util.Pair;
@@ -27,7 +26,7 @@ import org.odk.collect.android.utilities.QuestionMediaManager;
 import org.odk.collect.android.widgets.base.FileWidgetTest;
 import org.odk.collect.android.widgets.support.FakeQuestionMediaManager;
 import org.odk.collect.android.widgets.support.FakeWaitingForDataRegistry;
-import org.odk.collect.android.widgets.support.SynchronousImageLoader;
+import org.odk.collect.testshared.SynchronousImageLoader;
 import org.odk.collect.imageloader.ImageLoader;
 import org.odk.collect.shared.TempFiles;
 
@@ -153,9 +152,8 @@ public class AnnotateWidgetTest extends FileWidgetTest<AnnotateWidget> {
                 .build();
 
         AnnotateWidget widget = createWidget();
-        ImageView imageView = widget.getImageView();
-        assertThat(imageView, notNullValue());
-        Drawable drawable = imageView.getDrawable();
+        assertThat(widget.imageView.getVisibility(), is(View.VISIBLE));
+        Drawable drawable = widget.imageView.getDrawable();
         assertThat(drawable, notNullValue());
 
         String loadedPath = shadowOf(((BitmapDrawable) drawable).getBitmap()).getCreatedFromPath();
@@ -179,9 +177,8 @@ public class AnnotateWidgetTest extends FileWidgetTest<AnnotateWidget> {
                 .build();
 
         AnnotateWidget widget = createWidget();
-        ImageView imageView = widget.getImageView();
-        assertThat(imageView, notNullValue());
-        Drawable drawable = imageView.getDrawable();
+        assertThat(widget.imageView.getVisibility(), is(View.VISIBLE));
+        Drawable drawable = widget.imageView.getDrawable();
         assertThat(drawable, notNullValue());
 
         String loadedPath = shadowOf(((BitmapDrawable) drawable).getBitmap()).getCreatedFromPath();

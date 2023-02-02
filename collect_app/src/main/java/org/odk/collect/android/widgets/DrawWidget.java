@@ -47,7 +47,7 @@ public class DrawWidget extends BaseImageWidget implements ButtonClickListener {
 
         imageClickHandler = new DrawImageClickHandler(DrawActivity.OPTION_DRAW, RequestCodes.DRAW_IMAGE, R.string.draw_image);
         setUpLayout();
-        addCurrentImageToLayout();
+        updateAnswer();
         addAnswerView(answerLayout, WidgetViewUtils.getStandardMargin(context));
     }
 

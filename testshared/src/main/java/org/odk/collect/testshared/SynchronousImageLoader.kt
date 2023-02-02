@@ -1,4 +1,4 @@
-package org.odk.collect.android.widgets.support
+package org.odk.collect.testshared
 
 import android.graphics.BitmapFactory
 import android.widget.ImageView
@@ -14,5 +14,6 @@ class SynchronousImageLoader : ImageLoader {
         requestListener: GlideImageLoader.ImageLoaderCallback?
     ) {
         imageView.setImageBitmap(BitmapFactory.decodeFile(imageFile?.absolutePath))
+        requestListener?.onLoadSucceeded()
     }
 }

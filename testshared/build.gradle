@@ -32,6 +32,7 @@ android {
 }
 
 dependencies {
+    implementation project(path: ':imageloader')
     coreLibraryDesugaring Dependencies.desugar
 
     implementation fileTree(dir: "libs", include: ["*.jar"])
