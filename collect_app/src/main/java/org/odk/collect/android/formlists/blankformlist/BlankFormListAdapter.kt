@@ -45,13 +45,13 @@ class BlankFormListAdapter(
                 binding.mapButton.visibility = if (this.geometryPath.isNotBlank()) View.VISIBLE else View.GONE
 
                 binding.root.setOnClickListener {
-                    if (MultiClickGuard.allowClick(javaClass.name)) {
+                    if (MultiClickGuard.allowClick(javaClass.name, 3)) {
                         listener.onFormClick(this.contentUri)
                     }
                 }
 
                 binding.mapButton.setOnClickListener {
-                    if (MultiClickGuard.allowClick(javaClass.name)) {
+                    if (MultiClickGuard.allowClick(javaClass.name, 3)) {
                         listener.onMapButtonClick(this.databaseId)
                     }
                 }

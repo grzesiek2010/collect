@@ -3,8 +3,6 @@ package org.odk.collect.androidshared.ui.multiclicksafe
 import android.os.SystemClock
 
 object MultiClickGuard {
-    private const val CLICK_DEBOUNCE_MS = 1000
-
     @JvmField
     var test = false
 
@@ -13,13 +11,14 @@ object MultiClickGuard {
 
     // Debounce multiple clicks within the same screen
     @JvmStatic
-    fun allowClick(className: String = javaClass.name): Boolean {
+    @JvmOverloads
+    fun allowClick(className: String = javaClass.name, clickDebounceSeconds: Int = 1): Boolean {
         if (test) {
             return true
         }
         val elapsedRealtime = SystemClock.elapsedRealtime()
         val isSameClass = className == lastClickName
-        val isBeyondThreshold = elapsedRealtime - lastClickTime > CLICK_DEBOUNCE_MS
+        val isBeyondThreshold = elapsedRealtime - lastClickTime > clickDebounceSeconds * 1000
         val isBeyondTestThreshold =
             lastClickTime == 0L || lastClickTime == elapsedRealtime // just for tests
 
