@@ -22,8 +22,6 @@ import android.os.Bundle;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
-import android.view.View.OnClickListener;
-import android.widget.Button;
 import android.widget.TextView;
 
 import androidx.appcompat.widget.Toolbar;
@@ -42,6 +40,7 @@ import org.odk.collect.android.projects.ProjectSettingsDialog;
 import org.odk.collect.android.utilities.ApplicationConstants;
 import org.odk.collect.android.utilities.PlayServicesChecker;
 import org.odk.collect.android.utilities.ThemeUtils;
+import org.odk.collect.android.views.MainMenuButton;
 import org.odk.collect.androidshared.ui.multiclicksafe.MultiClickGuard;
 import org.odk.collect.crashhandler.CrashHandler;
 import org.odk.collect.settings.SettingsProvider;
@@ -61,11 +60,11 @@ import javax.inject.Inject;
  */
 public class MainMenuActivity extends LocalizedActivity {
     // buttons
-    private Button manageFilesButton;
-    private Button sendDataButton;
-    private Button viewSentFormsButton;
-    private Button reviewDataButton;
-    private Button getFormsButton;
+    private MainMenuButton manageFilesButton;
+    private MainMenuButton sendDataButton;
+    private MainMenuButton viewSentFormsButton;
+    private MainMenuButton reviewDataButton;
+    private MainMenuButton getFormsButton;
 
     @Inject
     MainMenuViewModel.Factory viewModelFactory;
@@ -124,7 +123,7 @@ public class MainMenuActivity extends LocalizedActivity {
         initToolbar();
         initMapbox();
 
-        Button enterDataButtonNew = findViewById(R.id.enter_data);
+        MainMenuButton enterDataButtonNew = findViewById(R.id.enter_data);
         enterDataButtonNew.setOnClickListener(v -> {
             Intent intent = new Intent(this, BlankFormListActivity.class);
             startActivity(intent);
@@ -132,75 +131,52 @@ public class MainMenuActivity extends LocalizedActivity {
 
         // review data button. expects a result.
         reviewDataButton = findViewById(R.id.review_data);
-        reviewDataButton.setText(getString(R.string.review_data_button));
-        reviewDataButton.setOnClickListener(new OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                Intent i = new Intent(getApplicationContext(), InstanceChooserList.class);
-                i.putExtra(ApplicationConstants.BundleKeys.FORM_MODE,
-                        ApplicationConstants.FormModes.EDIT_SAVED);
-                startActivity(i);
-            }
+        reviewDataButton.setOnClickListener(v -> {
+            Intent i = new Intent(getApplicationContext(), InstanceChooserList.class);
+            i.putExtra(ApplicationConstants.BundleKeys.FORM_MODE, ApplicationConstants.FormModes.EDIT_SAVED);
+            startActivity(i);
         });
 
         // send data button. expects a result.
         sendDataButton = findViewById(R.id.send_data);
-        sendDataButton.setText(getString(R.string.send_data_button));
-        sendDataButton.setOnClickListener(new OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                Intent i = new Intent(getApplicationContext(),
-                        InstanceUploaderListActivity.class);
-                startActivity(i);
-            }
+        sendDataButton.setOnClickListener(v -> {
+            Intent i = new Intent(getApplicationContext(), InstanceUploaderListActivity.class);
+            startActivity(i);
         });
 
         //View sent forms
         viewSentFormsButton = findViewById(R.id.view_sent_forms);
-        viewSentFormsButton.setOnClickListener(new OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                Intent i = new Intent(getApplicationContext(), InstanceChooserList.class);
-                i.putExtra(ApplicationConstants.BundleKeys.FORM_MODE,
-                        ApplicationConstants.FormModes.VIEW_SENT);
-                startActivity(i);
-            }
+        viewSentFormsButton.setOnClickListener(v -> {
+            Intent i = new Intent(getApplicationContext(), InstanceChooserList.class);
+            i.putExtra(ApplicationConstants.BundleKeys.FORM_MODE, ApplicationConstants.FormModes.VIEW_SENT);
+            startActivity(i);
         });
 
         // manage forms button. no result expected.
         getFormsButton = findViewById(R.id.get_forms);
-        getFormsButton.setText(getString(R.string.get_forms));
-        getFormsButton.setOnClickListener(new OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                String protocol = settingsProvider.getUnprotectedSettings().getString(ProjectKeys.KEY_PROTOCOL);
-                Intent i;
-                if (protocol.equalsIgnoreCase(ProjectKeys.PROTOCOL_GOOGLE_SHEETS)) {
-                    if (new PlayServicesChecker().isGooglePlayServicesAvailable(MainMenuActivity.this)) {
-                        i = new Intent(getApplicationContext(),
-                                GoogleDriveActivity.class);
-                    } else {
-                        new PlayServicesChecker().showGooglePlayServicesAvailabilityErrorDialog(MainMenuActivity.this);
-                        return;
-                    }
-                } else {
+        getFormsButton.setOnClickListener(v -> {
+            String protocol = settingsProvider.getUnprotectedSettings().getString(ProjectKeys.KEY_PROTOCOL);
+            Intent i;
+            if (protocol.equalsIgnoreCase(ProjectKeys.PROTOCOL_GOOGLE_SHEETS)) {
+                if (new PlayServicesChecker().isGooglePlayServicesAvailable(MainMenuActivity.this)) {
                     i = new Intent(getApplicationContext(),
-                            FormDownloadListActivity.class);
+                            GoogleDriveActivity.class);
+                } else {
+                    new PlayServicesChecker().showGooglePlayServicesAvailabilityErrorDialog(MainMenuActivity.this);
+                    return;
                 }
-                startActivity(i);
+            } else {
+                i = new Intent(getApplicationContext(),
+                        FormDownloadListActivity.class);
             }
+            startActivity(i);
         });
 
         // manage forms button. no result expected.
         manageFilesButton = findViewById(R.id.manage_forms);
-        manageFilesButton.setText(getString(R.string.manage_files));
-        manageFilesButton.setOnClickListener(new OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                Intent i = new Intent(getApplicationContext(),
-                        DeleteSavedFormActivity.class);
-                startActivity(i);
-            }
+        manageFilesButton.setOnClickListener(v -> {
+            Intent i = new Intent(getApplicationContext(), DeleteSavedFormActivity.class);
+            startActivity(i);
         });
 
         TextView appName = findViewById(R.id.app_name);
@@ -215,29 +191,15 @@ public class MainMenuActivity extends LocalizedActivity {
         }
 
         mainMenuViewModel.getSendableInstancesCount().observe(this, finalized -> {
-            if (finalized > 0) {
-                sendDataButton.setText(getString(R.string.send_data_button, String.valueOf(finalized)));
-            } else {
-                sendDataButton.setText(getString(R.string.send_data));
-            }
+            reviewDataButton.setNumber(finalized);
         });
-
 
         mainMenuViewModel.getEditableInstancesCount().observe(this, unsent -> {
-            if (unsent > 0) {
-                reviewDataButton.setText(getString(R.string.review_data_button, String.valueOf(unsent)));
-            } else {
-                reviewDataButton.setText(getString(R.string.review_data));
-            }
+            reviewDataButton.setNumber(unsent);
         });
 
-
         mainMenuViewModel.getSentInstancesCount().observe(this, sent -> {
-            if (sent > 0) {
-                viewSentFormsButton.setText(getString(R.string.view_sent_forms_button, String.valueOf(sent)));
-            } else {
-                viewSentFormsButton.setText(getString(R.string.view_sent_forms));
-            }
+            reviewDataButton.setNumber(sent);
         });
     }
 
