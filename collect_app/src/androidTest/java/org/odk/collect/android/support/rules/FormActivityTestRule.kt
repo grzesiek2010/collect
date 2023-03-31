@@ -4,7 +4,7 @@ import android.app.Activity
 import android.app.Application
 import android.content.Intent
 import androidx.test.core.app.ApplicationProvider
-import org.odk.collect.android.activities.FormEntryActivity
+import org.odk.collect.android.external.FormUriActivity
 import org.odk.collect.android.external.FormsContract
 import org.odk.collect.android.injection.DaggerUtils
 import org.odk.collect.android.storage.StorageSubdirectory
@@ -58,7 +58,7 @@ class FormActivityTestRule @JvmOverloads constructor(
                 .getOneByPath(formPath)
             val projectId = DaggerUtils.getComponent(application).currentProjectProvider()
                 .getCurrentProject().uuid
-            val intent = Intent(application, FormEntryActivity::class.java)
+            val intent = Intent(application, FormUriActivity::class.java)
             intent.data = FormsContract.getUri(projectId, form!!.dbId)
             return intent
         }
