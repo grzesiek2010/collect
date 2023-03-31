@@ -2,7 +2,7 @@ package org.odk.collect.android.formmanagement
 
 import android.app.Activity
 import android.content.Intent
-import org.odk.collect.android.activities.FormEntryActivity
+import org.odk.collect.android.external.FormUriActivity
 import org.odk.collect.android.external.FormsContract
 import org.odk.collect.android.external.InstancesContract
 import org.odk.collect.android.utilities.ApplicationConstants.BundleKeys.FORM_MODE
@@ -21,7 +21,7 @@ class FormNavigator(
     fun editInstance(activity: Activity, instanceId: Long) {
         val uri = InstancesContract.getUri(projectId, instanceId)
         activity.startActivity(
-            Intent(activity, FormEntryActivity::class.java).also {
+            Intent(activity, FormUriActivity::class.java).also {
                 it.action = Intent.ACTION_EDIT
                 it.data = uri
 
@@ -41,7 +41,7 @@ class FormNavigator(
 
     fun newInstance(activity: Activity, formId: Long) {
         activity.startActivity(
-            Intent(activity, FormEntryActivity::class.java).also {
+            Intent(activity, FormUriActivity::class.java).also {
                 it.action = Intent.ACTION_EDIT
                 it.data = FormsContract.getUri(projectId, formId)
             }

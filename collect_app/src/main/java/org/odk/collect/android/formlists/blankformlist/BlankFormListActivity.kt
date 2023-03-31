@@ -11,8 +11,8 @@ import android.widget.TextView
 import androidx.activity.viewModels
 import androidx.recyclerview.widget.RecyclerView
 import org.odk.collect.android.R
-import org.odk.collect.android.activities.FormEntryActivity
 import org.odk.collect.android.activities.FormMapActivity
+import org.odk.collect.android.external.FormUriActivity
 import org.odk.collect.android.injection.DaggerUtils
 import org.odk.collect.android.preferences.dialogs.ServerAuthDialogFragment
 import org.odk.collect.android.utilities.ApplicationConstants
@@ -75,7 +75,7 @@ class BlankFormListActivity : LocalizedActivity(), OnFormItemClickListener {
             setResult(RESULT_OK, Intent().setData(formUri))
         } else {
             // caller wants to view/edit a form, so launch formentryactivity
-            Intent(this, FormEntryActivity::class.java).apply {
+            Intent(this, FormUriActivity::class.java).apply {
                 action = Intent.ACTION_EDIT
                 data = formUri
                 putExtra(
