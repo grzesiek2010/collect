@@ -91,7 +91,7 @@ public class Collect extends Application implements
     public static String defaultSysLanguage;
     private static Collect singleton;
 
-    private final AppState appState = new AppState();
+    private final AppState appState = AppState.INSTANCE;
     private final SupplierObjectProvider objectProvider = new SupplierObjectProvider();
 
     private ExternalDataManager externalDataManager;

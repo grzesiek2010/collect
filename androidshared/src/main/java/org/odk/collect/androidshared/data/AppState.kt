@@ -6,6 +6,7 @@ import android.app.Service
 import android.content.Context
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModel
+import timber.log.Timber
 
 /**
  * [AppState] can be used as a shared store of state that lives at an "app"/"in-memory" level
@@ -30,7 +31,7 @@ import androidx.lifecycle.ViewModel
  * [getState] extension function.
  *
  */
-class AppState {
+object AppState {
 
     private val map = mutableMapOf<String, Any?>()
 
@@ -62,8 +63,13 @@ interface StateStore {
 }
 
 fun Application.getState(): AppState {
-    val stateStore = this as StateStore
-    return stateStore.getState()
+    return try {
+        val stateStore = this as StateStore
+        stateStore.getState()
+    } catch (e: ClassCastException) {
+        Timber.e(e, "${this.javaClass} cannot be cast to StateStore")
+        AppState
+    }
 }
 
 fun Context.getState(): AppState {
