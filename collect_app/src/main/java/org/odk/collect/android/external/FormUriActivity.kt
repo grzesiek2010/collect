@@ -142,10 +142,11 @@ class FormUriActivity : ComponentActivity() {
     private fun startForm() {
         formFillingAlreadyStarted = true
         openForm.launch(
-            Intent(this, FormEntryActivity::class.java).also {
-                it.action = intent.action
-                it.data = intent.data
-                intent.extras?.let { sourceExtras -> it.putExtras(sourceExtras) }
+            Intent(this, FormEntryActivity::class.java).apply {
+                action = intent.action
+                data = intent.data
+                intent.extras?.let { sourceExtras -> putExtras(sourceExtras) }
+                putExtra(FORM_FILLING_STARTED_SAFELY, true)
             }
         )
     }
@@ -164,6 +165,7 @@ class FormUriActivity : ComponentActivity() {
     }
 
     companion object {
+        const val FORM_FILLING_STARTED_SAFELY = "FORM_FILLING_STARTED_SAFELY"
         private const val FORM_FILLING_ALREADY_STARTED = "FORM_FILLING_ALREADY_STARTED"
     }
 }

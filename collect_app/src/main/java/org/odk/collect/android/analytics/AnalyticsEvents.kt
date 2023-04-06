@@ -161,4 +161,11 @@ object AnalyticsEvents {
      */
     const val TEXT_NUMBER_WIDGET = "TextNumberWidget"
     const val TEXT_NUMBER_WIDGET_WITH_THOUSANDS_SEPARATOR = "TextNumberWidgetWithThousandsSeparator"
+
+    /**
+     * Tracks how often {@link org.odk.collect.android.activities.FormEntryActivity} is started
+     * directly without using {@link org.odk.collect.android.external.FormUriActivity} as a middleman
+     * that makes sure all requirements to start the process are met.
+     */
+    const val FORM_ENTRY_ACTIVITY_STARTED_DIRECTLY = "FormEntryActivityStartedDirectly"
 }

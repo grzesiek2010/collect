@@ -95,6 +95,7 @@ import org.odk.collect.android.backgroundwork.InstanceSubmitScheduler;
 import org.odk.collect.android.dao.helpers.InstancesDaoHelper;
 import org.odk.collect.android.entities.EntitiesRepositoryProvider;
 import org.odk.collect.android.exception.JavaRosaException;
+import org.odk.collect.android.external.FormUriActivity;
 import org.odk.collect.android.external.FormsContract;
 import org.odk.collect.android.external.InstancesContract;
 import org.odk.collect.android.formentry.BackgroundAudioPermissionDialogFragment;
@@ -650,6 +651,10 @@ public class FormEntryActivity extends LocalizedActivity implements AnimationLis
     }
 
     private void loadFromIntent(Intent intent) {
+        if (!intent.hasExtra(FormUriActivity.FORM_FILLING_STARTED_SAFELY)) {
+            Analytics.log(AnalyticsEvents.FORM_ENTRY_ACTIVITY_STARTED_DIRECTLY);
+        }
+
         Uri uri = intent.getData();
         String uriMimeType = null;
 
