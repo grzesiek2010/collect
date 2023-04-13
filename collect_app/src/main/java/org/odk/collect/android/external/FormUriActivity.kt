@@ -139,8 +139,6 @@ class FormUriActivity : ComponentActivity() {
                 if (!canFormBeEdited()) {
                     putExtra(ApplicationConstants.BundleKeys.FORM_MODE, ApplicationConstants.FormModes.VIEW_SENT)
                 }
-
-                putExtra(FORM_FILLING_STARTED_SAFELY, true)
             }
         )
     }
@@ -184,7 +182,6 @@ class FormUriActivity : ComponentActivity() {
     }
 
     companion object {
-        const val FORM_FILLING_STARTED_SAFELY = "FORM_FILLING_STARTED_SAFELY"
         private const val FORM_FILLING_ALREADY_STARTED = "FORM_FILLING_ALREADY_STARTED"
     }
 }
