@@ -9,7 +9,7 @@ import androidx.lifecycle.Lifecycle
 import androidx.test.core.app.ActivityScenario
 import androidx.test.core.app.ApplicationProvider
 import org.junit.rules.ExternalResource
-import org.odk.collect.android.activities.FormEntryActivity
+import org.odk.collect.android.activities.FormFillingActivity
 import org.odk.collect.android.external.FormsContract
 import org.odk.collect.android.formmanagement.FormNavigator
 import org.odk.collect.android.injection.DaggerUtils
@@ -23,7 +23,7 @@ import org.odk.collect.projects.Project
 import timber.log.Timber
 import java.io.IOException
 
-class FormEntryActivityTestRule : ExternalResource() {
+class FormFillingActivityTestRule : ExternalResource() {
 
     private lateinit var intent: Intent
     private lateinit var scenario: ActivityScenario<Activity>
@@ -36,7 +36,7 @@ class FormEntryActivityTestRule : ExternalResource() {
         }
     }
 
-    fun setUpProjectAndCopyForm(formFilename: String): FormEntryActivityTestRule {
+    fun setUpProjectAndCopyForm(formFilename: String): FormFillingActivityTestRule {
         try {
             // Set up demo project
             val component =
@@ -67,7 +67,7 @@ class FormEntryActivityTestRule : ExternalResource() {
         return FormHierarchyPage(instanceName).assertOnPage()
     }
 
-    fun saveInstanceStateForActivity(): FormEntryActivityTestRule {
+    fun saveInstanceStateForActivity(): FormFillingActivityTestRule {
         scenario.onActivity {
             it.onSaveInstanceState(Bundle(), PersistableBundle())
         }
@@ -75,7 +75,7 @@ class FormEntryActivityTestRule : ExternalResource() {
         return this
     }
 
-    fun destroyActivity(): FormEntryActivityTestRule {
+    fun destroyActivity(): FormFillingActivityTestRule {
         lateinit var scenarioActivity: Activity
         scenario.onActivity {
             scenarioActivity = it
@@ -98,7 +98,7 @@ class FormEntryActivityTestRule : ExternalResource() {
         val projectId = DaggerUtils.getComponent(application).currentProjectProvider()
             .getCurrentProject().uuid
 
-        return FormNavigator.newInstanceIntent(application, FormsContract.getUri(projectId, form!!.dbId), FormEntryActivity::class)
+        return FormNavigator.newInstanceIntent(application, FormsContract.getUri(projectId, form!!.dbId), FormFillingActivity::class)
     }
 
     private fun createEditFormIntent(formFilename: String): Intent {
@@ -116,7 +116,7 @@ class FormEntryActivityTestRule : ExternalResource() {
             application,
             projectId,
             instance.dbId,
-            FormEntryActivity::class
+            FormFillingActivity::class
         )
     }
 }

@@ -13,13 +13,13 @@ import org.odk.collect.android.support.pages.AppClosedPage
 import org.odk.collect.android.support.pages.FormEntryPage
 import org.odk.collect.android.support.pages.FormHierarchyPage
 import org.odk.collect.android.support.pages.SaveOrIgnoreDialog
-import org.odk.collect.android.support.rules.FormEntryActivityTestRule
+import org.odk.collect.android.support.rules.FormFillingActivityTestRule
 import org.odk.collect.android.support.rules.TestRuleChain
 
 @RunWith(AndroidJUnit4::class)
 class SavePointTest {
 
-    private val rule = FormEntryActivityTestRule()
+    private val rule = FormFillingActivityTestRule()
 
     @get:Rule
     val ruleChain: RuleChain = TestRuleChain.chain().around(rule)
@@ -222,7 +222,7 @@ class SavePointTest {
      * Simulates a case where the process is killed without lifecycle clean up (like a phone
      * being battery dying).
      */
-    private fun simulateBatteryDeath(): FormEntryActivityTestRule {
+    private fun simulateBatteryDeath(): FormFillingActivityTestRule {
         CollectHelpers.simulateProcessRestart()
         return rule
     }
@@ -231,7 +231,7 @@ class SavePointTest {
      * Simulate a "process restore" case where an app in the background is killed by Android
      * to reclaim memory, change permissions etc
      */
-    private fun simulateProcessRestore(): FormEntryActivityTestRule {
+    private fun simulateProcessRestore(): FormFillingActivityTestRule {
         rule.saveInstanceStateForActivity()
             .destroyActivity()
 

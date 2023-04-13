@@ -73,7 +73,7 @@ class BlankFormListActivity : LocalizedActivity(), OnFormItemClickListener {
             // caller is waiting on a picked form
             setResult(RESULT_OK, Intent().setData(formUri))
         } else {
-            // caller wants to view/edit a form, so launch formentryactivity
+            // caller wants to view/edit a form, so launch form filling
             startActivity(FormNavigator.newInstanceIntent(this, formUri))
         }
         finish()
