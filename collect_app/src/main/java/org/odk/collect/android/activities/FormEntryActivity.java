@@ -385,12 +385,8 @@ public class FormEntryActivity extends LocalizedActivity implements AnimationLis
      */
     @Override
     public void onCreate(Bundle savedInstanceState) {
-        if (getIntent().getData() != null) {
-            Timber.w("onCreate %s", Md5.getMd5Hash(getIntent().getData().toString()));
-        } else {
-            Timber.w("onCreate null");
-        }
-        
+        Timber.w("onCreate %s", Md5.getMd5Hash(getIntent().getData().toString()));
+
         // Workaround for https://issuetracker.google.com/issues/37124582. Some widgets trigger
         // this issue by including WebViews
         if (Build.VERSION.SDK_INT >= 24) {
@@ -803,11 +799,8 @@ public class FormEntryActivity extends LocalizedActivity implements AnimationLis
 
     @Override
     protected void onSaveInstanceState(Bundle outState) {
-        if (getIntent().getData() != null) {
-            Timber.w("onSaveInstanceState %s", Md5.getMd5Hash(getIntent().getData().toString()));
-        } else {
-            Timber.w("onSaveInstanceState null");
-        }
+        Timber.w("onSaveInstanceState %s", Md5.getMd5Hash(getIntent().getData().toString()));
+
         super.onSaveInstanceState(outState);
 
         outState.putString(KEY_SESSION_ID, sessionId);
@@ -1901,11 +1894,8 @@ public class FormEntryActivity extends LocalizedActivity implements AnimationLis
 
     @Override
     protected void onStart() {
-        if (getIntent().getData() != null) {
-            Timber.w("onStart %s", Md5.getMd5Hash(getIntent().getData().toString()));
-        } else {
-            Timber.w("onStart null");
-        }
+        Timber.w("onStart %s", Md5.getMd5Hash(getIntent().getData().toString()));
+
         super.onStart();
         FormController formController = getFormController();
 
@@ -1924,11 +1914,8 @@ public class FormEntryActivity extends LocalizedActivity implements AnimationLis
 
     @Override
     protected void onPause() {
-        if (getIntent().getData() != null) {
-            Timber.w("onPause %s", Md5.getMd5Hash(getIntent().getData().toString()));
-        } else {
-            Timber.w("onPause null");
-        }
+        Timber.w("onPause %s", Md5.getMd5Hash(getIntent().getData().toString()));
+
         backgroundLocationViewModel.activityHidden();
 
         super.onPause();
@@ -1936,11 +1923,8 @@ public class FormEntryActivity extends LocalizedActivity implements AnimationLis
 
     @Override
     protected void onResume() {
-        if (getIntent().getData() != null) {
-            Timber.w("onResume %s", Md5.getMd5Hash(getIntent().getData().toString()));
-        } else {
-            Timber.w("onResume null");
-        }
+        Timber.w("onResume %s", Md5.getMd5Hash(getIntent().getData().toString()));
+
         super.onResume();
 
         activityDisplayed();
@@ -2043,11 +2027,8 @@ public class FormEntryActivity extends LocalizedActivity implements AnimationLis
 
     @Override
     protected void onDestroy() {
-        if (getIntent().getData() != null) {
-            Timber.w("onDestroy %s", Md5.getMd5Hash(getIntent().getData().toString()));
-        } else {
-            Timber.w("onDestroy null");
-        }
+        Timber.w("onDestroy %s", Md5.getMd5Hash(getIntent().getData().toString()));
+
         if (formLoaderTask != null) {
             formLoaderTask.setFormLoaderListener(null);
             // We have to call cancel to terminate the thread, otherwise it
