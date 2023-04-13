@@ -662,11 +662,6 @@ public class FormFillingActivity extends LocalizedActivity implements AnimationL
         if (uriMimeType != null && uriMimeType.equals(InstancesContract.CONTENT_ITEM_TYPE)) {
             Instance instance = new InstancesRepositoryProvider(Collect.getInstance()).get().get(ContentUriHelper.getIdFromUri(uri));
 
-            if (instance == null) {
-                createErrorDialog(getString(R.string.bad_uri, uri), true);
-                return;
-            }
-
             instancePath = instance.getInstanceFilePath();
             if (!new File(instancePath).exists()) {
                 Analytics.log(AnalyticsEvents.OPEN_DELETED_INSTANCE);
@@ -693,26 +688,15 @@ public class FormFillingActivity extends LocalizedActivity implements AnimationL
             formPath = candidateForms.get(0).getFormFilePath();
         } else if (uriMimeType != null && uriMimeType.equals(FormsContract.CONTENT_ITEM_TYPE)) {
             Form form = formsRepositoryProvider.get().get(ContentUriHelper.getIdFromUri(uri));
-            if (form != null) {
-                formPath = form.getFormFilePath();
-            }
+            formPath = form.getFormFilePath();
 
-            if (formPath == null) {
-                createErrorDialog(getString(R.string.bad_uri, uri), true);
-                return;
-            } else {
-                /**
-                 * This is the fill-blank-form code path.See if there is a savepoint for this form
-                 * that has never been explicitly saved by the user. If there is, open this savepoint(resume this filled-in form).
-                 * Savepoints for forms that were explicitly saved will be recovered when that
-                 * explicitly saved instance is edited via edit-saved-form.
-                 */
-                instancePath = loadSavePoint();
-            }
-        } else {
-            Timber.i("Unrecognized URI: %s", uri);
-            createErrorDialog(getString(R.string.unrecognized_uri, uri), true);
-            return;
+            /**
+             * This is the fill-blank-form code path.See if there is a savepoint for this form
+             * that has never been explicitly saved by the user. If there is, open this savepoint(resume this filled-in form).
+             * Savepoints for forms that were explicitly saved will be recovered when that
+             * explicitly saved instance is edited via edit-saved-form.
+             */
+            instancePath = loadSavePoint();
         }
 
         formLoaderTask = new FormLoaderTask(instancePath, null, null);
