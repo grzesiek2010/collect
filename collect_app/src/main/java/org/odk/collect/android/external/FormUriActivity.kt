@@ -5,19 +5,25 @@ import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.result.contract.ActivityResultContracts
 import com.google.android.material.dialog.MaterialAlertDialogBuilder
+import java.io.File
+import javax.inject.Inject
+import org.odk.collect.analytics.Analytics
 import org.odk.collect.android.R
 import org.odk.collect.android.activities.FormFillingActivity
+import org.odk.collect.android.analytics.AnalyticsEvents
+import org.odk.collect.android.formentry.FormData
 import org.odk.collect.android.injection.DaggerUtils
+import org.odk.collect.android.instancemanagement.InstanceDeleter
 import org.odk.collect.android.projects.CurrentProjectProvider
 import org.odk.collect.android.utilities.ApplicationConstants
 import org.odk.collect.android.utilities.ContentUriHelper
 import org.odk.collect.android.utilities.FormsRepositoryProvider
 import org.odk.collect.android.utilities.InstancesRepositoryProvider
+import org.odk.collect.forms.Form
 import org.odk.collect.forms.instances.Instance
 import org.odk.collect.projects.ProjectsRepository
 import org.odk.collect.settings.SettingsProvider
 import org.odk.collect.settings.keys.ProtectedProjectKeys
-import javax.inject.Inject
 
 /**
  * This class serves as a firewall for starting form filling. It should be used to do that
@@ -65,7 +71,7 @@ class FormUriActivity : ComponentActivity() {
     private fun assertProjectListNotEmpty(): Boolean {
         val projects = projectsRepository.getAll()
         return if (projects.isEmpty()) {
-            displayErrorDialog(R.string.app_not_configured)
+            displayErrorDialog(getString(R.string.app_not_configured))
             false
         } else {
             true
@@ -79,7 +85,7 @@ class FormUriActivity : ComponentActivity() {
         val projectId = uriProjectId ?: firstProject.uuid
 
         return if (projectId != currentProjectProvider.getCurrentProject().uuid) {
-            displayErrorDialog(R.string.wrong_project_selected_for_form)
+            displayErrorDialog(getString(R.string.wrong_project_selected_for_form))
             false
         } else {
             true
@@ -97,7 +103,7 @@ class FormUriActivity : ComponentActivity() {
         } ?: false
 
         return if (!isUriValid) {
-            displayErrorDialog(R.string.unrecognized_uri)
+            displayErrorDialog(getString(R.string.unrecognized_uri))
             false
         } else {
             true
@@ -115,7 +121,7 @@ class FormUriActivity : ComponentActivity() {
         }
 
         return if (!doesFormExist) {
-            displayErrorDialog(R.string.bad_uri)
+            displayErrorDialog(getString(R.string.bad_uri))
             false
         } else {
             true
@@ -130,12 +136,47 @@ class FormUriActivity : ComponentActivity() {
     }
 
     private fun startForm() {
+        val uri = intent.data!!
+
+        val formData: FormData = if (contentResolver.getType(uri) == FormsContract.CONTENT_ITEM_TYPE) {
+            val formFilePath = formsRepositoryProvider.get().get(ContentUriHelper.getIdFromUri(uri))!!.formFilePath
+            FormData.BlankFormData(formFilePath)
+        } else {
+            val instance = instanceRepositoryProvider.get().get(ContentUriHelper.getIdFromUri(uri))!!
+
+            if (!File(instance.instanceFilePath).exists()) {
+                Analytics.log(AnalyticsEvents.OPEN_DELETED_INSTANCE)
+                InstanceDeleter(instanceRepositoryProvider.get(), formsRepositoryProvider.get()).delete(instance.dbId)
+                displayErrorDialog(getString(R.string.instance_deleted_message))
+                return
+            }
+
+            val candidateForms = formsRepositoryProvider.get().getAllByFormIdAndVersion(instance.formId, instance.formVersion)
+
+            if (candidateForms.isEmpty()) {
+                val version = if (instance.formVersion == null) {
+                    ""
+                } else {
+                    "\n" + getString(R.string.version) + " " + instance.formVersion
+                }
+
+                displayErrorDialog(getString(R.string.parent_form_not_present, "${instance.formId} + $version"))
+                return
+            } else if (candidateForms.stream().filter { f: Form -> !f.isDeleted }.count() > 1) {
+                displayErrorDialog(getString(R.string.survey_multiple_forms_error))
+                return
+            }
+
+            FormData.SavedFormData(candidateForms[0].formFilePath, instance.instanceFilePath)
+        }
+
         formFillingAlreadyStarted = true
         openForm.launch(
             Intent(this, FormFillingActivity::class.java).apply {
                 action = intent.action
-                data = intent.data
+                data = uri
                 intent.extras?.let { sourceExtras -> putExtras(sourceExtras) }
+                putExtra(FORM_DATA, formData)
                 if (!canFormBeEdited()) {
                     putExtra(ApplicationConstants.BundleKeys.FORM_MODE, ApplicationConstants.FormModes.VIEW_SENT)
                 }
@@ -143,7 +184,7 @@ class FormUriActivity : ComponentActivity() {
         )
     }
 
-    private fun displayErrorDialog(message: Int) {
+    private fun displayErrorDialog(message: String) {
         MaterialAlertDialogBuilder(this)
             .setMessage(message)
             .setPositiveButton(R.string.ok) { _, _ -> finish() }
@@ -183,5 +224,6 @@ class FormUriActivity : ComponentActivity() {
 
     companion object {
         private const val FORM_FILLING_ALREADY_STARTED = "FORM_FILLING_ALREADY_STARTED"
+        const val FORM_DATA = "FORM_DATA"
     }
 }

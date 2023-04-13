@@ -95,10 +95,11 @@ import org.odk.collect.android.backgroundwork.InstanceSubmitScheduler;
 import org.odk.collect.android.dao.helpers.InstancesDaoHelper;
 import org.odk.collect.android.entities.EntitiesRepositoryProvider;
 import org.odk.collect.android.exception.JavaRosaException;
-import org.odk.collect.android.external.FormsContract;
+import org.odk.collect.android.external.FormUriActivity;
 import org.odk.collect.android.external.InstancesContract;
 import org.odk.collect.android.formentry.BackgroundAudioPermissionDialogFragment;
 import org.odk.collect.android.formentry.BackgroundAudioViewModel;
+import org.odk.collect.android.formentry.FormData;
 import org.odk.collect.android.formentry.FormEndView;
 import org.odk.collect.android.formentry.FormEntryMenuDelegate;
 import org.odk.collect.android.formentry.FormEntryViewModel;
@@ -132,7 +133,6 @@ import org.odk.collect.android.fragments.dialogs.LocationProvidersDisabledDialog
 import org.odk.collect.android.fragments.dialogs.NumberPickerDialog;
 import org.odk.collect.android.fragments.dialogs.RankingWidgetDialog;
 import org.odk.collect.android.fragments.dialogs.SelectMinimalDialog;
-import org.odk.collect.android.instancemanagement.InstanceDeleter;
 import org.odk.collect.android.javarosawrapper.FormController;
 import org.odk.collect.android.javarosawrapper.RepeatsInFieldListException;
 import org.odk.collect.android.listeners.AdvanceToNextListener;
@@ -652,44 +652,9 @@ public class FormFillingActivity extends LocalizedActivity implements AnimationL
     }
 
     private void loadFromIntent(Intent intent) {
-        Uri uri = intent.getData();
-        String uriMimeType = null;
-
-        if (uri != null) {
-            uriMimeType = getContentResolver().getType(uri);
-        }
-
-        if (uriMimeType != null && uriMimeType.equals(InstancesContract.CONTENT_ITEM_TYPE)) {
-            Instance instance = new InstancesRepositoryProvider(Collect.getInstance()).get().get(ContentUriHelper.getIdFromUri(uri));
-
-            instancePath = instance.getInstanceFilePath();
-            if (!new File(instancePath).exists()) {
-                Analytics.log(AnalyticsEvents.OPEN_DELETED_INSTANCE);
-                new InstanceDeleter(new InstancesRepositoryProvider(Collect.getInstance()).get(), formsRepository).delete(instance.getDbId());
-                createErrorDialog(getString(R.string.instance_deleted_message), true);
-                return;
-            }
-
-            List<Form> candidateForms = formsRepository.getAllByFormIdAndVersion(instance.getFormId(), instance.getFormVersion());
-
-            if (candidateForms.isEmpty()) {
-                createErrorDialog(getString(
-                        R.string.parent_form_not_present,
-                        instance.getFormId())
-                                + ((instance.getFormVersion() == null) ? ""
-                                : "\n" + getString(R.string.version) + " " + instance.getFormVersion()),
-                        true);
-                return;
-            } else if (candidateForms.stream().filter(f -> !f.isDeleted()).count() > 1) {
-                createErrorDialog(getString(R.string.survey_multiple_forms_error), true);
-                return;
-            }
-
-            formPath = candidateForms.get(0).getFormFilePath();
-        } else if (uriMimeType != null && uriMimeType.equals(FormsContract.CONTENT_ITEM_TYPE)) {
-            Form form = formsRepositoryProvider.get().get(ContentUriHelper.getIdFromUri(uri));
-            formPath = form.getFormFilePath();
-
+        FormData formData = (FormData) intent.getExtras().get(FormUriActivity.FORM_DATA);
+        formPath = formData.getFormPath();
+        if (formData instanceof FormData.BlankFormData) {
             /**
              * This is the fill-blank-form code path.See if there is a savepoint for this form
              * that has never been explicitly saved by the user. If there is, open this savepoint(resume this filled-in form).
@@ -697,6 +662,8 @@ public class FormFillingActivity extends LocalizedActivity implements AnimationL
              * explicitly saved instance is edited via edit-saved-form.
              */
             instancePath = loadSavePoint();
+        } else if (formData instanceof FormData.SavedFormData) {
+            instancePath = ((FormData.SavedFormData) formData).getInstancePath();
         }
 
         formLoaderTask = new FormLoaderTask(instancePath, null, null);
