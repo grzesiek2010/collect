@@ -19,6 +19,7 @@ import static org.odk.collect.settings.migration.MigrationUtils.translateValue;
 import static java.util.Arrays.asList;
 
 import org.odk.collect.settings.importing.SettingsMigrator;
+import org.odk.collect.settings.keys.ProtectedProjectKeys;
 import org.odk.collect.settings.migration.KeyRenamer;
 import org.odk.collect.settings.migration.KeyTranslator;
 import org.odk.collect.settings.migration.Migration;
@@ -50,6 +51,8 @@ public class ODKAppSettingsMigrator implements SettingsMigrator {
         for (Migration migration : getMetaMigrations()) {
             migration.apply(metaPrefs);
         }
+
+        migrateFormFinalizationSettings(adminSettings, generalSettings);
     }
 
     private List<Migration> getUnprotectedMigrations() {
@@ -146,5 +149,27 @@ public class ODKAppSettingsMigrator implements SettingsMigrator {
                 translateKey("show_map_basemap").toKey("maps")
                         .fromValue(false).toValue(false)
         );
+    }
+
+    private void migrateFormFinalizationSettings(Settings adminSettings, Settings generalSettings) {
+        if (adminSettings.contains("mark_as_finalized") && !adminSettings.getBoolean("mark_as_finalized")) {
+            if (generalSettings.getBoolean("default_completed") || !generalSettings.contains("default_completed")) {
+                adminSettings.save(ProtectedProjectKeys.KEY_SAVE_AS_DRAFT, false);
+            } else {
+                adminSettings.save(ProtectedProjectKeys.KEY_FINALIZE, false);
+            }
+        }
+
+        adminSettings.remove("mark_as_finalized");
+        generalSettings.remove("default_completed");
+
+        if (adminSettings.contains(ProtectedProjectKeys.KEY_SAVE_AS_DRAFT) &&
+                !adminSettings.getBoolean(ProtectedProjectKeys.KEY_SAVE_AS_DRAFT) &&
+                adminSettings.contains(ProtectedProjectKeys.KEY_FINALIZE) &&
+                !adminSettings.getBoolean(ProtectedProjectKeys.KEY_FINALIZE)
+        ) {
+            adminSettings.save(ProtectedProjectKeys.KEY_SAVE_AS_DRAFT, true);
+            adminSettings.save(ProtectedProjectKeys.KEY_FINALIZE, true);
+        }
     }
 }

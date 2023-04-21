@@ -1,11 +1,14 @@
 package org.odk.collect.settings;
 
+import static org.hamcrest.CoreMatchers.equalTo;
+import static org.hamcrest.MatcherAssert.assertThat;
 import static org.odk.collect.settings.support.SettingsUtils.assertSettings;
 import static org.odk.collect.settings.support.SettingsUtils.assertSettingsEmpty;
 import static org.odk.collect.settings.support.SettingsUtils.initSettings;
 import static java.util.Arrays.asList;
 
 import org.junit.Test;
+import org.odk.collect.settings.keys.ProtectedProjectKeys;
 import org.odk.collect.shared.settings.InMemSettings;
 import org.odk.collect.shared.settings.Settings;
 
@@ -247,6 +250,71 @@ public class ODKAppSettingsMigratorTest {
         assertSettingsEmpty(generalSettings);
         assertSettings(metaSettings,
                 "server_list", "[\"http://blah.com\"]"
+        );
+    }
+
+    @Test
+    public void whenOldMarkAsFinalizedWasDisabled_andDefaultCompletedWasEnabled_thenDisableNewSaveAsDraftOptionAndRemoveOldSettings() {
+        initSettings(adminSettings, "mark_as_finalized", false);
+        initSettings(generalSettings, "default_completed", true);
+
+        runMigrations();
+
+        assertSettings(adminSettings, ProtectedProjectKeys.KEY_SAVE_AS_DRAFT, false);
+        assertThat(adminSettings.contains("mark_as_finalized"), equalTo(false));
+        assertThat(generalSettings.contains("default_completed"), equalTo(false));
+    }
+
+    @Test
+    public void whenOldMarkAsFinalizedWasDisabled_andDefaultCompletedWasDisabled_thenDisableNewFinalizeOptionAndRemoveOldSettings() {
+        initSettings(adminSettings, "mark_as_finalized", false);
+        initSettings(generalSettings, "default_completed", false);
+
+        runMigrations();
+
+        assertSettings(adminSettings, ProtectedProjectKeys.KEY_FINALIZE, false);
+        assertThat(adminSettings.contains("mark_as_finalized"), equalTo(false));
+        assertThat(generalSettings.contains("default_completed"), equalTo(false));
+    }
+
+    @Test
+    public void whenOldMarkAsFinalizedWasEnabled_andDefaultCompletedWasEnabled_thenDoNotUpdateNewFormFinalizationSettingsAndRemoveOldSettings() {
+        initSettings(adminSettings, "mark_as_finalized", true);
+        initSettings(generalSettings, "default_completed", true);
+
+        runMigrations();
+
+        assertThat(adminSettings.contains(ProtectedProjectKeys.KEY_SAVE_AS_DRAFT), equalTo(false));
+        assertThat(adminSettings.contains(ProtectedProjectKeys.KEY_FINALIZE), equalTo(false));
+        assertThat(adminSettings.contains("mark_as_finalized"), equalTo(false));
+        assertThat(generalSettings.contains("default_completed"), equalTo(false));
+    }
+
+    @Test
+    public void whenOldMarkAsFinalizedWasEnabled_andDefaultCompletedWasDisabled_thenDoNotUpdateNewFormFinalizationSettingsAndRemoveOldSettings() {
+        initSettings(adminSettings, "mark_as_finalized", true);
+        initSettings(generalSettings, "default_completed", false);
+
+        runMigrations();
+
+        assertThat(adminSettings.contains(ProtectedProjectKeys.KEY_SAVE_AS_DRAFT), equalTo(false));
+        assertThat(adminSettings.contains(ProtectedProjectKeys.KEY_FINALIZE), equalTo(false));
+        assertThat(adminSettings.contains("mark_as_finalized"), equalTo(false));
+        assertThat(generalSettings.contains("default_completed"), equalTo(false));
+    }
+
+    @Test
+    public void whenBothSaveAsDraftAndFinalizeOptionsAreDisabled_thenEnableThem() {
+        initSettings(adminSettings,
+                ProtectedProjectKeys.KEY_SAVE_AS_DRAFT, false,
+                ProtectedProjectKeys.KEY_FINALIZE, false
+        );
+
+        runMigrations();
+
+        assertSettings(adminSettings,
+                ProtectedProjectKeys.KEY_FINALIZE, true,
+                ProtectedProjectKeys.KEY_FINALIZE, true
         );
     }
 
