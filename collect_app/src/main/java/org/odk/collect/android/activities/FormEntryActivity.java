@@ -1295,7 +1295,8 @@ public class FormEntryActivity extends LocalizedActivity implements AnimationLis
         }
 
         boolean isSaveAsDraftEnabled = settingsProvider.getProtectedSettings().getBoolean(ProtectedProjectKeys.KEY_SAVE_AS_DRAFT);
-        FormEndView endView = new FormEndView(this, saveName, isSaveAsDraftEnabled, markAsFinalized ->
+        boolean isFinalizeEnabled = settingsProvider.getProtectedSettings().getBoolean(ProtectedProjectKeys.KEY_FINALIZE);
+        FormEndView endView = new FormEndView(this, saveName, isSaveAsDraftEnabled, isFinalizeEnabled, markAsFinalized ->
                 saveForm(true, markAsFinalized, saveName, false)
         );
 
