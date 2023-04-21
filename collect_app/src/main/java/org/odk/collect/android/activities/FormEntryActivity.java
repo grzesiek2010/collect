@@ -190,6 +190,7 @@ import org.odk.collect.permissions.PermissionsChecker;
 import org.odk.collect.permissions.PermissionsProvider;
 import org.odk.collect.settings.SettingsProvider;
 import org.odk.collect.settings.keys.ProjectKeys;
+import org.odk.collect.settings.keys.ProtectedProjectKeys;
 import org.odk.collect.shared.strings.Md5;
 import org.odk.collect.strings.localization.LocalizedActivity;
 
@@ -1293,7 +1294,8 @@ public class FormEntryActivity extends LocalizedActivity implements AnimationLis
             }
         }
 
-        FormEndView endView = new FormEndView(this, saveName, markAsFinalized ->
+        boolean isSaveAsDraftEnabled = settingsProvider.getProtectedSettings().getBoolean(ProtectedProjectKeys.KEY_SAVE_AS_DRAFT);
+        FormEndView endView = new FormEndView(this, saveName, isSaveAsDraftEnabled, markAsFinalized ->
                 saveForm(true, markAsFinalized, saveName, false)
         );
 
