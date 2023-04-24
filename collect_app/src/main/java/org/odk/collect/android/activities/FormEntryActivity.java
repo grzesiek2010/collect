@@ -1672,20 +1672,19 @@ public class FormEntryActivity extends LocalizedActivity implements AnimationLis
     private void createErrorDialog(FormError error) {
         formError = error;
 
+        if (alertDialog != null && alertDialog.isShowing()) {
+            alertDialog.dismiss();
+        }
+
         alertDialog = new MaterialAlertDialogBuilder(this).create();
         alertDialog.setTitle(getString(R.string.error_occured));
         alertDialog.setMessage(formError.getMessage());
-        DialogInterface.OnClickListener errorListener = new DialogInterface.OnClickListener() {
-            @Override
-            public void onClick(DialogInterface dialog, int i) {
-                switch (i) {
-                    case BUTTON_POSITIVE:
-                        if (formError instanceof FormError.Fatal) {
-                            formError = null;
-                            exit();
-                        }
-                        break;
+        DialogInterface.OnClickListener errorListener = (dialog, which) -> {
+            if (which == BUTTON_POSITIVE) {
+                if (formError instanceof FormError.Fatal) {
+                    exit();
                 }
+                formError = null;
             }
         };
         alertDialog.setCancelable(false);
@@ -1951,11 +1950,7 @@ public class FormEntryActivity extends LocalizedActivity implements AnimationLis
         }
 
         if (formError != null) {
-            if (alertDialog != null && !alertDialog.isShowing()) {
-                createErrorDialog(formError);
-            } else {
-                return;
-            }
+            createErrorDialog(formError);
         }
 
         FormController formController = getFormController();
