@@ -102,6 +102,7 @@ import org.odk.collect.android.formentry.BackgroundAudioViewModel;
 import org.odk.collect.android.formentry.FormEndView;
 import org.odk.collect.android.formentry.FormEntryMenuDelegate;
 import org.odk.collect.android.formentry.FormEntryViewModel;
+import org.odk.collect.android.formentry.FormError;
 import org.odk.collect.android.formentry.FormIndexAnimationHandler;
 import org.odk.collect.android.formentry.FormIndexAnimationHandler.Direction;
 import org.odk.collect.android.formentry.FormLoadingDialogFragment;
@@ -513,8 +514,8 @@ public class FormEntryActivity extends LocalizedActivity implements AnimationLis
         formEntryViewModel.setAnswerListener(this::onAnswer);
 
         formEntryViewModel.getError().observe(this, error -> {
-            if (error instanceof FormEntryViewModel.NonFatal) {
-                createErrorDialog(((FormEntryViewModel.NonFatal) error).getMessage(), false);
+            if (error instanceof FormError.NonFatal) {
+                createErrorDialog(((FormError.NonFatal) error).getMessage(), false);
                 formEntryViewModel.errorDisplayed();
             }
         });
