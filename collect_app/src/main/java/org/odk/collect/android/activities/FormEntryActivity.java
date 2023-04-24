@@ -269,7 +269,7 @@ public class FormEntryActivity extends LocalizedActivity implements AnimationLis
     private SwipeHandler.View currentView;
 
     private AlertDialog alertDialog;
-    private String errorMessage;
+    private FormError formError;
     private boolean shownAlertDialogIsGroupRepeat;
 
     private FormLoaderTask formLoaderTask;
@@ -433,7 +433,7 @@ public class FormEntryActivity extends LocalizedActivity implements AnimationLis
         }
         swipeHandler = new SwipeHandler(this, settingsProvider.getUnprotectedSettings());
 
-        errorMessage = null;
+        formError = null;
 
         questionHolder = findViewById(R.id.questionholder);
 
@@ -515,7 +515,7 @@ public class FormEntryActivity extends LocalizedActivity implements AnimationLis
 
         formEntryViewModel.getError().observe(this, error -> {
             if (error instanceof FormError.NonFatal) {
-                createErrorDialog(((FormError.NonFatal) error).getMessage(), false);
+                createErrorDialog(error);
                 formEntryViewModel.errorDisplayed();
             }
         });
@@ -528,7 +528,7 @@ public class FormEntryActivity extends LocalizedActivity implements AnimationLis
                         getCurrentViewIfODKView().highlightWidget(failedConstraint.index);
                     }
                 } catch (RepeatsInFieldListException e) {
-                    createErrorDialog(e.getMessage(), false);
+                    createErrorDialog(new FormError.NonFatal(e.getMessage()));
                 }
 
                 swipeHandler.setBeenSwiped(false);
@@ -602,7 +602,7 @@ public class FormEntryActivity extends LocalizedActivity implements AnimationLis
                 newForm = savedInstanceState.getBoolean(NEWFORM, true);
             }
             if (savedInstanceState.containsKey(KEY_ERROR)) {
-                errorMessage = savedInstanceState.getString(KEY_ERROR);
+                formError = savedInstanceState.getParcelable(KEY_ERROR);
             }
             saveName = savedInstanceState.getString(KEY_SAVE_NAME);
             if (savedInstanceState.containsKey(KEY_AUTO_SAVED)) {
@@ -620,8 +620,8 @@ public class FormEntryActivity extends LocalizedActivity implements AnimationLis
 
         // If a parse error message is showing then nothing else is loaded
         // Dialogs mid form just disappear on rotation.
-        if (errorMessage != null) {
-            createErrorDialog(errorMessage, true);
+        if (formError != null) {
+            createErrorDialog(formError);
             return;
         }
 
@@ -665,7 +665,7 @@ public class FormEntryActivity extends LocalizedActivity implements AnimationLis
             Instance instance = new InstancesRepositoryProvider(Collect.getInstance()).get().get(ContentUriHelper.getIdFromUri(uri));
 
             if (instance == null) {
-                createErrorDialog(getString(R.string.bad_uri, uri), true);
+                createErrorDialog(new FormError.Fatal(getString(R.string.bad_uri, uri)));
                 return;
             }
 
@@ -673,22 +673,22 @@ public class FormEntryActivity extends LocalizedActivity implements AnimationLis
             if (!new File(instancePath).exists()) {
                 Analytics.log(AnalyticsEvents.OPEN_DELETED_INSTANCE);
                 new InstanceDeleter(new InstancesRepositoryProvider(Collect.getInstance()).get(), formsRepository).delete(instance.getDbId());
-                createErrorDialog(getString(R.string.instance_deleted_message), true);
+                createErrorDialog(new FormError.Fatal(getString(R.string.instance_deleted_message)));
                 return;
             }
 
             List<Form> candidateForms = formsRepository.getAllByFormIdAndVersion(instance.getFormId(), instance.getFormVersion());
 
             if (candidateForms.isEmpty()) {
-                createErrorDialog(getString(
+                createErrorDialog(new FormError.Fatal(getString(
                         R.string.parent_form_not_present,
                         instance.getFormId())
                                 + ((instance.getFormVersion() == null) ? ""
-                                : "\n" + getString(R.string.version) + " " + instance.getFormVersion()),
-                        true);
+                                : "\n" + getString(R.string.version) + " " + instance.getFormVersion()))
+                );
                 return;
             } else if (candidateForms.stream().filter(f -> !f.isDeleted()).count() > 1) {
-                createErrorDialog(getString(R.string.survey_multiple_forms_error), true);
+                createErrorDialog(new FormError.Fatal(getString(R.string.survey_multiple_forms_error)));
                 return;
             }
 
@@ -700,7 +700,7 @@ public class FormEntryActivity extends LocalizedActivity implements AnimationLis
             }
 
             if (formPath == null) {
-                createErrorDialog(getString(R.string.bad_uri, uri), true);
+                createErrorDialog(new FormError.Fatal(getString(R.string.bad_uri, uri)));
                 return;
             } else {
                 /**
@@ -713,7 +713,7 @@ public class FormEntryActivity extends LocalizedActivity implements AnimationLis
             }
         } else {
             Timber.i("Unrecognized URI: %s", uri);
-            createErrorDialog(getString(R.string.unrecognized_uri, uri), true);
+            createErrorDialog(new FormError.Fatal(getString(R.string.unrecognized_uri, uri)));
             return;
         }
 
@@ -843,7 +843,7 @@ public class FormEntryActivity extends LocalizedActivity implements AnimationLis
             nonblockingCreateSavePointData();
         }
         outState.putBoolean(NEWFORM, false);
-        outState.putString(KEY_ERROR, errorMessage);
+        outState.putParcelable(KEY_ERROR, formError);
         outState.putString(KEY_SAVE_NAME, saveName);
         outState.putBoolean(KEY_AUTO_SAVED, autoSaved);
         outState.putBoolean(KEY_LOCATION_PERMISSIONS_GRANTED, locationPermissionsPreviouslyGranted);
@@ -910,7 +910,7 @@ public class FormEntryActivity extends LocalizedActivity implements AnimationLis
                     }
                 } catch (JavaRosaException e) {
                     Timber.e(e);
-                    createErrorDialog(e.getCause().getMessage(), false);
+                    createErrorDialog(new FormError.NonFatal(e.getCause().getMessage()));
                 }
                 break;
             case RequestCodes.DRAW_IMAGE:
@@ -1187,11 +1187,10 @@ public class FormEntryActivity extends LocalizedActivity implements AnimationLis
                     // this is badness to avoid a crash.
                     try {
                         event = formController.stepToNextScreenEvent();
-                        createErrorDialog(e.getMessage(), false);
+                        createErrorDialog(new FormError.NonFatal(e.getMessage()));
                     } catch (JavaRosaException e1) {
                         Timber.d(e1);
-                        createErrorDialog(e.getMessage() + "\n\n" + e1.getCause().getMessage(),
-                                false);
+                        createErrorDialog(new FormError.NonFatal(e.getMessage() + "\n\n" + e1.getCause().getMessage()));
                     }
                     return createView(event, advancingPage);
                 }
@@ -1211,10 +1210,10 @@ public class FormEntryActivity extends LocalizedActivity implements AnimationLis
                 // this is badness to avoid a crash.
                 try {
                     event = formController.stepToNextScreenEvent();
-                    createErrorDialog(getString(R.string.survey_internal_error), true);
+                    createErrorDialog(new FormError.Fatal(getString(R.string.survey_internal_error)));
                 } catch (JavaRosaException e) {
                     Timber.d(e);
-                    createErrorDialog(e.getCause().getMessage(), true);
+                    createErrorDialog(new FormError.Fatal(e.getCause().getMessage()));
                 }
                 return createView(event, advancingPage);
         }
@@ -1262,9 +1261,9 @@ public class FormEntryActivity extends LocalizedActivity implements AnimationLis
         } catch (JavaRosaException e) {
             Timber.d(e);
             if (e.getMessage().equals(e.getCause().getMessage())) {
-                createErrorDialog(e.getMessage(), false);
+                createErrorDialog(new FormError.NonFatal(e.getMessage()));
             } else {
-                createErrorDialog(e.getMessage() + "\n\n" + e.getCause().getMessage(), false);
+                createErrorDialog(new FormError.NonFatal(e.getMessage() + "\n\n" + e.getCause().getMessage()));
             }
         }
 
@@ -1567,7 +1566,7 @@ public class FormEntryActivity extends LocalizedActivity implements AnimationLis
                     }
                 }
             } catch (RepeatsInFieldListException e) {
-                createErrorDialog(e.getMessage(), false);
+                createErrorDialog(new FormError.NonFatal(e.getMessage()));
             }
         }
     }
@@ -1670,24 +1669,19 @@ public class FormEntryActivity extends LocalizedActivity implements AnimationLis
     /**
      * Creates and displays dialog with the given errorMsg.
      */
-    private void createErrorDialog(String errorMsg, final boolean shouldExit) {
-        if (alertDialog != null && alertDialog.isShowing()) {
-            errorMsg = errorMessage + "\n\n" + errorMsg;
-            errorMessage = errorMsg;
-        } else {
-            alertDialog = new MaterialAlertDialogBuilder(this).create();
-            errorMessage = errorMsg;
-        }
+    private void createErrorDialog(FormError error) {
+        formError = error;
 
+        alertDialog = new MaterialAlertDialogBuilder(this).create();
         alertDialog.setTitle(getString(R.string.error_occured));
-        alertDialog.setMessage(errorMsg);
+        alertDialog.setMessage(formError.getMessage());
         DialogInterface.OnClickListener errorListener = new DialogInterface.OnClickListener() {
             @Override
             public void onClick(DialogInterface dialog, int i) {
                 switch (i) {
                     case BUTTON_POSITIVE:
-                        if (shouldExit) {
-                            errorMessage = null;
+                        if (formError instanceof FormError.Fatal) {
+                            formError = null;
                             exit();
                         }
                         break;
@@ -1956,9 +1950,9 @@ public class FormEntryActivity extends LocalizedActivity implements AnimationLis
             updateNavigationButtonVisibility();
         }
 
-        if (errorMessage != null) {
+        if (formError != null) {
             if (alertDialog != null && !alertDialog.isShowing()) {
-                createErrorDialog(errorMessage, true);
+                createErrorDialog(formError);
             } else {
                 return;
             }
@@ -2281,9 +2275,9 @@ public class FormEntryActivity extends LocalizedActivity implements AnimationLis
         DialogFragmentUtils.dismissDialog(FormLoadingDialogFragment.class, getSupportFragmentManager());
 
         if (errorMsg != null) {
-            createErrorDialog(errorMsg, true);
+            createErrorDialog(new FormError.Fatal(errorMsg));
         } else {
-            createErrorDialog(getString(R.string.parse_error), true);
+            createErrorDialog(new FormError.Fatal(getString(R.string.parse_error)));
         }
     }
 
@@ -2532,10 +2526,10 @@ public class FormEntryActivity extends LocalizedActivity implements AnimationLis
                             }
                         });
                     } catch (RepeatsInFieldListException e) {
-                        createErrorDialog(e.getMessage(), false);
+                        createErrorDialog(new FormError.NonFatal(e.getMessage()));
                     } catch (Exception | Error e) {
                         Timber.e(e);
-                        createErrorDialog(getString(R.string.update_widgets_error), true);
+                        createErrorDialog(new FormError.Fatal(getString(R.string.update_widgets_error)));
                     }
                 }
             });
