@@ -9,6 +9,7 @@ import static org.odk.collect.settings.keys.ProjectKeys.KEY_CARTO_MAP_STYLE;
 import static org.odk.collect.settings.keys.ProjectKeys.KEY_GOOGLE_MAP_STYLE;
 import static org.odk.collect.settings.keys.ProjectKeys.KEY_MAPBOX_MAP_STYLE;
 import static org.odk.collect.settings.keys.ProjectKeys.KEY_USGS_MAP_STYLE;
+import static org.odk.collect.settings.migration.MigrationUtils.combineCrossSettingsKeys;
 import static org.odk.collect.settings.migration.MigrationUtils.combineKeys;
 import static org.odk.collect.settings.migration.MigrationUtils.extractNewKey;
 import static org.odk.collect.settings.migration.MigrationUtils.moveKey;
@@ -20,11 +21,16 @@ import static java.util.Arrays.asList;
 
 import org.odk.collect.settings.importing.SettingsMigrator;
 import org.odk.collect.settings.keys.ProtectedProjectKeys;
+import org.odk.collect.settings.migration.CrossSettingsKeyCombiner;
+import org.odk.collect.settings.migration.CrossSettingsMigration;
 import org.odk.collect.settings.migration.KeyRenamer;
 import org.odk.collect.settings.migration.KeyTranslator;
 import org.odk.collect.settings.migration.Migration;
+import org.odk.collect.settings.migration.SettingsKeyPair;
 import org.odk.collect.shared.settings.Settings;
 
+import java.util.Arrays;
+import java.util.Collections;
 import java.util.List;
 
 /**
@@ -52,7 +58,9 @@ public class ODKAppSettingsMigrator implements SettingsMigrator {
             migration.apply(metaPrefs);
         }
 
-        migrateFormFinalizationSettings(adminSettings, generalSettings);
+        for (CrossSettingsMigration migration : getCrossSettingsMigrations(adminSettings, generalSettings)) {
+            migration.apply();
+        }
     }
 
     private List<Migration> getUnprotectedMigrations() {
@@ -151,25 +159,24 @@ public class ODKAppSettingsMigrator implements SettingsMigrator {
         );
     }
 
-    private void migrateFormFinalizationSettings(Settings adminSettings, Settings generalSettings) {
-        if (adminSettings.contains("mark_as_finalized") && !adminSettings.getBoolean("mark_as_finalized")) {
-            if (generalSettings.getBoolean("default_completed") || !generalSettings.contains("default_completed")) {
-                adminSettings.save(ProtectedProjectKeys.KEY_SAVE_AS_DRAFT, false);
-            } else {
-                adminSettings.save(ProtectedProjectKeys.KEY_FINALIZE, false);
-            }
-        }
-
-        adminSettings.remove("mark_as_finalized");
-        generalSettings.remove("default_completed");
-
-        if (adminSettings.contains(ProtectedProjectKeys.KEY_SAVE_AS_DRAFT) &&
-                !adminSettings.getBoolean(ProtectedProjectKeys.KEY_SAVE_AS_DRAFT) &&
-                adminSettings.contains(ProtectedProjectKeys.KEY_FINALIZE) &&
-                !adminSettings.getBoolean(ProtectedProjectKeys.KEY_FINALIZE)
-        ) {
-            adminSettings.save(ProtectedProjectKeys.KEY_SAVE_AS_DRAFT, true);
-            adminSettings.save(ProtectedProjectKeys.KEY_FINALIZE, true);
-        }
+    public List<CrossSettingsKeyCombiner> getCrossSettingsMigrations(Settings protectedSettings, Settings unprotectedSettings) {
+        return Collections.singletonList(
+                combineCrossSettingsKeys(
+                        asList(
+                                new SettingsKeyPair(protectedSettings, "mark_as_finalized"),
+                                new SettingsKeyPair(unprotectedSettings, "default_completed")
+                        )
+                )
+                .withValues(false, false)
+                .toPairs(
+                    ProtectedProjectKeys.KEY_SAVE_AS_DRAFT, true,
+                    ProtectedProjectKeys.KEY_FINALIZE, false
+                )
+                .withValues(false, true)
+                .toPairs(
+                    ProtectedProjectKeys.KEY_SAVE_AS_DRAFT, false,
+                    ProtectedProjectKeys.KEY_FINALIZE, true
+                )
+        );
     }
 }

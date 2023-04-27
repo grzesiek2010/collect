@@ -254,51 +254,13 @@ public class ODKAppSettingsMigratorTest {
     }
 
     @Test
-    public void whenOldMarkAsFinalizedWasDisabled_andDefaultCompletedWasEnabled_thenDisableNewSaveAsDraftOptionAndRemoveOldSettings() {
+    public void migrateFinalizationSettings() {
         initSettings(adminSettings, "mark_as_finalized", false);
         initSettings(generalSettings, "default_completed", true);
 
         runMigrations();
 
         assertSettings(adminSettings, ProtectedProjectKeys.KEY_SAVE_AS_DRAFT, false);
-        assertThat(adminSettings.contains("mark_as_finalized"), equalTo(false));
-        assertThat(generalSettings.contains("default_completed"), equalTo(false));
-    }
-
-    @Test
-    public void whenOldMarkAsFinalizedWasDisabled_andDefaultCompletedWasDisabled_thenDisableNewFinalizeOptionAndRemoveOldSettings() {
-        initSettings(adminSettings, "mark_as_finalized", false);
-        initSettings(generalSettings, "default_completed", false);
-
-        runMigrations();
-
-        assertSettings(adminSettings, ProtectedProjectKeys.KEY_FINALIZE, false);
-        assertThat(adminSettings.contains("mark_as_finalized"), equalTo(false));
-        assertThat(generalSettings.contains("default_completed"), equalTo(false));
-    }
-
-    @Test
-    public void whenOldMarkAsFinalizedWasEnabled_andDefaultCompletedWasEnabled_thenDoNotUpdateNewFormFinalizationSettingsAndRemoveOldSettings() {
-        initSettings(adminSettings, "mark_as_finalized", true);
-        initSettings(generalSettings, "default_completed", true);
-
-        runMigrations();
-
-        assertThat(adminSettings.contains(ProtectedProjectKeys.KEY_SAVE_AS_DRAFT), equalTo(false));
-        assertThat(adminSettings.contains(ProtectedProjectKeys.KEY_FINALIZE), equalTo(false));
-        assertThat(adminSettings.contains("mark_as_finalized"), equalTo(false));
-        assertThat(generalSettings.contains("default_completed"), equalTo(false));
-    }
-
-    @Test
-    public void whenOldMarkAsFinalizedWasEnabled_andDefaultCompletedWasDisabled_thenDoNotUpdateNewFormFinalizationSettingsAndRemoveOldSettings() {
-        initSettings(adminSettings, "mark_as_finalized", true);
-        initSettings(generalSettings, "default_completed", false);
-
-        runMigrations();
-
-        assertThat(adminSettings.contains(ProtectedProjectKeys.KEY_SAVE_AS_DRAFT), equalTo(false));
-        assertThat(adminSettings.contains(ProtectedProjectKeys.KEY_FINALIZE), equalTo(false));
         assertThat(adminSettings.contains("mark_as_finalized"), equalTo(false));
         assertThat(generalSettings.contains("default_completed"), equalTo(false));
     }

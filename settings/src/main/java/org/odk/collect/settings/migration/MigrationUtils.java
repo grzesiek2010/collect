@@ -4,6 +4,8 @@ import android.annotation.SuppressLint;
 
 import org.odk.collect.shared.settings.Settings;
 
+import java.util.List;
+
 public final class MigrationUtils {
 
     private MigrationUtils() {
@@ -51,6 +53,10 @@ public final class MigrationUtils {
      */
     public static KeyCombiner combineKeys(String... oldKeys) {
         return new KeyCombiner(oldKeys);
+    }
+
+    public static CrossSettingsKeyCombiner combineCrossSettingsKeys(List<SettingsKeyPair> oldSettings) {
+        return new CrossSettingsKeyCombiner(oldSettings);
     }
 
     public static KeyMover moveKey(String key) {
