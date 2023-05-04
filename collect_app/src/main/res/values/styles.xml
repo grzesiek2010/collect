@@ -1,5 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
+    <style name="TextAppearanceLabelExtraLarge" parent="TextAppearance.Material3.LabelLarge">
+        <item name="android:textSize">18sp</item>
+    </style>
 
     <style name="Widget.Collect.TextView.Empty" parent="Widget.AppCompat.TextView">
         <item name="android:layout_width">match_parent</item>
