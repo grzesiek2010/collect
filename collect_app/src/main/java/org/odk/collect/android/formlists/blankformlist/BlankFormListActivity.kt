@@ -6,6 +6,7 @@ import android.os.Bundle
 import android.view.View
 import android.widget.ProgressBar
 import android.widget.TextView
+import androidx.activity.result.contract.ActivityResultContracts
 import androidx.activity.viewModels
 import androidx.recyclerview.widget.RecyclerView
 import org.odk.collect.android.R
@@ -36,6 +37,12 @@ class BlankFormListActivity : LocalizedActivity(), OnFormItemClickListener {
 
     private val adapter: BlankFormListAdapter = BlankFormListAdapter(this)
 
+    private val openForm =
+        registerForActivityResult(ActivityResultContracts.StartActivityForResult()) {
+            setResult(RESULT_OK, it.data)
+            finish()
+        }
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         DaggerUtils.getComponent(this).inject(this)
@@ -57,9 +64,8 @@ class BlankFormListActivity : LocalizedActivity(), OnFormItemClickListener {
             setResult(RESULT_OK, Intent().setData(formUri))
         } else {
             // caller wants to view/edit a form, so launch FormFillingActivity
-            startActivity(FormFillingIntentFactory.newInstanceIntent(this, formUri))
+            openForm.launch(FormFillingIntentFactory.newInstanceIntent(this, formUri))
         }
-        finish()
     }
 
     override fun onMapButtonClick(id: Long) {
