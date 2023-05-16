@@ -6,6 +6,7 @@ import android.os.Bundle
 import android.view.Menu
 import android.view.MenuItem
 import android.view.View
+import androidx.activity.result.contract.ActivityResultContracts
 import androidx.appcompat.widget.Toolbar
 import androidx.core.splashscreen.SplashScreen.Companion.installSplashScreen
 import androidx.lifecycle.ViewModelProvider
@@ -52,6 +53,10 @@ class MainMenuActivity : LocalizedActivity() {
     private lateinit var binding: MainMenuBinding
     private lateinit var mainMenuViewModel: MainMenuViewModel
     private lateinit var currentProjectViewModel: CurrentProjectViewModel
+
+    private val openListOfForms =
+        registerForActivityResult(ActivityResultContracts.StartActivityForResult()) {
+        }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         initSplashScreen()
@@ -168,7 +173,9 @@ class MainMenuActivity : LocalizedActivity() {
 
     private fun initButtons() {
         binding.enterData.setOnClickListener {
-            startActivity(Intent(this, BlankFormListActivity::class.java))
+            openListOfForms.launch(
+                Intent(this, BlankFormListActivity::class.java)
+            )
         }
 
         binding.reviewData.setOnClickListener {
