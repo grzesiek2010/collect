@@ -495,8 +495,10 @@ public class AppDependencyModule {
     @Provides
     public MainMenuViewModel.Factory providesMainMenuViewModelFactory(VersionInformation versionInformation, Application application,
                                                                       SettingsProvider settingsProvider, InstancesAppState instancesAppState,
-                                                                      Scheduler scheduler) {
-        return new MainMenuViewModel.Factory(versionInformation, application, settingsProvider, instancesAppState, scheduler);
+                                                                      Scheduler scheduler, FormsRepositoryProvider formsRepositoryProvider,
+                                                                      InstancesRepositoryProvider instancesRepositoryProvider, AutoSendSettingsProvider autoSendSettingsProvider,
+                                                                      NetworkStateProvider networkStateProvider) {
+        return new MainMenuViewModel.Factory(versionInformation, application, settingsProvider, instancesAppState, scheduler, formsRepositoryProvider.get(), instancesRepositoryProvider.get(), autoSendSettingsProvider, networkStateProvider);
     }
 
     @Provides

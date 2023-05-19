@@ -30,12 +30,16 @@ import org.odk.collect.android.application.initialization.AnalyticsInitializer
 import org.odk.collect.android.formlists.blankformlist.BlankFormListActivity
 import org.odk.collect.android.formmanagement.InstancesAppState
 import org.odk.collect.android.injection.config.AppDependencyModule
+import org.odk.collect.android.instancemanagement.autosend.AutoSendSettingsProvider
 import org.odk.collect.android.projects.CurrentProjectProvider
 import org.odk.collect.android.storage.StoragePathProvider
 import org.odk.collect.android.support.CollectHelpers
 import org.odk.collect.android.utilities.ApplicationConstants
+import org.odk.collect.android.utilities.FormsRepositoryProvider
+import org.odk.collect.android.utilities.InstancesRepositoryProvider
 import org.odk.collect.android.version.VersionInformation
 import org.odk.collect.androidshared.livedata.MutableNonNullLiveData
+import org.odk.collect.androidshared.network.NetworkStateProvider
 import org.odk.collect.androidtest.ActivityScenarioLauncherRule
 import org.odk.collect.async.Scheduler
 import org.odk.collect.projects.Project
@@ -69,14 +73,22 @@ class MainMenuActivityTest {
                 application: Application,
                 settingsProvider: SettingsProvider,
                 instancesAppState: InstancesAppState,
-                scheduler: Scheduler
+                scheduler: Scheduler,
+                formsRepositoryProvider: FormsRepositoryProvider,
+                instancesRepositoryProvider: InstancesRepositoryProvider,
+                autoSendSettingsProvider: AutoSendSettingsProvider,
+                networkStateProvider: NetworkStateProvider
             ): MainMenuViewModel.Factory {
                 return object : MainMenuViewModel.Factory(
                     versionInformation,
                     application,
                     settingsProvider,
                     instancesAppState,
-                    scheduler
+                    scheduler,
+                    formsRepositoryProvider.get(),
+                    instancesRepositoryProvider.get(),
+                    autoSendSettingsProvider,
+                    networkStateProvider
                 ) {
                     override fun <T : ViewModel> create(modelClass: Class<T>): T {
                         return mainMenuViewModel as T
