@@ -6,6 +6,7 @@ import android.os.Bundle
 import android.view.Menu
 import android.view.MenuItem
 import android.view.View
+import androidx.activity.result.ActivityResult
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.appcompat.widget.Toolbar
 import androidx.core.splashscreen.SplashScreen.Companion.installSplashScreen
@@ -24,6 +25,7 @@ import org.odk.collect.android.application.MapboxClassInstanceCreator.createMapB
 import org.odk.collect.android.application.MapboxClassInstanceCreator.isMapboxAvailable
 import org.odk.collect.android.databinding.MainMenuBinding
 import org.odk.collect.android.formlists.blankformlist.BlankFormListActivity
+import org.odk.collect.android.formmanagement.FormFillingIntentFactory
 import org.odk.collect.android.gdrive.GoogleDriveActivity
 import org.odk.collect.android.injection.DaggerUtils
 import org.odk.collect.android.projects.ProjectIconView
@@ -32,6 +34,7 @@ import org.odk.collect.android.utilities.ApplicationConstants
 import org.odk.collect.android.utilities.PlayServicesChecker
 import org.odk.collect.android.utilities.ThemeUtils
 import org.odk.collect.androidshared.ui.DialogFragmentUtils.showIfNotShowing
+import org.odk.collect.androidshared.ui.SnackbarUtils
 import org.odk.collect.androidshared.ui.multiclicksafe.MultiClickGuard.allowClick
 import org.odk.collect.crashhandler.CrashHandler
 import org.odk.collect.projects.Project.Saved
@@ -54,8 +57,14 @@ class MainMenuActivity : LocalizedActivity() {
     private lateinit var mainMenuViewModel: MainMenuViewModel
     private lateinit var currentProjectViewModel: CurrentProjectViewModel
 
+    private val openForm =
+        registerForActivityResult(ActivityResultContracts.StartActivityForResult()) {
+            displayFormSavedSnackbar(it)
+        }
+
     private val openListOfForms =
         registerForActivityResult(ActivityResultContracts.StartActivityForResult()) {
+            displayFormSavedSnackbar(it)
         }
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -295,6 +304,23 @@ class MainMenuActivity : LocalizedActivity() {
             }
         } else {
             binding.googleDriveDeprecationBanner.root.visibility = View.GONE
+        }
+    }
+
+    private fun displayFormSavedSnackbar(activityResult: ActivityResult) {
+        activityResult.data?.data?.let { uri ->
+            val formSavedSnackbarType = mainMenuViewModel.getFormSavedSnackbarType(uri)
+
+            formSavedSnackbarType?.let { it ->
+                SnackbarUtils.showLongSnackbar(
+                    binding.root,
+                    getString(it.message),
+                    action = SnackbarUtils.Action(getString(it.actionName)) {
+                        openForm.launch(FormFillingIntentFactory.editInstanceIntent(this, uri))
+                    },
+                    displayDismissButton = true
+                )
+            }
         }
     }
 }
