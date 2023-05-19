@@ -1,15 +1,23 @@
 package org.odk.collect.android.mainmenu
 
 import android.app.Application
+import android.net.Uri
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
 import org.odk.collect.android.formmanagement.InstancesAppState
 import org.odk.collect.android.instancemanagement.InstanceDiskSynchronizer
+import org.odk.collect.android.instancemanagement.autosend.AutoSendSettingsProvider
+import org.odk.collect.android.instancemanagement.autosend.shouldFormBeSentAutomatically
 import org.odk.collect.android.preferences.utilities.FormUpdateMode
 import org.odk.collect.android.preferences.utilities.SettingsUtils
+import org.odk.collect.android.utilities.ContentUriHelper
+import org.odk.collect.android.utilities.FormsRepositoryProvider
+import org.odk.collect.android.utilities.InstancesRepositoryProvider
 import org.odk.collect.android.version.VersionInformation
+import org.odk.collect.androidshared.network.NetworkStateProvider
 import org.odk.collect.async.Scheduler
+import org.odk.collect.forms.instances.Instance
 import org.odk.collect.settings.SettingsProvider
 import org.odk.collect.settings.keys.ProtectedProjectKeys
 
@@ -18,7 +26,11 @@ class MainMenuViewModel(
     private val versionInformation: VersionInformation,
     private val settingsProvider: SettingsProvider,
     private val instancesAppState: InstancesAppState,
-    private val scheduler: Scheduler
+    private val scheduler: Scheduler,
+    private val formsRepositoryProvider: FormsRepositoryProvider,
+    private val instancesRepositoryProvider: InstancesRepositoryProvider,
+    private val autoSendSettingsProvider: AutoSendSettingsProvider,
+    private val networkStateProvider: NetworkStateProvider
 ) : ViewModel() {
 
     val version: String
@@ -95,12 +107,39 @@ class MainMenuViewModel(
     val sentInstancesCount: LiveData<Int>
         get() = instancesAppState.sentCount
 
+    fun getFormSavedSnackbarType(uri: Uri): FormSavedSnackbarType? {
+        val instance = instancesRepositoryProvider.get().get(ContentUriHelper.getIdFromUri(uri))
+        if (instance != null) {
+            return when (instance.status) {
+                Instance.STATUS_INCOMPLETE -> FormSavedSnackbarType.SAVED_AS_DRAFT
+                Instance.STATUS_COMPLETE -> {
+                    val form = formsRepositoryProvider.get().getAllByFormIdAndVersion(instance.formId, instance.formVersion).first()
+                    if (form.shouldFormBeSentAutomatically(autoSendSettingsProvider.isAutoSendEnabledInSettings())) {
+                        if (networkStateProvider.isDeviceOnline) {
+                            FormSavedSnackbarType.SENDING
+                        } else {
+                            FormSavedSnackbarType.SENDING_NO_INTERNET_CONNECTION
+                        }
+                    } else {
+                        FormSavedSnackbarType.FINALIZED
+                    }
+                }
+                else -> null
+            }
+        }
+        return null
+    }
+
     open class Factory(
         private val versionInformation: VersionInformation,
         private val application: Application,
         private val settingsProvider: SettingsProvider,
         private val instancesAppState: InstancesAppState,
-        private val scheduler: Scheduler
+        private val scheduler: Scheduler,
+        private val formsRepositoryProvider: FormsRepositoryProvider,
+        private val instancesRepositoryProvider: InstancesRepositoryProvider,
+        private val autoSendSettingsProvider: AutoSendSettingsProvider,
+        private val networkStateProvider: NetworkStateProvider
     ) : ViewModelProvider.Factory {
         override fun <T : ViewModel> create(modelClass: Class<T>): T {
             return MainMenuViewModel(
@@ -108,7 +147,11 @@ class MainMenuViewModel(
                 versionInformation,
                 settingsProvider,
                 instancesAppState,
-                scheduler
+                scheduler,
+                formsRepositoryProvider,
+                instancesRepositoryProvider,
+                autoSendSettingsProvider,
+                networkStateProvider
             ) as T
         }
     }
