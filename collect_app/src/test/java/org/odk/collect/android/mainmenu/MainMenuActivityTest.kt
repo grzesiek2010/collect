@@ -67,6 +67,8 @@ class MainMenuActivityTest {
 
     @Before
     fun setup() {
+        CollectHelpers.createDemoProject()
+
         CollectHelpers.overrideAppDependencyModule(object : AppDependencyModule() {
             override fun providesMainMenuViewModelFactory(
                 versionInformation: VersionInformation,
