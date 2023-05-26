@@ -6,6 +6,7 @@ import java.util.Locale
 
 class MarkerIconDescription @JvmOverloads constructor(
     val icon: Int,
+    val isVisible: Boolean = true,
     private val color: String? = null,
     private val symbol: String? = null
 ) {

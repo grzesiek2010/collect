@@ -289,7 +289,7 @@ class SelectionMapFragment(
 
                 map.setMarkerIcon(
                     featureId,
-                    MarkerIconDescription(item.largeIcon, item.color, item.symbol)
+                    MarkerIconDescription(item.largeIcon, color = item.color, symbol = item.symbol)
                 )
 
                 summarySheet.setItem(item)
@@ -355,7 +355,7 @@ class SelectionMapFragment(
         if (featureId != null) {
             map.setMarkerIcon(
                 featureId,
-                MarkerIconDescription(selectedItem.smallIcon, selectedItem.color, selectedItem.symbol)
+                MarkerIconDescription(selectedItem.smallIcon, color = selectedItem.color, symbol = selectedItem.symbol)
             )
         }
     }
@@ -378,7 +378,7 @@ class SelectionMapFragment(
                 MapPoint(point.latitude, point.longitude),
                 false,
                 MapFragment.BOTTOM,
-                MarkerIconDescription(it.smallIcon, it.color, it.symbol)
+                MarkerIconDescription(it.smallIcon, color = it.color, symbol = it.symbol)
             )
         }
 

@@ -834,7 +834,7 @@ public class OsmDroidMapFragment extends Fragment implements MapFragment,
             paint.setStrokeWidth(STROKE_WIDTH);
             map.getOverlays().add(polyline);
             for (MapPoint point : points) {
-                markers.add(createMarker(map, new MarkerDescription(point, draggable, CENTER, new MarkerIconDescription(R.drawable.ic_map_point))));
+                markers.add(createMarker(map, new MarkerDescription(point, draggable, CENTER, new MarkerIconDescription(R.drawable.ic_map_point, draggable))));
             }
             update();
         }
@@ -881,7 +881,7 @@ public class OsmDroidMapFragment extends Fragment implements MapFragment,
         }
 
         public void addPoint(MapPoint point) {
-            markers.add(createMarker(map, new MarkerDescription(point, draggable, CENTER, new MarkerIconDescription(R.drawable.ic_map_point))));
+            markers.add(createMarker(map, new MarkerDescription(point, draggable, CENTER, new MarkerIconDescription(R.drawable.ic_map_point, draggable))));
             update();
         }
 
@@ -923,7 +923,7 @@ public class OsmDroidMapFragment extends Fragment implements MapFragment,
             });
 
             for (MapPoint point : points) {
-                markers.add(createMarker(map, new MarkerDescription(point, false, CENTER, new MarkerIconDescription(R.drawable.ic_map_point))));
+                markers.add(createMarker(map, new MarkerDescription(point, false, CENTER, new MarkerIconDescription(R.drawable.ic_map_point, false))));
             }
         }
 

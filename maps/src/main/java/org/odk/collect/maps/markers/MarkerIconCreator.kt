@@ -5,8 +5,12 @@ import android.graphics.Bitmap
 import android.graphics.Canvas
 import android.graphics.Color
 import android.graphics.Paint
+import android.graphics.Rect
 import android.graphics.Typeface
 import android.graphics.drawable.BitmapDrawable
+import android.graphics.drawable.ColorDrawable
+import android.graphics.drawable.ShapeDrawable
+import android.graphics.drawable.shapes.OvalShape
 import android.util.LruCache
 import androidx.core.content.ContextCompat
 import androidx.core.graphics.ColorUtils
@@ -34,7 +38,7 @@ object MarkerIconCreator {
         val bitmapId = drawableId.toString() + color + symbol
 
         return if (cache[bitmapId] == null) {
-            createBitmap(context, drawableId, color, symbol).also {
+            createBitmap(context, drawableId, color, symbol, markerIconDescription.isVisible).also {
                 cache.put(bitmapId, it)
             }
         } else {
@@ -46,11 +50,16 @@ object MarkerIconCreator {
         context: Context,
         drawableId: Int,
         color: Int?,
-        symbol: String?
+        symbol: String?,
+        display: Boolean = true
     ): Bitmap {
         val drawable = ContextCompat.getDrawable(context, drawableId)
         if (drawable != null) {
             drawable.mutate()
+
+            if (!display) {
+                drawable.alpha = 0
+            }
 
             val isBackgroundDark = color?.let {
                 drawable.setTint(it)
