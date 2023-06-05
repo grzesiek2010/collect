@@ -34,16 +34,18 @@ internal class PolyLineFeature(
     init {
         initMapPoints.forEach {
             mapPoints.add(it)
-            pointAnnotations.add(
-                MapUtils.createPointAnnotation(
-                    pointAnnotationManager,
-                    it,
-                    draggable,
-                    MapFragment.CENTER,
-                    R.drawable.ic_map_point,
-                    context
+            if (draggable) {
+                pointAnnotations.add(
+                    MapUtils.createPointAnnotation(
+                        pointAnnotationManager,
+                        it,
+                        true,
+                        MapFragment.CENTER,
+                        R.drawable.ic_map_point,
+                        context
+                    )
                 )
-            )
+            }
         }
 
         updateLine()
@@ -79,24 +81,28 @@ internal class PolyLineFeature(
 
     fun appendPoint(point: MapPoint) {
         mapPoints.add(point)
-        pointAnnotations.add(
-            MapUtils.createPointAnnotation(
-                pointAnnotationManager,
-                point,
-                draggable,
-                MapFragment.CENTER,
-                R.drawable.ic_map_point,
-                context
+        if (draggable) {
+            pointAnnotations.add(
+                MapUtils.createPointAnnotation(
+                    pointAnnotationManager,
+                    point,
+                    true,
+                    MapFragment.CENTER,
+                    R.drawable.ic_map_point,
+                    context
+                )
             )
-        )
+        }
         updateLine()
     }
 
     fun removeLastPoint() {
-        if (pointAnnotations.isNotEmpty()) {
-            pointAnnotationManager.delete(pointAnnotations.last())
-            pointAnnotations.removeLast()
+        if (mapPoints.isNotEmpty()) {
             mapPoints.removeLast()
+            if (pointAnnotations.isNotEmpty()) {
+                pointAnnotationManager.delete(pointAnnotations.last())
+                pointAnnotations.removeLast()
+            }
             updateLine()
         }
     }

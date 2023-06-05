@@ -793,6 +793,7 @@ public class GoogleMapFragment extends SupportMapFragment implements
         public static final int STROKE_WIDTH = 5;
 
         private final Context context;
+        private final List<MapPoint> points;
         private final GoogleMap map;
         private final List<Marker> markers = new ArrayList<>();
         private final boolean closedPolygon;
@@ -801,6 +802,7 @@ public class GoogleMapFragment extends SupportMapFragment implements
 
         PolyLineFeature(Context context, List<MapPoint> points, boolean closedPolygon, boolean draggable, GoogleMap map) {
             this.context = context;
+            this.points = points;
             this.map = map;
             this.closedPolygon = closedPolygon;
             this.draggable = draggable;
@@ -809,8 +811,10 @@ public class GoogleMapFragment extends SupportMapFragment implements
                 return;
             }
 
-            for (MapPoint point : points) {
-                markers.add(createMarker(context, new MarkerDescription(point, draggable, CENTER, new MarkerIconDescription(R.drawable.ic_map_point)), map));
+            if (draggable) {
+                for (MapPoint point : points) {
+                    markers.add(createMarker(context, new MarkerDescription(point, true, CENTER, new MarkerIconDescription(R.drawable.ic_map_point)), map));
+                }
             }
 
             update();
@@ -831,13 +835,17 @@ public class GoogleMapFragment extends SupportMapFragment implements
 
         public void update() {
             List<LatLng> latLngs = new ArrayList<>();
-            for (Marker marker : markers) {
-                latLngs.add(marker.getPosition());
+            if (draggable) {
+                for (Marker marker : markers) {
+                    latLngs.add(marker.getPosition());
+                }
+            } else {
+                latLngs = points.stream().map(mapPoint -> new LatLng(mapPoint.latitude, mapPoint.longitude)).collect(Collectors.toList());
             }
             if (closedPolygon && !latLngs.isEmpty()) {
                 latLngs.add(latLngs.get(0));
             }
-            if (markers.isEmpty()) {
+            if (points.isEmpty()) {
                 clearPolyline();
             } else if (polyline == null) {
                 polyline = map.addPolyline(new PolylineOptions()
@@ -861,10 +869,6 @@ public class GoogleMapFragment extends SupportMapFragment implements
         }
 
         public List<MapPoint> getPoints() {
-            List<MapPoint> points = new ArrayList<>();
-            for (Marker marker : markers) {
-                points.add(fromMarker(marker));
-            }
             return points;
         }
 
@@ -872,15 +876,21 @@ public class GoogleMapFragment extends SupportMapFragment implements
             if (map == null) {  // during Robolectric tests, map will be null
                 return;
             }
-            markers.add(createMarker(context, new MarkerDescription(point, draggable, CENTER, new MarkerIconDescription(R.drawable.ic_map_point)), map));
+            points.add(point);
+            if (draggable) {
+                markers.add(createMarker(context, new MarkerDescription(point, true, CENTER, new MarkerIconDescription(R.drawable.ic_map_point)), map));
+            }
             update();
         }
 
         public void removeLastPoint() {
-            if (!markers.isEmpty()) {
-                int last = markers.size() - 1;
-                markers.get(last).remove();
-                markers.remove(last);
+            if (!points.isEmpty()) {
+                points.remove(points.size() - 1);
+                if (!markers.isEmpty()) {
+                    int last = markers.size() - 1;
+                    markers.get(last).remove();
+                    markers.remove(last);
+                }
                 update();
             }
         }

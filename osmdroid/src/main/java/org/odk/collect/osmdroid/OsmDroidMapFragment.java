@@ -809,6 +809,7 @@ public class OsmDroidMapFragment extends Fragment implements MapFragment,
      */
     private class PolyLineFeature implements MapFeature {
         final MapView map;
+        private final List<MapPoint> points;
         final List<Marker> markers = new ArrayList<>();
         final Polyline polyline;
         final boolean closedPolygon;
@@ -817,6 +818,7 @@ public class OsmDroidMapFragment extends Fragment implements MapFragment,
 
         PolyLineFeature(MapView map, List<MapPoint> points, boolean closedPolygon, boolean draggable) {
             this.map = map;
+            this.points = points;
             this.closedPolygon = closedPolygon;
             this.draggable = draggable;
             polyline = new Polyline();
@@ -832,8 +834,11 @@ public class OsmDroidMapFragment extends Fragment implements MapFragment,
             Paint paint = polyline.getPaint();
             paint.setStrokeWidth(STROKE_WIDTH);
             map.getOverlays().add(polyline);
-            for (MapPoint point : points) {
-                markers.add(createMarker(map, new MarkerDescription(point, draggable, CENTER, new MarkerIconDescription(R.drawable.ic_map_point))));
+
+            if (draggable) {
+                for (MapPoint point : points) {
+                    markers.add(createMarker(map, new MarkerDescription(point, true, CENTER, new MarkerIconDescription(R.drawable.ic_map_point))));
+                }
             }
             update();
         }
@@ -853,8 +858,12 @@ public class OsmDroidMapFragment extends Fragment implements MapFragment,
 
         public void update() {
             List<GeoPoint> geoPoints = new ArrayList<>();
-            for (Marker marker : markers) {
-                geoPoints.add(marker.getPosition());
+            if (draggable) {
+                for (Marker marker : markers) {
+                    geoPoints.add(marker.getPosition());
+                }
+            } else {
+                geoPoints = points.stream().map(mapPoint -> new GeoPoint(mapPoint.latitude, mapPoint.longitude, mapPoint.altitude)).collect(Collectors.toList());
             }
             if (closedPolygon && !geoPoints.isEmpty()) {
                 geoPoints.add(geoPoints.get(0));
@@ -872,23 +881,25 @@ public class OsmDroidMapFragment extends Fragment implements MapFragment,
         }
 
         public List<MapPoint> getPoints() {
-            List<MapPoint> points = new ArrayList<>();
-            for (Marker marker : markers) {
-                points.add(fromMarker(marker));
-            }
             return points;
         }
 
         public void addPoint(MapPoint point) {
-            markers.add(createMarker(map, new MarkerDescription(point, draggable, CENTER, new MarkerIconDescription(R.drawable.ic_map_point))));
+            points.add(point);
+            if (draggable) {
+                markers.add(createMarker(map, new MarkerDescription(point, true, CENTER, new MarkerIconDescription(R.drawable.ic_map_point))));
+            }
             update();
         }
 
         public void removeLastPoint() {
-            if (!markers.isEmpty()) {
-                int last = markers.size() - 1;
-                map.getOverlays().remove(markers.get(last));
-                markers.remove(last);
+            if (!points.isEmpty()) {
+                points.remove(points.size() - 1);
+                if (!markers.isEmpty()) {
+                    int last = markers.size() - 1;
+                    map.getOverlays().remove(markers.get(last));
+                    markers.remove(last);
+                }
                 update();
             }
         }
