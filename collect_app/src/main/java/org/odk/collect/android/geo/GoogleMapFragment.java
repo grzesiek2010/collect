@@ -313,7 +313,7 @@ public class GoogleMapFragment extends SupportMapFragment implements
     @Override
     public int addPolygon(@NonNull List<MapPoint> points, boolean draggable) {
         int featureId = nextFeatureId++;
-        features.put(featureId, new PolygonFeature(requireActivity(), map, points, requireContext().getResources().getColor(R.color.mapLineColor), draggable));
+        features.put(featureId, new StaticPolygonFeature(map, points, requireContext().getResources().getColor(R.color.mapLineColor)));
         return featureId;
     }
 
@@ -903,12 +903,10 @@ public class GoogleMapFragment extends SupportMapFragment implements
         }
     }
 
-    private static class PolygonFeature implements MapFeature {
-
+    private static class StaticPolygonFeature implements MapFeature {
         private Polygon polygon;
-        private final List<Marker> markers = new ArrayList<>();
 
-        PolygonFeature(Context context, GoogleMap map, List<MapPoint> points, int strokeLineColor, boolean draggable) {
+        StaticPolygonFeature(GoogleMap map, List<MapPoint> points, int strokeLineColor) {
             polygon = map.addPolygon(new PolygonOptions()
                     .addAll(points.stream().map(mapPoint -> new LatLng(mapPoint.latitude, mapPoint.longitude)).collect(Collectors.toList()))
                     .strokeColor(strokeLineColor)
@@ -916,17 +914,11 @@ public class GoogleMapFragment extends SupportMapFragment implements
                     .fillColor(ColorUtils.setAlphaComponent(strokeLineColor, 68))
                     .clickable(true)
             );
-
-            if (draggable) {
-                for (MapPoint point : points) {
-                    markers.add(createMarker(context, new MarkerDescription(point, true, CENTER, new MarkerIconDescription(R.drawable.ic_map_point)), map));
-                }
-            }
         }
 
         @Override
         public boolean ownsMarker(Marker marker) {
-            return markers.contains(marker);
+            return false;
         }
 
         @Override
@@ -950,11 +942,6 @@ public class GoogleMapFragment extends SupportMapFragment implements
                 polygon.remove();
                 polygon = null;
             }
-
-            for (Marker marker : markers) {
-                marker.remove();
-            }
-            markers.clear();
         }
     }
 }
