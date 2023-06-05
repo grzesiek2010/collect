@@ -19,7 +19,8 @@ class PolygonFeature(
     private val polygonAnnotationManager: PolygonAnnotationManager,
     points: Iterable<MapPoint>,
     featureClickListener: MapFragment.FeatureListener?,
-    featureId: Int
+    featureId: Int,
+    draggable: Boolean
 ) : MapFeature {
 
     private val polygonAnnotation: PolygonAnnotation = polygonAnnotationManager.create(

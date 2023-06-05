@@ -355,7 +355,8 @@ class MapboxMapFragment :
             mapView.annotations.createPolygonAnnotationManager(),
             points,
             featureClickListener,
-            featureId
+            featureId,
+            draggable
         )
 
         return featureId
