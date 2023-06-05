@@ -311,7 +311,7 @@ public class GoogleMapFragment extends SupportMapFragment implements
     }
 
     @Override
-    public int addPolygon(@NonNull Iterable<MapPoint> points) {
+    public int addPolygon(@NonNull Iterable<MapPoint> points, boolean draggable) {
         int featureId = nextFeatureId++;
         features.put(featureId, new PolygonFeature(requireActivity(), map, points, requireContext().getResources().getColor(R.color.mapLineColor)));
         return featureId;

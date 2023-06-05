@@ -61,7 +61,7 @@ class NoOpMapFragment : Fragment(), MapFragment {
         TODO("Not yet implemented")
     }
 
-    override fun addPolygon(points: MutableIterable<MapPoint>): Int {
+    override fun addPolygon(points: MutableIterable<MapPoint>, draggable: Boolean): Int {
         TODO("Not yet implemented")
     }
 

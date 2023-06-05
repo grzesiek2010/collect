@@ -340,7 +340,7 @@ public class OsmDroidMapFragment extends Fragment implements MapFragment,
     }
 
     @Override
-    public int addPolygon(@NonNull Iterable<MapPoint> points) {
+    public int addPolygon(@NonNull Iterable<MapPoint> points, boolean draggable) {
         int featureId = nextFeatureId++;
         features.put(featureId, new PolygonFeature(map, points));
         return featureId;

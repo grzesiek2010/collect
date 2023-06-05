@@ -347,7 +347,7 @@ class MapboxMapFragment :
         return featureId
     }
 
-    override fun addPolygon(points: MutableIterable<MapPoint>): Int {
+    override fun addPolygon(points: MutableIterable<MapPoint>, draggable: Boolean): Int {
         val featureId = nextFeatureId++
         features[featureId] = PolygonFeature(
             requireContext(),
