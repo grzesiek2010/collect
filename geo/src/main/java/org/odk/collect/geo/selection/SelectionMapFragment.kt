@@ -385,7 +385,7 @@ class SelectionMapFragment(
         val pointIds = map.addMarkers(markerDescriptions)
         val polyIds = polys.fold(listOf<Int>()) { ids, item ->
             if (item.points.first() == item.points.last()) {
-                ids + map.addPolygon(item.points)
+                ids + map.addPolygon(item.points, false)
             } else {
                 ids + map.addPolyLine(item.points, false, false)
             }

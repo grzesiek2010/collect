@@ -122,7 +122,7 @@ class FakeMapFragment : Fragment(), MapFragment {
         return featureId
     }
 
-    override fun addPolygon(points: MutableIterable<MapPoint>): Int {
+    override fun addPolygon(points: MutableIterable<MapPoint>, draggable: Boolean): Int {
         val featureId = generateFeatureId()
         polygons[featureId] = points.toList()
         featureIds.add(featureId)
