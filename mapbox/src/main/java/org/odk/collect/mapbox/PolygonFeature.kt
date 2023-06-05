@@ -39,15 +39,19 @@ class PolygonFeature(
             polygonAnnotationManager.addClickListener(it)
         }
 
-    private val pointAnnotations = points.map {
-        MapUtils.createPointAnnotation(
-            pointAnnotationManager,
-            it,
-            false,
-            MapFragment.CENTER,
-            R.drawable.ic_map_point,
-            context
-        )
+    private val pointAnnotations = if (draggable) {
+        points.map {
+            MapUtils.createPointAnnotation(
+                pointAnnotationManager,
+                it,
+                true,
+                MapFragment.CENTER,
+                R.drawable.ic_map_point,
+                context
+            )
+        }
+    } else {
+        emptyList()
     }
 
     private val pointClickListener = PointClickListener(

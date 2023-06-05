@@ -922,8 +922,10 @@ public class OsmDroidMapFragment extends Fragment implements MapFragment,
                 return false;
             });
 
-            for (MapPoint point : points) {
-                markers.add(createMarker(map, new MarkerDescription(point, false, CENTER, new MarkerIconDescription(R.drawable.ic_map_point))));
+            if (draggable) {
+                for (MapPoint point : points) {
+                    markers.add(createMarker(map, new MarkerDescription(point, true, CENTER, new MarkerIconDescription(R.drawable.ic_map_point))));
+                }
             }
         }
 

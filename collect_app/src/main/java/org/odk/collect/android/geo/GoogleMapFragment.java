@@ -900,17 +900,19 @@ public class GoogleMapFragment extends SupportMapFragment implements
         private final List<Marker> markers = new ArrayList<>();
 
         PolygonFeature(Context context, GoogleMap map, Iterable<MapPoint> points, int strokeLineColor, boolean draggable) {
-            for (MapPoint point : points) {
-                markers.add(createMarker(context, new MarkerDescription(point, false, CENTER, new MarkerIconDescription(R.drawable.ic_map_point)), map));
-            }
-
             polygon = map.addPolygon(new PolygonOptions()
-                    .addAll(markers.stream().map(Marker::getPosition).collect(Collectors.toList()))
+                    .addAll(StreamSupport.stream(points.spliterator(), false).map(mapPoint -> new LatLng(mapPoint.latitude, mapPoint.longitude)).collect(Collectors.toList()))
                     .strokeColor(strokeLineColor)
                     .strokeWidth(5)
                     .fillColor(ColorUtils.setAlphaComponent(strokeLineColor, 68))
                     .clickable(true)
             );
+
+            if (draggable) {
+                for (MapPoint point : points) {
+                    markers.add(createMarker(context, new MarkerDescription(point, true, CENTER, new MarkerIconDescription(R.drawable.ic_map_point)), map));
+                }
+            }
         }
 
         @Override
