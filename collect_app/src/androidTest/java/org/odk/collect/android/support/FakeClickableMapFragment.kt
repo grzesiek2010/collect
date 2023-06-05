@@ -35,7 +35,7 @@ class FakeClickableMapFragment : Fragment(), MapFragment {
     override fun zoomToPoint(center: MapPoint?, zoom: Double, animate: Boolean) {}
 
     override fun zoomToBoundingBox(
-        points: MutableIterable<MapPoint>?,
+        points: List<MapPoint>?,
         scaleFactor: Double,
         animate: Boolean
     ) {}
@@ -58,14 +58,14 @@ class FakeClickableMapFragment : Fragment(), MapFragment {
     }
 
     override fun addPolyLine(
-        points: MutableIterable<MapPoint>,
+        points: List<MapPoint>,
         closed: Boolean,
         draggable: Boolean
     ): Int {
         return -1
     }
 
-    override fun addPolygon(points: MutableIterable<MapPoint>, draggable: Boolean): Int {
+    override fun addPolygon(points: List<MapPoint>, draggable: Boolean): Int {
         return addPolyLine(points, closed = true, draggable = false)
     }
 

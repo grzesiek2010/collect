@@ -71,7 +71,6 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
-import java.util.stream.StreamSupport;
 
 import javax.inject.Inject;
 
@@ -245,7 +244,7 @@ public class GoogleMapFragment extends SupportMapFragment implements
         hasCenter = true;
     }
 
-    @Override public void zoomToBoundingBox(Iterable<MapPoint> points, double scaleFactor, boolean animate) {
+    @Override public void zoomToBoundingBox(List<MapPoint> points, double scaleFactor, boolean animate) {
         if (map == null) {  // during Robolectric tests, map will be null
             return;
         }
@@ -305,14 +304,14 @@ public class GoogleMapFragment extends SupportMapFragment implements
         return feature instanceof MarkerFeature ? ((MarkerFeature) feature).getPoint() : null;
     }
 
-    @Override public int addPolyLine(@NonNull Iterable<MapPoint> points, boolean closed, boolean draggable) {
+    @Override public int addPolyLine(@NonNull List<MapPoint> points, boolean closed, boolean draggable) {
         int featureId = nextFeatureId++;
         features.put(featureId, new PolyLineFeature(getActivity(), points, closed, draggable, map));
         return featureId;
     }
 
     @Override
-    public int addPolygon(@NonNull Iterable<MapPoint> points, boolean draggable) {
+    public int addPolygon(@NonNull List<MapPoint> points, boolean draggable) {
         int featureId = nextFeatureId++;
         features.put(featureId, new PolygonFeature(requireActivity(), map, points, requireContext().getResources().getColor(R.color.mapLineColor), draggable));
         return featureId;
@@ -800,7 +799,7 @@ public class GoogleMapFragment extends SupportMapFragment implements
         private final boolean draggable;
         private Polyline polyline;
 
-        PolyLineFeature(Context context, Iterable<MapPoint> points, boolean closedPolygon, boolean draggable, GoogleMap map) {
+        PolyLineFeature(Context context, List<MapPoint> points, boolean closedPolygon, boolean draggable, GoogleMap map) {
             this.context = context;
             this.map = map;
             this.closedPolygon = closedPolygon;
@@ -899,9 +898,9 @@ public class GoogleMapFragment extends SupportMapFragment implements
         private Polygon polygon;
         private final List<Marker> markers = new ArrayList<>();
 
-        PolygonFeature(Context context, GoogleMap map, Iterable<MapPoint> points, int strokeLineColor, boolean draggable) {
+        PolygonFeature(Context context, GoogleMap map, List<MapPoint> points, int strokeLineColor, boolean draggable) {
             polygon = map.addPolygon(new PolygonOptions()
-                    .addAll(StreamSupport.stream(points.spliterator(), false).map(mapPoint -> new LatLng(mapPoint.latitude, mapPoint.longitude)).collect(Collectors.toList()))
+                    .addAll(points.stream().map(mapPoint -> new LatLng(mapPoint.latitude, mapPoint.longitude)).collect(Collectors.toList()))
                     .strokeColor(strokeLineColor)
                     .strokeWidth(5)
                     .fillColor(ColorUtils.setAlphaComponent(strokeLineColor, 68))

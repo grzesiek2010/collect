@@ -96,7 +96,7 @@ public interface MapFragment {
      * to occupy at most 80% of the width and 80% of the height of the viewport,
      * ensuring a margin of at least 10% on all sides.
      */
-    void zoomToBoundingBox(Iterable<MapPoint> points, double scaleFactor, boolean animate);
+    void zoomToBoundingBox(List<MapPoint> points, double scaleFactor, boolean animate);
 
     /**
      * Adds a marker to the map at the given location. If draggable is true,
@@ -118,13 +118,13 @@ public interface MapFragment {
      * The vertices will have handles that can be dragged by the user.
      * Returns a positive integer, the featureId for the newly added shape.
      */
-    int addPolyLine(@NonNull Iterable<MapPoint> points, boolean closed, boolean draggable);
+    int addPolyLine(@NonNull List<MapPoint> points, boolean closed, boolean draggable);
 
     /**
      * Adds a polygon to the map with given sequence of vertices. * Returns a positive integer,
      * the featureId for the newly added shape.
      */
-    int addPolygon(@NonNull Iterable<MapPoint> points, boolean draggable);
+    int addPolygon(@NonNull List<MapPoint> points, boolean draggable);
 
     /** Appends a vertex to the polyline or polygon specified by featureId. */
     void appendPointToPolyLine(int featureId, @NonNull MapPoint point);

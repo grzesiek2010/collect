@@ -32,7 +32,7 @@ class NoOpMapFragment : Fragment(), MapFragment {
     }
 
     override fun zoomToBoundingBox(
-        points: MutableIterable<MapPoint>?,
+        points: List<MapPoint>?,
         scaleFactor: Double,
         animate: Boolean
     ) {
@@ -54,14 +54,14 @@ class NoOpMapFragment : Fragment(), MapFragment {
     }
 
     override fun addPolyLine(
-        points: MutableIterable<MapPoint>,
+        points: List<MapPoint>,
         closed: Boolean,
         draggable: Boolean
     ): Int {
         TODO("Not yet implemented")
     }
 
-    override fun addPolygon(points: MutableIterable<MapPoint>, draggable: Boolean): Int {
+    override fun addPolygon(points: List<MapPoint>, draggable: Boolean): Int {
         TODO("Not yet implemented")
     }
 

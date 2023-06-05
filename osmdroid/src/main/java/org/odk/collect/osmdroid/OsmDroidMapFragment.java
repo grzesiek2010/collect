@@ -78,7 +78,6 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
-import java.util.stream.StreamSupport;
 
 import javax.inject.Inject;
 
@@ -270,7 +269,7 @@ public class OsmDroidMapFragment extends Fragment implements MapFragment,
     }
 
     @Override
-    public void zoomToBoundingBox(Iterable<MapPoint> points, double scaleFactor, boolean animate) {
+    public void zoomToBoundingBox(List<MapPoint> points, double scaleFactor, boolean animate) {
         if (points != null) {
             int count = 0;
             List<GeoPoint> geoPoints = new ArrayList<>();
@@ -333,14 +332,14 @@ public class OsmDroidMapFragment extends Fragment implements MapFragment,
     }
 
     @Override
-    public int addPolyLine(@NonNull Iterable<MapPoint> points, boolean closed, boolean draggable) {
+    public int addPolyLine(@NonNull List<MapPoint> points, boolean closed, boolean draggable) {
         int featureId = nextFeatureId++;
         features.put(featureId, new PolyLineFeature(map, points, closed, draggable));
         return featureId;
     }
 
     @Override
-    public int addPolygon(@NonNull Iterable<MapPoint> points, boolean draggable) {
+    public int addPolygon(@NonNull List<MapPoint> points, boolean draggable) {
         int featureId = nextFeatureId++;
         features.put(featureId, new PolygonFeature(map, points, draggable));
         return featureId;
@@ -816,7 +815,7 @@ public class OsmDroidMapFragment extends Fragment implements MapFragment,
         private boolean draggable;
         static final int STROKE_WIDTH = 5;
 
-        PolyLineFeature(MapView map, Iterable<MapPoint> points, boolean closedPolygon, boolean draggable) {
+        PolyLineFeature(MapView map, List<MapPoint> points, boolean closedPolygon, boolean draggable) {
             this.map = map;
             this.closedPolygon = closedPolygon;
             this.draggable = draggable;
@@ -901,17 +900,14 @@ public class OsmDroidMapFragment extends Fragment implements MapFragment,
         private final Polygon polygon = new Polygon();
         private final List<Marker> markers = new ArrayList<>();
 
-        PolygonFeature(MapView map, Iterable<MapPoint> points, boolean draggable) {
+        PolygonFeature(MapView map, List<MapPoint> points, boolean draggable) {
             this.map = map;
 
             map.getOverlays().add(polygon);
             int strokeColor = map.getContext().getResources().getColor(R.color.mapLineColor);
             polygon.getOutlinePaint().setColor(strokeColor);
             polygon.getFillPaint().setColor(ColorUtils.setAlphaComponent(strokeColor, 68));
-            polygon.setPoints(StreamSupport.stream(points.spliterator(), false).map(point -> {
-                return new GeoPoint(point.latitude, point.longitude);
-            }).collect(Collectors.toList()));
-
+            polygon.setPoints(points.stream().map(point -> new GeoPoint(point.latitude, point.longitude)).collect(Collectors.toList()));
             polygon.setOnClickListener((polygon, mapView, eventPos) -> {
                 int featureId = findFeature(polygon);
                 if (featureClickListener != null && featureId != -1) {

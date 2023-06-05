@@ -17,7 +17,7 @@ class PolygonFeature(
     private val context: Context,
     private val pointAnnotationManager: PointAnnotationManager,
     private val polygonAnnotationManager: PolygonAnnotationManager,
-    points: Iterable<MapPoint>,
+    points: MutableList<MapPoint>,
     featureClickListener: MapFragment.FeatureListener?,
     featureId: Int,
     draggable: Boolean

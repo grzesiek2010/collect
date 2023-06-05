@@ -18,7 +18,7 @@ class FakeMapFragment : Fragment(), MapFragment {
     private var retainMockAccuracy = false
     private var center: MapPoint? = null
     private var zoom = 0.0
-    private var zoomBoundingBox: Pair<Iterable<MapPoint>, Double>? = null
+    private var zoomBoundingBox: Pair<List<MapPoint>, Double>? = null
     private var readyListener: ReadyListener? = null
     private var gpsLocation: MapPoint? = null
     private var featureClickListener: FeatureListener? = null
@@ -70,7 +70,7 @@ class FakeMapFragment : Fragment(), MapFragment {
     }
 
     override fun zoomToBoundingBox(
-        points: Iterable<MapPoint>,
+        points: List<MapPoint>,
         scaleFactor: Double,
         animate: Boolean
     ) {
@@ -108,7 +108,7 @@ class FakeMapFragment : Fragment(), MapFragment {
     }
 
     override fun addPolyLine(
-        points: Iterable<MapPoint>,
+        points: List<MapPoint>,
         closed: Boolean,
         draggable: Boolean
     ): Int {
@@ -122,7 +122,7 @@ class FakeMapFragment : Fragment(), MapFragment {
         return featureId
     }
 
-    override fun addPolygon(points: MutableIterable<MapPoint>, draggable: Boolean): Int {
+    override fun addPolygon(points: List<MapPoint>, draggable: Boolean): Int {
         val featureId = generateFeatureId()
         polygons[featureId] = points.toList()
         featureIds.add(featureId)
@@ -219,7 +219,7 @@ class FakeMapFragment : Fragment(), MapFragment {
         return markerIcons.values.toList()
     }
 
-    fun getZoomBoundingBox(): Pair<Iterable<MapPoint>, Double>? {
+    fun getZoomBoundingBox(): Pair<List<MapPoint>, Double>? {
         return zoomBoundingBox
     }
 

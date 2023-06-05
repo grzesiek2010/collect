@@ -254,7 +254,7 @@ class MapboxMapFragment :
     }
 
     override fun zoomToBoundingBox(
-        mapPoints: Iterable<MapPoint>?,
+        mapPoints: List<MapPoint>?,
         scaleFactor: Double,
         animate: Boolean
     ) {
@@ -331,7 +331,7 @@ class MapboxMapFragment :
         }
     }
 
-    override fun addPolyLine(points: MutableIterable<MapPoint>, closed: Boolean, draggable: Boolean): Int {
+    override fun addPolyLine(points: MutableList<MapPoint>, closed: Boolean, draggable: Boolean): Int {
         val featureId = nextFeatureId++
         features[featureId] = PolyLineFeature(
             requireContext(),
@@ -347,7 +347,7 @@ class MapboxMapFragment :
         return featureId
     }
 
-    override fun addPolygon(points: MutableIterable<MapPoint>, draggable: Boolean): Int {
+    override fun addPolygon(points: MutableList<MapPoint>, draggable: Boolean): Int {
         val featureId = nextFeatureId++
         features[featureId] = PolygonFeature(
             requireContext(),

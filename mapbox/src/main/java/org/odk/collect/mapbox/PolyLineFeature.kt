@@ -23,7 +23,7 @@ internal class PolyLineFeature(
     private val featureDragEndListener: MapFragment.FeatureListener?,
     private val closedPolygon: Boolean,
     private val draggable: Boolean,
-    initMapPoints: Iterable<MapPoint>
+    initMapPoints: MutableList<MapPoint>
 ) : MapFeature {
     val mapPoints = mutableListOf<MapPoint>()
     private val pointAnnotations = mutableListOf<PointAnnotation>()
