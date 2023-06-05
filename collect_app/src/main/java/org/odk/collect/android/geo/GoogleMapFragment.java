@@ -71,6 +71,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
+import java.util.stream.StreamSupport;
 
 import javax.inject.Inject;
 
@@ -313,7 +314,7 @@ public class GoogleMapFragment extends SupportMapFragment implements
     @Override
     public int addPolygon(@NonNull Iterable<MapPoint> points, boolean draggable) {
         int featureId = nextFeatureId++;
-        features.put(featureId, new PolygonFeature(requireActivity(), map, points, requireContext().getResources().getColor(R.color.mapLineColor)));
+        features.put(featureId, new PolygonFeature(requireActivity(), map, points, requireContext().getResources().getColor(R.color.mapLineColor), draggable));
         return featureId;
     }
 
@@ -898,8 +899,7 @@ public class GoogleMapFragment extends SupportMapFragment implements
         private Polygon polygon;
         private final List<Marker> markers = new ArrayList<>();
 
-        PolygonFeature(Context context, GoogleMap map, Iterable<MapPoint> points, int strokeLineColor) {
-
+        PolygonFeature(Context context, GoogleMap map, Iterable<MapPoint> points, int strokeLineColor, boolean draggable) {
             for (MapPoint point : points) {
                 markers.add(createMarker(context, new MarkerDescription(point, false, CENTER, new MarkerIconDescription(R.drawable.ic_map_point)), map));
             }
