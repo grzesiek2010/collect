@@ -1,10 +1,8 @@
 package org.odk.collect.android.projects
 
 import androidx.test.espresso.matcher.ViewMatchers.assertThat
+import org.hamcrest.Matchers.equalTo
 import org.hamcrest.Matchers.instanceOf
-import org.hamcrest.Matchers.`is`
-import org.hamcrest.Matchers.nullValue
-import org.junit.Before
 import org.junit.Test
 import org.mockito.kotlin.any
 import org.mockito.kotlin.doReturn
@@ -14,7 +12,9 @@ import org.mockito.kotlin.whenever
 import org.odk.collect.android.backgroundwork.FormUpdateScheduler
 import org.odk.collect.android.backgroundwork.InstanceSubmitScheduler
 import org.odk.collect.android.preferences.Defaults
+import org.odk.collect.android.storage.StoragePathProvider
 import org.odk.collect.android.utilities.ChangeLockProvider
+import org.odk.collect.android.utilities.InstancesRepositoryProvider
 import org.odk.collect.forms.instances.Instance
 import org.odk.collect.formstest.InMemInstancesRepository
 import org.odk.collect.projects.InMemProjectsRepository
@@ -30,8 +30,13 @@ import java.io.File
 class ProjectDeleterTest {
     private val project1 = Project.Saved("1", "1", "1", "#ffffff")
 
-    private val projectsRepository = InMemProjectsRepository()
+    private val projectsRepository = InMemProjectsRepository().apply {
+        save(project1)
+    }
     private val instancesRepository = InMemInstancesRepository()
+    private val instancesRepositoryProvider = mock<InstancesRepositoryProvider>().apply {
+        whenever(get(project1.uuid)).thenReturn(instancesRepository)
+    }
 
     private val currentProjectProvider = mock<CurrentProjectProvider> {
         on { getCurrentProject() } doReturn project1
@@ -43,11 +48,20 @@ class ProjectDeleterTest {
         on { getInstanceLock(any()) } doReturn BooleanChangeLock()
     }
     private val settingsProvider = InMemSettingsProvider()
-
-    @Before
-    fun setup() {
-        projectsRepository.save(project1)
+    private val storagePathProvider = mock<StoragePathProvider>().apply {
+        whenever(getProjectRootDirPath(project1.uuid)).thenReturn("")
     }
+
+    private val deleter = ProjectDeleter(
+        projectsRepository,
+        currentProjectProvider,
+        formUpdateManager,
+        instanceSubmitScheduler,
+        instancesRepositoryProvider,
+        storagePathProvider,
+        changeLockProvider,
+        settingsProvider
+    )
 
     @Test
     fun `If there are incomplete instances the project should not be deleted`() {
@@ -57,20 +71,9 @@ class ProjectDeleterTest {
                 .build()
         )
 
-        val deleter = ProjectDeleter(
-            projectsRepository,
-            mock(),
-            mock(),
-            mock(),
-            instancesRepository,
-            "",
-            changeLockProvider,
-            settingsProvider
-        )
-
-        deleter.deleteCurrentProject()
-        assertThat(deleter.deleteCurrentProject(), instanceOf(DeleteProjectResult.UnsentInstances::class.java))
-        assertThat(projectsRepository.projects.contains(project1), `is`(true))
+        val result = deleter.deleteProject(project1.uuid)
+        assertThat(result, instanceOf(DeleteProjectResult.UnsentInstances::class.java))
+        assertThat(projectsRepository.projects.contains(project1), equalTo(true))
     }
 
     @Test
@@ -81,20 +84,9 @@ class ProjectDeleterTest {
                 .build()
         )
 
-        val deleter = ProjectDeleter(
-            projectsRepository,
-            mock(),
-            mock(),
-            mock(),
-            instancesRepository,
-            "",
-            changeLockProvider,
-            settingsProvider
-        )
-
-        deleter.deleteCurrentProject()
-        assertThat(deleter.deleteCurrentProject(), instanceOf(DeleteProjectResult.UnsentInstances::class.java))
-        assertThat(projectsRepository.projects.contains(project1), `is`(true))
+        val result = deleter.deleteProject(project1.uuid)
+        assertThat(result, instanceOf(DeleteProjectResult.UnsentInstances::class.java))
+        assertThat(projectsRepository.projects.contains(project1), equalTo(true))
     }
 
     @Test
@@ -105,20 +97,9 @@ class ProjectDeleterTest {
                 .build()
         )
 
-        val deleter = ProjectDeleter(
-            projectsRepository,
-            mock(),
-            mock(),
-            mock(),
-            instancesRepository,
-            "",
-            changeLockProvider,
-            settingsProvider
-        )
-
-        deleter.deleteCurrentProject()
-        assertThat(deleter.deleteCurrentProject(), instanceOf(DeleteProjectResult.UnsentInstances::class.java))
-        assertThat(projectsRepository.projects.contains(project1), `is`(true))
+        val result = deleter.deleteProject(project1.uuid)
+        assertThat(result, instanceOf(DeleteProjectResult.UnsentInstances::class.java))
+        assertThat(projectsRepository.projects.contains(project1), equalTo(true))
     }
 
     @Test
@@ -129,21 +110,10 @@ class ProjectDeleterTest {
                 .build()
         )
 
-        val deleter = ProjectDeleter(
-            projectsRepository,
-            currentProjectProvider,
-            formUpdateManager,
-            instanceSubmitScheduler,
-            instancesRepository,
-            "",
-            changeLockProvider,
-            settingsProvider
-        )
-
-        val result = deleter.deleteCurrentProject()
+        val result = deleter.deleteProject(project1.uuid)
         assertThat(result, instanceOf(DeleteProjectResult.DeletedSuccessfully::class.java))
-        assertThat((result as DeleteProjectResult.DeletedSuccessfully).newCurrentProject, `is`(nullValue()))
-        assertThat(projectsRepository.projects.size, `is`(0))
+        assertThat((result as DeleteProjectResult.DeletedSuccessfully).newCurrentProject, equalTo(null))
+        assertThat(projectsRepository.projects.size, equalTo(0))
     }
 
     @Test
@@ -153,20 +123,9 @@ class ProjectDeleterTest {
 
         whenever(changeLockProvider.getFormLock(any())).thenReturn(formChangeLock)
 
-        val deleter = ProjectDeleter(
-            projectsRepository,
-            currentProjectProvider,
-            formUpdateManager,
-            instanceSubmitScheduler,
-            instancesRepository,
-            "",
-            changeLockProvider,
-            settingsProvider
-        )
-
-        val result = deleter.deleteCurrentProject()
+        val result = deleter.deleteProject(project1.uuid)
         assertThat(result, instanceOf(DeleteProjectResult.RunningBackgroundJobs::class.java))
-        assertThat(projectsRepository.projects.contains(project1), `is`(true))
+        assertThat(projectsRepository.projects.contains(project1), equalTo(true))
     }
 
     @Test
@@ -176,36 +135,14 @@ class ProjectDeleterTest {
 
         whenever(changeLockProvider.getInstanceLock(any())).thenReturn(changeLock)
 
-        val deleter = ProjectDeleter(
-            projectsRepository,
-            currentProjectProvider,
-            formUpdateManager,
-            instanceSubmitScheduler,
-            instancesRepository,
-            "",
-            changeLockProvider,
-            settingsProvider
-        )
-
-        val result = deleter.deleteCurrentProject()
+        val result = deleter.deleteProject(project1.uuid)
         assertThat(result, instanceOf(DeleteProjectResult.RunningBackgroundJobs::class.java))
-        assertThat(projectsRepository.projects.contains(project1), `is`(true))
+        assertThat(projectsRepository.projects.contains(project1), equalTo(true))
     }
 
     @Test
     fun `Deleting project cancels scheduled form updates and instance submits`() {
-        val deleter = ProjectDeleter(
-            projectsRepository,
-            currentProjectProvider,
-            formUpdateManager,
-            instanceSubmitScheduler,
-            instancesRepository,
-            "",
-            changeLockProvider,
-            settingsProvider
-        )
-
-        deleter.deleteCurrentProject()
+        deleter.deleteProject(project1.uuid)
         verify(formUpdateManager).cancelUpdates(project1.uuid)
         verify(instanceSubmitScheduler).cancelSubmit(project1.uuid)
     }
@@ -220,49 +157,27 @@ class ProjectDeleterTest {
         settingsProvider.getUnprotectedSettings("2").save(ProjectKeys.KEY_SERVER_URL, "https://my-server.com")
         settingsProvider.getProtectedSettings("2").save(ProtectedProjectKeys.KEY_AUTOSEND, false)
 
-        val deleter = ProjectDeleter(
-            mock(),
-            currentProjectProvider,
-            mock(),
-            mock(),
-            mock(),
-            "",
-            changeLockProvider,
-            settingsProvider
-        )
+        deleter.deleteProject(project1.uuid)
 
-        deleter.deleteCurrentProject()
-
-        assertThat(settingsProvider.getMetaSettings().getString(MetaKeys.KEY_INSTALL_ID), `is`("1234"))
+        assertThat(settingsProvider.getMetaSettings().getString(MetaKeys.KEY_INSTALL_ID), equalTo("1234"))
 
         settingsProvider.getUnprotectedSettings("1").getAll().forEach { (key, value) ->
-            assertThat(value, `is`(Defaults.protected[key]))
+            assertThat(value, equalTo(Defaults.protected[key]))
         }
 
         settingsProvider.getProtectedSettings("1").getAll().forEach { (key, value) ->
-            assertThat(value, `is`(Defaults.protected[key]))
+            assertThat(value, equalTo(Defaults.protected[key]))
         }
 
-        assertThat(settingsProvider.getUnprotectedSettings("2").getString(ProjectKeys.KEY_SERVER_URL), `is`("https://my-server.com"))
-        assertThat(settingsProvider.getProtectedSettings("2").getBoolean(ProtectedProjectKeys.KEY_AUTOSEND), `is`(false))
+        assertThat(settingsProvider.getUnprotectedSettings("2").getString(ProjectKeys.KEY_SERVER_URL), equalTo("https://my-server.com"))
+        assertThat(settingsProvider.getProtectedSettings("2").getBoolean(ProtectedProjectKeys.KEY_AUTOSEND), equalTo(false))
     }
 
     @Test
     fun `If the deleted project was the last one return DeletedSuccessfully with null parameter`() {
-        val deleter = ProjectDeleter(
-            projectsRepository,
-            currentProjectProvider,
-            mock(),
-            mock(),
-            instancesRepository,
-            "",
-            changeLockProvider,
-            settingsProvider
-        )
-
-        val result = deleter.deleteCurrentProject()
+        val result = deleter.deleteProject(project1.uuid)
         assertThat(result, instanceOf(DeleteProjectResult.DeletedSuccessfully::class.java))
-        assertThat((result as DeleteProjectResult.DeletedSuccessfully).newCurrentProject, `is`(nullValue()))
+        assertThat((result as DeleteProjectResult.DeletedSuccessfully).newCurrentProject, equalTo(null))
     }
 
     @Test
@@ -270,21 +185,21 @@ class ProjectDeleterTest {
         val project2 = Project.Saved("2", "2", "2", "#cccccc")
         projectsRepository.save(project2)
 
-        val deleter = ProjectDeleter(
-            projectsRepository,
-            currentProjectProvider,
-            mock(),
-            mock(),
-            instancesRepository,
-            "",
-            changeLockProvider,
-            settingsProvider
-        )
-
-        val result = deleter.deleteCurrentProject()
+        val result = deleter.deleteProject(project1.uuid)
         verify(currentProjectProvider).setCurrentProject(project2.uuid)
         assertThat(result, instanceOf(DeleteProjectResult.DeletedSuccessfully::class.java))
-        assertThat((result as DeleteProjectResult.DeletedSuccessfully).newCurrentProject, `is`(project2))
+        assertThat((result as DeleteProjectResult.DeletedSuccessfully).newCurrentProject, equalTo(project2))
+    }
+
+    @Test
+    fun `If the deleted project was not the last one but also not the currently used do not set the current project and return DeletedSuccessfully with null parameter`() {
+        val project2 = Project.Saved("2", "2", "2", "#cccccc")
+        projectsRepository.save(project2)
+        whenever(currentProjectProvider.getCurrentProject()).thenReturn(project2)
+
+        val result = deleter.deleteProject(project1.uuid)
+        assertThat(result, instanceOf(DeleteProjectResult.DeletedSuccessfully::class.java))
+        assertThat((result as DeleteProjectResult.DeletedSuccessfully).newCurrentProject, equalTo(null))
     }
 
     @Test
@@ -292,21 +207,12 @@ class ProjectDeleterTest {
         val projectDir = TempFiles.createTempDir()
         File(projectDir, "dir").mkdir()
 
-        assertThat(projectDir.exists(), `is`(true))
-        assertThat(projectDir.listFiles().size, `is`(1))
+        assertThat(projectDir.exists(), equalTo(true))
+        assertThat(projectDir.listFiles().size, equalTo(1))
 
-        val deleter = ProjectDeleter(
-            projectsRepository,
-            currentProjectProvider,
-            mock(),
-            mock(),
-            instancesRepository,
-            projectDir.absolutePath,
-            changeLockProvider,
-            settingsProvider
-        )
+        whenever(storagePathProvider.getProjectRootDirPath(project1.uuid)).thenReturn(projectDir.absolutePath)
 
-        deleter.deleteCurrentProject()
-        assertThat(projectDir.exists(), `is`(false))
+        deleter.deleteProject(project1.uuid)
+        assertThat(projectDir.exists(), equalTo(false))
     }
 }

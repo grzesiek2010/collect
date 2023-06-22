@@ -11,4 +11,5 @@ object MetaKeys {
     const val LAST_LAUNCHED = "last_launched"
     const val LAST_USED_PEN_COLOR = "last_used_pen_color"
     const val PERMISSIONS_REQUESTED = "permissions_requested"
+    const val GOOGLE_DRIVE_PROJECTS_WITH_NO_FILLED_FORMS_DELETED = "google_drive_projects_with_no_filled_forms_removed"
 }
