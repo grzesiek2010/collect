@@ -111,8 +111,8 @@ class MainMenuViewModelTest {
 
         val uri = InstancesContract.getUri(Project.DEMO_PROJECT_ID, instance.dbId)
         val formSavedSnackbarType = viewModel.getFormSavedSnackbarDetails(uri)!!
-        assertThat(formSavedSnackbarType.first, equalTo(R.string.form_saved_as_draft))
-        assertThat(formSavedSnackbarType.second, equalTo(R.string.edit_form))
+        assertThat(formSavedSnackbarType.first, equalTo(org.odk.collect.strings.R.string.form_saved_as_draft))
+        assertThat(formSavedSnackbarType.second, equalTo(org.odk.collect.strings.R.string.edit_form))
     }
 
     @Test
@@ -131,8 +131,8 @@ class MainMenuViewModelTest {
 
         val uri = InstancesContract.getUri(Project.DEMO_PROJECT_ID, instance.dbId)
         val formSavedSnackbarType = viewModel.getFormSavedSnackbarDetails(uri)!!
-        assertThat(formSavedSnackbarType.first, equalTo(R.string.form_saved_as_draft))
-        assertThat(formSavedSnackbarType.second, equalTo(R.string.view_form))
+        assertThat(formSavedSnackbarType.first, equalTo(org.odk.collect.strings.R.string.form_saved_as_draft))
+        assertThat(formSavedSnackbarType.second, equalTo(org.odk.collect.strings.R.string.view_form))
     }
 
     @Test
@@ -152,8 +152,8 @@ class MainMenuViewModelTest {
 
         val uri = InstancesContract.getUri(Project.DEMO_PROJECT_ID, instance.dbId)
         val formSavedSnackbarDetails = viewModel.getFormSavedSnackbarDetails(uri)!!
-        assertThat(formSavedSnackbarDetails.first, equalTo(R.string.form_saved))
-        assertThat(formSavedSnackbarDetails.second, equalTo(R.string.view_form))
+        assertThat(formSavedSnackbarDetails.first, equalTo(org.odk.collect.strings.R.string.form_saved))
+        assertThat(formSavedSnackbarDetails.second, equalTo(org.odk.collect.strings.R.string.view_form))
     }
 
     @Test
@@ -174,8 +174,8 @@ class MainMenuViewModelTest {
 
         val uri = InstancesContract.getUri(Project.DEMO_PROJECT_ID, instance.dbId)
         val formSavedSnackbarDetails = viewModel.getFormSavedSnackbarDetails(uri)!!
-        assertThat(formSavedSnackbarDetails.first, equalTo(R.string.form_sending))
-        assertThat(formSavedSnackbarDetails.second, equalTo(R.string.view_form))
+        assertThat(formSavedSnackbarDetails.first, equalTo(org.odk.collect.strings.R.string.form_sending))
+        assertThat(formSavedSnackbarDetails.second, equalTo(org.odk.collect.strings.R.string.view_form))
     }
 
     @Test

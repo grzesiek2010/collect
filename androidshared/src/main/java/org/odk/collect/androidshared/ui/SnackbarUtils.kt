@@ -71,7 +71,7 @@ object SnackbarUtils {
         }
 
         Snackbar.make(parentView, message.trim(), duration).apply {
-            val textView = view.findViewById<TextView>(R.id.snackbar_text)
+            val textView = view.findViewById<TextView>(com.google.android.material.R.id.snackbar_text)
             textView.isSingleLine = false
 
             if (anchorView?.visibility != View.GONE) {
@@ -79,13 +79,13 @@ object SnackbarUtils {
             }
 
             if (displayDismissButton) {
-                view.findViewById<Button>(R.id.snackbar_action).let {
+                view.findViewById<Button>(com.google.android.material.R.id.snackbar_action).let {
                     val dismissButton = ImageView(view.context).apply {
                         setImageResource(R.drawable.ic_close_24)
                         setOnClickListener {
                             dismiss()
                         }
-                        contentDescription = context.getString(R.string.close_snackbar)
+                        contentDescription = context.getString(org.odk.collect.strings.R.string.close_snackbar)
                     }
 
                     val params = LinearLayout.LayoutParams(

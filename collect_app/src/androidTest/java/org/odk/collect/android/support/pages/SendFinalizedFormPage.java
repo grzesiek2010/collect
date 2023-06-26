@@ -16,7 +16,7 @@ public class SendFinalizedFormPage extends Page<SendFinalizedFormPage> {
 
     @Override
     public SendFinalizedFormPage assertOnPage() {
-        onView(allOf(withText(getTranslatedString(R.string.send_data)), isDescendantOfA(withId(R.id.toolbar)))).check(matches(isDisplayed()));
+        onView(allOf(withText(getTranslatedString(org.odk.collect.strings.R.string.send_data)), isDescendantOfA(withId(R.id.toolbar)))).check(matches(isDisplayed()));
         return this;
     }
 
@@ -26,17 +26,17 @@ public class SendFinalizedFormPage extends Page<SendFinalizedFormPage> {
     }
 
     public OkDialog clickSendSelected() {
-        clickOnText(getTranslatedString(R.string.send_selected_data));
+        clickOnText(getTranslatedString(org.odk.collect.strings.R.string.send_selected_data));
         return new OkDialog();
     }
 
     public ServerAuthDialog clickSendSelectedWithAuthenticationError() {
-        clickOnText(getTranslatedString(R.string.send_selected_data));
+        clickOnText(getTranslatedString(org.odk.collect.strings.R.string.send_selected_data));
         return new ServerAuthDialog().assertOnPage();
     }
 
     public SendFinalizedFormPage clickSelectAll() {
-        clickOnString(R.string.select_all);
+        clickOnString(org.odk.collect.strings.R.string.select_all);
         return this;
     }
 

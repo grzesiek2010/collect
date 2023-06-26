@@ -51,7 +51,6 @@ import com.google.android.gms.maps.model.TileOverlay;
 import com.google.android.gms.maps.model.TileOverlayOptions;
 import com.google.android.material.dialog.MaterialAlertDialogBuilder;
 
-import org.odk.collect.android.R;
 import org.odk.collect.android.geo.GoogleMapConfigurator.GoogleMapTypeOption;
 import org.odk.collect.android.injection.DaggerUtils;
 import org.odk.collect.androidshared.system.ContextUtils;
@@ -132,7 +131,7 @@ public class GoogleMapFragment extends SupportMapFragment implements
     public void init(@Nullable ReadyListener readyListener, @Nullable ErrorListener errorListener) {
         getMapAsync((GoogleMap googleMap) -> {
             if (googleMap == null) {
-                ToastUtils.showShortToast(requireContext(), R.string.google_play_services_error_occured);
+                ToastUtils.showShortToast(requireContext(), org.odk.collect.strings.R.string.google_play_services_error_occured);
                 if (errorListener != null) {
                     errorListener.onError();
                 }
@@ -320,7 +319,7 @@ public class GoogleMapFragment extends SupportMapFragment implements
     @Override
     public int addPolygon(@NonNull Iterable<MapPoint> points) {
         int featureId = nextFeatureId++;
-        features.put(featureId, new StaticPolygonFeature(map, points, requireContext().getResources().getColor(R.color.mapLineColor)));
+        features.put(featureId, new StaticPolygonFeature(map, points, requireContext().getResources().getColor(org.odk.collect.icons.R.color.mapLineColor)));
         return featureId;
     }
 
@@ -609,13 +608,13 @@ public class GoogleMapFragment extends SupportMapFragment implements
         if (locationCrosshairs == null) {
             locationCrosshairs = map.addMarker(new MarkerOptions()
                 .position(loc)
-                .icon(getBitmapDescriptor(getContext(), new MarkerIconDescription(R.drawable.ic_crosshairs)))
+                .icon(getBitmapDescriptor(getContext(), new MarkerIconDescription(org.odk.collect.maps.R.drawable.ic_crosshairs)))
                 .anchor(0.5f, 0.5f)  // center the crosshairs on the position
             );
         }
         if (accuracyCircle == null) {
-            int stroke = ContextUtils.getThemeAttributeValue(requireContext(), R.attr.colorPrimaryDark);
-            int fill = getResources().getColor(R.color.color_primary_low_emphasis);
+            int stroke = ContextUtils.getThemeAttributeValue(requireContext(), androidx.appcompat.R.attr.colorPrimaryDark);
+            int fill = getResources().getColor(org.odk.collect.androidshared.R.color.color_primary_low_emphasis);
             accuracyCircle = map.addCircle(new CircleOptions()
                 .center(loc)
                 .radius(radius)
@@ -705,12 +704,12 @@ public class GoogleMapFragment extends SupportMapFragment implements
 
     private void showGpsDisabledAlert() {
         new MaterialAlertDialogBuilder(getActivity())
-            .setMessage(getString(R.string.gps_enable_message))
+            .setMessage(getString(org.odk.collect.strings.R.string.gps_enable_message))
             .setCancelable(false)
-            .setPositiveButton(getString(R.string.enable_gps),
+            .setPositiveButton(getString(org.odk.collect.strings.R.string.enable_gps),
                 (dialog, id) -> startActivityForResult(
                     new Intent(Settings.ACTION_LOCATION_SOURCE_SETTINGS), 0))
-            .setNegativeButton(getString(R.string.cancel),
+            .setNegativeButton(getString(org.odk.collect.strings.R.string.cancel),
                 (dialog, id) -> dialog.cancel())
             .create()
             .show();
@@ -727,11 +726,11 @@ public class GoogleMapFragment extends SupportMapFragment implements
 
     private MapConfigurator createConfigurator() {
         return new GoogleMapConfigurator(
-                KEY_GOOGLE_MAP_STYLE, R.string.basemap_source_google,
-                new GoogleMapTypeOption(GoogleMap.MAP_TYPE_NORMAL, R.string.streets),
-                new GoogleMapTypeOption(GoogleMap.MAP_TYPE_TERRAIN, R.string.terrain),
-                new GoogleMapTypeOption(GoogleMap.MAP_TYPE_HYBRID, R.string.hybrid),
-                new GoogleMapTypeOption(GoogleMap.MAP_TYPE_SATELLITE, R.string.satellite)
+                KEY_GOOGLE_MAP_STYLE, org.odk.collect.strings.R.string.basemap_source_google,
+                new GoogleMapTypeOption(GoogleMap.MAP_TYPE_NORMAL, org.odk.collect.strings.R.string.streets),
+                new GoogleMapTypeOption(GoogleMap.MAP_TYPE_TERRAIN, org.odk.collect.strings.R.string.terrain),
+                new GoogleMapTypeOption(GoogleMap.MAP_TYPE_HYBRID, org.odk.collect.strings.R.string.hybrid),
+                new GoogleMapTypeOption(GoogleMap.MAP_TYPE_SATELLITE, org.odk.collect.strings.R.string.satellite)
         );
     }
 
@@ -813,7 +812,7 @@ public class GoogleMapFragment extends SupportMapFragment implements
                 clearPolyline();
             } else if (polyline == null) {
                 polyline = map.addPolyline(new PolylineOptions()
-                        .color(context.getResources().getColor(R.color.mapLineColor))
+                        .color(context.getResources().getColor(org.odk.collect.icons.R.color.mapLineColor))
                         .zIndex(1)
                         .width(POLYLINE_STROKE_WIDTH)
                         .addAll(latLngs)
@@ -875,7 +874,7 @@ public class GoogleMapFragment extends SupportMapFragment implements
             }
 
             for (MapPoint point : points) {
-                markers.add(createMarker(context, new MarkerDescription(point, true, CENTER, new MarkerIconDescription(R.drawable.ic_map_point)), map));
+                markers.add(createMarker(context, new MarkerDescription(point, true, CENTER, new MarkerIconDescription(org.odk.collect.icons.R.drawable.ic_map_point)), map));
             }
 
             update();
@@ -909,7 +908,7 @@ public class GoogleMapFragment extends SupportMapFragment implements
                 clearPolyline();
             } else if (polyline == null) {
                 polyline = map.addPolyline(new PolylineOptions()
-                    .color(context.getResources().getColor(R.color.mapLineColor))
+                    .color(context.getResources().getColor(org.odk.collect.icons.R.color.mapLineColor))
                     .zIndex(1)
                     .width(POLYLINE_STROKE_WIDTH)
                     .addAll(latLngs)
@@ -941,7 +940,7 @@ public class GoogleMapFragment extends SupportMapFragment implements
             if (map == null) {  // during Robolectric tests, map will be null
                 return;
             }
-            markers.add(createMarker(context, new MarkerDescription(point, true, CENTER, new MarkerIconDescription(R.drawable.ic_map_point)), map));
+            markers.add(createMarker(context, new MarkerDescription(point, true, CENTER, new MarkerIconDescription(org.odk.collect.icons.R.drawable.ic_map_point)), map));
             update();
         }
 
