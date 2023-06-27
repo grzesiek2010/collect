@@ -317,6 +317,17 @@ public class ODKAppSettingsMigratorTest {
         assertThat(protectedSettings.contains("default_completed"), equalTo(false));
     }
 
+    @Test
+    public void when_markAsFinalized_wasDisabled_and_defaultCompleted_wasDisabled_andOtherWaysOfEditingFormAreDisabled_thenDisableNewSaveAsDraft_andEnableNewFinalize() {
+        initSettings(protectedSettings, "mark_as_finalized", false);
+        initSettings(unprotectedSettings, "default_completed", false);
+        initSettings(protectedSettings, ProtectedProjectKeys.ALLOW_OTHER_WAYS_OF_EDITING_FORM, false);
+
+        runMigrations();
+
+        assertSettings(protectedSettings, ProtectedProjectKeys.KEY_SAVE_AS_DRAFT, false, ProtectedProjectKeys.KEY_FINALIZE, true);
+    }
+
     private void runMigrations() {
         new ODKAppSettingsMigrator(metaSettings).migrate(unprotectedSettings, protectedSettings);
     }
