@@ -167,7 +167,13 @@ public class ODKAppSettingsMigrator implements SettingsMigrator {
                                 ProtectedProjectKeys.KEY_FINALIZE, true
                         ),
                 removeKey("mark_as_finalized"),
-                removeKey("default_completed")
+                removeKey("default_completed"),
+                combineKeys(ProtectedProjectKeys.ALLOW_OTHER_WAYS_OF_EDITING_FORM)
+                        .withValues(false)
+                        .toPairs(
+                                ProtectedProjectKeys.KEY_SAVE_AS_DRAFT, false,
+                                ProtectedProjectKeys.KEY_FINALIZE, true
+                        )
         );
     }
 }
