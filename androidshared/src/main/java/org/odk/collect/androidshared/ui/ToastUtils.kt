@@ -103,7 +103,7 @@ object ToastUtils {
         } else {
             MaterialAlertDialogBuilder(activity)
                 .setMessage(message)
-                .setPositiveButton(R.string.ok, null)
+                .setPositiveButton(org.odk.collect.strings.R.string.ok, null)
                 .create()
                 .show()
         }

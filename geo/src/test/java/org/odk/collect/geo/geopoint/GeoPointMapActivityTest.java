@@ -76,7 +76,7 @@ public class GeoPointMapActivityTest {
         mapFragment.setLocationProvider("GPS");
         mapFragment.setLocation(new MapPoint(1, 2, 3, 4f));
         scenario.onActivity(activity -> {
-            assertEquals(activity.getString(R.string.please_wait_long), activity.getLocationStatus());
+            assertEquals(activity.getString(org.odk.collect.strings.R.string.please_wait_long), activity.getLocationStatus());
         });
 
 

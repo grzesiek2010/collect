@@ -31,8 +31,8 @@ class PenColorPickerDialog : DialogFragment() {
 
         return MaterialAlertDialogBuilder(requireContext())
             .setView(picker)
-            .setTitle(R.string.project_color)
-            .setPositiveButton(R.string.ok) { _, _ -> model.setPenColor(picker.color) }
+            .setTitle(org.odk.collect.strings.R.string.project_color)
+            .setPositiveButton(org.odk.collect.strings.R.string.ok) { _, _ -> model.setPenColor(picker.color) }
             .create()
     }
 }

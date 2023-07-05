@@ -305,7 +305,7 @@ abstract class Page<T : Page<T>> {
     }
 
     fun checkIsSnackbarErrorVisible(): T {
-        onView(allOf(withId(R.id.snackbar_text))).check(matches(isDisplayed()))
+        onView(allOf(withId(com.google.android.material.R.id.snackbar_text))).check(matches(isDisplayed()))
         return this as T
     }
 
@@ -320,8 +320,8 @@ abstract class Page<T : Page<T>> {
     }
 
     fun scrollToRecyclerViewItemAndClickText(text: String?): T {
-        onView(withId(R.id.recycler_view)).perform(RecyclerViewActions.actionOnItem<RecyclerView.ViewHolder>(hasDescendant(withText(text)), scrollTo()))
-        onView(withId(R.id.recycler_view)).perform(RecyclerViewActions.actionOnItem<RecyclerView.ViewHolder>(hasDescendant(withText(text)), click()))
+        onView(withId(androidx.preference.R.id.recycler_view)).perform(RecyclerViewActions.actionOnItem<RecyclerView.ViewHolder>(hasDescendant(withText(text)), scrollTo()))
+        onView(withId(androidx.preference.R.id.recycler_view)).perform(RecyclerViewActions.actionOnItem<RecyclerView.ViewHolder>(hasDescendant(withText(text)), click()))
         return this as T
     }
 
@@ -430,7 +430,7 @@ abstract class Page<T : Page<T>> {
     }
 
     fun closeSnackbar(): T {
-        onView(withContentDescription(R.string.close_snackbar)).perform(click())
+        onView(withContentDescription(org.odk.collect.strings.R.string.close_snackbar)).perform(click())
         return this as T
     }
 

@@ -12,7 +12,7 @@ import org.odk.collect.android.R
 class ErrorPage : Page<ErrorPage>() {
 
     override fun assertOnPage(): ErrorPage {
-        assertText(R.string.errors)
+        assertText(org.odk.collect.strings.R.string.errors)
         return this
     }
 

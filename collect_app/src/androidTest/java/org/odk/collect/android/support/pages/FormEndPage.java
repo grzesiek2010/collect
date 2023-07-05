@@ -21,22 +21,22 @@ public class FormEndPage extends Page<FormEndPage> {
 
     @Override
     public FormEndPage assertOnPage() {
-        onView(withText(getTranslatedString(R.string.save_enter_data_description, formName))).check(matches(isDisplayed()));
+        onView(withText(getTranslatedString(org.odk.collect.strings.R.string.save_enter_data_description, formName))).check(matches(isDisplayed()));
         return this;
     }
 
     public <D extends Page<D>> D clickSaveAsDraft(D destination) {
-        clickOnString(R.string.save_as_draft);
+        clickOnString(org.odk.collect.strings.R.string.save_as_draft);
         return destination.assertOnPage();
     }
 
     public MainMenuPage clickSaveAsDraft() {
-        clickOnString(R.string.save_as_draft);
+        clickOnString(org.odk.collect.strings.R.string.save_as_draft);
         return new MainMenuPage().assertOnPage();
     }
 
     public <D extends Page<D>> D clickFinalize(D destination) {
-        clickOnString(R.string.finalize);
+        clickOnString(org.odk.collect.strings.R.string.finalize);
         return destination.assertOnPage();
     }
 
@@ -45,7 +45,7 @@ public class FormEndPage extends Page<FormEndPage> {
     }
 
     public MainMenuPage clickSend() {
-        clickOnString(R.string.send);
+        clickOnString(org.odk.collect.strings.R.string.send);
         return new MainMenuPage().assertOnPage();
     }
 
@@ -54,7 +54,7 @@ public class FormEndPage extends Page<FormEndPage> {
     }
 
     public FormEntryPage clickSaveAndExitWithError(String errorText) {
-        clickOnString(R.string.finalize);
+        clickOnString(org.odk.collect.strings.R.string.finalize);
         assertConstraintDisplayed(errorText);
         return new FormEntryPage(formName).assertOnPage();
     }

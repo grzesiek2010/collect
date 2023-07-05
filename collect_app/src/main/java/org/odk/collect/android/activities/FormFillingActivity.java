@@ -591,7 +591,7 @@ public class FormFillingActivity extends LocalizedActivity implements AnimationL
                         formSaveViewModel.resumeSave();
                     } else {
                         String path = session.getFile().getAbsolutePath();
-                        String message = getString(R.string.answer_file_copy_failed_message, path);
+                        String message = getString(org.odk.collect.strings.R.string.answer_file_copy_failed_message, path);
                         Toast.makeText(this, message, Toast.LENGTH_LONG).show();
                     }
                 });
@@ -765,7 +765,7 @@ public class FormFillingActivity extends LocalizedActivity implements AnimationL
     private void initToolbar() {
         Toolbar toolbar = findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
-        setTitle(getString(R.string.loading_form));
+        setTitle(getString(org.odk.collect.strings.R.string.loading_form));
     }
 
     /**
@@ -870,7 +870,7 @@ public class FormFillingActivity extends LocalizedActivity implements AnimationL
         if (intent == null && requestCode != RequestCodes.DRAW_IMAGE && requestCode != RequestCodes.ANNOTATE_IMAGE
                 && requestCode != RequestCodes.SIGNATURE_CAPTURE && requestCode != RequestCodes.IMAGE_CAPTURE) {
             Timber.d("The intent has a null value for requestCode: %s", requestCode);
-            showLongToast(this, getString(R.string.null_intent_value));
+            showLongToast(this, getString(org.odk.collect.strings.R.string.null_intent_value));
             return;
         }
 
@@ -936,7 +936,7 @@ public class FormFillingActivity extends LocalizedActivity implements AnimationL
     private void loadMedia(Uri uri) {
         permissionsProvider.requestReadUriPermission(this, uri, getContentResolver(), () -> {
             MaterialProgressDialogFragment progressDialog = new MaterialProgressDialogFragment();
-            progressDialog.setMessage(getString(R.string.please_wait));
+            progressDialog.setMessage(getString(org.odk.collect.strings.R.string.please_wait));
             DialogFragmentUtils.showIfNotShowing(progressDialog, TAG_PROGRESS_DIALOG_MEDIA_LOADING, getSupportFragmentManager());
 
             mediaLoadingFragment.beginMediaLoadingTask(uri, getFormController());
@@ -984,7 +984,7 @@ public class FormFillingActivity extends LocalizedActivity implements AnimationL
                             waitingForDataRegistry.cancelWaitingForData();
                         } catch (Exception e) {
                             Timber.e(e);
-                            ToastUtils.showLongToast(this, currentViewIfODKView.getContext().getString(R.string.error_attaching_binary_file,
+                            ToastUtils.showLongToast(this, currentViewIfODKView.getContext().getString(org.odk.collect.strings.R.string.error_attaching_binary_file,
                                     e.getMessage()));
                         }
                         set = true;
@@ -1073,11 +1073,11 @@ public class FormFillingActivity extends LocalizedActivity implements AnimationL
             super.onCreateContextMenu(menu, v, menuInfo);
             FormController formController = getFormController();
 
-            menu.add(0, v.getId(), 0, getString(R.string.clear_answer));
+            menu.add(0, v.getId(), 0, getString(org.odk.collect.strings.R.string.clear_answer));
             if (formController.indexContainsRepeatableGroup()) {
-                menu.add(0, DELETE_REPEAT, 0, getString(R.string.delete_repeat));
+                menu.add(0, DELETE_REPEAT, 0, getString(org.odk.collect.strings.R.string.delete_repeat));
             }
-            menu.setHeaderTitle(getString(R.string.edit_prompt));
+            menu.setHeaderTitle(getString(org.odk.collect.strings.R.string.edit_prompt));
         }
     }
 
@@ -1198,7 +1198,7 @@ public class FormFillingActivity extends LocalizedActivity implements AnimationL
                 // this is badness to avoid a crash.
                 try {
                     event = formController.stepToNextScreenEvent();
-                    createErrorDialog(getString(R.string.survey_internal_error), true);
+                    createErrorDialog(getString(org.odk.collect.strings.R.string.survey_internal_error), true);
                 } catch (JavaRosaException e) {
                     Timber.d(e);
                     createErrorDialog(e.getCause().getMessage(), true);
@@ -1539,7 +1539,7 @@ public class FormFillingActivity extends LocalizedActivity implements AnimationL
                     constraintText = formController.getQuestionPrompt(index)
                             .getSpecialFormQuestionText("constraintMsg");
                     if (constraintText == null) {
-                        constraintText = getString(R.string.invalid_answer_error);
+                        constraintText = getString(org.odk.collect.strings.R.string.invalid_answer_error);
                     }
                 }
                 break;
@@ -1550,7 +1550,7 @@ public class FormFillingActivity extends LocalizedActivity implements AnimationL
                     constraintText = formController.getQuestionPrompt(index)
                             .getSpecialFormQuestionText("requiredMsg");
                     if (constraintText == null) {
-                        constraintText = getString(R.string.required_answer_error);
+                        constraintText = getString(org.odk.collect.strings.R.string.required_answer_error);
                     }
                 }
                 break;
@@ -1632,7 +1632,7 @@ public class FormFillingActivity extends LocalizedActivity implements AnimationL
             errorMessage = errorMsg;
         }
 
-        alertDialog.setTitle(getString(R.string.error_occured));
+        alertDialog.setTitle(getString(org.odk.collect.strings.R.string.error_occured));
         alertDialog.setMessage(errorMsg);
         DialogInterface.OnClickListener errorListener = new DialogInterface.OnClickListener() {
             @Override
@@ -1648,7 +1648,7 @@ public class FormFillingActivity extends LocalizedActivity implements AnimationL
             }
         };
         alertDialog.setCancelable(false);
-        alertDialog.setButton(BUTTON_POSITIVE, getString(R.string.ok), errorListener);
+        alertDialog.setButton(BUTTON_POSITIVE, getString(org.odk.collect.strings.R.string.ok), errorListener);
         swipeHandler.setBeenSwiped(false);
         alertDialog.show();
     }
@@ -1664,7 +1664,7 @@ public class FormFillingActivity extends LocalizedActivity implements AnimationL
         // save current answer
         if (current) {
             if (!formEntryViewModel.updateAnswersForScreen(getAnswers(), complete)) {
-                showShortToast(this, R.string.data_saved_error);
+                showShortToast(this, org.odk.collect.strings.R.string.data_saved_error);
                 return false;
             }
         }
@@ -1700,7 +1700,7 @@ public class FormFillingActivity extends LocalizedActivity implements AnimationL
 
                     finishAndReturnInstance();
                 } else {
-                    showShortToast(this, R.string.data_saved_ok);
+                    showShortToast(this, org.odk.collect.strings.R.string.data_saved_ok);
                 }
 
                 formSaveViewModel.resumeFormEntry();
@@ -1713,10 +1713,10 @@ public class FormFillingActivity extends LocalizedActivity implements AnimationL
                 String message;
 
                 if (result.getMessage() != null) {
-                    message = getString(R.string.data_saved_error) + " "
+                    message = getString(org.odk.collect.strings.R.string.data_saved_error) + " "
                             + result.getMessage();
                 } else {
-                    message = getString(R.string.data_saved_error);
+                    message = getString(org.odk.collect.strings.R.string.data_saved_error);
                 }
 
                 showLongToast(this, message);
@@ -1727,7 +1727,7 @@ public class FormFillingActivity extends LocalizedActivity implements AnimationL
                 DialogFragmentUtils.dismissDialog(SaveFormProgressDialogFragment.class, getSupportFragmentManager());
                 DialogFragmentUtils.dismissDialog(ChangesReasonPromptDialogFragment.class, getSupportFragmentManager());
 
-                showLongToast(this, String.format(getString(R.string.encryption_error_message),
+                showLongToast(this, String.format(getString(org.odk.collect.strings.R.string.encryption_error_message),
                         result.getMessage()));
                 finishAndReturnInstance();
                 formSaveViewModel.resumeFormEntry();
@@ -1768,7 +1768,7 @@ public class FormFillingActivity extends LocalizedActivity implements AnimationL
      */
     private void createClearDialog(final QuestionWidget qw) {
         alertDialog = new MaterialAlertDialogBuilder(this).create();
-        alertDialog.setTitle(getString(R.string.clear_answer_ask));
+        alertDialog.setTitle(getString(org.odk.collect.strings.R.string.clear_answer_ask));
 
         String question = qw.getFormEntryPrompt().getLongText();
         if (question == null) {
@@ -1778,7 +1778,7 @@ public class FormFillingActivity extends LocalizedActivity implements AnimationL
             question = question.substring(0, 50) + "...";
         }
 
-        alertDialog.setMessage(getString(R.string.clearanswer_confirm,
+        alertDialog.setMessage(getString(org.odk.collect.strings.R.string.clearanswer_confirm,
                 question));
 
         DialogInterface.OnClickListener quitListener = new DialogInterface.OnClickListener() {
@@ -1794,8 +1794,8 @@ public class FormFillingActivity extends LocalizedActivity implements AnimationL
         };
         alertDialog.setCancelable(false);
         alertDialog
-                .setButton(BUTTON_POSITIVE, getString(R.string.discard_answer), quitListener);
-        alertDialog.setButton(BUTTON_NEGATIVE, getString(R.string.clear_answer_no),
+                .setButton(BUTTON_POSITIVE, getString(org.odk.collect.strings.R.string.discard_answer), quitListener);
+        alertDialog.setButton(BUTTON_NEGATIVE, getString(org.odk.collect.strings.R.string.clear_answer_no),
                 quitListener);
         alertDialog.show();
     }
@@ -1832,8 +1832,8 @@ public class FormFillingActivity extends LocalizedActivity implements AnimationL
                             formEntryViewModel.updateAnswersForScreen(getAnswers(), false);
                             onScreenRefresh();
                         })
-                .setTitle(getString(R.string.change_language))
-                .setNegativeButton(getString(R.string.do_not_change), null).create();
+                .setTitle(getString(org.odk.collect.strings.R.string.change_language))
+                .setNegativeButton(getString(org.odk.collect.strings.R.string.do_not_change), null).create();
         alertDialog.show();
     }
 
@@ -2110,7 +2110,7 @@ public class FormFillingActivity extends LocalizedActivity implements AnimationL
             boolean hasUsedSavepoint = task.hasUsedSavepoint();
 
             if (hasUsedSavepoint) {
-                runOnUiThread(() -> showLongToast(this, R.string.savepoint_used));
+                runOnUiThread(() -> showLongToast(this, org.odk.collect.strings.R.string.savepoint_used));
             }
 
             if (formController.getInstanceFile() == null) {
@@ -2123,7 +2123,7 @@ public class FormFillingActivity extends LocalizedActivity implements AnimationL
                 if (instanceFile != null) {
                     formController.setInstanceFile(instanceFile);
                 } else {
-                    showFormLoadErrorAndExit(getString(R.string.loading_form_failed));
+                    showFormLoadErrorAndExit(getString(org.odk.collect.strings.R.string.loading_form_failed));
                 }
 
                 identityPromptViewModel.formLoaded(formController);
@@ -2198,7 +2198,7 @@ public class FormFillingActivity extends LocalizedActivity implements AnimationL
             }
         } else {
             Timber.e(new Error("FormController is null"));
-            showLongToast(this, R.string.loading_form_failed);
+            showLongToast(this, org.odk.collect.strings.R.string.loading_form_failed);
             exit();
         }
     }
@@ -2217,7 +2217,7 @@ public class FormFillingActivity extends LocalizedActivity implements AnimationL
         if (errorMsg != null) {
             createErrorDialog(errorMsg, true);
         } else {
-            createErrorDialog(getString(R.string.parse_error), true);
+            createErrorDialog(getString(org.odk.collect.strings.R.string.parse_error), true);
         }
     }
 
@@ -2226,7 +2226,7 @@ public class FormFillingActivity extends LocalizedActivity implements AnimationL
 
         FormLoadingDialogFragment dialog = getDialog(FormLoadingDialogFragment.class, getSupportFragmentManager());
         if (dialog != null) {
-            dialog.setMessage(getString(R.string.please_wait) + "\n\n" + stepMessage);
+            dialog.setMessage(getString(org.odk.collect.strings.R.string.please_wait) + "\n\n" + stepMessage);
         }
     }
 
@@ -2277,14 +2277,14 @@ public class FormFillingActivity extends LocalizedActivity implements AnimationL
     @Override
     public void onSavePointError(String errorMessage) {
         if (errorMessage != null && errorMessage.trim().length() > 0) {
-            showLongToast(this, getString(R.string.save_point_error, errorMessage));
+            showLongToast(this, getString(org.odk.collect.strings.R.string.save_point_error, errorMessage));
         }
     }
 
     @Override
     public void onSaveFormIndexError(String errorMessage) {
         if (errorMessage != null && errorMessage.trim().length() > 0) {
-            showLongToast(this, getString(R.string.save_point_error, errorMessage));
+            showLongToast(this, getString(org.odk.collect.strings.R.string.save_point_error, errorMessage));
         }
     }
 
@@ -2469,7 +2469,7 @@ public class FormFillingActivity extends LocalizedActivity implements AnimationL
                         createErrorDialog(e.getMessage(), false);
                     } catch (Exception | Error e) {
                         Timber.e(e);
-                        createErrorDialog(getString(R.string.update_widgets_error), true);
+                        createErrorDialog(getString(org.odk.collect.strings.R.string.update_widgets_error), true);
                     }
                 }
             });
