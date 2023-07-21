@@ -19,9 +19,14 @@ import static org.odk.collect.android.utilities.ApplicationConstants.RequestCode
 
 import android.annotation.SuppressLint;
 import android.app.Activity;
+import android.content.ComponentName;
 import android.content.Context;
 import android.content.Intent;
+import android.content.pm.PackageManager;
+import android.content.pm.ResolveInfo;
 import android.net.Uri;
+import android.os.Parcelable;
+import android.provider.MediaStore;
 import android.view.View;
 import android.widget.Button;
 
@@ -41,6 +46,8 @@ import org.odk.collect.androidshared.system.CameraUtils;
 import org.odk.collect.selfiecamera.CaptureSelfieActivity;
 
 import java.io.File;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Locale;
 
 import timber.log.Timber;
@@ -143,29 +150,44 @@ public class ImageWidget extends BaseImageWidget implements ButtonClickListener 
             intent.putExtra(CaptureSelfieActivity.EXTRA_TMP_PATH, new StoragePathProvider().getOdkDirPath(StorageSubdirectory.CACHE));
             imageCaptureHandler.captureImage(intent, RequestCodes.MEDIA_FILE_PATH, org.odk.collect.strings.R.string.capture_image);
         } else {
-            Intent intent = new Intent(android.provider.MediaStore.ACTION_IMAGE_CAPTURE);
-            // We give the camera an absolute filename/path where to put the
-            // picture because of bug:
-            // http://code.google.com/p/android/issues/detail?id=1480
-            // The bug appears to be fixed in Android 2.0+, but as of feb 2,
-            // 2010, G1 phones only run 1.6. Without specifying the path the
-            // images returned by the camera in 1.6 (and earlier) are ~1/4
-            // the size. boo.
+            List<Intent> allIntents = new ArrayList();
+            PackageManager packageManager = getContext().getPackageManager();
 
-            try {
-                Uri uri = new ContentUriProvider().getUriForFile(getContext(),
-                        BuildConfig.APPLICATION_ID + ".provider",
-                        new File(tmpImageFilePath));
-                // if this gets modified, the onActivityResult in
-                // FormEntyActivity will also need to be updated.
-                intent.putExtra(android.provider.MediaStore.EXTRA_OUTPUT, uri);
-                FileUtils.grantFilePermissions(intent, uri, getContext());
-            } catch (IllegalArgumentException e) {
-                Timber.e(e);
+            // Add default camera app
+            Intent captureIntent = new Intent(android.provider.MediaStore.ACTION_IMAGE_CAPTURE);
+            List<ResolveInfo> cameraApps = packageManager.queryIntentActivities(captureIntent, 0);
+            ResolveInfo res = cameraApps.get(0);
+
+            Intent defaultCameraAppIntent = new Intent(captureIntent);
+            defaultCameraAppIntent.setComponent(new ComponentName(res.activityInfo.packageName, res.activityInfo.name));
+            defaultCameraAppIntent.setPackage(res.activityInfo.packageName);
+
+            // Add other camera apps
+            for (String packageName : SPECIFIC_CAMERA_APPS) {
+                Intent specificCameraAppIntent = new Intent(captureIntent);
+                specificCameraAppIntent.setPackage(packageName);
+                try {
+                    Uri uri = new ContentUriProvider().getUriForFile(getContext(),
+                            BuildConfig.APPLICATION_ID + ".provider",
+                            new File(tmpImageFilePath));
+                    // if this gets modified, the onActivityResult in
+                    // FormEntyActivity will also need to be updated.
+                    specificCameraAppIntent.putExtra(android.provider.MediaStore.EXTRA_OUTPUT, uri);
+                    FileUtils.grantFilePermissions(specificCameraAppIntent, uri, getContext());
+                } catch (IllegalArgumentException e) {
+                    Timber.e(e);
+                }
+                allIntents.add(specificCameraAppIntent);
             }
 
-            imageCaptureHandler.captureImage(intent, RequestCodes.IMAGE_CAPTURE, org.odk.collect.strings.R.string.capture_image);
+            Intent chooserIntent = Intent.createChooser(defaultCameraAppIntent, "Select camera");
+            chooserIntent.putExtra(Intent.EXTRA_INITIAL_INTENTS, allIntents.toArray(new Parcelable[allIntents.size()]));
+            launchActivityForResult(chooserIntent, RequestCodes.IMAGE_CAPTURE, org.odk.collect.strings.R.string.capture_image);
         }
     }
 
+    private static final String[] SPECIFIC_CAMERA_APPS =  new String[]{
+            "net.sourceforge.opencamera",
+            "com.jeyluta.timestampcamerafree"
+    };
 }

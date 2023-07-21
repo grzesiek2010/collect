@@ -340,5 +340,8 @@ the specific language governing permissions and limitations under the License.
         <intent>
             <action android:name="android.intent.action.MAIN" />
         </intent>
+        <intent>
+            <action android:name="android.media.action.IMAGE_CAPTURE" />
+        </intent>
     </queries>
 </manifest>
