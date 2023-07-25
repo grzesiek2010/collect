@@ -1214,4 +1214,15 @@
     <string name="edit_form">Edit</string>
     <string name="view_form">View</string>
     <string name="close_snackbar">Close snackbar</string>
+
+    <!--
+    ##############################################
+    # Forms ready to send banner
+    ##############################################
+    -->
+    <string name="last_form_sent_seconds_ago">Last form sent: %d second(s) ago</string>
+    <string name="last_form_sent_minutes_ago">Last form sent: %d minute(s) ago</string>
+    <string name="last_form_sent_hours_ago">Last form sent: %d hour(s) ago</string>
+    <string name="last_form_sent_days_ago">Last form sent: %d day(s) ago</string>
+    <string name="forms_ready_to_send">%d form(s) ready to send</string>
 </resources>
