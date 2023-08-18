@@ -7,8 +7,12 @@ import org.junit.Rule
 import org.junit.Test
 import org.junit.rules.RuleChain
 import org.junit.runner.RunWith
+import org.odk.collect.android.support.CollectHelpers
 import org.odk.collect.android.support.StorageUtils
+import org.odk.collect.android.support.pages.AccessControlPage
 import org.odk.collect.android.support.pages.FormEntryPage
+import org.odk.collect.android.support.pages.MainMenuPage
+import org.odk.collect.android.support.pages.ProjectSettingsPage
 import org.odk.collect.android.support.rules.CollectTestRule
 import org.odk.collect.android.support.rules.TestRuleChain
 
@@ -54,5 +58,32 @@ class AuditTest {
         assertThat(auditLog[9].get("event"), equalTo("form save"))
         assertThat(auditLog[10].get("event"), equalTo("form exit"))
         assertThat(auditLog[11].get("event"), equalTo("form finalize"))
+    }
+
+    @Test
+    fun xfillAndEditingForm_updatesAuditLogForInstance() {
+        rule.startAtMainMenu()
+            .copyForm("one-question-audit.xml")
+            .openProjectSettingsDialog()
+            .clickSettings()
+            .clickAccessControl()
+            .clickFormEntrySettings()
+            .clickMovingBackwards()
+            .clickOnString(org.odk.collect.strings.R.string.yes)
+            .pressBack(AccessControlPage())
+            .pressBack(ProjectSettingsPage())
+            .pressBack(MainMenuPage())
+            .startBlankForm("One Question Audit")
+            .fillOut(
+                FormEntryPage.QuestionAndAnswer("what is your age", "31")
+            )
+            .let {
+                CollectHelpers.killAndReopenApp()
+            }
+
+        MainMenuPage().startBlankForm("One Question Audit")
+
+        val auditLog = StorageUtils.getAuditLogForFirstInstance()
+        assertThat(auditLog[1].get("event"), equalTo("form resume"))
     }
 }
