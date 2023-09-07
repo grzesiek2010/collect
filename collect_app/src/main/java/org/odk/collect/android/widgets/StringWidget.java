@@ -23,11 +23,13 @@ import android.text.TextWatcher;
 import android.text.method.TextKeyListener;
 import android.util.TypedValue;
 import android.view.Gravity;
+import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
 import androidx.annotation.NonNull;
 
+import com.google.android.material.button.MaterialButton;
 import com.google.android.material.textfield.TextInputEditText;
 import com.google.android.material.textfield.TextInputLayout;
 
@@ -38,6 +40,7 @@ import org.javarosa.form.api.FormEntryPrompt;
 import org.odk.collect.android.R;
 import org.odk.collect.android.formentry.questions.QuestionDetails;
 import org.odk.collect.android.formentry.questions.WidgetViewUtils;
+import org.odk.collect.android.utilities.ViewUtils;
 import org.odk.collect.android.widgets.utilities.QuestionFontSizeUtils;
 
 import timber.log.Timber;
@@ -60,7 +63,7 @@ public class StringWidget extends QuestionWidget {
 
     protected void setUpLayout(Context context) {
         setDisplayValueFromModel();
-        addAnswerView(textInputLayout, WidgetViewUtils.getStandardMargin(context));
+        addAnswerView(textInputLayout);
     }
 
     @Override
@@ -136,10 +139,11 @@ public class StringWidget extends QuestionWidget {
     }
 
     private TextInputLayout getAnswerEditText(boolean readOnly, FormEntryPrompt prompt) {
-        TextInputLayout textInputLayout = new TextInputLayout(getContext());
-        TextInputEditText answerEditText = new TextInputEditText(textInputLayout.getContext());
-        textInputLayout.addView(answerEditText);
+        TextInputLayout textInputLayout = (TextInputLayout) LayoutInflater
+                .from(getContext())
+                .inflate(R.layout.widget_answer_text_view, null, false);
 
+        TextInputEditText answerEditText = textInputLayout.findViewById(R.id.edit_text);
         answerEditText.setId(View.generateViewId());
         answerEditText.setTextSize(TypedValue.COMPLEX_UNIT_DIP, QuestionFontSizeUtils.getFontSize(settings, QuestionFontSizeUtils.FontSize.HEADLINE_6));
         answerEditText.setKeyListener(new TextKeyListener(TextKeyListener.Capitalize.SENTENCES, false));

@@ -105,6 +105,7 @@ public class ExStringWidget extends StringWidget implements WidgetDataReceiver, 
 
     @Override
     protected void setUpLayout(Context context) {
+        textInputLayout.setPadding(7, 7, 7, 0);
         answerText.setText(getFormEntryPrompt().getAnswerText());
         answerText.setVisibility(answerText.getText().toString().isBlank() ? GONE : VISIBLE);
         launchIntentButton = createSimpleButton(getContext(), getFormEntryPrompt().isReadOnly(), getButtonText(), QuestionFontSizeUtils.getFontSize(settings, QuestionFontSizeUtils.FontSize.LABEL_LARGE), this);
@@ -198,7 +199,6 @@ public class ExStringWidget extends StringWidget implements WidgetDataReceiver, 
         hasExApp = false;
         if (!getFormEntryPrompt().isReadOnly()) {
             answerText.setVisibility(VISIBLE);
-            answerText.setBackground((new EditText(getContext())).getBackground());
             answerText.setFocusable(true);
             answerText.setFocusableInTouchMode(true);
             answerText.setEnabled(true);
