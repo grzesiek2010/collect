@@ -25,9 +25,11 @@ import android.util.TypedValue;
 import android.view.Gravity;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.EditText;
 
 import androidx.annotation.NonNull;
+
+import com.google.android.material.textfield.TextInputEditText;
+import com.google.android.material.textfield.TextInputLayout;
 
 import org.javarosa.core.model.QuestionDef;
 import org.javarosa.core.model.data.IAnswerData;
@@ -45,18 +47,20 @@ import timber.log.Timber;
  */
 @SuppressLint("ViewConstructor")
 public class StringWidget extends QuestionWidget {
-    public final EditText answerText;
+    public final TextInputLayout textInputLayout;
+    public final TextInputEditText answerText;
 
     protected StringWidget(Context context, QuestionDetails questionDetails) {
         super(context, questionDetails);
 
-        answerText = getAnswerEditText(questionDetails.isReadOnly() || this instanceof ExStringWidget, getFormEntryPrompt());
+        textInputLayout = getAnswerEditText(questionDetails.isReadOnly() || this instanceof ExStringWidget, getFormEntryPrompt());
+        answerText = (TextInputEditText) textInputLayout.getEditText();
         setUpLayout(context);
     }
 
     protected void setUpLayout(Context context) {
         setDisplayValueFromModel();
-        addAnswerView(answerText, WidgetViewUtils.getStandardMargin(context));
+        addAnswerView(textInputLayout, WidgetViewUtils.getStandardMargin(context));
     }
 
     @Override
@@ -131,8 +135,11 @@ public class StringWidget extends QuestionWidget {
         }
     }
 
-    private EditText getAnswerEditText(boolean readOnly, FormEntryPrompt prompt) {
-        EditText answerEditText = new EditText(getContext());
+    private TextInputLayout getAnswerEditText(boolean readOnly, FormEntryPrompt prompt) {
+        TextInputLayout textInputLayout = new TextInputLayout(getContext());
+        TextInputEditText answerEditText = new TextInputEditText(textInputLayout.getContext());
+        textInputLayout.addView(answerEditText);
+
         answerEditText.setId(View.generateViewId());
         answerEditText.setTextSize(TypedValue.COMPLEX_UNIT_DIP, QuestionFontSizeUtils.getFontSize(settings, QuestionFontSizeUtils.FontSize.HEADLINE_6));
         answerEditText.setKeyListener(new TextKeyListener(TextKeyListener.Capitalize.SENTENCES, false));
@@ -190,6 +197,16 @@ public class StringWidget extends QuestionWidget {
             }
         }
 
-        return answerEditText;
+        return textInputLayout;
+    }
+
+    @Override
+    public void hideError() {
+        textInputLayout.setError(null);
+    }
+
+    @Override
+    public void displayError(String errorMessage) {
+        textInputLayout.setError(errorMessage);
     }
 }
