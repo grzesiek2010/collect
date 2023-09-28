@@ -65,13 +65,13 @@ class ServerSettingsTest {
     @Test
     fun currentServerUrlShouldBeSelectedToMakeChangingItEasier_whenServerURLConfigurationDialogIsLaunched() {
         MainMenuPage().assertOnPage()
-                .openProjectSettingsDialog()
-                .clickSettings()
-                .clickServerSettings()
-                .assertText("https://demo.getodk.org")
-                .clickOnURL()
-                .addText(testDependencies.server.url)
-                .clickOKOnDialog()
-                .assertText(testDependencies.server.url)
+            .openProjectSettingsDialog()
+            .clickSettings()
+            .clickServerSettings()
+            .assertText("https://demo.getodk.org")
+            .clickOnURL()
+            .addText(testDependencies.server.url)
+            .clickOKOnDialog()
+            .assertText(testDependencies.server.url)
     }
 }
