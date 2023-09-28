@@ -13,6 +13,7 @@ import androidx.test.espresso.action.ViewActions.click
 import androidx.test.espresso.action.ViewActions.replaceText
 import androidx.test.espresso.action.ViewActions.scrollTo
 import androidx.test.espresso.action.ViewActions.typeText
+import androidx.test.espresso.action.ViewActions.typeTextIntoFocusedView
 import androidx.test.espresso.assertion.ViewAssertions.doesNotExist
 import androidx.test.espresso.assertion.ViewAssertions.matches
 import androidx.test.espresso.contrib.RecyclerViewActions
@@ -263,6 +264,11 @@ abstract class Page<T : Page<T>> {
 
     fun addText(existingText: String?, text: String?): T {
         onView(withText(existingText)).perform(typeText(text))
+        return this as T
+    }
+
+    fun addText(text: String?): T {
+        onView(withClassName(endsWith("EditText"))).perform(typeTextIntoFocusedView(text))
         return this as T
     }
 
