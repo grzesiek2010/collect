@@ -27,6 +27,7 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.text.InputFilter;
 import android.text.TextUtils;
+import android.widget.EditText;
 
 import androidx.appcompat.app.AlertDialog;
 import androidx.preference.EditTextPreference;
@@ -122,6 +123,7 @@ public class ServerPreferencesFragment extends BaseProjectPreferencesFragment im
 
         serverUrlPreference.setOnPreferenceChangeListener(createChangeListener());
         serverUrlPreference.setSummary(serverUrlPreference.getText());
+        serverUrlPreference.setOnBindEditTextListener(EditText::selectAll);
 
         usernamePreference.setOnPreferenceChangeListener(createChangeListener());
         usernamePreference.setSummary(usernamePreference.getText());
