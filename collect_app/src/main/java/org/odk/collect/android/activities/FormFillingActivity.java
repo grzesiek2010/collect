@@ -2177,6 +2177,7 @@ public class FormFillingActivity extends LocalizedActivity implements AnimationL
                                 if (formIndex != null) {
                                     formController.jumpToIndex(formIndex);
                                     formControllerAvailable(formController);
+                                    activityDisplayed();
                                     formEntryViewModel.refresh();
                                     return;
                                 }
