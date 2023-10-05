@@ -146,4 +146,31 @@ class AuditTest {
         assertThat(auditLog[13].get("event"), equalTo("form save"))
         assertThat(auditLog[14].get("event"), equalTo("form exit"))
     }
+
+    @Test // https://github.com/getodk/collect/issues/5767
+    fun navigatingBackToTheFormAfterKillingTheAppWhenMovingBackwardsIsDisabled_savesLocationEventsToAuditLog() {
+        rule.startAtMainMenu()
+                .openProjectSettingsDialog()
+                .clickSettings()
+                .clickAccessControl()
+                .clickFormEntrySettings()
+                .clickMovingBackwards()
+                .clickOnString(org.odk.collect.strings.R.string.yes)
+                .pressBack(AccessControlPage())
+                .pressBack(ProjectSettingsPage())
+                .pressBack(MainMenuPage())
+
+                .copyForm("one-question-audit-background-location.xml")
+                .startBlankForm("One Question Audit Background Location")
+                .fillOut(FormEntryPage.QuestionAndAnswer("what is your age", "31"))
+                .killAndReopenApp(MainMenuPage())
+                .startBlankForm("One Question Audit Background Location")
+                .swipeToEndScreen()
+                .clickFinalize()
+
+        val auditLog = StorageUtils.getAuditLogForFirstInstance()
+        assertThat(auditLog[2].get("event"), equalTo("location tracking enabled"))
+        assertThat(auditLog[3].get("event"), equalTo("location permissions granted"))
+        assertThat(auditLog[4].get("event"), equalTo("location providers enabled"))
+    }
 }
