@@ -11,7 +11,8 @@ public final class QuestionFontSizeUtils {
     public enum FontSize {
         HEADLINE_6,
         SUBTITLE_1,
-        LABEL_LARGE
+        LABEL_LARGE,
+        LABEL_EXTRA_LARGE
     }
 
     public static final int DEFAULT_FONT_SIZE = 21;
@@ -21,6 +22,8 @@ public final class QuestionFontSizeUtils {
     private static final int SUBTITLE_1_DIFF = -5;
 
     private static final int LABEL_LARGE_DIFF = -7;
+
+    private static final int LABEL_EXTRA_LARGE_DIFF = -3;
 
 
     private QuestionFontSizeUtils() {
@@ -41,6 +44,10 @@ public final class QuestionFontSizeUtils {
 
             case LABEL_LARGE -> {
                 return settingsValue + LABEL_LARGE_DIFF;
+            }
+
+            case LABEL_EXTRA_LARGE -> {
+                return settingsValue + LABEL_EXTRA_LARGE_DIFF;
             }
 
             default -> throw new IllegalArgumentException();
