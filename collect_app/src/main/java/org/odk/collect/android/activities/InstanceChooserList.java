@@ -158,7 +158,8 @@ public class InstanceChooserList extends AppListActivity implements AdapterView.
 
         BulkFinalizationViewModel bulkFinalizationViewModel = new BulkFinalizationViewModel(
                 scheduler,
-                instancesDataService
+                instancesDataService,
+                settingsProvider
         );
 
         MaterialProgressDialogFragment.showOn(this, bulkFinalizationViewModel.isFinalizing(), getSupportFragmentManager(), () -> {
@@ -167,17 +168,19 @@ public class InstanceChooserList extends AppListActivity implements AdapterView.
             return dialog;
         });
 
-        DraftsMenuProvider draftsMenuProvider = new DraftsMenuProvider(this, bulkFinalizationViewModel::finalizeAllDrafts);
-        addMenuProvider(draftsMenuProvider, this);
-        bulkFinalizationViewModel.getDraftsCount().observe(this, draftsCount -> {
-            draftsMenuProvider.setDraftsCount(draftsCount);
-            invalidateMenu();
-        });
+        if (bulkFinalizationViewModel.isEnabled()) {
+            DraftsMenuProvider draftsMenuProvider = new DraftsMenuProvider(this, bulkFinalizationViewModel::finalizeAllDrafts);
+            addMenuProvider(draftsMenuProvider, this);
+            bulkFinalizationViewModel.getDraftsCount().observe(this, draftsCount -> {
+                draftsMenuProvider.setDraftsCount(draftsCount);
+                invalidateMenu();
+            });
 
-        bulkFinalizationViewModel.getFinalizedForms().observe(
-                this,
-                new FinalizeAllSnackbarPresenter(this.findViewById(android.R.id.content), this)
-        );
+            bulkFinalizationViewModel.getFinalizedForms().observe(
+                    this,
+                    new FinalizeAllSnackbarPresenter(this.findViewById(android.R.id.content), this)
+            );
+        }
     }
 
     private void init() {
