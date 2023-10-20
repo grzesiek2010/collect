@@ -89,7 +89,7 @@ class BulkFinalizationTest {
 
             .clickOptionsIcon(string.finalize_all_forms)
             .clickOnString(string.finalize_all_forms)
-            .clickOnButtonInDialog(string.finalize, EditSavedFormPage())
+            .clickOnButtonInDialog(string.finalize, EditSavedFormPage(false))
             .checkIsSnackbarWithQuantityDisplayed(plurals.bulk_finalize_failure, 1)
     }
 
