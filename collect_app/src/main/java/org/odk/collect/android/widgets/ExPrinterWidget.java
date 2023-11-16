@@ -223,21 +223,23 @@ public class ExPrinterWidget extends QuestionWidget implements WidgetDataReceive
 
     @Override
     public void onButtonClick(int buttonId) {
-        String appearance = getFormEntryPrompt().getAppearanceHint();
-        String[] attrs = appearance.split(":");
-        final String intentName = (attrs.length < 2 || attrs[1].length() == 0)
-                ? "org.opendatakit.sensors.ZebraPrinter" : attrs[1];
-        final String errorString;
-        String v = getFormEntryPrompt().getSpecialFormQuestionText("noPrinterErrorString");
-        errorString = (v != null) ? v : getContext().getString(org.odk.collect.strings.R.string.no_printer);
-        try {
-            waitingForDataRegistry.waitForData(getFormEntryPrompt().getIndex());
-            firePrintingActivity(intentName);
-        } catch (ActivityNotFoundException e) {
-            waitingForDataRegistry.cancelWaitingForData();
-            Toast.makeText(getContext(),
-                    errorString, Toast.LENGTH_SHORT)
-                    .show();
-        }
+        ODKPrinter.doWebViewPrint(getContext());
+
+//        String appearance = getFormEntryPrompt().getAppearanceHint();
+//        String[] attrs = appearance.split(":");
+//        final String intentName = (attrs.length < 2 || attrs[1].length() == 0)
+//                ? "org.opendatakit.sensors.ZebraPrinter" : attrs[1];
+//        final String errorString;
+//        String v = getFormEntryPrompt().getSpecialFormQuestionText("noPrinterErrorString");
+//        errorString = (v != null) ? v : getContext().getString(org.odk.collect.strings.R.string.no_printer);
+//        try {
+//            waitingForDataRegistry.waitForData(getFormEntryPrompt().getIndex());
+//            firePrintingActivity(intentName);
+//        } catch (ActivityNotFoundException e) {
+//            waitingForDataRegistry.cancelWaitingForData();
+//            Toast.makeText(getContext(),
+//                    errorString, Toast.LENGTH_SHORT)
+//                    .show();
+//        }
     }
 }
