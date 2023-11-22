@@ -399,10 +399,6 @@ public class JavaRosaFormController implements FormController {
         try {
             ValidateOutcome validateOutcome = getFormDef().validate(markCompleted);
             if (validateOutcome != null) {
-                this.jumpToIndex(validateOutcome.failedPrompt);
-                if (indexIsInFieldList()) {
-                    stepToPreviousScreenEvent();
-                }
                 return new FailedValidationResult(validateOutcome.failedPrompt, validateOutcome.outcome);
             }
             return SuccessValidationResult.INSTANCE;
