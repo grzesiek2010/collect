@@ -12,6 +12,7 @@ import org.odk.collect.android.utilities.InstancesRepositoryProvider
 import org.odk.collect.android.utilities.WebCredentialsUtils
 import org.odk.collect.forms.FormsRepository
 import org.odk.collect.forms.instances.Instance
+import org.odk.collect.forms.instances.InstancesRepository
 import org.odk.collect.metadata.PropertyManager
 import org.odk.collect.metadata.PropertyManager.Companion.PROPMGR_DEVICE_ID
 import org.odk.collect.settings.keys.ProjectKeys
@@ -19,6 +20,7 @@ import org.odk.collect.shared.settings.Settings
 import timber.log.Timber
 
 class InstanceSubmitter(
+    private val instancesRepository: InstancesRepository,
     private val formsRepository: FormsRepository,
     private val generalSettings: Settings,
     private val propertyManager: PropertyManager
@@ -29,6 +31,8 @@ class InstanceSubmitter(
         if (toUpload.isEmpty()) {
             throw SubmitException
         }
+        markInstancesAsScheduledForSubmitting(toUpload)
+
         val result = mutableMapOf<Instance, FormUploadException?>()
         val deviceId = propertyManager.getSingularProperty(PROPMGR_DEVICE_ID)
 
@@ -48,6 +52,15 @@ class InstanceSubmitter(
             }
         }
         return result
+    }
+
+    private fun markInstancesAsScheduledForSubmitting(toUpload: List<Instance>) {
+        toUpload.forEach {
+            val instanceBuilder = Instance.Builder(it)
+            instanceBuilder.status(Instance.STATUS_SUBMITTING)
+
+            instancesRepository.save(instanceBuilder.build())
+        }
     }
 
     private fun setUpODKUploader(): InstanceUploader {

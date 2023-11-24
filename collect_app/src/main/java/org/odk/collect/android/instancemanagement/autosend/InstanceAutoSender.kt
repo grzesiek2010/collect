@@ -17,6 +17,7 @@ class InstanceAutoSender(
 ) {
     fun autoSendInstances(projectDependencyProvider: ProjectDependencyProvider): Boolean {
         val instanceSubmitter = InstanceSubmitter(
+            projectDependencyProvider.instancesRepository,
             projectDependencyProvider.formsRepository,
             projectDependencyProvider.generalSettings,
             propertyManager

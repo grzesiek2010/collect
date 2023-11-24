@@ -30,6 +30,7 @@ public final class Instance {
     public static final String STATUS_VALID = "valid";
     public static final String STATUS_COMPLETE = "complete";
     public static final String STATUS_SUBMITTED = "submitted";
+    public static final String STATUS_SUBMITTING = "submitting";
     public static final String STATUS_SUBMISSION_FAILED = "submissionFailed";
 
     public static final String GEOMETRY_TYPE_POINT = "Point";
