@@ -3,6 +3,7 @@ package org.odk.collect.android.instancemanagement
 import org.odk.collect.analytics.Analytics
 import org.odk.collect.android.analytics.AnalyticsEvents
 import org.odk.collect.android.application.Collect
+import org.odk.collect.android.formmanagement.InstancesDataService
 import org.odk.collect.android.gdrive.GoogleAccountsManager
 import org.odk.collect.android.gdrive.GoogleApiProvider
 import org.odk.collect.android.gdrive.InstanceGoogleSheetsUploader
@@ -31,7 +32,8 @@ class InstanceSubmitter(
     private val googleApiProvider: GoogleApiProvider,
     private val permissionsProvider: PermissionsProvider,
     private val generalSettings: Settings,
-    private val propertyManager: PropertyManager
+    private val propertyManager: PropertyManager,
+    private val instancesDataService: InstancesDataService
 ) {
 
     @Throws(SubmitException::class)
@@ -87,6 +89,7 @@ class InstanceSubmitter(
 
             instancesRepository.save(instanceBuilder.build())
         }
+        instancesDataService.update()
     }
 
     @Throws(SubmitException::class)

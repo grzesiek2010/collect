@@ -65,7 +65,8 @@ class AutoSendTaskSpecTest {
                 instancesRepositoryProvider: InstancesRepositoryProvider?,
                 storagePathProvider: StoragePathProvider?,
                 changeLockProvider: ChangeLockProvider?,
-                formSourceProvider: FormSourceProvider?
+                formSourceProvider: FormSourceProvider?,
+                instancesDataService: InstancesDataService?
             ): ProjectDependencyProviderFactory {
                 return projectDependencyProviderFactory
             }
