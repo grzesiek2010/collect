@@ -75,6 +75,7 @@ class InstanceSubmitter(
                 deleteInstance(instance)
                 logUploadedForm(instance)
             } catch (e: FormUploadException) {
+                markInstancesAsFailedToSubmit(instance)
                 Timber.d(e)
                 result[instance] = e
             }
@@ -83,12 +84,23 @@ class InstanceSubmitter(
     }
 
     private fun markInstancesAsScheduledForSubmitting(toUpload: List<Instance>) {
-        toUpload.forEach {
-            val instanceBuilder = Instance.Builder(it)
-            instanceBuilder.status(Instance.STATUS_SUBMITTING)
-
-            instancesRepository.save(instanceBuilder.build())
+        toUpload.forEach { instance ->
+            instancesRepository.save(
+                Instance.Builder(instance)
+                    .status(Instance.STATUS_SUBMITTING)
+                    .build()
+            )
         }
+        instancesDataService.update()
+    }
+
+    private fun markInstancesAsFailedToSubmit(instance: Instance) {
+        instancesRepository.save(
+            Instance.Builder(instance)
+                .status(Instance.STATUS_SUBMISSION_FAILED)
+                .build()
+        )
+
         instancesDataService.update()
     }
 
