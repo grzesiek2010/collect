@@ -20,7 +20,8 @@ class InstanceAutoSender(
             projectDependencyProvider.instancesRepository,
             projectDependencyProvider.formsRepository,
             projectDependencyProvider.generalSettings,
-            propertyManager
+            propertyManager,
+            projectDependencyProvider.instancesDataService
         )
         return projectDependencyProvider.changeLockProvider.getInstanceLock(projectDependencyProvider.projectId).withLock { acquiredLock: Boolean ->
             if (acquiredLock) {

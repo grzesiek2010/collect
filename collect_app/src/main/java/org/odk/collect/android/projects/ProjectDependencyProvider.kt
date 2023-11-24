@@ -1,6 +1,7 @@
 package org.odk.collect.android.projects
 
 import org.odk.collect.android.formmanagement.FormSourceProvider
+import org.odk.collect.android.formmanagement.InstancesDataService
 import org.odk.collect.android.storage.StoragePathProvider
 import org.odk.collect.android.storage.StorageSubdirectory
 import org.odk.collect.android.utilities.ChangeLockProvider
@@ -19,7 +20,8 @@ data class ProjectDependencyProvider(
     val instancesRepositoryProvider: InstancesRepositoryProvider,
     val storagePathProvider: StoragePathProvider,
     val changeLockProvider: ChangeLockProvider,
-    val formSourceProvider: FormSourceProvider
+    val formSourceProvider: FormSourceProvider,
+    val instancesDataService: InstancesDataService
 ) {
     val generalSettings by lazy { settingsProvider.getUnprotectedSettings(projectId) }
     val formsRepository by lazy { formsRepositoryProvider.get(projectId) }
@@ -36,7 +38,8 @@ class ProjectDependencyProviderFactory(
     private val instancesRepositoryProvider: InstancesRepositoryProvider,
     private val storagePathProvider: StoragePathProvider,
     private val changeLockProvider: ChangeLockProvider,
-    private val formSourceProvider: FormSourceProvider
+    private val formSourceProvider: FormSourceProvider,
+    private val instancesDataService: InstancesDataService
 ) {
     fun create(projectId: String) = ProjectDependencyProvider(
         projectId,
@@ -45,6 +48,7 @@ class ProjectDependencyProviderFactory(
         instancesRepositoryProvider,
         storagePathProvider,
         changeLockProvider,
-        formSourceProvider
+        formSourceProvider,
+        instancesDataService
     )
 }

@@ -616,8 +616,18 @@ public class AppDependencyModule {
     }
 
     @Provides
+<<<<<<< HEAD
     public ProjectDependencyProviderFactory providesProjectDependencyProviderFactory(SettingsProvider settingsProvider, FormsRepositoryProvider formsRepositoryProvider, InstancesRepositoryProvider instancesRepositoryProvider, StoragePathProvider storagePathProvider, ChangeLockProvider changeLockProvider, FormSourceProvider formSourceProvider) {
         return new ProjectDependencyProviderFactory(settingsProvider, formsRepositoryProvider, instancesRepositoryProvider, storagePathProvider, changeLockProvider, formSourceProvider);
+=======
+    public PenColorPickerViewModel.Factory providesPenColorPickerViewModel(SettingsProvider settingsProvider) {
+        return new PenColorPickerViewModel.Factory(settingsProvider.getMetaSettings());
+    }
+
+    @Provides
+    public ProjectDependencyProviderFactory providesProjectDependencyProviderFactory(SettingsProvider settingsProvider, FormsRepositoryProvider formsRepositoryProvider, InstancesRepositoryProvider instancesRepositoryProvider, StoragePathProvider storagePathProvider, ChangeLockProvider changeLockProvider, FormSourceProvider formSourceProvider, InstancesDataService instancesDataService) {
+        return new ProjectDependencyProviderFactory(settingsProvider, formsRepositoryProvider, instancesRepositoryProvider, storagePathProvider, changeLockProvider, formSourceProvider, instancesDataService);
+>>>>>>> 7b9773f032 (Update instancesDataService after marking instances as being submitted)
     }
 
     @Provides

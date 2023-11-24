@@ -3,6 +3,7 @@ package org.odk.collect.android.instancemanagement
 import org.odk.collect.analytics.Analytics
 import org.odk.collect.android.analytics.AnalyticsEvents
 import org.odk.collect.android.application.Collect
+import org.odk.collect.android.formmanagement.InstancesDataService
 import org.odk.collect.android.upload.FormUploadException
 import org.odk.collect.android.upload.InstanceServerUploader
 import org.odk.collect.android.upload.InstanceUploader
@@ -23,7 +24,8 @@ class InstanceSubmitter(
     private val instancesRepository: InstancesRepository,
     private val formsRepository: FormsRepository,
     private val generalSettings: Settings,
-    private val propertyManager: PropertyManager
+    private val propertyManager: PropertyManager,
+    private val instancesDataService: InstancesDataService
 ) {
 
     @Throws(SubmitException::class)
@@ -61,6 +63,7 @@ class InstanceSubmitter(
 
             instancesRepository.save(instanceBuilder.build())
         }
+        instancesDataService.update()
     }
 
     private fun setUpODKUploader(): InstanceUploader {
