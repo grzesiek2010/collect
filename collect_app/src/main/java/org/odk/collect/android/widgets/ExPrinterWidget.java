@@ -223,7 +223,7 @@ public class ExPrinterWidget extends QuestionWidget implements WidgetDataReceive
 
     @Override
     public void onButtonClick(int buttonId) {
-        ODKPrinter.doWebViewPrint(getContext());
+        ODKPrinter.doWebViewPrint(getContext(), getFormEntryPrompt().getAnswerText());
 
 //        String appearance = getFormEntryPrompt().getAppearanceHint();
 //        String[] attrs = appearance.split(":");

@@ -324,6 +324,7 @@ dependencies {
     implementation Dependencies.zxing_android_embedded
 
     implementation Dependencies.danlew_android_joda
+    implementation group: 'org.jsoup', name: 'jsoup', version: '1.16.2'
 
     // Android Architecture Components:
     implementation Dependencies.androidx_lifecycle_runtime_ktx

@@ -2,11 +2,17 @@ package org.odk.collect.android.widgets
 
 import android.annotation.SuppressLint
 import android.content.Context
+import android.graphics.Bitmap
 import android.print.PrintAttributes
 import android.print.PrintManager
+import android.util.Base64
 import android.webkit.WebResourceRequest
 import android.webkit.WebView
 import android.webkit.WebViewClient
+import org.jsoup.Jsoup
+import org.jsoup.nodes.Document
+import org.odk.collect.qrcode.QRCodeCreator
+import java.io.ByteArrayOutputStream
 
 @SuppressLint("StaticFieldLeak")
 object ODKPrinter {
@@ -14,7 +20,21 @@ object ODKPrinter {
     private var mWebView: WebView? = null
 
     @JvmStatic
-    fun doWebViewPrint(context: Context) {
+    fun doWebViewPrint(context: Context, htmlDocument: String) {
+        val doc: Document = Jsoup.parse(htmlDocument)
+
+        val qrcodeElements = doc.getElementsByTag("qrcode")
+        for (qrcodeElement in qrcodeElements) {
+            val newElement = doc.createElement("img").apply {
+                attributes().addAll(qrcodeElement.attributes())
+                val bitmap = bitmapToBase64(QRCodeCreator().generate(qrcodeElement.text()))
+                attr("src", "data:image/png;base64,$bitmap")
+            }
+            qrcodeElement.replaceWith(newElement)
+        }
+
+        val parsedHtml = doc.html()
+
         // Create a WebView object specifically for printing
         val webView = WebView(context)
         webView.webViewClient = object : WebViewClient() {
@@ -27,22 +47,18 @@ object ODKPrinter {
             }
         }
 
-        // Generate an HTML document on the fly:
-        val htmlDocument =
-
-                        "      <img id='qr_code'" +
-                        "            src=\"file:///android_asset/qr_code.png\"/>" +
-                        "      <br>" +
-                        "      <img id='barcode'" +
-                        "            src=\"file:///android_asset/barcode.png\"/>" +
-                        "      <br>" +
-                        "      <h1>ODK is awesome</h1>"
-
-        webView.loadDataWithBaseURL(null, htmlDocument, "text/HTML", "UTF-8", null)
+        webView.loadDataWithBaseURL(null, parsedHtml, "text/HTML", "UTF-8", null)
 
         // Keep a reference to WebView object until you pass the PrintDocumentAdapter
         // to the PrintManager
         mWebView = webView
+    }
+
+    private fun bitmapToBase64(bitmap: Bitmap): String {
+        val byteArrayOutputStream = ByteArrayOutputStream()
+        bitmap.compress(Bitmap.CompressFormat.PNG, 100, byteArrayOutputStream)
+        val byteArray = byteArrayOutputStream.toByteArray()
+        return Base64.encodeToString(byteArray, Base64.DEFAULT)
     }
 
     private fun createWebPrintJob(context: Context, webView: WebView) {
