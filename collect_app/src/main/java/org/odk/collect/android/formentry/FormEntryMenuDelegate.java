@@ -2,12 +2,14 @@ package org.odk.collect.android.formentry;
 
 import static org.odk.collect.settings.keys.ProjectKeys.KEY_BACKGROUND_LOCATION;
 
+import android.annotation.SuppressLint;
 import android.content.Intent;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
 
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.appcompat.view.menu.MenuBuilder;
 
 import com.google.android.material.dialog.MaterialAlertDialogBuilder;
 
@@ -51,8 +53,12 @@ public class FormEntryMenuDelegate implements MenuDelegate {
         this.settingsProvider = settingsProvider;
     }
 
+    @SuppressLint("RestrictedApi")
     @Override
     public void onCreateOptionsMenu(MenuInflater menuInflater, Menu menu) {
+        if(menu instanceof MenuBuilder){
+            ((MenuBuilder) menu).setOptionalIconsVisible(true);
+        }
         menuInflater.inflate(R.menu.form_menu, menu);
     }
 
