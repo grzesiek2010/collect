@@ -49,11 +49,15 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.MotionEvent;
 import android.view.View;
+import android.view.ViewGroup;
 import android.view.ViewGroup.LayoutParams;
 import android.view.animation.Animation;
 import android.view.animation.Animation.AnimationListener;
 import android.webkit.WebView;
+import android.widget.AdapterView;
 import android.widget.FrameLayout;
+import android.widget.ListAdapter;
+import android.widget.ListPopupWindow;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -69,6 +73,7 @@ import androidx.lifecycle.LifecycleOwner;
 import androidx.lifecycle.ViewModelProvider;
 
 import com.google.android.material.dialog.MaterialAlertDialogBuilder;
+import com.google.android.material.textview.MaterialTextView;
 
 import org.javarosa.core.model.FormDef;
 import org.javarosa.core.model.FormIndex;
@@ -179,9 +184,11 @@ import org.odk.collect.androidshared.system.IntentLauncher;
 import org.odk.collect.androidshared.system.ProcessRestoreDetector;
 import org.odk.collect.androidshared.ui.DialogFragmentUtils;
 import org.odk.collect.androidshared.ui.FragmentFactoryBuilder;
+import org.odk.collect.androidshared.ui.OverflowMenuAdapter;
 import org.odk.collect.androidshared.ui.SnackbarUtils;
 import org.odk.collect.androidshared.ui.ToastUtils;
 import org.odk.collect.androidshared.ui.multiclicksafe.MultiClickGuard;
+import org.odk.collect.androidshared.utils.ScreenUtils;
 import org.odk.collect.async.Scheduler;
 import org.odk.collect.audioclips.AudioClipViewModel;
 import org.odk.collect.audiorecorder.recording.AudioRecorder;
@@ -1054,15 +1061,15 @@ public class FormFillingActivity extends LocalizedActivity implements AnimationL
             return true;
         }
 
-        // These actions should move into the `FormEntryMenuDelegate`
-        if (item.getItemId() == R.id.menu_languages) {
-            createLanguageDialog();
-            return true;
-        } else if (item.getItemId() == R.id.menu_save) {
-            // don't exit
-            saveForm(false, InstancesDaoHelper.isInstanceComplete(getFormController()), null, true);
-            return true;
-        }
+//        // These actions should move into the `FormEntryMenuDelegate`
+//        if (item.getItemId() == R.id.menu_languages) {
+//            createLanguageDialog();
+//            return true;
+//        } else if (item.getItemId() == R.id.menu_save) {
+//            // don't exit
+//            saveForm(false, InstancesDaoHelper.isInstanceComplete(getFormController()), null, true);
+//            return true;
+//        }
 
         return super.onOptionsItemSelected(item);
     }

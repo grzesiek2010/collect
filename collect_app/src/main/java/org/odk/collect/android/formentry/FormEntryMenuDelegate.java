@@ -6,6 +6,9 @@ import android.content.Intent;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
+import android.view.View;
+import android.widget.AdapterView;
+import android.widget.ListPopupWindow;
 
 import androidx.appcompat.app.AppCompatActivity;
 
@@ -21,9 +24,13 @@ import org.odk.collect.android.utilities.ApplicationConstants;
 import org.odk.collect.android.utilities.MenuDelegate;
 import org.odk.collect.androidshared.system.PlayServicesChecker;
 import org.odk.collect.androidshared.ui.DialogFragmentUtils;
+import org.odk.collect.androidshared.ui.OverflowMenuAdapter;
 import org.odk.collect.audiorecorder.recording.AudioRecorder;
 import org.odk.collect.settings.SettingsProvider;
 import org.odk.collect.settings.keys.ProtectedProjectKeys;
+
+import java.util.ArrayList;
+import java.util.List;
 
 public class FormEntryMenuDelegate implements MenuDelegate {
 
@@ -76,24 +83,24 @@ public class FormEntryMenuDelegate implements MenuDelegate {
                 && formController.getLanguages() != null
                 && formController.getLanguages().length > 1;
 
-        menu.findItem(R.id.menu_languages).setVisible(useability)
-                .setEnabled(useability);
+//        menu.findItem(R.id.menu_languages).setVisible(useability)
+//                .setEnabled(useability);
 
         useability = settingsProvider.getProtectedSettings().getBoolean(ProtectedProjectKeys.KEY_ACCESS_SETTINGS);
 
-        menu.findItem(R.id.menu_preferences).setVisible(useability)
-                .setEnabled(useability);
+//        menu.findItem(R.id.menu_preferences).setVisible(useability)
+//                .setEnabled(useability);
 
-        if (formController != null && formController.currentFormCollectsBackgroundLocation()
-                && new PlayServicesChecker().isGooglePlayServicesAvailable(activity)) {
-            MenuItem backgroundLocation = menu.findItem(R.id.track_location);
-            backgroundLocation.setVisible(true);
-            backgroundLocation.setChecked(settingsProvider.getUnprotectedSettings().getBoolean(KEY_BACKGROUND_LOCATION));
-        }
+//        if (formController != null && formController.currentFormCollectsBackgroundLocation()
+//                && new PlayServicesChecker().isGooglePlayServicesAvailable(activity)) {
+//            MenuItem backgroundLocation = menu.findItem(R.id.track_location);
+//            backgroundLocation.setVisible(true);
+//            backgroundLocation.setChecked(settingsProvider.getUnprotectedSettings().getBoolean(KEY_BACKGROUND_LOCATION));
+//        }
 
         menu.findItem(R.id.menu_add_repeat).setVisible(formEntryViewModel.canAddRepeat());
-        menu.findItem(R.id.menu_record_audio).setVisible(formEntryViewModel.hasBackgroundRecording().getValue());
-        menu.findItem(R.id.menu_record_audio).setChecked(backgroundAudioViewModel.isBackgroundRecordingEnabled().getValue());
+        //menu.findItem(R.id.menu_record_audio).setVisible(formEntryViewModel.hasBackgroundRecording().getValue());
+        //menu.findItem(R.id.menu_record_audio).setChecked(backgroundAudioViewModel.isBackgroundRecordingEnabled().getValue());
     }
 
     @Override
@@ -107,59 +114,78 @@ public class FormEntryMenuDelegate implements MenuDelegate {
             }
 
             return true;
-        } else if (item.getItemId() == R.id.menu_preferences) {
-            if (audioRecorder.isRecording()) {
-                DialogFragmentUtils.showIfNotShowing(RecordingWarningDialogFragment.class, activity.getSupportFragmentManager());
-            } else {
-                formEntryViewModel.updateAnswersForScreen(answersProvider.getAnswers(), false);
-                Intent pref = new Intent(activity, ProjectPreferencesActivity.class);
-                activity.startActivityForResult(pref, ApplicationConstants.RequestCodes.CHANGE_SETTINGS);
-            }
-
-            return true;
-        } else if (item.getItemId() == R.id.track_location) {
-            backgroundLocationViewModel.backgroundLocationPreferenceToggled(settingsProvider.getUnprotectedSettings());
-            return true;
-        } else if (item.getItemId() == R.id.menu_goto) {
-            if (audioRecorder.isRecording() && !backgroundAudioViewModel.isBackgroundRecording()) {
-                DialogFragmentUtils.showIfNotShowing(RecordingWarningDialogFragment.class, activity.getSupportFragmentManager());
-            } else {
-                formEntryViewModel.updateAnswersForScreen(answersProvider.getAnswers(), false);
-                formEntryViewModel.openHierarchy();
-                Intent i = new Intent(activity, FormHierarchyActivity.class);
-                i.putExtra(FormHierarchyActivity.EXTRA_SESSION_ID, formEntryViewModel.getSessionId());
-                activity.startActivityForResult(i, ApplicationConstants.RequestCodes.HIERARCHY_ACTIVITY);
-            }
-
-            return true;
-        } else if (item.getItemId() == R.id.menu_record_audio) {
-            boolean enabled = !item.isChecked();
-
-            if (!enabled) {
-                new MaterialAlertDialogBuilder(activity)
-                        .setMessage(org.odk.collect.strings.R.string.stop_recording_confirmation)
-                        .setPositiveButton(org.odk.collect.strings.R.string.disable_recording, (dialog, which) -> backgroundAudioViewModel.setBackgroundRecordingEnabled(false))
-                        .setNegativeButton(org.odk.collect.strings.R.string.cancel, null)
-                        .create()
-                        .show();
-            } else {
-                new MaterialAlertDialogBuilder(activity)
-                        .setMessage(org.odk.collect.strings.R.string.background_audio_recording_enabled_explanation)
-                        .setCancelable(false)
-                        .setPositiveButton(org.odk.collect.strings.R.string.ok, null)
-                        .create()
-                        .show();
-
-                backgroundAudioViewModel.setBackgroundRecordingEnabled(true);
-            }
-
-            return true;
-        } else if (item.getItemId() == R.id.menu_validate) {
-            formEntryViewModel.saveScreenAnswersToFormController(answersProvider.getAnswers(), false);
-            formEntryViewModel.validate();
+        } else if (item.getItemId() == R.id.menu_more) {
+            showListPopupWindow(activity.findViewById(item.getItemId()));
             return true;
         } else {
             return false;
         }
+    }
+
+    private void showListPopupWindow(View anchor) {
+        final ListPopupWindow popupWindow = new ListPopupWindow(activity);
+
+        List<OverflowMenuAdapter.OverflowMenuItem> itemList = new ArrayList<>();
+        itemList.add(new OverflowMenuAdapter.OverflowMenuItem(R.drawable.ic_baseline_delete_outline_24, "Option 1 Option", false));
+        itemList.add(new OverflowMenuAdapter.OverflowMenuItem(R.drawable.ic_baseline_delete_outline_24, "Option 2", false));
+        itemList.add(new OverflowMenuAdapter.OverflowMenuItem(R.drawable.ic_baseline_delete_outline_24, "Option 3", false));
+
+        OverflowMenuAdapter adapter = new OverflowMenuAdapter(activity, itemList);
+        popupWindow.setAnchorView(anchor);
+        popupWindow.setAdapter(adapter);
+        popupWindow.setWidth(adapter.measureContentWidth());
+        popupWindow.setOnItemClickListener((adapterView, view, position, id) -> {
+            popupWindow.dismiss();
+
+//                if (item.getItemId() == R.id.menu_preferences) {
+//                    if (audioRecorder.isRecording()) {
+//                        DialogFragmentUtils.showIfNotShowing(RecordingWarningDialogFragment.class, activity.getSupportFragmentManager());
+//                    } else {
+//                        formEntryViewModel.updateAnswersForScreen(answersProvider.getAnswers(), false);
+//                        Intent pref = new Intent(activity, ProjectPreferencesActivity.class);
+//                        activity.startActivityForResult(pref, ApplicationConstants.RequestCodes.CHANGE_SETTINGS);
+//                    }
+//
+//                } else if (item.getItemId() == R.id.track_location) {
+//                    backgroundLocationViewModel.backgroundLocationPreferenceToggled(settingsProvider.getUnprotectedSettings());
+//                } else if (item.getItemId() == R.id.menu_goto) {
+//                    if (audioRecorder.isRecording() && !backgroundAudioViewModel.isBackgroundRecording()) {
+//                        DialogFragmentUtils.showIfNotShowing(RecordingWarningDialogFragment.class, activity.getSupportFragmentManager());
+//                    } else {
+//                        formEntryViewModel.updateAnswersForScreen(answersProvider.getAnswers(), false);
+//                        formEntryViewModel.openHierarchy();
+//                        Intent i = new Intent(activity, FormHierarchyActivity.class);
+//                        i.putExtra(FormHierarchyActivity.EXTRA_SESSION_ID, formEntryViewModel.getSessionId());
+//                        activity.startActivityForResult(i, ApplicationConstants.RequestCodes.HIERARCHY_ACTIVITY);
+//                    }
+//
+//                } else if (item.getItemId() == R.id.menu_record_audio) {
+//                    boolean enabled = !item.isChecked();
+//
+//                    if (!enabled) {
+//                        new MaterialAlertDialogBuilder(activity)
+//                                .setMessage(org.odk.collect.strings.R.string.stop_recording_confirmation)
+//                                .setPositiveButton(org.odk.collect.strings.R.string.disable_recording, (dialog, which) -> backgroundAudioViewModel.setBackgroundRecordingEnabled(false))
+//                                .setNegativeButton(org.odk.collect.strings.R.string.cancel, null)
+//                                .create()
+//                                .show();
+//                    } else {
+//                        new MaterialAlertDialogBuilder(activity)
+//                                .setMessage(org.odk.collect.strings.R.string.background_audio_recording_enabled_explanation)
+//                                .setCancelable(false)
+//                                .setPositiveButton(org.odk.collect.strings.R.string.ok, null)
+//                                .create()
+//                                .show();
+//
+//                        backgroundAudioViewModel.setBackgroundRecordingEnabled(true);
+//                    }
+//
+//                    return true;
+//                } else if (item.getItemId() == R.id.menu_validate) {
+//                    formEntryViewModel.saveScreenAnswersToFormController(answersProvider.getAnswers(), false);
+//                    formEntryViewModel.validate();
+//                }
+        });
+        popupWindow.show();
     }
 }
