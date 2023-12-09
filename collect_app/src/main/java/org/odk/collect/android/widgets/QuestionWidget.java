@@ -51,7 +51,6 @@ import org.odk.collect.android.widgets.utilities.QuestionFontSizeUtils;
 import org.odk.collect.android.widgets.utilities.QuestionFontSizeUtils.FontSize;
 import org.odk.collect.android.utilities.SoftKeyboardController;
 import org.odk.collect.android.utilities.ThemeUtils;
-import org.odk.collect.android.utilities.ViewUtils;
 import org.odk.collect.android.widgets.interfaces.Widget;
 import org.odk.collect.android.widgets.items.SelectImageMapWidget;
 import org.odk.collect.androidshared.utils.ScreenUtils;
@@ -290,20 +289,6 @@ public abstract class QuestionWidget extends FrameLayout implements Widget {
         return false;
     }
 
-    @Deprecated
-    protected void addQuestionLabel(View v) {
-        if (v == null) {
-            Timber.e(new Error("cannot add a null view as questionMediaLayout"));
-            return;
-        }
-        // default for questionmedialayout
-        RelativeLayout.LayoutParams params = new RelativeLayout.LayoutParams(
-                ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.MATCH_PARENT);
-        params.addRule(RelativeLayout.ALIGN_PARENT_LEFT, RelativeLayout.TRUE);
-        params.addRule(RelativeLayout.ALIGN_PARENT_TOP, RelativeLayout.TRUE);
-        containerView.addView(v, params);
-    }
-
     private TextView setupHelpText(TextView helpText, FormEntryPrompt prompt) {
         String s = prompt.getHelpText();
 
@@ -324,25 +309,16 @@ public abstract class QuestionWidget extends FrameLayout implements Widget {
         }
     }
 
-    @Deprecated
-    protected final void addAnswerView(View v) {
-        addAnswerView(v, null);
-    }
-
     /**
      * Widget should use {@link #onCreateAnswerView} to define answer view
      */
     @Deprecated
-    protected final void addAnswerView(View v, Integer margin) {
+    protected final void addAnswerView(View v) {
         ViewGroup answerContainer = findViewById(R.id.answer_container);
 
         RelativeLayout.LayoutParams params = new RelativeLayout.LayoutParams(
                 ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT);
         params.addRule(RelativeLayout.ALIGN_PARENT_LEFT, RelativeLayout.TRUE);
-
-        if (margin != null) {
-            params.setMargins(ViewUtils.pxFromDp(getContext(), margin), 0, ViewUtils.pxFromDp(getContext(), margin), 0);
-        }
 
         answerContainer.addView(v, params);
 
@@ -386,10 +362,6 @@ public abstract class QuestionWidget extends FrameLayout implements Widget {
     public void showWarning(String warningBody) {
         warningText.setVisibility(View.VISIBLE);
         warningText.setText(warningBody);
-    }
-
-    public View getHelpTextLayout() {
-        return helpTextLayout;
     }
 
     public AudioVideoImageTextLabel getAudioVideoImageTextLabel() {

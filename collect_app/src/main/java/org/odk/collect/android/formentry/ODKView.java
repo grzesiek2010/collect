@@ -31,6 +31,7 @@ import android.text.TextUtils;
 import android.util.TypedValue;
 import android.view.View;
 import android.view.View.OnLongClickListener;
+import android.view.ViewGroup;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -257,7 +258,6 @@ public class ODKView extends SwipeHandler.View implements OnLongClickListener, W
      */
     private void addWidgetForQuestion(FormEntryPrompt question) {
         QuestionWidget qw = configureWidgetForQuestion(question);
-
         widgets.add(qw);
 
         if (widgets.size() > 1) {
@@ -307,6 +307,14 @@ public class ODKView extends SwipeHandler.View implements OnLongClickListener, W
         View divider = new View(getContext());
         divider.setBackgroundResource(new ThemeUtils(getContext()).getDivider());
         divider.setMinimumHeight(3);
+
+        ViewGroup.MarginLayoutParams params = new ViewGroup.MarginLayoutParams(
+                ViewGroup.LayoutParams.WRAP_CONTENT,
+                ViewGroup.LayoutParams.MATCH_PARENT
+        );
+        int marginVertical = (int) getContext().getResources().getDimension(org.odk.collect.androidshared.R.dimen.margin_extra_small);
+        params.setMargins(0, marginVertical, 0, marginVertical);
+        divider.setLayoutParams(params);
 
         return divider;
     }
