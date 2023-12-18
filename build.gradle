@@ -1,5 +1,4 @@
 import dependencies.Versions
-apply from: 'secrets.gradle'
 
 // Plugin for detecting outdated dependencies. Run './gradlew dependencyUpdates' to generate a report.
 apply plugin: "com.github.ben-manes.versions"
@@ -57,7 +56,7 @@ allprojects {
             }
             credentials {
                 username = "mapbox"
-                password = getSecrets().getProperty('MAPBOX_DOWNLOADS_TOKEN', '')
+                password = Secrets.INSTANCE.getSecrets(rootDir).getProperty('MAPBOX_DOWNLOADS_TOKEN', '')
             }
         }
     }
