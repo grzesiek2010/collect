@@ -26,7 +26,6 @@ import org.odk.collect.android.formentry.audit.AuditUtils;
 import org.odk.collect.android.formentry.questions.SelectChoiceUtils;
 import org.odk.collect.android.javarosawrapper.FailedValidationResult;
 import org.odk.collect.android.javarosawrapper.FormController;
-import org.odk.collect.android.javarosawrapper.RepeatsInFieldListException;
 import org.odk.collect.android.javarosawrapper.ValidationResult;
 import org.odk.collect.android.widgets.interfaces.SelectChoiceLoader;
 import org.odk.collect.androidshared.data.Consumable;
@@ -296,7 +295,9 @@ public class FormEntryViewModel extends ViewModel implements SelectChoiceLoader 
             return selectChoices;
         } else {
             // Choice lists from some questions aren't preloaded yet
-            return SelectChoiceUtils.loadSelectChoices(prompt, formController);
+            List<SelectChoice> newChoices = SelectChoiceUtils.loadSelectChoices(prompt, formController);
+            choices.put(prompt.getIndex(), newChoices);
+            return newChoices;
         }
     }
 
@@ -339,9 +340,9 @@ public class FormEntryViewModel extends ViewModel implements SelectChoiceLoader 
                  updateIndex is called again).
                 */
                 if (!formController.indexIsInFieldList()) {
-                    preloadSelectChoices();
+                    loadSelectChoices(formController.getQuestionPrompt());
                 }
-            } catch (RepeatsInFieldListException | XPathSyntaxException |
+            } catch (XPathSyntaxException |
                      FileNotFoundException e) {
                 // Ignored
             }
@@ -375,18 +376,6 @@ public class FormEntryViewModel extends ViewModel implements SelectChoiceLoader 
                     validationResult.setValue(new Consumable<>(result));
                 }
         );
-    }
-
-    private void preloadSelectChoices() throws RepeatsInFieldListException, FileNotFoundException, XPathSyntaxException {
-        int event = formController.getEvent();
-        if (event == FormEntryController.EVENT_QUESTION) {
-            FormEntryPrompt prompt = formController.getQuestionPrompt();
-
-            if (prompt != null) {
-                List<SelectChoice> selectChoices = SelectChoiceUtils.loadSelectChoices(prompt, formController);
-                choices.put(prompt.getIndex(), selectChoices);
-            }
-        }
     }
 
     public interface AnswerListener {
