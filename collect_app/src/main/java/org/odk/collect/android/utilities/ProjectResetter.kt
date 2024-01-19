@@ -27,7 +27,9 @@ class ProjectResetter(
     private val propertyManager: PropertyManager,
     private val settingsProvider: SettingsProvider,
     private val instancesRepositoryProvider: InstancesRepositoryProvider,
-    private val formsRepositoryProvider: FormsRepositoryProvider
+    private val formsRepositoryProvider: FormsRepositoryProvider,
+    private val projectId: String,
+    private val changeLockProvider: ChangeLockProvider
 ) {
 
     private var failedResetActions = mutableListOf<Int>()
@@ -61,10 +63,18 @@ class ProjectResetter(
     }
 
     private fun resetInstances() {
-        instancesRepositoryProvider.get().deleteAll()
+        changeLockProvider.getInstanceLock(projectId).withLock { acquiredLock: Boolean ->
+            if (acquiredLock) {
+                instancesRepositoryProvider.get().deleteAll()
 
-        if (!deleteFolderContent(storagePathProvider.getOdkDirPath(StorageSubdirectory.INSTANCES))) {
-            failedResetActions.add(ResetAction.RESET_INSTANCES)
+                if (!deleteFolderContent(storagePathProvider.getOdkDirPath(StorageSubdirectory.INSTANCES))) {
+                    failedResetActions.add(ResetAction.RESET_INSTANCES)
+                }
+                true
+            } else {
+                failedResetActions.add(ResetAction.RESET_INSTANCES)
+                false
+            }
         }
     }
 
