@@ -14,6 +14,7 @@ import org.junit.Test
 import org.junit.runner.RunWith
 import org.mockito.kotlin.mock
 import org.mockito.kotlin.verify
+import org.mockito.kotlin.whenever
 import org.odk.collect.android.injection.DaggerUtils
 import org.odk.collect.android.injection.config.AppDependencyModule
 import org.odk.collect.android.preferences.Defaults
@@ -29,6 +30,7 @@ import org.odk.collect.settings.SettingsProvider
 import org.odk.collect.settings.keys.ProjectKeys
 import org.odk.collect.settings.keys.ProtectedProjectKeys
 import org.odk.collect.shared.settings.Settings
+import org.odk.collect.testshared.BooleanChangeLock
 import java.io.File
 
 @RunWith(AndroidJUnit4::class)
@@ -42,6 +44,8 @@ class ProjectResetterTest {
     private lateinit var anotherProjectId: String
 
     private val propertyManager = mock<PropertyManager>()
+    private val changeLockProvider = mock<ChangeLockProvider>()
+    private val changeLock = BooleanChangeLock()
 
     @Before
     fun setup() {
@@ -51,6 +55,10 @@ class ProjectResetterTest {
                 settingsProvider: SettingsProvider?
             ): PropertyManager {
                 return propertyManager
+            }
+
+            override fun providesChangeLockProvider(): ChangeLockProvider {
+                return changeLockProvider
             }
         })
 
@@ -63,6 +71,8 @@ class ProjectResetterTest {
         settingsProvider = component.settingsProvider()
         formsRepositoryProvider = component.formsRepositoryProvider()
         instancesRepositoryProvider = component.instancesRepositoryProvider()
+
+        whenever(changeLockProvider.getInstanceLock(currentProjectId)).thenReturn(changeLock)
     }
 
     @Test
@@ -182,6 +192,19 @@ class ProjectResetterTest {
         assertEquals(1, formsRepositoryProvider.get(anotherProjectId).all.size)
         assertTestFormFiles(anotherProjectId)
         assertTrue(File(storagePathProvider.getOdkDirPath(StorageSubdirectory.METADATA, anotherProjectId) + "/itemsets.db").exists())
+    }
+
+    @Test
+    fun `Reset instances does not clear instances if the instances database is locked`() {
+        saveTestInstanceFiles(currentProjectId)
+        setupTestInstancesDatabase(currentProjectId)
+
+        changeLock.lock()
+        val failedResetActions = projectResetter.reset(listOf(ProjectResetter.ResetAction.RESET_INSTANCES))
+        assertEquals(1, failedResetActions.size)
+
+        assertEquals(1, instancesRepositoryProvider.get(currentProjectId).all.size)
+        assertTestInstanceFiles(currentProjectId)
     }
 
     @Test
