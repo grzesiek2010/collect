@@ -6,6 +6,10 @@ import org.odk.collect.async.Scheduler
 import org.odk.collect.async.SchedulerAsyncTaskMimic
 import timber.log.Timber
 
+interface SavePointListener {
+    fun onSavePointError(errorMessage: String?)
+}
+
 class SavePointTask(
     private var listener: SavePointListener?,
     private val formController: FormController,
