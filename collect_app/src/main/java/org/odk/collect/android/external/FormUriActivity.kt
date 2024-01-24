@@ -18,6 +18,7 @@ import org.odk.collect.analytics.Analytics
 import org.odk.collect.android.R
 import org.odk.collect.android.activities.FormFillingActivity
 import org.odk.collect.android.analytics.AnalyticsEvents
+import org.odk.collect.android.formentry.savepoint.SavePointManager
 import org.odk.collect.android.injection.DaggerUtils
 import org.odk.collect.android.instancemanagement.InstanceDeleter
 import org.odk.collect.android.instancemanagement.canBeEdited
@@ -31,6 +32,8 @@ import org.odk.collect.projects.ProjectsRepository
 import org.odk.collect.settings.SettingsProvider
 import org.odk.collect.strings.R.string
 import java.io.File
+import java.text.SimpleDateFormat
+import java.util.Locale
 import javax.inject.Inject
 
 /**
@@ -91,9 +94,40 @@ class FormUriActivity : ComponentActivity() {
             if (it != null) {
                 displayErrorDialog(it)
             } else if (savedInstanceState?.getBoolean(FORM_FILLING_ALREADY_STARTED) != true) {
-                startForm()
+                scheduler.immediate(
+                    background = {
+                        findSavePoint()
+                    },
+                    foreground = { savePoint ->
+                        if (savePoint == null) {
+                            startForm()
+                        } else {
+                            displaySavePointRecoveryDialog(savePoint)
+                        }
+                    }
+                )
             }
         }
+    }
+
+    private fun findSavePoint(): File? {
+        val uri = intent.data!!
+        val uriMimeType = contentResolver.getType(uri)
+        if (uriMimeType == FormsContract.CONTENT_ITEM_TYPE) {
+            val formId = formsRepositoryProvider.get().get(ContentUriHelper.getIdFromUri(uri))!!.formId
+            val forms = formsRepositoryProvider.get().getAllByFormId(formId).apply {
+                sortByDescending { it.version }
+            }
+
+            forms.forEachIndexed { index, form ->
+                SavePointManager.find(form)?.let { savePoint ->
+                    if (index > -1) {
+                        return savePoint
+                    }
+                }
+            }
+        }
+        return null
     }
 
     private fun startForm() {
@@ -117,6 +151,19 @@ class FormUriActivity : ComponentActivity() {
         MaterialAlertDialogBuilder(this)
             .setMessage(message)
             .setPositiveButton(string.ok) { _, _ -> finish() }
+            .setOnCancelListener { finish() }
+            .create()
+            .show()
+    }
+
+    private fun displaySavePointRecoveryDialog(savePoint: File) {
+        MaterialAlertDialogBuilder(this)
+            .setMessage(SimpleDateFormat(getString(string.recover_message), Locale.getDefault()).format(savePoint.lastModified()))
+            .setPositiveButton(string.recover) { _, _ -> startForm() }
+            .setNegativeButton(string.do_not_recover) { _, _ ->
+                SavePointManager.remove(savePoint)
+                startForm()
+            }
             .setOnCancelListener { finish() }
             .create()
             .show()
