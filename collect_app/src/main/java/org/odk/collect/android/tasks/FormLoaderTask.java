@@ -96,6 +96,7 @@ public class FormLoaderTask extends SchedulerAsyncTaskMimic<Void, String, FormLo
     private FormDef formDef;
     private Form form;
     private Instance instance;
+    private boolean usedSavepoint;
 
     @Override
     protected void onPreExecute() {
@@ -153,6 +154,7 @@ public class FormLoaderTask extends SchedulerAsyncTaskMimic<Void, String, FormLo
      */
     @Override
     protected FECWrapper doInBackground(Void... ignored) {
+        usedSavepoint = false;
         errorMsg = null;
 
         if (uriMimeType != null && uriMimeType.equals(InstancesContract.CONTENT_ITEM_TYPE)) {
@@ -173,6 +175,8 @@ public class FormLoaderTask extends SchedulerAsyncTaskMimic<Void, String, FormLo
              */
             File savePoint = SavePointManager.find(form);
             if (savePoint != null) {
+                usedSavepoint = true;
+                Timber.w("Loading instance from savepoint file: %s", savePoint.getAbsolutePath());
                 instancePath = savePoint.getAbsolutePath();
             }
         }
@@ -226,12 +230,10 @@ public class FormLoaderTask extends SchedulerAsyncTaskMimic<Void, String, FormLo
         // create FormEntryController from formdef
         final FormEntryController fec = formEntryControllerFactory.create(formDef, formMediaDir);
 
-        boolean usedSavepoint = false;
-
         try {
             Timber.i("Initializing form.");
             final long start = System.currentTimeMillis();
-            usedSavepoint = initializeForm(formDef, fec);
+            initializeForm(formDef, fec);
             Timber.i("Form initialized in %.3f seconds.", (System.currentTimeMillis() - start) / 1000F);
         } catch (IOException | RuntimeException e) {
             Timber.e(e);
@@ -363,23 +365,11 @@ public class FormLoaderTask extends SchedulerAsyncTaskMimic<Void, String, FormLo
         }
     }
 
-    private boolean initializeForm(FormDef formDef, FormEntryController fec) throws IOException {
+    private void initializeForm(FormDef formDef, FormEntryController fec) throws IOException {
         final InstanceInitializationFactory instanceInit = new InstanceInitializationFactory();
-        boolean usedSavepoint = false;
 
         if (instancePath != null) {
             File instanceXml = new File(instancePath);
-
-            // Use the savepoint file only if it's newer than the last manual save
-            final File savepointFile = SaveFormToDisk.getSavepointFile(instanceXml.getName());
-            if (savepointFile.exists()
-                    && savepointFile.lastModified() > instanceXml.lastModified()) {
-                usedSavepoint = true;
-                instanceXml = savepointFile;
-                Timber.w("Loading instance from savepoint file: %s",
-                        savepointFile.getAbsolutePath());
-            }
-
             if (instanceXml.exists()) {
                 // This order is important. Import data, then initialize.
                 try {
@@ -407,7 +397,6 @@ public class FormLoaderTask extends SchedulerAsyncTaskMimic<Void, String, FormLo
         } else {
             formDef.initialize(true, instanceInit);
         }
-        return usedSavepoint;
     }
 
     @Override
