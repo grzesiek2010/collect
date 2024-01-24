@@ -16,7 +16,7 @@
  * the License.
  */
 
-package org.odk.collect.android.listeners;
+package org.odk.collect.android.formentry.savepoint;
 
 /**
  * Author: Meletis Margaritis
