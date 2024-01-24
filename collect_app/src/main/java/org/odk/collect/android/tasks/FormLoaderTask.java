@@ -103,10 +103,6 @@ public class FormLoaderTask extends SchedulerAsyncTaskMimic<Void, String, FormLo
 
     }
 
-    public String getInstancePath() {
-        return instancePath;
-    }
-
     public Form getForm() {
         return form;
     }
