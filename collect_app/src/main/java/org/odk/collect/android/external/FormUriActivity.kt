@@ -18,6 +18,7 @@ import org.odk.collect.analytics.Analytics
 import org.odk.collect.android.R
 import org.odk.collect.android.activities.FormFillingActivity
 import org.odk.collect.android.analytics.AnalyticsEvents
+import org.odk.collect.android.formentry.savepoint.SavePointManager
 import org.odk.collect.android.injection.DaggerUtils
 import org.odk.collect.android.instancemanagement.InstanceDeleter
 import org.odk.collect.android.instancemanagement.canBeEdited
@@ -27,10 +28,13 @@ import org.odk.collect.android.utilities.ContentUriHelper
 import org.odk.collect.android.utilities.FormsRepositoryProvider
 import org.odk.collect.android.utilities.InstancesRepositoryProvider
 import org.odk.collect.async.Scheduler
+import org.odk.collect.forms.Form
 import org.odk.collect.projects.ProjectsRepository
 import org.odk.collect.settings.SettingsProvider
 import org.odk.collect.strings.R.string
 import java.io.File
+import java.text.SimpleDateFormat
+import java.util.Locale
 import javax.inject.Inject
 
 /**
@@ -91,9 +95,46 @@ class FormUriActivity : ComponentActivity() {
             if (it != null) {
                 displayErrorDialog(it)
             } else if (savedInstanceState?.getBoolean(FORM_FILLING_ALREADY_STARTED) != true) {
-                startForm()
+                scheduler.immediate(
+                    background = {
+                        getSavePoint()
+                    },
+                    foreground = { qwt ->
+                        if (qwt == null) {
+                            startForm()
+                        } else {
+                            displaySavePointRecoveryDialog(qwt)
+                        }
+                    }
+                )
             }
         }
+    }
+
+    private fun getSavePoint(): SavePointWrapper? {
+        val uri = intent.data!!
+        val uriMimeType = contentResolver.getType(uri)
+        if (uriMimeType == FormsContract.CONTENT_ITEM_TYPE) {
+            val selectedForm = formsRepositoryProvider.get().get(ContentUriHelper.getIdFromUri(uri))!!
+
+            // if there is a savepoint for the selected for just start it
+            var instancePath = SavePointManager.getInstancePathIfSavePointExists(selectedForm)
+            if (instancePath != null) {
+                return null
+            }
+
+            // otherwise check savepoints for older versions
+            formsRepositoryProvider.get().getAllByFormId(selectedForm.formId)
+                .filter { it.date < selectedForm.date }
+                .sortedByDescending { it.date }
+                .forEach { olderForm ->
+                    instancePath = SavePointManager.getInstancePathIfSavePointExists(olderForm)
+                    if (instancePath != null) {
+                        return SavePointWrapper(SavePointManager.getSavepointFile(File(instancePath).name), olderForm)
+                    }
+                }
+        }
+        return null
     }
 
     private fun startForm() {
@@ -117,6 +158,22 @@ class FormUriActivity : ComponentActivity() {
         MaterialAlertDialogBuilder(this)
             .setMessage(message)
             .setPositiveButton(string.ok) { _, _ -> finish() }
+            .setOnCancelListener { finish() }
+            .create()
+            .show()
+    }
+
+    private fun displaySavePointRecoveryDialog(savePointWrapper: SavePointWrapper) {
+        MaterialAlertDialogBuilder(this)
+            .setMessage(SimpleDateFormat(getString(string.recover_message), Locale.getDefault()).format(savePointWrapper.savePoint.lastModified()))
+            .setPositiveButton(string.recover) { _, _ ->
+                intent.data = FormsContract.getUri(projectsDataService.getCurrentProject().uuid, savePointWrapper.form.dbId)
+                startForm()
+            }
+            .setNegativeButton(string.do_not_recover) { _, _ ->
+                SavePointManager.remove(savePointWrapper.savePoint)
+                startForm()
+            }
             .setOnCancelListener { finish() }
             .create()
             .show()
@@ -275,3 +332,8 @@ private class FormUriViewModel(
         }
     }
 }
+
+data class SavePointWrapper(
+    val savePoint: File,
+    val form: Form
+)

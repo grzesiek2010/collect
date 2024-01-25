@@ -37,4 +37,9 @@ object SavePointManager {
         val cacheDir = File(StoragePathProvider().getOdkDirPath(StorageSubdirectory.CACHE))
         return File(cacheDir, "$instanceName.save")
     }
+
+    @JvmStatic
+    fun remove(savePoint: File) {
+        savePoint.delete()
+    }
 }
