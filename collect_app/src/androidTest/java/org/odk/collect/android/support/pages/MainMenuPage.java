@@ -43,6 +43,16 @@ public class MainMenuPage extends Page<MainMenuPage> {
         return new FormEntryPage(formName).assertOnPage();
     }
 
+    public FormHierarchyPage startBlankFormWithSavepoint(String formName) {
+        goToBlankForm(formName);
+        return new FormHierarchyPage(formName).assertOnPage();
+    }
+
+    public SavePointRecoveryDialogPage startBlankFormWithSavepointRecovery(String formName) {
+        goToBlankForm(formName);
+        return new SavePointRecoveryDialogPage().assertOnPage();
+    }
+
     public AddNewRepeatDialog startBlankFormWithRepeatGroup(String formName, String repeatName) {
         goToBlankForm(formName);
         return new AddNewRepeatDialog(repeatName).assertOnPage();

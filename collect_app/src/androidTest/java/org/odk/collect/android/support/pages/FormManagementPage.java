@@ -30,6 +30,11 @@ public class FormManagementPage extends Page<FormManagementPage> {
         return new ListPreferenceDialog<>(org.odk.collect.strings.R.string.form_update_frequency_title, this).assertOnPage();
     }
 
+    public FormManagementPage clickHideOldFormVersions() {
+        clickOnString(org.odk.collect.strings.R.string.hide_old_form_versions_setting_title);
+        return this;
+    }
+
     public ListPreferenceDialog<FormManagementPage> clickAutoSend() {
         clickOnString(org.odk.collect.strings.R.string.autosend);
         return new ListPreferenceDialog<>(org.odk.collect.strings.R.string.autosend, this).assertOnPage();

@@ -261,6 +261,15 @@ abstract class Page<T : Page<T>> {
         return this as T
     }
 
+    fun clickCancelOnDialog(): T {
+        closeSoftKeyboard() // Make sure to avoid issues with keyboard being up
+        waitForDialogToSettle()
+        onView(withId(android.R.id.button2))
+            .inRoot(isDialog())
+            .perform(click())
+        return this as T
+    }
+
     fun <D : Page<D>?> clickOKOnDialog(destination: D): D {
         closeSoftKeyboard() // Make sure to avoid issues with keyboard being up
         waitForDialogToSettle()
