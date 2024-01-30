@@ -30,6 +30,7 @@ object DatabaseFormColumns : BaseColumns {
     const val LANGUAGE = "language"
     const val DELETED_DATE = "deleted_date"
     const val LAST_DETECTED_ATTACHMENTS_UPDATE_DATE = "lastDetectedAttachmentsUpdateDate"
+    const val SAVE_POINT_FILE_PATH = "savePointFilePath"
 
     // not used in the newest database version
     const val DISPLAY_SUBTEXT = "displaySubtext"

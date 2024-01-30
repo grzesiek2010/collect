@@ -26,6 +26,7 @@ import static org.odk.collect.android.database.forms.DatabaseFormColumns.LANGUAG
 import static org.odk.collect.android.database.forms.DatabaseFormColumns.LAST_DETECTED_ATTACHMENTS_UPDATE_DATE;
 import static org.odk.collect.android.database.forms.DatabaseFormColumns.LAST_DETECTED_FORM_VERSION_HASH;
 import static org.odk.collect.android.database.forms.DatabaseFormColumns.MD5_HASH;
+import static org.odk.collect.android.database.forms.DatabaseFormColumns.SAVE_POINT_FILE_PATH;
 import static org.odk.collect.android.database.forms.DatabaseFormColumns.SUBMISSION_URI;
 
 import timber.log.Timber;
@@ -42,7 +43,7 @@ public class FormDatabaseMigrator implements DatabaseMigrator {
     private static final String MODEL_VERSION = "modelVersion";
 
     public void onCreate(SQLiteDatabase db) {
-        createFormsTableV12(db);
+        createFormsTableV13(db);
     }
 
     @SuppressWarnings({"checkstyle:FallThrough"})
@@ -70,16 +71,18 @@ public class FormDatabaseMigrator implements DatabaseMigrator {
                 upgradeToVersion11(db);
             case 11:
                 upgradeToVersion12(db);
-                break;
             case 12:
+                upgradeToVersion13(db);
+                break;
+            case 13:
                 // Remember to bump the database version number in {@link org.odk.collect.android.database.DatabaseConstants}
-                // upgradeToVersion13(db);
+                // upgradeToVersion14(db);
         }
     }
 
     public void onDowngrade(SQLiteDatabase db) throws SQLException {
         SQLiteUtils.dropTable(db, FORMS_TABLE_NAME);
-        createFormsTableV12(db);
+        createFormsTableV13(db);
     }
 
     private void upgradeToVersion2(SQLiteDatabase db) {
@@ -265,6 +268,10 @@ public class FormDatabaseMigrator implements DatabaseMigrator {
         SQLiteUtils.addColumn(db, FORMS_TABLE_NAME, LAST_DETECTED_ATTACHMENTS_UPDATE_DATE, "integer");
     }
 
+    private void upgradeToVersion13(SQLiteDatabase db) {
+        SQLiteUtils.addColumn(db, FORMS_TABLE_NAME, SAVE_POINT_FILE_PATH, "text");
+    }
+
     private void createFormsTableV4(SQLiteDatabase db, String tableName) {
         db.execSQL("CREATE TABLE IF NOT EXISTS " + tableName + " ("
                 + _ID + " integer primary key, "
@@ -369,7 +376,7 @@ public class FormDatabaseMigrator implements DatabaseMigrator {
                 + DELETED_DATE + " integer);");
     }
 
-    private void createFormsTableV12(SQLiteDatabase db) {
+    private void createFormsTableV13(SQLiteDatabase db) {
         db.execSQL("CREATE TABLE IF NOT EXISTS " + FORMS_TABLE_NAME + " ("
                 + _ID + " integer primary key, "
                 + DISPLAY_NAME + " text not null, "
@@ -388,6 +395,7 @@ public class FormDatabaseMigrator implements DatabaseMigrator {
                 + AUTO_DELETE + " text, "
                 + GEOMETRY_XPATH + " text, "
                 + DELETED_DATE + " integer, "
-                + LAST_DETECTED_ATTACHMENTS_UPDATE_DATE + " integer);"); // milliseconds
+                + LAST_DETECTED_ATTACHMENTS_UPDATE_DATE + " integer, " // milliseconds
+                + SAVE_POINT_FILE_PATH + " text);"); // milliseconds
     }
 }

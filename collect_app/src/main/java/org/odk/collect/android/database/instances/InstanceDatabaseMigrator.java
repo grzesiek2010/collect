@@ -22,6 +22,7 @@ import static org.odk.collect.android.database.instances.DatabaseInstanceColumns
 import static org.odk.collect.android.database.instances.DatabaseInstanceColumns.JR_FORM_ID;
 import static org.odk.collect.android.database.instances.DatabaseInstanceColumns.JR_VERSION;
 import static org.odk.collect.android.database.instances.DatabaseInstanceColumns.LAST_STATUS_CHANGE_DATE;
+import static org.odk.collect.android.database.instances.DatabaseInstanceColumns.SAVE_POINT_FILE_PATH;
 import static org.odk.collect.android.database.instances.DatabaseInstanceColumns.STATUS;
 import static org.odk.collect.android.database.instances.DatabaseInstanceColumns.SUBMISSION_URI;
 
@@ -29,15 +30,8 @@ public class InstanceDatabaseMigrator implements DatabaseMigrator {
     private static final String[] COLUMN_NAMES_V5 = {_ID, DISPLAY_NAME, SUBMISSION_URI, CAN_EDIT_WHEN_COMPLETE,
             INSTANCE_FILE_PATH, JR_FORM_ID, JR_VERSION, STATUS, LAST_STATUS_CHANGE_DATE, DELETED_DATE};
 
-    private static final String[] COLUMN_NAMES_V6 = {_ID, DISPLAY_NAME, SUBMISSION_URI,
-            CAN_EDIT_WHEN_COMPLETE, INSTANCE_FILE_PATH, JR_FORM_ID, JR_VERSION, STATUS,
-            LAST_STATUS_CHANGE_DATE, DELETED_DATE, GEOMETRY, GEOMETRY_TYPE};
-
-    public static final String[] CURRENT_VERSION_COLUMN_NAMES = COLUMN_NAMES_V6;
-
     public void onCreate(SQLiteDatabase db) {
-        createInstancesTableV5(db, INSTANCES_TABLE_NAME);
-        upgradeToVersion6(db, INSTANCES_TABLE_NAME);
+        createInstancesTableV7(db);
     }
 
     @SuppressWarnings({"checkstyle:FallThrough"})
@@ -56,19 +50,19 @@ public class InstanceDatabaseMigrator implements DatabaseMigrator {
                 upgradeToVersion6(db, INSTANCES_TABLE_NAME);
                 break;
             case 6:
+                upgradeToVersion7(db);
+                break;
+            case 7:
                 // Remember to bump the database version number in {@link org.odk.collect.android.database.DatabaseConstants}
-                // upgradeToVersion7(db);
+                // upgradeToVersion8(db);
             default:
                 Timber.i("Unknown version %d", oldVersion);
         }
     }
 
     public void onDowngrade(SQLiteDatabase db) {
-        String temporaryTableName = INSTANCES_TABLE_NAME + "_tmp";
-        createInstancesTableV5(db, temporaryTableName);
-        upgradeToVersion6(db, temporaryTableName);
-
-        dropObsoleteColumns(db, CURRENT_VERSION_COLUMN_NAMES, temporaryTableName);
+        SQLiteUtils.dropTable(db, INSTANCES_TABLE_NAME);
+        createInstancesTableV7(db);
     }
 
     private void upgradeToVersion2(SQLiteDatabase db) {
@@ -137,6 +131,10 @@ public class InstanceDatabaseMigrator implements DatabaseMigrator {
         SQLiteUtils.addColumn(db, name, GEOMETRY_TYPE, "text");
     }
 
+    private void upgradeToVersion7(SQLiteDatabase db) {
+        SQLiteUtils.addColumn(db, INSTANCES_TABLE_NAME, SAVE_POINT_FILE_PATH, "text");
+    }
+
     private void createInstancesTableV5(SQLiteDatabase db, String name) {
         db.execSQL("CREATE TABLE IF NOT EXISTS " + name + " ("
                 + _ID + " integer primary key, "
@@ -149,5 +147,22 @@ public class InstanceDatabaseMigrator implements DatabaseMigrator {
                 + STATUS + " text not null, "
                 + LAST_STATUS_CHANGE_DATE + " date not null, "
                 + DELETED_DATE + " date );");
+    }
+
+    private void createInstancesTableV7(SQLiteDatabase db) {
+        db.execSQL("CREATE TABLE IF NOT EXISTS " + INSTANCES_TABLE_NAME + " ("
+                + _ID + " integer primary key, "
+                + DISPLAY_NAME + " text not null, "
+                + SUBMISSION_URI + " text, "
+                + CAN_EDIT_WHEN_COMPLETE + " text, "
+                + INSTANCE_FILE_PATH + " text not null, "
+                + JR_FORM_ID + " text not null, "
+                + JR_VERSION + " text, "
+                + STATUS + " text not null, "
+                + LAST_STATUS_CHANGE_DATE + " date not null, "
+                + DELETED_DATE + " date, "
+                + GEOMETRY + " text, "
+                + GEOMETRY_TYPE + " text, "
+                + INSTANCES_TABLE_NAME + " text );");
     }
 }
