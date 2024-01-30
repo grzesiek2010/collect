@@ -45,7 +45,6 @@ import org.odk.collect.android.dynamicpreload.ExternalDataUseCases;
 import org.odk.collect.android.external.FormsContract;
 import org.odk.collect.android.external.InstancesContract;
 import org.odk.collect.android.fastexternalitemset.ItemsetDbAdapter;
-import org.odk.collect.android.formentry.savepoint.SavePointUtils;
 import org.odk.collect.android.javarosawrapper.FormController;
 import org.odk.collect.android.javarosawrapper.JavaRosaFormController;
 import org.odk.collect.android.listeners.FormLoaderListener;
@@ -167,7 +166,7 @@ public class FormLoaderTask extends SchedulerAsyncTaskMimic<Void, String, FormLo
              * Savepoints for forms that were explicitly saved will be recovered when that
              * explicitly saved instance is edited via edit-saved-form.
              */
-            instancePath = SavePointUtils.getInstancePathIfSavePointExists(form);
+            instancePath = form.getSavePointFilePath();
         }
 
         if (form.getFormFilePath() == null) {
@@ -364,9 +363,14 @@ public class FormLoaderTask extends SchedulerAsyncTaskMimic<Void, String, FormLo
             File instanceXml = new File(instancePath);
 
             // Use the savepoint file only if it's newer than the last manual save
-            final File savepointFile = SavePointUtils.getSavepointFile(instanceXml.getName());
-            if (savepointFile.exists()
-                    && savepointFile.lastModified() > instanceXml.lastModified()) {
+            File savepointFile = null;
+            if (uriMimeType != null && uriMimeType.equals(InstancesContract.CONTENT_ITEM_TYPE) && instance.getSavePointFilePath() != null) {
+                savepointFile = new File(instance.getSavePointFilePath());
+            } else if (form.getSavePointFilePath() != null) {
+                savepointFile = new File(form.getSavePointFilePath());
+            }
+
+            if (savepointFile != null && savepointFile.exists()) {
                 usedSavepoint = true;
                 instanceXml = savepointFile;
                 Timber.w("Loading instance from savepoint file: %s",

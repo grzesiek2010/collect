@@ -34,6 +34,8 @@ import org.odk.collect.async.Cancellable;
 import org.odk.collect.async.Scheduler;
 import org.odk.collect.audiorecorder.recording.AudioRecorder;
 import org.odk.collect.entities.EntitiesRepository;
+import org.odk.collect.forms.Form;
+import org.odk.collect.forms.FormsRepository;
 import org.odk.collect.forms.instances.Instance;
 import org.odk.collect.forms.instances.InstancesRepository;
 import org.odk.collect.material.MaterialProgressDialogFragment;
@@ -83,11 +85,13 @@ public class FormSaveViewModel extends ViewModel implements MaterialProgressDial
     private final AudioRecorder audioRecorder;
     private final ProjectsDataService projectsDataService;
     private final EntitiesRepository entitiesRepository;
+    private final FormsRepository formsRepository;
     private final InstancesRepository instancesRepository;
+    private Form form;
     private Instance instance;
     private final Cancellable formSessionObserver;
 
-    public FormSaveViewModel(SavedStateHandle stateHandle, Supplier<Long> clock, FormSaver formSaver, MediaUtils mediaUtils, Scheduler scheduler, AudioRecorder audioRecorder, ProjectsDataService projectsDataService, LiveData<FormSession> formSession, EntitiesRepository entitiesRepository, InstancesRepository instancesRepository) {
+    public FormSaveViewModel(SavedStateHandle stateHandle, Supplier<Long> clock, FormSaver formSaver, MediaUtils mediaUtils, Scheduler scheduler, AudioRecorder audioRecorder, ProjectsDataService projectsDataService, LiveData<FormSession> formSession, EntitiesRepository entitiesRepository, FormsRepository formsRepository, InstancesRepository instancesRepository) {
         this.stateHandle = stateHandle;
         this.clock = clock;
         this.formSaver = formSaver;
@@ -96,6 +100,7 @@ public class FormSaveViewModel extends ViewModel implements MaterialProgressDial
         this.audioRecorder = audioRecorder;
         this.projectsDataService = projectsDataService;
         this.entitiesRepository = entitiesRepository;
+        this.formsRepository = formsRepository;
         this.instancesRepository = instancesRepository;
 
         if (stateHandle.get(ORIGINAL_FILES) != null) {
@@ -107,6 +112,7 @@ public class FormSaveViewModel extends ViewModel implements MaterialProgressDial
 
         formSessionObserver = LiveDataUtils.observe(formSession, it -> {
             formController = it.getFormController();
+            form = it.getForm();
             instance = it.getInstance();
         });
     }
@@ -150,6 +156,7 @@ public class FormSaveViewModel extends ViewModel implements MaterialProgressDial
             formController.getAuditEventLogger().logEvent(AuditEvent.AuditEventType.FORM_EXIT, true, System.currentTimeMillis());
 
             if (formController.getInstanceFile() != null) {
+                removeSavepoint();
                 SaveFormToDisk.removeSavepointFiles(formController.getInstanceFile().getName());
 
                 // if it's not already saved, erase everything
@@ -165,6 +172,26 @@ public class FormSaveViewModel extends ViewModel implements MaterialProgressDial
         }
 
         clearMediaFiles();
+    }
+
+    private void removeSavepoint() {
+        scheduler.immediate(() -> {
+            Form updatedForm = formsRepository.get(form.getDbId());
+            Instance updatedInstance = null;
+            if (instance != null) {
+                updatedInstance = instancesRepository.get(instance.getDbId());
+            }
+
+            if (updatedInstance != null && updatedInstance.getSavePointFilePath() != null) {
+                new File(updatedInstance.getSavePointFilePath()).delete();
+                instancesRepository.save(new Instance.Builder(updatedInstance).savePointFilePath(null).build());
+            } else if (updatedForm.getSavePointFilePath() != null) {
+                new File(updatedForm.getSavePointFilePath()).delete();
+                formsRepository.save(new Form.Builder(updatedForm).savePointFilePath(null).build());
+            }
+            return null;
+        }, result -> {
+        });
     }
 
     public void resumeSave() {
@@ -246,6 +273,7 @@ public class FormSaveViewModel extends ViewModel implements MaterialProgressDial
         switch (taskResult.getSaveResult()) {
             case SAVED:
             case SAVED_AND_EXIT: {
+                removeSavepoint();
                 formController.getAuditEventLogger().logEvent(AuditEvent.AuditEventType.FORM_SAVE, false, clock.get());
 
                 if (saveRequest.viewExiting) {

@@ -17,6 +17,7 @@ class InstancesRepositoryProvider @JvmOverloads constructor(
             context,
             storagePathProvider.getOdkDirPath(StorageSubdirectory.METADATA, projectId),
             storagePathProvider.getOdkDirPath(StorageSubdirectory.INSTANCES, projectId),
+            storagePathProvider.getOdkDirPath(StorageSubdirectory.CACHE, projectId),
             System::currentTimeMillis
         )
     }

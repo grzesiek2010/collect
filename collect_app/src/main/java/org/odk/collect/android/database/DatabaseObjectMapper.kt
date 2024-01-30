@@ -34,6 +34,7 @@ object DatabaseObjectMapper {
         values.put(DatabaseFormColumns.AUTO_DELETE, form.autoDelete)
         values.put(DatabaseFormColumns.GEOMETRY_XPATH, form.geometryXpath)
         values.put(DatabaseFormColumns.LAST_DETECTED_ATTACHMENTS_UPDATE_DATE, form.lastDetectedAttachmentsUpdateDate)
+        values.put(DatabaseFormColumns.SAVE_POINT_FILE_PATH, form.savePointFilePath)
         return values
     }
 
@@ -71,6 +72,7 @@ object DatabaseObjectMapper {
             .geometryXpath(values.getAsString(DatabaseFormColumns.GEOMETRY_XPATH))
             .deleted(values.getAsLong(DatabaseFormColumns.DELETED_DATE) != null)
             .lastDetectedAttachmentsUpdateDate(values.getAsLong(DatabaseFormColumns.LAST_DETECTED_ATTACHMENTS_UPDATE_DATE))
+            .savePointFilePath(values.getAsString(DatabaseFormColumns.SAVE_POINT_FILE_PATH))
             .build()
     }
 
@@ -100,6 +102,7 @@ object DatabaseObjectMapper {
         val geometryXpathColumnIndex = cursor.getColumnIndex(DatabaseFormColumns.GEOMETRY_XPATH)
         val deletedDateColumnIndex = cursor.getColumnIndex(DatabaseFormColumns.DELETED_DATE)
         val lastDetectedAttachmentsUpdateDateColumnIndex = cursor.getColumnIndex(DatabaseFormColumns.LAST_DETECTED_ATTACHMENTS_UPDATE_DATE)
+        val savepointFilePathColumnIndex = cursor.getColumnIndex(DatabaseFormColumns.SAVE_POINT_FILE_PATH)
         return Form.Builder()
             .dbId(cursor.getLong(idColumnIndex))
             .displayName(cursor.getString(displayNameColumnIndex))
@@ -134,6 +137,13 @@ object DatabaseObjectMapper {
             .geometryXpath(cursor.getString(geometryXpathColumnIndex))
             .deleted(!cursor.isNull(deletedDateColumnIndex))
             .lastDetectedAttachmentsUpdateDate(if (cursor.isNull(lastDetectedAttachmentsUpdateDateColumnIndex)) null else cursor.getLong(lastDetectedAttachmentsUpdateDateColumnIndex))
+            .savePointFilePath(
+                    if (cursor.isNull(savepointFilePathColumnIndex)) null
+                    else getAbsoluteFilePath(
+                            cachePath,
+                            cursor.getString(savepointFilePathColumnIndex)
+                    )
+            )
             .build()
     }
 
@@ -152,11 +162,16 @@ object DatabaseObjectMapper {
             .deletedDate(values.getAsLong(DatabaseInstanceColumns.DELETED_DATE))
             .geometry(values.getAsString(DatabaseInstanceColumns.GEOMETRY))
             .geometryType(values.getAsString(DatabaseInstanceColumns.GEOMETRY_TYPE))
+            .savePointFilePath(values.getAsString(DatabaseInstanceColumns.SAVE_POINT_FILE_PATH))
             .build()
     }
 
     @JvmStatic
-    fun getInstanceFromCurrentCursorPosition(cursor: Cursor, instancesPath: String): Instance? {
+    fun getInstanceFromCurrentCursorPosition(
+        cursor: Cursor,
+        instancesPath: String,
+        cachePath: String
+    ): Instance? {
         val dbId = cursor.getLong(cursor.getColumnIndex(BaseColumns._ID))
         val displayNameColumnIndex = cursor.getColumnIndex(DatabaseInstanceColumns.DISPLAY_NAME)
         val submissionUriColumnIndex = cursor.getColumnIndex(DatabaseInstanceColumns.SUBMISSION_URI)
@@ -172,6 +187,7 @@ object DatabaseObjectMapper {
         val deletedDateColumnIndex = cursor.getColumnIndex(DatabaseInstanceColumns.DELETED_DATE)
         val geometryTypeColumnIndex = cursor.getColumnIndex(DatabaseInstanceColumns.GEOMETRY_TYPE)
         val geometryColumnIndex = cursor.getColumnIndex(DatabaseInstanceColumns.GEOMETRY)
+        val savepointFilePathColumnIndex = cursor.getColumnIndex(DatabaseInstanceColumns.SAVE_POINT_FILE_PATH)
         val databaseIdIndex = cursor.getColumnIndex(BaseColumns._ID)
         return Instance.Builder()
             .dbId(dbId)
@@ -199,6 +215,13 @@ object DatabaseObjectMapper {
             )
             .geometryType(cursor.getString(geometryTypeColumnIndex))
             .geometry(cursor.getString(geometryColumnIndex))
+            .savePointFilePath(
+                    if (cursor.isNull(savepointFilePathColumnIndex)) null
+                    else getAbsoluteFilePath(
+                            cachePath,
+                            cursor.getString(savepointFilePathColumnIndex)
+                    )
+            )
             .dbId(cursor.getLong(databaseIdIndex))
             .build()
     }
@@ -224,6 +247,7 @@ object DatabaseObjectMapper {
         values.put(DatabaseInstanceColumns.DELETED_DATE, instance.deletedDate)
         values.put(DatabaseInstanceColumns.GEOMETRY, instance.geometry)
         values.put(DatabaseInstanceColumns.GEOMETRY_TYPE, instance.geometryType)
+        values.put(DatabaseInstanceColumns.SAVE_POINT_FILE_PATH, instance.savePointFilePath)
         return values
     }
 }

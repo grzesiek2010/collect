@@ -19,7 +19,6 @@ import org.odk.collect.android.R
 import org.odk.collect.android.activities.FormFillingActivity
 import org.odk.collect.android.analytics.AnalyticsEvents
 import org.odk.collect.android.formentry.savepoint.SavePoint
-import org.odk.collect.android.formentry.savepoint.SavePointUtils
 import org.odk.collect.android.injection.DaggerUtils
 import org.odk.collect.android.instancemanagement.InstanceDeleter
 import org.odk.collect.android.instancemanagement.canBeEdited
@@ -118,8 +117,7 @@ class FormUriActivity : ComponentActivity() {
             val selectedForm = formsRepositoryProvider.get().get(ContentUriHelper.getIdFromUri(uri))!!
 
             // if there is a savepoint for the selected form just start it
-            var instancePath = SavePointUtils.getInstancePathIfSavePointExists(selectedForm)
-            if (instancePath != null) {
+            if (!selectedForm.savePointFilePath.isNullOrBlank()) {
                 return null
             }
 
@@ -128,9 +126,8 @@ class FormUriActivity : ComponentActivity() {
                 .filter { it.date < selectedForm.date }
                 .sortedByDescending { it.date }
                 .forEach { form ->
-                    instancePath = SavePointUtils.getInstancePathIfSavePointExists(form)
-                    if (instancePath != null) {
-                        return SavePoint(SavePointUtils.getSavepointFile(File(instancePath).name), form)
+                    if (!form.savePointFilePath.isNullOrBlank()) {
+                        return SavePoint(File(form.savePointFilePath), form)
                     }
                 }
         }

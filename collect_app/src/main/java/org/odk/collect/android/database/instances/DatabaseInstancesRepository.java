@@ -31,6 +31,7 @@ import static org.odk.collect.android.database.instances.DatabaseInstanceColumns
 import static org.odk.collect.android.database.instances.DatabaseInstanceColumns.JR_FORM_ID;
 import static org.odk.collect.android.database.instances.DatabaseInstanceColumns.JR_VERSION;
 import static org.odk.collect.android.database.instances.DatabaseInstanceColumns.LAST_STATUS_CHANGE_DATE;
+import static org.odk.collect.android.database.instances.DatabaseInstanceColumns.SAVE_POINT_FILE_PATH;
 import static org.odk.collect.android.database.instances.DatabaseInstanceColumns.STATUS;
 import static org.odk.collect.android.database.instances.DatabaseInstanceColumns.SUBMISSION_URI;
 import static org.odk.collect.shared.PathUtils.getRelativeFilePath;
@@ -43,8 +44,9 @@ public final class DatabaseInstancesRepository implements InstancesRepository {
     private final DatabaseConnection databaseConnection;
     private final Supplier<Long> clock;
     private final String instancesPath;
+    private final String cachePath;
 
-    public DatabaseInstancesRepository(Context context, String dbPath, String instancesPath, Supplier<Long> clock) {
+    public DatabaseInstancesRepository(Context context, String dbPath, String instancesPath, String cachePath, Supplier<Long> clock) {
         this.databaseConnection = new DatabaseConnection(
                 context,
                 dbPath,
@@ -55,6 +57,7 @@ public final class DatabaseInstancesRepository implements InstancesRepository {
 
         this.clock = clock;
         this.instancesPath = instancesPath;
+        this.cachePath = cachePath;
     }
 
     @Override
@@ -63,7 +66,7 @@ public final class DatabaseInstancesRepository implements InstancesRepository {
         String[] selectionArgs = {Long.toString(databaseId)};
 
         try (Cursor cursor = query(null, selection, selectionArgs, null)) {
-            List<Instance> result = getInstancesFromCursor(cursor, instancesPath);
+            List<Instance> result = getInstancesFromCursor(cursor, instancesPath, cachePath);
             return !result.isEmpty() ? result.get(0) : null;
         }
     }
@@ -73,7 +76,7 @@ public final class DatabaseInstancesRepository implements InstancesRepository {
         String selection = INSTANCE_FILE_PATH + "=?";
         String[] args = {getRelativeFilePath(instancesPath, instancePath)};
         try (Cursor cursor = query(null, selection, args, null)) {
-            List<Instance> instances = getInstancesFromCursor(cursor, instancesPath);
+            List<Instance> instances = getInstancesFromCursor(cursor, instancesPath, cachePath);
             if (instances.size() == 1) {
                 return instances.get(0);
             } else {
@@ -87,7 +90,7 @@ public final class DatabaseInstancesRepository implements InstancesRepository {
         StrictMode.noteSlowCall("Accessing readable DB");
 
         try (Cursor cursor = query(null, null, null, null)) {
-            return getInstancesFromCursor(cursor, instancesPath);
+            return getInstancesFromCursor(cursor, instancesPath, cachePath);
         }
     }
 
@@ -96,14 +99,14 @@ public final class DatabaseInstancesRepository implements InstancesRepository {
         StrictMode.noteSlowCall("Accessing readable DB");
 
         try (Cursor cursor = query(null, DELETED_DATE + " IS NULL ", null, null)) {
-            return getInstancesFromCursor(cursor, instancesPath);
+            return getInstancesFromCursor(cursor, instancesPath, cachePath);
         }
     }
 
     @Override
     public List<Instance> getAllByStatus(String... status) {
         try (Cursor instancesCursor = getCursorForAllByStatus(status)) {
-            return getInstancesFromCursor(instancesCursor, instancesPath);
+            return getInstancesFromCursor(instancesCursor, instancesPath, cachePath);
         }
     }
 
@@ -120,7 +123,7 @@ public final class DatabaseInstancesRepository implements InstancesRepository {
         StrictMode.noteSlowCall("Accessing readable DB");
 
         try (Cursor c = query(null, JR_FORM_ID + " = ?", new String[]{formId}, null)) {
-            return getInstancesFromCursor(c, instancesPath);
+            return getInstancesFromCursor(c, instancesPath, cachePath);
         }
     }
 
@@ -130,11 +133,11 @@ public final class DatabaseInstancesRepository implements InstancesRepository {
 
         if (jrVersion != null) {
             try (Cursor cursor = query(null, JR_FORM_ID + " = ? AND " + JR_VERSION + " = ? AND " + DELETED_DATE + " IS NULL", new String[]{jrFormId, jrVersion}, null)) {
-                return getInstancesFromCursor(cursor, instancesPath);
+                return getInstancesFromCursor(cursor, instancesPath, cachePath);
             }
         } else {
             try (Cursor cursor = query(null, JR_FORM_ID + " = ? AND " + JR_VERSION + " IS NULL AND " + DELETED_DATE + " IS NULL", new String[]{jrFormId}, null)) {
-                return getInstancesFromCursor(cursor, instancesPath);
+                return getInstancesFromCursor(cursor, instancesPath, cachePath);
             }
         }
     }
@@ -243,7 +246,8 @@ public final class DatabaseInstancesRepository implements InstancesRepository {
                     LAST_STATUS_CHANGE_DATE,
                     DELETED_DATE,
                     GEOMETRY,
-                    GEOMETRY_TYPE
+                    GEOMETRY_TYPE,
+                    SAVE_POINT_FILE_PATH
             };
         }
 
@@ -271,11 +275,11 @@ public final class DatabaseInstancesRepository implements InstancesRepository {
         DirectoryUtils.deleteDirectory(new File(instance.getInstanceFilePath()).getParentFile());
     }
 
-    private static List<Instance> getInstancesFromCursor(Cursor cursor, String instancesPath) {
+    private static List<Instance> getInstancesFromCursor(Cursor cursor, String instancesPath, String cachePath) {
         List<Instance> instances = new ArrayList<>();
         cursor.moveToPosition(-1);
         while (cursor.moveToNext()) {
-            Instance instance = getInstanceFromCurrentCursorPosition(cursor, instancesPath);
+            Instance instance = getInstanceFromCurrentCursorPosition(cursor, instancesPath, cachePath);
             instances.add(instance);
         }
 

@@ -83,6 +83,7 @@ class FormEntryViewModelFactory(
                     projectsDataService,
                     formSessionRepository.get(sessionId),
                     entitiesRepositoryProvider.get(projectId),
+                    formsRepositoryProvider.get(projectId),
                     instancesRepositoryProvider.get(projectId)
                 )
             }

@@ -45,6 +45,7 @@ public final class Instance {
     private final Long deletedDate;
     private final String geometryType;
     private final String geometry;
+    private final String savePointFilePath;
 
     private final Long dbId;
 
@@ -60,6 +61,7 @@ public final class Instance {
         deletedDate = builder.deletedDate;
         geometryType = builder.geometryType;
         geometry = builder.geometry;
+        savePointFilePath = builder.savePointFilePath;
 
         dbId = builder.dbId;
     }
@@ -76,6 +78,7 @@ public final class Instance {
         private Long deletedDate;
         private String geometryType;
         private String geometry;
+        private String savePointFilePath;
 
         private Long dbId;
 
@@ -96,6 +99,7 @@ public final class Instance {
             deletedDate = instance.deletedDate;
             geometryType = instance.geometryType;
             geometry = instance.geometry;
+            savePointFilePath = instance.savePointFilePath;
         }
 
         public Builder displayName(String displayName) {
@@ -153,6 +157,11 @@ public final class Instance {
             return this;
         }
 
+        public Builder savePointFilePath(@Nullable String savePointFilePath) {
+            this.savePointFilePath = savePointFilePath;
+            return this;
+        }
+
         public Builder dbId(Long dbId) {
             this.dbId = dbId;
             return this;
@@ -206,6 +215,11 @@ public final class Instance {
 
     public String getGeometry() {
         return geometry;
+    }
+
+    @Nullable
+    public String getSavePointFilePath() {
+        return savePointFilePath;
     }
 
     public Long getDbId() {

@@ -31,15 +31,16 @@ public class DatabaseInstancesRepositoryTest extends InstancesRepositoryTest {
 
     private final File dbDir = TempFiles.createTempDir();
     private final File instancesDir = TempFiles.createTempDir();
+    private final File cacheDir = TempFiles.createTempDir();
 
     @Override
     public InstancesRepository buildSubject() {
-        return new DatabaseInstancesRepository(ApplicationProvider.getApplicationContext(), dbDir.getAbsolutePath(), instancesDir.getAbsolutePath(), System::currentTimeMillis);
+        return new DatabaseInstancesRepository(ApplicationProvider.getApplicationContext(), dbDir.getAbsolutePath(), instancesDir.getAbsolutePath(), cacheDir.getAbsolutePath(), System::currentTimeMillis);
     }
 
     @Override
     public InstancesRepository buildSubject(Supplier<Long> clock) {
-        return new DatabaseInstancesRepository(ApplicationProvider.getApplicationContext(), dbDir.getAbsolutePath(), instancesDir.getAbsolutePath(), clock);
+        return new DatabaseInstancesRepository(ApplicationProvider.getApplicationContext(), dbDir.getAbsolutePath(), instancesDir.getAbsolutePath(), cacheDir.getAbsolutePath(), clock);
     }
 
     @Override

@@ -204,6 +204,7 @@ public class InstanceProvider extends ContentProvider {
 
         InstancesRepository instancesRepository = instancesRepositoryProvider.get(projectId);
         String instancesPath = storagePathProvider.getOdkDirPath(StorageSubdirectory.INSTANCES, projectId);
+        String cachePath = storagePathProvider.getOdkDirPath(StorageSubdirectory.CACHE, projectId);
 
         int count;
 
@@ -211,7 +212,7 @@ public class InstanceProvider extends ContentProvider {
             case INSTANCES:
                 try (Cursor cursor = dbQuery(projectId, null, where, whereArgs, null)) {
                     while (cursor.moveToNext()) {
-                        Instance instance = getInstanceFromCurrentCursorPosition(cursor, instancesPath);
+                        Instance instance = getInstanceFromCurrentCursorPosition(cursor, instancesPath, cachePath);
                         ContentValues existingValues = getValuesFromInstance(instance, instancesPath);
 
                         existingValues.putAll(values);
@@ -236,7 +237,7 @@ public class InstanceProvider extends ContentProvider {
                     try (Cursor cursor = dbQuery(projectId, new String[]{_ID}, where, whereArgs, null)) {
                         while (cursor.moveToNext()) {
                             if (cursor.getLong(cursor.getColumnIndex(_ID)) == instanceId) {
-                                Instance instance = getInstanceFromCurrentCursorPosition(cursor, instancesPath);
+                                Instance instance = getInstanceFromCurrentCursorPosition(cursor, instancesPath, cachePath);
                                 ContentValues existingValues = getValuesFromInstance(instance, instancesPath);
 
                                 existingValues.putAll(values);

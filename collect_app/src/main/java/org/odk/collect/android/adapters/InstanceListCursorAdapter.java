@@ -42,7 +42,8 @@ public class InstanceListCursorAdapter extends SimpleCursorAdapter {
         View view = super.getView(position, convertView, parent);
         Instance instance = DatabaseObjectMapper.getInstanceFromCurrentCursorPosition(
                 getCursor(),
-                new StoragePathProvider().getOdkDirPath(StorageSubdirectory.INSTANCES)
+                new StoragePathProvider().getOdkDirPath(StorageSubdirectory.INSTANCES),
+                new StoragePathProvider().getOdkDirPath(StorageSubdirectory.CACHE)
         );
 
         InstanceListItemView.setInstance(view, instance, shouldCheckDisabled);
