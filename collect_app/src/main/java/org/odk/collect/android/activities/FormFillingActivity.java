@@ -90,6 +90,7 @@ import org.odk.collect.android.audio.AudioRecordingControllerFragment;
 import org.odk.collect.android.audio.M4AAppender;
 import org.odk.collect.android.backgroundwork.InstanceSubmitScheduler;
 import org.odk.collect.android.dao.helpers.InstancesDaoHelper;
+import org.odk.collect.android.database.savepoints.SavepointsRepositoryProvider;
 import org.odk.collect.android.entities.EntitiesRepositoryProvider;
 import org.odk.collect.android.exception.JavaRosaException;
 import org.odk.collect.android.external.InstancesContract;
@@ -149,6 +150,7 @@ import org.odk.collect.android.logic.ImmutableDisplayableQuestion;
 import org.odk.collect.android.mainmenu.MainMenuActivity;
 import org.odk.collect.android.projects.ProjectsDataService;
 import org.odk.collect.android.storage.StoragePathProvider;
+import org.odk.collect.android.storage.StorageSubdirectory;
 import org.odk.collect.android.tasks.FormLoaderTask;
 import org.odk.collect.android.tasks.SaveFormIndexTask;
 import org.odk.collect.android.tasks.SavePointTask;
@@ -730,7 +732,21 @@ public class FormFillingActivity extends LocalizedActivity implements AnimationL
      */
     private void nonblockingCreateSavePointData() {
         try {
-            SavePointTask savePointTask = new SavePointTask(this, getFormController(), scheduler);
+            Long formDbId = formSessionRepository.get(sessionId).getValue().getForm().getDbId();
+            Long instanceDbId = null;
+            Instance instance = formSessionRepository.get(sessionId).getValue().getInstance();
+            if (instance != null) {
+                instanceDbId = instance.getDbId();
+            }
+            SavePointTask savePointTask = new SavePointTask(
+                    this,
+                    getFormController(),
+                    formDbId,
+                    instanceDbId,
+                    storagePathProvider.getOdkDirPath(StorageSubdirectory.CACHE),
+                    new SavepointsRepositoryProvider(this, storagePathProvider).get(),
+                    scheduler
+            );
             savePointTask.execute();
 
             if (!allowMovingBackwards) {
