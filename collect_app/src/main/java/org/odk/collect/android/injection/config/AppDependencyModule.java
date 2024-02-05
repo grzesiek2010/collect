@@ -40,6 +40,7 @@ import org.odk.collect.android.configure.qr.AppConfigurationGenerator;
 import org.odk.collect.android.configure.qr.CachingQRCodeGenerator;
 import org.odk.collect.android.configure.qr.QRCodeGenerator;
 import org.odk.collect.android.database.itemsets.DatabaseFastExternalItemsetsRepository;
+import org.odk.collect.android.database.savepoints.SavepointsRepositoryProvider;
 import org.odk.collect.android.entities.EntitiesRepositoryProvider;
 import org.odk.collect.android.external.InstancesContract;
 import org.odk.collect.android.formentry.AppStateFormSessionRepository;
@@ -471,6 +472,11 @@ public class AppDependencyModule {
     @Provides
     public InstancesRepositoryProvider providesInstancesRepositoryProvider(Context context, StoragePathProvider storagePathProvider) {
         return new InstancesRepositoryProvider(context, storagePathProvider);
+    }
+
+    @Provides
+    public SavepointsRepositoryProvider providesSavepointsRepositoryProvider(Context context, StoragePathProvider storagePathProvider) {
+        return new SavepointsRepositoryProvider(context, storagePathProvider);
     }
 
     @Provides
