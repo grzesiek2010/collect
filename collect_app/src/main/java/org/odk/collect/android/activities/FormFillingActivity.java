@@ -187,6 +187,7 @@ import org.odk.collect.audiorecorder.recording.AudioRecorder;
 import org.odk.collect.externalapp.ExternalAppUtils;
 import org.odk.collect.forms.Form;
 import org.odk.collect.forms.instances.Instance;
+import org.odk.collect.forms.savepoints.Savepoint;
 import org.odk.collect.location.LocationClient;
 import org.odk.collect.material.MaterialProgressDialogFragment;
 import org.odk.collect.metadata.PropertyManager;
@@ -705,13 +706,14 @@ public class FormFillingActivity extends LocalizedActivity implements AnimationL
 
     private void loadFromIntent(Intent intent) {
         Uri uri = intent.getData();
+        Savepoint savepoint = (Savepoint) intent.getSerializableExtra(ApplicationConstants.BundleKeys.SAVEPOINT);
         String uriMimeType = null;
 
         if (uri != null) {
             uriMimeType = getContentResolver().getType(uri);
         }
 
-        formLoaderTask = new FormLoaderTask(uri, uriMimeType, startingXPath, waitingXPath, formEntryControllerFactory, scheduler);
+        formLoaderTask = new FormLoaderTask(uri, uriMimeType, startingXPath, waitingXPath, formEntryControllerFactory, scheduler, savepoint);
         formLoaderTask.setFormLoaderListener(this);
         showIfNotShowing(FormLoadingDialogFragment.class, getSupportFragmentManager());
         formLoaderTask.execute();
