@@ -144,7 +144,7 @@ class FormUriActivity : ComponentActivity() {
                 if (uriMimeType == FormsContract.CONTENT_ITEM_TYPE) {
                     intent.data = FormsContract.getUri(projectsDataService.getCurrentProject().uuid, savepoint.formDbId)
                 }
-                startForm()
+                startForm(savepoint)
             }
             .setNegativeButton(string.do_not_recover) { _, _ ->
                 savepointFile.delete()
@@ -156,7 +156,7 @@ class FormUriActivity : ComponentActivity() {
             .show()
     }
 
-    private fun startForm() {
+    private fun startForm(savepoint: Savepoint? = null) {
         formFillingAlreadyStarted = true
         openForm.launch(
             Intent(this, FormFillingActivity::class.java).apply {
@@ -167,6 +167,12 @@ class FormUriActivity : ComponentActivity() {
                     putExtra(
                         ApplicationConstants.BundleKeys.FORM_MODE,
                         ApplicationConstants.FormModes.VIEW_SENT
+                    )
+                }
+                if (savepoint != null) {
+                    putExtra(
+                        ApplicationConstants.BundleKeys.SAVEPOINT,
+                        savepoint
                     )
                 }
             }

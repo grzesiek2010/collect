@@ -90,6 +90,7 @@ import org.odk.collect.android.audio.AudioRecordingControllerFragment;
 import org.odk.collect.android.audio.M4AAppender;
 import org.odk.collect.android.backgroundwork.InstanceSubmitScheduler;
 import org.odk.collect.android.dao.helpers.InstancesDaoHelper;
+import org.odk.collect.android.database.savepoints.Savepoint;
 import org.odk.collect.android.database.savepoints.SavepointsRepositoryProvider;
 import org.odk.collect.android.entities.EntitiesRepositoryProvider;
 import org.odk.collect.android.exception.JavaRosaException;
@@ -705,13 +706,14 @@ public class FormFillingActivity extends LocalizedActivity implements AnimationL
 
     private void loadFromIntent(Intent intent) {
         Uri uri = intent.getData();
+        Savepoint savepoint = intent.getParcelableExtra(ApplicationConstants.BundleKeys.SAVEPOINT);
         String uriMimeType = null;
 
         if (uri != null) {
             uriMimeType = getContentResolver().getType(uri);
         }
 
-        formLoaderTask = new FormLoaderTask(uri, uriMimeType, startingXPath, waitingXPath, formEntryControllerFactory, scheduler);
+        formLoaderTask = new FormLoaderTask(uri, uriMimeType, startingXPath, waitingXPath, formEntryControllerFactory, scheduler, savepoint);
         formLoaderTask.setFormLoaderListener(this);
         showIfNotShowing(FormLoadingDialogFragment.class, getSupportFragmentManager());
         formLoaderTask.execute();
