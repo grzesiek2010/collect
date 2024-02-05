@@ -111,6 +111,10 @@ public class FormLoaderTask extends SchedulerAsyncTaskMimic<Void, String, FormLo
         return form;
     }
 
+    public Savepoint getSavepoint() {
+        return savepoint;
+    }
+
     public Instance getInstance() {
         return instance;
     }

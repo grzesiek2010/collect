@@ -428,6 +428,7 @@ public class FormFillingActivity extends LocalizedActivity implements AnimationL
                 autoSendSettingsProvider,
                 formsRepositoryProvider,
                 instancesRepositoryProvider,
+                new SavepointsRepositoryProvider(this, storagePathProvider).get(),
                 new QRCodeCreatorImpl(),
                 new HtmlPrinter()
         );
@@ -635,8 +636,8 @@ public class FormFillingActivity extends LocalizedActivity implements AnimationL
         });
     }
 
-    private void formControllerAvailable(@NonNull FormController formController, @NonNull Form form, @Nullable Instance instance) {
-        formSessionRepository.set(sessionId, formController, form, instance);
+    private void formControllerAvailable(@NonNull FormController formController, @NonNull Form form, @Nullable Instance instance, @Nullable Savepoint savepoint) {
+        formSessionRepository.set(sessionId, formController, form, instance, savepoint);
         AnalyticsUtils.setForm(formController);
         backgroundLocationViewModel.formFinishedLoading();
     }
@@ -1905,6 +1906,7 @@ public class FormFillingActivity extends LocalizedActivity implements AnimationL
         final FormController formController = task.getFormController();
         Instance instance = task.getInstance();
         Form form = task.getForm();
+        Savepoint savepoint = task.getSavepoint();
         String formPath = form.getFormFilePath();
 
         if (formController != null) {
@@ -1967,7 +1969,7 @@ public class FormFillingActivity extends LocalizedActivity implements AnimationL
                             registerReceiver(locationProvidersReceiver, new IntentFilter(LocationManager.PROVIDERS_CHANGED_ACTION));
                         }
 
-                        formControllerAvailable(formController, form, instance);
+                        formControllerAvailable(formController, form, instance, savepoint);
 
                         // onResume ran before the form was loaded. Let the viewModel know that the activity
                         // is about to be displayed and configured. Do this before the refresh actually
@@ -2001,7 +2003,7 @@ public class FormFillingActivity extends LocalizedActivity implements AnimationL
                                 FormIndex formIndex = SaveFormIndexTask.loadFormIndexFromFile(formController);
                                 if (formIndex != null) {
                                     formController.jumpToIndex(formIndex);
-                                    formControllerAvailable(formController, form, instance);
+                                    formControllerAvailable(formController, form, instance, savepoint);
                                     formEntryViewModel.refresh();
                                     return;
                                 }
@@ -2009,12 +2011,12 @@ public class FormFillingActivity extends LocalizedActivity implements AnimationL
 
                             boolean pendingActivityResult = task.hasPendingActivityResult();
                             if (pendingActivityResult) {
-                                formControllerAvailable(formController, form, instance);
+                                formControllerAvailable(formController, form, instance, savepoint);
                                 formEntryViewModel.refreshSync();
                                 onActivityResult(task.getRequestCode(), task.getResultCode(), task.getIntent());
                             } else {
                                 formController.getAuditEventLogger().logEvent(AuditEvent.AuditEventType.HIERARCHY, true, System.currentTimeMillis());
-                                formControllerAvailable(formController, form, instance);
+                                formControllerAvailable(formController, form, instance, savepoint);
                                 Intent intent = new Intent(this, FormHierarchyActivity.class);
                                 intent.putExtra(FormHierarchyActivity.EXTRA_SESSION_ID, sessionId);
                                 startActivityForResult(intent, RequestCodes.HIERARCHY_ACTIVITY);
@@ -2022,7 +2024,7 @@ public class FormFillingActivity extends LocalizedActivity implements AnimationL
                         }
                     });
                 } else {
-                    formControllerAvailable(formController, form, instance);
+                    formControllerAvailable(formController, form, instance, savepoint);
                     if (ApplicationConstants.FormModes.VIEW_SENT.equalsIgnoreCase(formMode)) {
                         Intent intent = new Intent(this, ViewOnlyFormHierarchyActivity.class);
                         intent.putExtra(FormHierarchyActivity.EXTRA_SESSION_ID, sessionId);

@@ -36,6 +36,8 @@ import org.odk.collect.audiorecorder.recording.AudioRecorder;
 import org.odk.collect.entities.EntitiesRepository;
 import org.odk.collect.forms.instances.Instance;
 import org.odk.collect.forms.instances.InstancesRepository;
+import org.odk.collect.forms.savepoints.Savepoint;
+import org.odk.collect.forms.savepoints.SavepointsRepository;
 import org.odk.collect.material.MaterialProgressDialogFragment;
 import org.odk.collect.shared.strings.Md5;
 import org.odk.collect.utilities.Result;
@@ -84,10 +86,17 @@ public class FormSaveViewModel extends ViewModel implements MaterialProgressDial
     private final ProjectsDataService projectsDataService;
     private final EntitiesRepository entitiesRepository;
     private final InstancesRepository instancesRepository;
+    private final SavepointsRepository savepointsRepository;
     private Instance instance;
+    private Savepoint savepoint;
     private final Cancellable formSessionObserver;
 
-    public FormSaveViewModel(SavedStateHandle stateHandle, Supplier<Long> clock, FormSaver formSaver, MediaUtils mediaUtils, Scheduler scheduler, AudioRecorder audioRecorder, ProjectsDataService projectsDataService, LiveData<FormSession> formSession, EntitiesRepository entitiesRepository, InstancesRepository instancesRepository) {
+    public FormSaveViewModel(SavedStateHandle stateHandle, Supplier<Long> clock, FormSaver formSaver,
+                             MediaUtils mediaUtils, Scheduler scheduler, AudioRecorder audioRecorder,
+                             ProjectsDataService projectsDataService, LiveData<FormSession> formSession,
+                             EntitiesRepository entitiesRepository, InstancesRepository instancesRepository,
+                             SavepointsRepository savepointsRepository
+    ) {
         this.stateHandle = stateHandle;
         this.clock = clock;
         this.formSaver = formSaver;
@@ -97,6 +106,7 @@ public class FormSaveViewModel extends ViewModel implements MaterialProgressDial
         this.projectsDataService = projectsDataService;
         this.entitiesRepository = entitiesRepository;
         this.instancesRepository = instancesRepository;
+        this.savepointsRepository = savepointsRepository;
 
         if (stateHandle.get(ORIGINAL_FILES) != null) {
             originalFiles = stateHandle.get(ORIGINAL_FILES);
@@ -108,6 +118,7 @@ public class FormSaveViewModel extends ViewModel implements MaterialProgressDial
         formSessionObserver = LiveDataUtils.observe(formSession, it -> {
             formController = it.getFormController();
             instance = it.getInstance();
+            savepoint = it.getSavepoint();
         });
     }
 
@@ -150,7 +161,8 @@ public class FormSaveViewModel extends ViewModel implements MaterialProgressDial
             formController.getAuditEventLogger().logEvent(AuditEvent.AuditEventType.FORM_EXIT, true, System.currentTimeMillis());
 
             if (formController.getInstanceFile() != null) {
-                SaveFormToDisk.removeSavepointFiles(formController.getInstanceFile().getName());
+                removeSavepoint();
+                SaveFormToDisk.removeIndexFile(formController.getInstanceFile().getName());
 
                 // if it's not already saved, erase everything
                 if (!InstancesDaoHelper.isInstanceAvailable(getAbsoluteInstancePath())) {
@@ -246,6 +258,7 @@ public class FormSaveViewModel extends ViewModel implements MaterialProgressDial
         switch (taskResult.getSaveResult()) {
             case SAVED:
             case SAVED_AND_EXIT: {
+                removeSavepoint();
                 formController.getAuditEventLogger().logEvent(AuditEvent.AuditEventType.FORM_SAVE, false, clock.get());
 
                 if (saveRequest.viewExiting) {
@@ -409,6 +422,14 @@ public class FormSaveViewModel extends ViewModel implements MaterialProgressDial
     @Nullable
     public Instance getInstance() {
         return instance;
+    }
+
+    private void removeSavepoint() {
+        scheduler.immediate(() -> {
+            savepointsRepository.delete(savepoint);
+            return null;
+        }, result -> {
+        });
     }
 
     public static class SaveResult {

@@ -7,6 +7,7 @@ import org.odk.collect.android.javarosawrapper.FormController
 import org.odk.collect.androidshared.data.getState
 import org.odk.collect.forms.Form
 import org.odk.collect.forms.instances.Instance
+import org.odk.collect.forms.savepoints.Savepoint
 import org.odk.collect.shared.strings.UUIDGenerator
 
 interface FormSessionRepository {
@@ -15,10 +16,10 @@ interface FormSessionRepository {
     fun clear(id: String)
 
     fun set(id: String, formController: FormController, form: Form) {
-        set(id, formController, form, null)
+        set(id, formController, form, null, null)
     }
 
-    fun set(id: String, formController: FormController, form: Form, instance: Instance?)
+    fun set(id: String, formController: FormController, form: Form, instance: Instance?, savepoint: Savepoint?)
 }
 
 class AppStateFormSessionRepository(application: Application) : FormSessionRepository {
@@ -33,8 +34,8 @@ class AppStateFormSessionRepository(application: Application) : FormSessionRepos
         return getLiveData(id)
     }
 
-    override fun set(id: String, formController: FormController, form: Form, instance: Instance?) {
-        getLiveData(id).value = FormSession(formController, form, instance)
+    override fun set(id: String, formController: FormController, form: Form, instance: Instance?, savepoint: Savepoint?) {
+        getLiveData(id).value = FormSession(formController, form, instance, savepoint)
     }
 
     /**
@@ -59,5 +60,6 @@ class AppStateFormSessionRepository(application: Application) : FormSessionRepos
 data class FormSession @JvmOverloads constructor(
     val formController: FormController,
     val form: Form,
-    val instance: Instance? = null
+    val instance: Instance? = null,
+    val savepoint: Savepoint? = null
 )
