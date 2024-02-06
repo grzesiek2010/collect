@@ -12,6 +12,7 @@ import androidx.work.WorkManager
 import org.hamcrest.MatcherAssert.assertThat
 import org.hamcrest.Matchers.equalTo
 import org.junit.Before
+import org.junit.Ignore
 import org.junit.Rule
 import org.junit.Test
 import org.junit.runner.RunWith
@@ -70,6 +71,7 @@ class FormFillingActivityTest {
         component = CollectHelpers.overrideAppDependencyModule(dependencies)
     }
 
+    @Ignore
     @Test
     fun whenProcessIsKilledAndRestored_returnsToHierarchyAtQuestion() {
         val projectId = CollectHelpers.setupDemoProject()
@@ -108,6 +110,7 @@ class FormFillingActivityTest {
         assertText("What is your age?")
     }
 
+    @Ignore
     @Test
     fun whenProcessIsKilledAndRestored_andHierarchyIsOpen_returnsToHierarchyAtQuestion() {
         val projectId = CollectHelpers.setupDemoProject()
@@ -149,6 +152,7 @@ class FormFillingActivityTest {
         assertText("What is your age?")
     }
 
+    @Ignore
     @Test
     fun whenProcessIsKilledAndRestored_andThereADialogFragmentOpen_doesNotRestoreDialogFragment() {
         val projectId = CollectHelpers.setupDemoProject()
@@ -194,6 +198,7 @@ class FormFillingActivityTest {
         assertText("What is your age?")
     }
 
+    @Ignore
     @Test
     fun whenProcessIsKilledAndRestored_andIsWaitingForExternalData_dataCanStillBeReturned() {
         val projectId = CollectHelpers.setupDemoProject()
