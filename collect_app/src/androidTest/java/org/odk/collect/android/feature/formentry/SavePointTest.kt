@@ -34,7 +34,8 @@ class SavePointTest {
             .let { simulateBatteryDeath() }
 
         // Start blank form and check save point is loaded
-        rule.fillNewForm("two-question-audit.xml", FormHierarchyPage("Two Question"))
+        rule.fillNewFormWithSavepoint("two-question-audit.xml")
+            .clickRecover("Two Question")
             .assertText("Alexei")
             .assertTextDoesNotExist("46")
             .pressBack(FormEntryPage("Two Question"))
@@ -153,7 +154,8 @@ class SavePointTest {
             .let { simulateProcessDeath() }
 
         // Edit instance and check save point is loaded
-        rule.editForm("two-question-audit.xml", "Two Question")
+        rule.editFormWithSavepoint("two-question-audit.xml")
+            .clickRecover("Two Question")
             .assertText("Alexei")
             .assertText("52")
             .pressBack(FormEntryPage("Two Question"))

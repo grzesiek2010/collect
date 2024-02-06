@@ -77,8 +77,7 @@ class FormFillingActivityTest {
         val form = setupForm("forms/two-question.xml")
         val intent = FormFillingIntentFactory.newInstanceIntent(
             application,
-            FormsContract.getUri(projectId, form!!.dbId),
-            FormFillingActivity::class
+            FormsContract.getUri(projectId, form!!.dbId)
         )
 
         // Start activity
@@ -115,8 +114,7 @@ class FormFillingActivityTest {
         val form = setupForm("forms/two-question.xml")
         val intent = FormFillingIntentFactory.newInstanceIntent(
             application,
-            FormsContract.getUri(projectId, form!!.dbId),
-            FormFillingActivity::class
+            FormsContract.getUri(projectId, form!!.dbId)
         )
 
         // Start activity
@@ -156,8 +154,7 @@ class FormFillingActivityTest {
         val form = setupForm("forms/two-question.xml")
         val intent = FormFillingIntentFactory.newInstanceIntent(
             application,
-            FormsContract.getUri(projectId, form!!.dbId),
-            FormFillingActivity::class
+            FormsContract.getUri(projectId, form!!.dbId)
         )
 
         // Start activity
@@ -201,8 +198,7 @@ class FormFillingActivityTest {
         val form = setupForm("forms/two-question-external.xml")
         val intent = FormFillingIntentFactory.newInstanceIntent(
             application,
-            FormsContract.getUri(projectId, form!!.dbId),
-            FormFillingActivity::class
+            FormsContract.getUri(projectId, form!!.dbId)
         )
 
         // Start activity

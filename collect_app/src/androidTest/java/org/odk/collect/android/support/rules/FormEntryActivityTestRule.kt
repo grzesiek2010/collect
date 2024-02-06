@@ -17,6 +17,7 @@ import org.odk.collect.android.support.StorageUtils
 import org.odk.collect.android.support.pages.FormEntryPage
 import org.odk.collect.android.support.pages.FormHierarchyPage
 import org.odk.collect.android.support.pages.Page
+import org.odk.collect.android.support.pages.SavepointRecoveryDialogPage
 import org.odk.collect.androidtest.ActivityScenarioExtensions.saveInstanceState
 import timber.log.Timber
 import java.io.IOException
@@ -57,6 +58,12 @@ open class FormEntryActivityTestRule :
         return destination.assertOnPage()
     }
 
+    fun fillNewFormWithSavepoint(formFilename: String): SavepointRecoveryDialogPage {
+        intent = createNewFormIntent(formFilename)
+        scenario = ActivityScenario.launch(intent)
+        return SavepointRecoveryDialogPage().assertOnPage()
+    }
+
     fun fillNewForm(formFilename: String, formName: String): FormEntryPage {
         return fillNewForm(formFilename, FormEntryPage(formName))
     }
@@ -65,6 +72,12 @@ open class FormEntryActivityTestRule :
         intent = createEditFormIntent(formFilename)
         scenario = ActivityScenario.launch(intent)
         return FormHierarchyPage(instanceName).assertOnPage()
+    }
+
+    fun editFormWithSavepoint(formFilename: String): SavepointRecoveryDialogPage {
+        intent = createEditFormIntent(formFilename)
+        scenario = ActivityScenario.launch(intent)
+        return SavepointRecoveryDialogPage().assertOnPage()
     }
 
     fun navigateAwayFromActivity(): FormEntryActivityTestRule {
@@ -94,8 +107,7 @@ open class FormEntryActivityTestRule :
 
         return FormFillingIntentFactory.newInstanceIntent(
             application,
-            FormsContract.getUri(projectId, form!!.dbId),
-            FormFillingActivity::class
+            FormsContract.getUri(projectId, form!!.dbId)
         )
     }
 
@@ -113,8 +125,7 @@ open class FormEntryActivityTestRule :
         return FormFillingIntentFactory.editInstanceIntent(
             application,
             projectId,
-            instance.dbId,
-            FormFillingActivity::class
+            instance.dbId
         )
     }
 }
