@@ -187,12 +187,6 @@ class FormUriActivity : ComponentActivity() {
                         ApplicationConstants.FormModes.VIEW_SENT
                     )
                 }
-                if (savepoint != null) {
-                    putExtra(
-                        ApplicationConstants.BundleKeys.SAVEPOINT,
-                        savepoint
-                    )
-                }
             }
         )
     }

@@ -707,14 +707,13 @@ public class FormFillingActivity extends LocalizedActivity implements AnimationL
 
     private void loadFromIntent(Intent intent) {
         Uri uri = intent.getData();
-        Savepoint savepoint = (Savepoint) intent.getSerializableExtra(ApplicationConstants.BundleKeys.SAVEPOINT);
         String uriMimeType = null;
 
         if (uri != null) {
             uriMimeType = getContentResolver().getType(uri);
         }
 
-        formLoaderTask = new FormLoaderTask(uri, uriMimeType, startingXPath, waitingXPath, formEntryControllerFactory, scheduler, savepoint);
+        formLoaderTask = new FormLoaderTask(uri, uriMimeType, startingXPath, waitingXPath, formEntryControllerFactory, scheduler, new SavepointsRepositoryProvider(this, storagePathProvider).get());
         formLoaderTask.setFormLoaderListener(this);
         showIfNotShowing(FormLoadingDialogFragment.class, getSupportFragmentManager());
         formLoaderTask.execute();

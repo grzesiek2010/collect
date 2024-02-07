@@ -53,12 +53,14 @@ import org.odk.collect.android.utilities.ExternalizableFormDefCache;
 import org.odk.collect.android.utilities.FileUtils;
 import org.odk.collect.android.utilities.FormsRepositoryProvider;
 import org.odk.collect.android.utilities.InstancesRepositoryProvider;
+import org.odk.collect.android.utilities.SavepointsRepositoryProvider;
 import org.odk.collect.android.utilities.ZipUtils;
 import org.odk.collect.async.Scheduler;
 import org.odk.collect.async.SchedulerAsyncTaskMimic;
 import org.odk.collect.forms.Form;
 import org.odk.collect.forms.instances.Instance;
 import org.odk.collect.forms.savepoints.Savepoint;
+import org.odk.collect.forms.savepoints.SavepointsRepository;
 import org.odk.collect.shared.strings.Md5;
 
 import java.io.File;
@@ -96,7 +98,8 @@ public class FormLoaderTask extends SchedulerAsyncTaskMimic<Void, String, FormLo
     private FormDef formDef;
     private Form form;
     private Instance instance;
-    private final Savepoint savepoint;
+    private final SavepointsRepository savepointsRepository;
+    private Savepoint savepoint;
 
     @Override
     protected void onPreExecute() {
@@ -139,14 +142,14 @@ public class FormLoaderTask extends SchedulerAsyncTaskMimic<Void, String, FormLo
 
     FECWrapper data;
 
-    public FormLoaderTask(Uri uri, String uriMimeType, String xpath, String waitingXPath, FormEntryControllerFactory formEntryControllerFactory, Scheduler scheduler, Savepoint savepoint) {
+    public FormLoaderTask(Uri uri, String uriMimeType, String xpath, String waitingXPath, FormEntryControllerFactory formEntryControllerFactory, Scheduler scheduler, SavepointsRepository savepointsRepository) {
         super(scheduler);
         this.uri = uri;
         this.uriMimeType = uriMimeType;
         this.xpath = xpath;
         this.waitingXPath = waitingXPath;
         this.formEntryControllerFactory = formEntryControllerFactory;
-        this.savepoint = savepoint;
+        this.savepointsRepository = savepointsRepository;
     }
 
     /**
@@ -164,8 +167,10 @@ public class FormLoaderTask extends SchedulerAsyncTaskMimic<Void, String, FormLo
             List<Form> candidateForms = new FormsRepositoryProvider(Collect.getInstance()).get().getAllByFormIdAndVersion(instance.getFormId(), instance.getFormVersion());
 
             form = candidateForms.get(0);
+            savepoint = savepointsRepository.get(form.getDbId(), instance.getDbId());
         } else if (uriMimeType != null && uriMimeType.equals(FormsContract.CONTENT_ITEM_TYPE)) {
             form = new FormsRepositoryProvider(Collect.getInstance()).get().get(ContentUriHelper.getIdFromUri(uri));
+            savepoint = savepointsRepository.get(form.getDbId(), null);
             instancePath = savepoint != null ? savepoint.getInstanceFilePath() : null;
         }
 

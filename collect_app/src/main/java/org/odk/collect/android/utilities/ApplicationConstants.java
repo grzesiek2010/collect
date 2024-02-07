@@ -26,7 +26,6 @@ public class ApplicationConstants {
 
     public abstract static class BundleKeys {
         public static final String FORM_MODE = "formMode";
-        public static final String SAVEPOINT = "savepoint";
         public static final String SUCCESS_KEY = "SUCCESSFUL";
         public static final String FORM_IDS = "FORM_IDS";
         public static final String MESSAGE = "MESSAGE";
