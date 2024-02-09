@@ -36,10 +36,10 @@ public class AudioRecorderRecordingStatusHandler implements RecordingStatusHandl
     @Override
     public void onRecordingStatusChange(FormEntryPrompt prompt, Consumer<Pair<Long, Integer>> statusListener) {
         audioRecorder.getCurrentSession().observe(lifecycleOwner, session -> {
-            if (session != null && session.getId().equals(prompt.getIndex())) {
-                statusListener.accept(new Pair<>(session.getDuration(), session.getAmplitude()));
-            } else {
+            if (session == null) {
                 statusListener.accept(null);
+            } else if (session.getId().equals(prompt.getIndex())) {
+                statusListener.accept(new Pair<>(session.getDuration(), session.getAmplitude()));
             }
         });
     }
