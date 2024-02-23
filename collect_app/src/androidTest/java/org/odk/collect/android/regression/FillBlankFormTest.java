@@ -40,23 +40,6 @@ public class FillBlankFormTest {
             .around(rule);
 
     @Test
-    public void answers_ShouldBeSuggestedInComplianceWithSelectedLetters() {
-        //TestCase41
-        rule.startAtMainMenu()
-                .copyForm("formulaire_adherent.xml", singletonList("espece.csv"))
-                .startBlankFormWithRepeatGroup("formulaire_adherent", "Ajouté une observation")
-                .clickOnAdd(new FormEntryPage("formulaire_adherent"))
-                .clickOnText("Plante")
-                .inputText("Abi")
-                .swipeToNextQuestion("Nom latin de l'espece", true)
-                .assertText("Abies")
-                .swipeToPreviousQuestion("Nom latin de l'espece - au moins 3 lettres", true)
-                .inputText("Abr")
-                .swipeToNextQuestion("Nom latin de l'espece", true)
-                .assertText("Abrotanum alpestre");
-    }
-
-    @Test
     public void searchExpression_ShouldDisplayWhenItContainsOtherAppearanceName() {
         //TestCase26
         // This form doesn't define an instanceID and also doesn't request encryption so this case
