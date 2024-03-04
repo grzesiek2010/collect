@@ -1,9 +1,11 @@
 package org.odk.collect.android.formmanagement.formmap
 
 import android.content.res.Resources
+import android.view.View
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
+import com.google.android.material.color.MaterialColors
 import org.json.JSONException
 import org.json.JSONObject
 import org.odk.collect.android.R
@@ -11,6 +13,7 @@ import org.odk.collect.android.instancemanagement.getStatusDescription
 import org.odk.collect.android.instancemanagement.showAsEditable
 import org.odk.collect.androidshared.livedata.MutableNonNullLiveData
 import org.odk.collect.androidshared.livedata.NonNullLiveData
+import org.odk.collect.androidshared.system.ContextUtils
 import org.odk.collect.async.Scheduler
 import org.odk.collect.forms.Form
 import org.odk.collect.forms.FormsRepository
@@ -170,8 +173,17 @@ class FormMapViewModel(
                         instanceLastStatusChangeDate
                     )
                 ),
-                action
+                action,
+                status = instanceStatusToMappableSelectionItemStatus(instance)
             )
+        }
+    }
+
+    private fun instanceStatusToMappableSelectionItemStatus(instance: Instance): MappableSelectItem.Status? {
+        return when (instance.status) {
+            Instance.STATUS_INVALID, Instance.STATUS_INCOMPLETE -> MappableSelectItem.Status.ERRORS
+            Instance.STATUS_VALID -> MappableSelectItem.Status.NO_ERRORS
+            else -> null
         }
     }
 

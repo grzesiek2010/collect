@@ -63,7 +63,8 @@ sealed interface MappableSelectItem {
         val action: IconifiedText,
         override val selected: Boolean = false,
         override val color: String? = null,
-        override val symbol: String? = null
+        override val symbol: String? = null,
+        val status: Status? = null
     ) : MappableSelectItem {
 
         constructor(
@@ -77,7 +78,8 @@ sealed interface MappableSelectItem {
             action: IconifiedText,
             selected: Boolean = false,
             color: String? = null,
-            symbol: String? = null
+            symbol: String? = null,
+            status: Status? = null,
         ) : this(
             id,
             listOf(MapPoint(latitude, longitude)),
@@ -88,9 +90,12 @@ sealed interface MappableSelectItem {
             action,
             selected,
             color,
-            symbol
+            symbol,
+            status
         )
     }
 
     data class IconifiedText(val icon: Int?, val text: String)
+
+    enum class Status { ERRORS, NO_ERRORS }
 }
