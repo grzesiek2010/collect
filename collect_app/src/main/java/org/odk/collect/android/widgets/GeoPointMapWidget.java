@@ -64,14 +64,14 @@ public class GeoPointMapWidget extends QuestionWidget implements WidgetDataRecei
             if (getFormEntryPrompt().isReadOnly()) {
                 binding.simpleButton.setVisibility(View.GONE);
             } else {
-                binding.simpleButton.setText(org.odk.collect.strings.R.string.get_point);
+                binding.simpleButton.setText(org.odk.collect.strings.R.string.get_location);
             }
             answerText = null;
         } else {
             if (getFormEntryPrompt().isReadOnly()) {
-                binding.simpleButton.setText(org.odk.collect.strings.R.string.geopoint_view_read_only);
+                binding.simpleButton.setText(org.odk.collect.strings.R.string.view_location);
             } else {
-                binding.simpleButton.setText(org.odk.collect.strings.R.string.view_change_location);
+                binding.simpleButton.setText(org.odk.collect.strings.R.string.view_or_change_location);
             }
 
             binding.geoAnswerText.setText(answerToDisplay);
@@ -94,7 +94,7 @@ public class GeoPointMapWidget extends QuestionWidget implements WidgetDataRecei
         answerText = null;
         binding.geoAnswerText.setText(null);
         binding.geoAnswerText.setVisibility(GONE);
-        binding.simpleButton.setText(org.odk.collect.strings.R.string.get_point);
+        binding.simpleButton.setText(org.odk.collect.strings.R.string.get_location);
         widgetValueChanged();
     }
 
@@ -118,12 +118,12 @@ public class GeoPointMapWidget extends QuestionWidget implements WidgetDataRecei
             answerText = null;
             binding.geoAnswerText.setText("");
             binding.geoAnswerText.setVisibility(GONE);
-            binding.simpleButton.setText(org.odk.collect.strings.R.string.get_point);
+            binding.simpleButton.setText(org.odk.collect.strings.R.string.get_location);
         } else {
             answerText = answer.toString();
             binding.geoAnswerText.setText(answerToDisplay);
             binding.geoAnswerText.setVisibility(VISIBLE);
-            binding.simpleButton.setText(org.odk.collect.strings.R.string.view_change_location);
+            binding.simpleButton.setText(org.odk.collect.strings.R.string.view_or_change_location);
         }
         widgetValueChanged();
     }

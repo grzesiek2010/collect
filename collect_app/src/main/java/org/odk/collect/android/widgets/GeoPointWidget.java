@@ -63,11 +63,11 @@ public class GeoPointWidget extends QuestionWidget implements WidgetDataReceiver
 
         String answerToDisplay = GeoWidgetUtils.getGeoPointAnswerToDisplay(getContext(), answerText);
         if (answerToDisplay.isEmpty()) {
-            binding.simpleButton.setText(org.odk.collect.strings.R.string.get_point);
+            binding.simpleButton.setText(org.odk.collect.strings.R.string.get_location);
             answerText = null;
         } else {
             binding.geoAnswerText.setText(answerToDisplay);
-            binding.simpleButton.setText(org.odk.collect.strings.R.string.change_location);
+            binding.simpleButton.setText(org.odk.collect.strings.R.string.view_or_change_location);
         }
         binding.geoAnswerText.setVisibility(binding.geoAnswerText.getText().toString().isBlank() ? GONE : VISIBLE);
 
@@ -87,7 +87,7 @@ public class GeoPointWidget extends QuestionWidget implements WidgetDataReceiver
         answerText = null;
         binding.geoAnswerText.setText(null);
         binding.geoAnswerText.setVisibility(GONE);
-        binding.simpleButton.setText(org.odk.collect.strings.R.string.get_point);
+        binding.simpleButton.setText(org.odk.collect.strings.R.string.get_location);
         widgetValueChanged();
     }
 
@@ -111,12 +111,12 @@ public class GeoPointWidget extends QuestionWidget implements WidgetDataReceiver
             answerText = null;
             binding.geoAnswerText.setText("");
             binding.geoAnswerText.setVisibility(GONE);
-            binding.simpleButton.setText(org.odk.collect.strings.R.string.get_point);
+            binding.simpleButton.setText(org.odk.collect.strings.R.string.get_location);
         } else {
             answerText = answer.toString();
             binding.geoAnswerText.setText(answerToDisplay);
             binding.geoAnswerText.setVisibility(VISIBLE);
-            binding.simpleButton.setText(org.odk.collect.strings.R.string.change_location);
+            binding.simpleButton.setText(org.odk.collect.strings.R.string.view_or_change_location);
         }
         widgetValueChanged();
     }
