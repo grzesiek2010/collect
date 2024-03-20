@@ -30,6 +30,7 @@ import org.odk.collect.android.injection.DaggerUtils
 import org.odk.collect.android.instancemanagement.InstancesDataService
 import org.odk.collect.android.projects.ProjectDependencyProviderFactory
 import org.odk.collect.android.projects.ProjectsDataService
+import org.odk.collect.android.utilities.ChangeLockProvider
 import org.odk.collect.androidshared.ui.FragmentFactoryBuilder
 import org.odk.collect.androidshared.ui.ListFragmentStateAdapter
 import org.odk.collect.androidshared.utils.AppBarUtils.setupAppBarLayout
@@ -55,6 +56,9 @@ class DeleteFormsActivity : LocalizedActivity() {
     @Inject
     lateinit var instanceDataService: InstancesDataService
 
+    @Inject
+    lateinit var changeLockProvider: ChangeLockProvider
+
     private lateinit var binding: TabsLayoutBinding
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -70,7 +74,8 @@ class DeleteFormsActivity : LocalizedActivity() {
             scheduler,
             projectDependencyProvider.generalSettings,
             projectId,
-            instanceDataService
+            instanceDataService,
+            changeLockProvider
         )
 
         val viewModelProvider = ViewModelProvider(this, viewModelFactory)
@@ -126,7 +131,8 @@ class DeleteFormsActivity : LocalizedActivity() {
         private val scheduler: Scheduler,
         private val generalSettings: Settings,
         private val projectId: String,
-        private val instancesDataService: InstancesDataService
+        private val instancesDataService: InstancesDataService,
+        private val changeLockProvider: ChangeLockProvider
     ) :
         ViewModelProvider.Factory {
 
@@ -145,7 +151,9 @@ class DeleteFormsActivity : LocalizedActivity() {
                 SavedFormListViewModel::class.java -> SavedFormListViewModel(
                     scheduler,
                     generalSettings,
-                    instancesDataService
+                    instancesDataService,
+                    projectId,
+                    changeLockProvider
                 )
 
                 else -> throw IllegalArgumentException()

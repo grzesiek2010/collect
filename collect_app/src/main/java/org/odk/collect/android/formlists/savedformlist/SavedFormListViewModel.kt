@@ -7,6 +7,7 @@ import androidx.lifecycle.asLiveData
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.combine
 import org.odk.collect.android.instancemanagement.InstancesDataService
+import org.odk.collect.android.utilities.ChangeLockProvider
 import org.odk.collect.androidshared.async.TrackableWorker
 import org.odk.collect.androidshared.data.Consumable
 import org.odk.collect.async.Scheduler
@@ -18,7 +19,9 @@ import org.odk.collect.shared.settings.Settings
 class SavedFormListViewModel(
     scheduler: Scheduler,
     private val settings: Settings,
-    private val instancesDataService: InstancesDataService
+    private val instancesDataService: InstancesDataService,
+    private val projectId: String,
+    private val changeLockProvider: ChangeLockProvider
 ) : ViewModel() {
 
     private val _sortOrder =
@@ -65,14 +68,18 @@ class SavedFormListViewModel(
 
     fun deleteForms(databaseIds: LongArray): LiveData<Consumable<Int>?> {
         val result = MutableLiveData<Consumable<Int>?>(null)
-        worker.immediate(
-            background = {
-                databaseIds.forEach { instancesDataService.deleteInstance(it) }
-            },
-            foreground = {
-                result.value = Consumable(databaseIds.count())
+        changeLockProvider.getInstanceLock(projectId).withLock { acquiredLock: Boolean ->
+            if (acquiredLock) {
+                worker.immediate(
+                    background = {
+                        databaseIds.forEach { instancesDataService.deleteInstance(it) }
+                    },
+                    foreground = {
+                        result.value = Consumable(databaseIds.count())
+                    }
+                )
             }
-        )
+        }
 
         return result
     }
