@@ -11,12 +11,16 @@ import org.junit.Test
 import org.junit.runner.RunWith
 import org.mockito.kotlin.doReturn
 import org.mockito.kotlin.mock
+import org.mockito.kotlin.times
+import org.mockito.kotlin.verify
 import org.mockito.kotlin.whenever
 import org.odk.collect.android.formlists.savedformlist.SavedFormListViewModel.SortOrder
 import org.odk.collect.android.instancemanagement.InstancesDataService
+import org.odk.collect.android.utilities.ChangeLockProvider
 import org.odk.collect.forms.instances.Instance
 import org.odk.collect.formstest.InstanceFixtures
 import org.odk.collect.shared.settings.InMemSettings
+import org.odk.collect.testshared.BooleanChangeLock
 import org.odk.collect.testshared.FakeScheduler
 import org.odk.collect.testshared.getOrAwaitValue
 
@@ -29,6 +33,12 @@ class SavedFormListViewModelTest {
     private val scheduler = FakeScheduler()
     private val settings = InMemSettings()
 
+    private val projectId = "123"
+    private val changeLock = BooleanChangeLock()
+    private val changeLockProvider = mock<ChangeLockProvider>().apply {
+        whenever(getInstanceLock(projectId)).thenReturn(changeLock)
+    }
+
     private val instancesDataService: InstancesDataService = mock {
         on { instances } doReturn MutableStateFlow(emptyList())
     }
@@ -39,7 +49,7 @@ class SavedFormListViewModelTest {
         val yourForm = InstanceFixtures.instance(displayName = "Your form")
         saveForms(listOf(myForm, yourForm))
 
-        val viewModel = SavedFormListViewModel(scheduler, settings, instancesDataService)
+        val viewModel = SavedFormListViewModel(scheduler, settings, instancesDataService, projectId, changeLockProvider)
 
         viewModel.filterText = "Your"
         assertThat(
@@ -60,7 +70,7 @@ class SavedFormListViewModelTest {
         val yourForm = InstanceFixtures.instance(displayName = "Your form")
         saveForms(listOf(myForm, yourForm))
 
-        val viewModel = SavedFormListViewModel(scheduler, settings, instancesDataService)
+        val viewModel = SavedFormListViewModel(scheduler, settings, instancesDataService, projectId, changeLockProvider)
 
         viewModel.filterText = "blah"
         assertThat(
@@ -81,7 +91,7 @@ class SavedFormListViewModelTest {
         val yourForm = InstanceFixtures.instance(displayName = "Your form")
         saveForms(listOf(myForm, yourForm))
 
-        val viewModel = SavedFormListViewModel(scheduler, settings, instancesDataService)
+        val viewModel = SavedFormListViewModel(scheduler, settings, instancesDataService, projectId, changeLockProvider)
 
         viewModel.filterText = "my"
         assertThat(
@@ -96,7 +106,7 @@ class SavedFormListViewModelTest {
         val b = InstanceFixtures.instance(displayName = "B")
         saveForms(listOf(b, a))
 
-        val viewModel = SavedFormListViewModel(scheduler, settings, instancesDataService)
+        val viewModel = SavedFormListViewModel(scheduler, settings, instancesDataService, projectId, changeLockProvider)
 
         viewModel.sortOrder = SortOrder.NAME_ASC
         assertThat(
@@ -111,7 +121,7 @@ class SavedFormListViewModelTest {
         val b = InstanceFixtures.instance(displayName = "B")
         saveForms(listOf(a, b))
 
-        val viewModel = SavedFormListViewModel(scheduler, settings, instancesDataService)
+        val viewModel = SavedFormListViewModel(scheduler, settings, instancesDataService, projectId, changeLockProvider)
 
         viewModel.sortOrder = SortOrder.NAME_DESC
         assertThat(
@@ -126,7 +136,7 @@ class SavedFormListViewModelTest {
         val b = InstanceFixtures.instance(displayName = "B", lastStatusChangeDate = 1)
         saveForms(listOf(a, b))
 
-        val viewModel = SavedFormListViewModel(scheduler, settings, instancesDataService)
+        val viewModel = SavedFormListViewModel(scheduler, settings, instancesDataService, projectId, changeLockProvider)
 
         viewModel.sortOrder = SortOrder.DATE_DESC
         assertThat(
@@ -141,7 +151,7 @@ class SavedFormListViewModelTest {
         val b = InstanceFixtures.instance(displayName = "B", lastStatusChangeDate = 1)
         saveForms(listOf(b, a))
 
-        val viewModel = SavedFormListViewModel(scheduler, settings, instancesDataService)
+        val viewModel = SavedFormListViewModel(scheduler, settings, instancesDataService, projectId, changeLockProvider)
 
         viewModel.sortOrder = SortOrder.DATE_ASC
         assertThat(
@@ -156,10 +166,10 @@ class SavedFormListViewModelTest {
         val b = InstanceFixtures.instance(displayName = "B", lastStatusChangeDate = 1)
         saveForms(listOf(b, a))
 
-        val viewModel = SavedFormListViewModel(scheduler, settings, instancesDataService)
+        val viewModel = SavedFormListViewModel(scheduler, settings, instancesDataService, projectId, changeLockProvider)
         viewModel.sortOrder = SortOrder.DATE_ASC
 
-        val newViewModel = SavedFormListViewModel(scheduler, settings, instancesDataService)
+        val newViewModel = SavedFormListViewModel(scheduler, settings, instancesDataService, projectId, changeLockProvider)
         assertThat(newViewModel.sortOrder, equalTo(SortOrder.DATE_ASC))
         assertThat(
             newViewModel.formsToDisplay.getOrAwaitValue(scheduler),
@@ -169,7 +179,7 @@ class SavedFormListViewModelTest {
 
     @Test
     fun `isDeleting is true while deleting forms`() {
-        val viewModel = SavedFormListViewModel(scheduler, settings, instancesDataService)
+        val viewModel = SavedFormListViewModel(scheduler, settings, instancesDataService, projectId, changeLockProvider)
         assertThat(viewModel.isDeleting.getOrAwaitValue(), equalTo(false))
 
         viewModel.deleteForms(longArrayOf(1))
@@ -177,6 +187,25 @@ class SavedFormListViewModelTest {
 
         scheduler.flush()
         assertThat(viewModel.isDeleting.getOrAwaitValue(), equalTo(false))
+    }
+
+    @Test
+    fun `instances should not be deleted if the instances database is locked`() {
+        val viewModel = SavedFormListViewModel(scheduler, settings, instancesDataService, projectId, changeLockProvider)
+
+        changeLock.lock()
+        viewModel.deleteForms(longArrayOf(1))
+        scheduler.flush()
+        verify(instancesDataService, times(0)).deleteInstance(1)
+    }
+
+    @Test
+    fun `instances should be deleted if the instances database is not locked`() {
+        val viewModel = SavedFormListViewModel(scheduler, settings, instancesDataService, projectId, changeLockProvider)
+
+        viewModel.deleteForms(longArrayOf(1))
+        scheduler.flush()
+        verify(instancesDataService, times(1)).deleteInstance(1)
     }
 
     private fun saveForms(instances: List<Instance>) {
