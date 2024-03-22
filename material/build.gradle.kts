@@ -48,6 +48,7 @@ dependencies {
 
     implementation(project(":androidshared"))
     implementation(project(":strings"))
+    implementation(project(":icons"))
     implementation(Dependencies.androidx_appcompat)
     implementation(Dependencies.android_material)
     implementation(Dependencies.androidx_fragment_ktx)
