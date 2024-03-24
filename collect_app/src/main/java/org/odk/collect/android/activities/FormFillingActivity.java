@@ -552,9 +552,7 @@ public class FormFillingActivity extends LocalizedActivity implements AnimationL
         formEntryViewModel = viewModelProvider.get(FormEntryViewModel.class);
         printerWidgetViewModel = viewModelProvider.get(PrinterWidgetViewModel.class);
 
-        formEntryViewModel.getCurrentIndex().observe(this, index -> {
-            formIndexAnimationHandler.handle(index);
-        });
+        formEntryViewModel.getCurrentIndex().observe(this, pair -> formIndexAnimationHandler.handle(pair.component1()));
 
         formEntryViewModel.isLoading().observe(this, isLoading -> {
             findViewById(R.id.loading_screen).setVisibility(isLoading ? View.VISIBLE : View.GONE);
@@ -567,24 +565,6 @@ public class FormFillingActivity extends LocalizedActivity implements AnimationL
                 createErrorDialog(error);
                 formEntryViewModel.errorDisplayed();
             }
-        });
-
-        formEntryViewModel.getValidationResult().observe(this, consumable -> {
-            if (consumable.isConsumed()) {
-                return;
-            }
-            ValidationResult validationResult = consumable.getValue();
-            if (validationResult instanceof FailedValidationResult failedValidationResult) {
-                String errorMessage = failedValidationResult.getCustomErrorMessage();
-                if (errorMessage == null) {
-                    errorMessage = getString(failedValidationResult.getDefaultErrorMessage());
-                }
-                getCurrentViewIfODKView().setErrorForQuestionWithIndex(failedValidationResult.getIndex(), errorMessage);
-                swipeHandler.setBeenSwiped(false);
-            } else if (validationResult instanceof SuccessValidationResult) {
-                SnackbarUtils.showLongSnackbar(findViewById(R.id.llParent), getString(org.odk.collect.strings.R.string.success_form_validation), findViewById(R.id.buttonholder));
-            }
-            consumable.consume();
         });
 
         formSaveViewModel = viewModelProvider.get(FormSaveViewModel.class);

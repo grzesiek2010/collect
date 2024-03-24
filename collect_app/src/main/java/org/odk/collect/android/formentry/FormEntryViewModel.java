@@ -29,7 +29,6 @@ import org.odk.collect.android.javarosawrapper.RepeatsInFieldListException;
 import org.odk.collect.android.javarosawrapper.ValidationResult;
 import org.odk.collect.android.widgets.interfaces.SelectChoiceLoader;
 import org.odk.collect.androidshared.async.TrackableWorker;
-import org.odk.collect.androidshared.data.Consumable;
 import org.odk.collect.androidshared.livedata.MutableNonNullLiveData;
 import org.odk.collect.androidshared.livedata.NonNullLiveData;
 import org.odk.collect.async.Cancellable;
@@ -43,15 +42,16 @@ import java.util.List;
 import java.util.Map;
 import java.util.function.Supplier;
 
+import kotlin.Pair;
+
 public class FormEntryViewModel extends ViewModel implements SelectChoiceLoader {
 
     private final Supplier<Long> clock;
 
     private final MutableLiveData<FormError> error = new MutableLiveData<>(null);
     private final MutableNonNullLiveData<Boolean> hasBackgroundRecording = new MutableNonNullLiveData<>(false);
-    private final MutableLiveData<FormIndex> currentIndex = new MutableLiveData<>(null);
-    private final MutableLiveData<Consumable<ValidationResult>>
-            validationResult = new MutableLiveData<>(new Consumable<>(null));
+    private final MutableLiveData<Pair<FormIndex, FailedValidationResult>> currentIndex = new MutableLiveData<>(null);
+
     @NonNull
     private final FormSessionRepository formSessionRepository;
     private final String sessionId;
@@ -102,16 +102,12 @@ public class FormEntryViewModel extends ViewModel implements SelectChoiceLoader 
         return formController;
     }
 
-    public LiveData<FormIndex> getCurrentIndex() {
+    public LiveData<Pair<FormIndex, FailedValidationResult>> getCurrentIndex() {
         return currentIndex;
     }
 
     public LiveData<FormError> getError() {
         return error;
-    }
-
-    public LiveData<Consumable<ValidationResult>> getValidationResult() {
-        return validationResult;
     }
 
     public NonNullLiveData<Boolean> isLoading() {
@@ -126,7 +122,7 @@ public class FormEntryViewModel extends ViewModel implements SelectChoiceLoader 
 
         jumpBackIndex = formController.getFormIndex();
         jumpToNewRepeat();
-        updateIndex(false);
+        updateIndex(false, null);
     }
 
     public void jumpToNewRepeat() {
@@ -154,7 +150,7 @@ public class FormEntryViewModel extends ViewModel implements SelectChoiceLoader 
             }
         }
 
-        updateIndex(false);
+        updateIndex(false, null);
     }
 
     public void cancelRepeatPrompt() {
@@ -174,7 +170,7 @@ public class FormEntryViewModel extends ViewModel implements SelectChoiceLoader 
                 }
             }
 
-            updateIndex(true);
+            updateIndex(true, null);
             return null;
         }, ignored -> {});
     }
@@ -204,7 +200,7 @@ public class FormEntryViewModel extends ViewModel implements SelectChoiceLoader 
                 try {
                     formController.stepToNextScreenEvent();
                     formController.getAuditEventLogger().flush(); // Close events waiting for an end time
-                    updateIndex(true);
+                    updateIndex(true, null);
                 } catch (JavaRosaException e) {
                     error.postValue(new FormError.NonFatal(e.getCause().getMessage()));
                 }
@@ -223,7 +219,7 @@ public class FormEntryViewModel extends ViewModel implements SelectChoiceLoader 
                 try {
                     formController.stepToPreviousScreenEvent();
                     formController.getAuditEventLogger().flush(); // Close events waiting for an end time
-                    updateIndex(true);
+                    updateIndex(true, null);
                 } catch (JavaRosaException e) {
                     error.postValue(new FormError.NonFatal(e.getCause().getMessage()));
                 }
@@ -250,7 +246,7 @@ public class FormEntryViewModel extends ViewModel implements SelectChoiceLoader 
         try {
             ValidationResult result = formController.saveAllScreenAnswers(answers, evaluateConstraints);
             if (result instanceof FailedValidationResult) {
-                validationResult.postValue(new Consumable<>(result));
+                updateIndex(false, (FailedValidationResult) result);
                 return false;
             }
         } catch (JavaRosaException e) {
@@ -307,17 +303,17 @@ public class FormEntryViewModel extends ViewModel implements SelectChoiceLoader 
      */
     @Deprecated
     public void refreshSync() {
-        updateIndex(false);
+        updateIndex(false, null);
     }
 
     public void refresh() {
         worker.immediate((Supplier<Void>) () -> {
-            updateIndex(true);
+            updateIndex(true, null);
             return null;
         }, ignored -> {});
     }
 
-    private void updateIndex(boolean isAsync) {
+    private void updateIndex(boolean isAsync, FailedValidationResult failedValidationResult) {
         choices.clear();
 
         if (formController != null) {
@@ -347,9 +343,9 @@ public class FormEntryViewModel extends ViewModel implements SelectChoiceLoader 
 
             AuditUtils.logCurrentScreen(formController, formController.getAuditEventLogger(), clock.get());
             if (isAsync) {
-                currentIndex.postValue(formController.getFormIndex());
+                currentIndex.postValue(new Pair<>(formController.getFormIndex(), failedValidationResult));
             } else {
-                currentIndex.setValue(formController.getFormIndex());
+                currentIndex.setValue(new Pair<>(formController.getFormIndex(), failedValidationResult));
             }
         }
     }
@@ -361,7 +357,6 @@ public class FormEntryViewModel extends ViewModel implements SelectChoiceLoader 
     public void validate() {
         worker.immediate(
                 () -> {
-                    FormIndex originalIndex = formController.getFormIndex();
                     ValidationResult result = null;
                     try {
                         result = formController.validateAnswers(true, true);
@@ -370,10 +365,7 @@ public class FormEntryViewModel extends ViewModel implements SelectChoiceLoader 
                     }
 
                     // JavaRosa moves to the index where the contraint failed
-                    if (result instanceof FailedValidationResult && !((FailedValidationResult) result).getIndex().equals(originalIndex)) {
-                        updateIndex(true);
-                    }
-                    validationResult.postValue(new Consumable<>(result));
+                    updateIndex(true, (FailedValidationResult) result);
                     return null;
                 }, ignored -> {}
         );
