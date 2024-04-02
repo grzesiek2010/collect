@@ -8,7 +8,7 @@ import org.mockito.kotlin.whenever
 import org.odk.collect.android.projects.ProjectsDataService
 import org.odk.collect.android.utilities.ChangeLockProvider
 import org.odk.collect.android.utilities.FormsRepositoryProvider
-import org.odk.collect.android.utilities.InstancesRepositoryProvider
+import org.odk.collect.android.utilities.DatabaseInstancesRepositoryProvider
 import org.odk.collect.projects.Project
 import org.odk.collect.testshared.BooleanChangeLock
 
@@ -16,7 +16,7 @@ class InstancesDataServiceTest {
     private val formsRepositoryProvider = mock<FormsRepositoryProvider>().apply {
         whenever(get()).thenReturn(mock())
     }
-    private val instancesRepositoryProvider = mock<InstancesRepositoryProvider>().apply {
+    private val instancesRepositoryProvider = mock<DatabaseInstancesRepositoryProvider>().apply {
         whenever(get()).thenReturn(mock())
     }
     val project = Project.Saved("1", "Test", "T", "#000000")

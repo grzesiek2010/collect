@@ -40,7 +40,7 @@ class InstancesRepositoryProviderTest {
             } doReturn instancesDir.absolutePath
         }
 
-        val instancesRepositoryProvider = InstancesRepositoryProvider(context, storagePathProvider)
+        val instancesRepositoryProvider = DatabaseInstancesRepositoryProvider(context, storagePathProvider)
         val repository = instancesRepositoryProvider.get(projectId)
 
         val instance = repository.save(

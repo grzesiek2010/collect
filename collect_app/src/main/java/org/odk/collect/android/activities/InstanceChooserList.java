@@ -54,7 +54,7 @@ import org.odk.collect.android.instancemanagement.FinalizeAllSnackbarPresenter;
 import org.odk.collect.android.projects.ProjectsDataService;
 import org.odk.collect.android.utilities.ApplicationConstants;
 import org.odk.collect.android.utilities.FormsRepositoryProvider;
-import org.odk.collect.android.utilities.InstancesRepositoryProvider;
+import org.odk.collect.android.utilities.DatabaseInstancesRepositoryProvider;
 import org.odk.collect.androidshared.ui.multiclicksafe.MultiClickGuard;
 import org.odk.collect.async.Scheduler;
 import org.odk.collect.forms.Form;
@@ -91,7 +91,7 @@ public class InstanceChooserList extends AppListActivity implements AdapterView.
     Scheduler scheduler;
 
     @Inject
-    InstancesRepositoryProvider instancesRepositoryProvider;
+    DatabaseInstancesRepositoryProvider instancesRepositoryProvider;
 
     @Inject
     EntitiesRepositoryProvider entitiesRepositoryProvider;

@@ -43,7 +43,7 @@ import org.odk.collect.android.storage.StoragePathProvider
 import org.odk.collect.android.support.CollectHelpers
 import org.odk.collect.android.utilities.ApplicationConstants
 import org.odk.collect.android.utilities.FormsRepositoryProvider
-import org.odk.collect.android.utilities.InstancesRepositoryProvider
+import org.odk.collect.android.utilities.DatabaseInstancesRepositoryProvider
 import org.odk.collect.android.utilities.SavepointsRepositoryProvider
 import org.odk.collect.androidtest.ActivityScenarioLauncherRule
 import org.odk.collect.androidtest.RecordedIntentsRule
@@ -121,8 +121,8 @@ class FormUriActivityTest {
             override fun providesInstancesRepositoryProvider(
                 context: Context,
                 storagePathProvider: StoragePathProvider
-            ): InstancesRepositoryProvider {
-                return mock<InstancesRepositoryProvider>().apply {
+            ): DatabaseInstancesRepositoryProvider {
+                return mock<DatabaseInstancesRepositoryProvider>().apply {
                     whenever(get()).thenReturn(instancesRepository)
                 }
             }

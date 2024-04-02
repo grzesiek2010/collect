@@ -14,7 +14,7 @@ import org.odk.collect.android.preferences.utilities.FormUpdateMode
 import org.odk.collect.android.preferences.utilities.SettingsUtils
 import org.odk.collect.android.utilities.ContentUriHelper
 import org.odk.collect.android.utilities.FormsRepositoryProvider
-import org.odk.collect.android.utilities.InstancesRepositoryProvider
+import org.odk.collect.android.utilities.DatabaseInstancesRepositoryProvider
 import org.odk.collect.android.version.VersionInformation
 import org.odk.collect.async.Scheduler
 import org.odk.collect.forms.instances.Instance
@@ -22,14 +22,14 @@ import org.odk.collect.settings.SettingsProvider
 import org.odk.collect.settings.keys.ProtectedProjectKeys
 
 class MainMenuViewModel(
-    private val application: Application,
-    private val versionInformation: VersionInformation,
-    private val settingsProvider: SettingsProvider,
-    private val instancesDataService: InstancesDataService,
-    private val scheduler: Scheduler,
-    private val formsRepositoryProvider: FormsRepositoryProvider,
-    private val instancesRepositoryProvider: InstancesRepositoryProvider,
-    private val autoSendSettingsProvider: AutoSendSettingsProvider
+        private val application: Application,
+        private val versionInformation: VersionInformation,
+        private val settingsProvider: SettingsProvider,
+        private val instancesDataService: InstancesDataService,
+        private val scheduler: Scheduler,
+        private val formsRepositoryProvider: FormsRepositoryProvider,
+        private val instancesRepositoryProvider: DatabaseInstancesRepositoryProvider,
+        private val autoSendSettingsProvider: AutoSendSettingsProvider
 ) : ViewModel() {
 
     val version: String

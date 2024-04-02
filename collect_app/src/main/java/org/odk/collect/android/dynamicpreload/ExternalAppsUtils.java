@@ -38,7 +38,7 @@ import org.odk.collect.android.application.Collect;
 import org.odk.collect.android.exception.ExternalParamsException;
 import org.odk.collect.android.javarosawrapper.FormController;
 import org.odk.collect.forms.instances.Instance;
-import org.odk.collect.android.utilities.InstancesRepositoryProvider;
+import org.odk.collect.android.utilities.DatabaseInstancesRepositoryProvider;
 
 import java.io.Serializable;
 import java.util.ArrayList;
@@ -151,7 +151,7 @@ public final class ExternalAppsUtils {
             String path = formController.getInstanceFile().getAbsolutePath();
 
             String instanceProviderID = "-1";
-            Instance instance = new InstancesRepositoryProvider(Collect.getInstance()).get().getOneByPath(path);
+            Instance instance = new DatabaseInstancesRepositoryProvider(Collect.getInstance()).get().getOneByPath(path);
             if (instance != null) {
                 instanceProviderID = instance.getDbId().toString();
             }

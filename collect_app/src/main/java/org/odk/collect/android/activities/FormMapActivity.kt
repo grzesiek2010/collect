@@ -24,7 +24,7 @@ import org.odk.collect.android.formmanagement.formmap.FormMapViewModel
 import org.odk.collect.android.injection.DaggerUtils
 import org.odk.collect.android.projects.ProjectsDataService
 import org.odk.collect.android.utilities.FormsRepositoryProvider
-import org.odk.collect.android.utilities.InstancesRepositoryProvider
+import org.odk.collect.android.utilities.DatabaseInstancesRepositoryProvider
 import org.odk.collect.androidshared.ui.FragmentFactoryBuilder
 import org.odk.collect.async.Scheduler
 import org.odk.collect.geo.selection.SelectionMapFragment
@@ -41,7 +41,7 @@ class FormMapActivity : LocalizedActivity() {
     lateinit var formsRepositoryProvider: FormsRepositoryProvider
 
     @Inject
-    lateinit var instancesRepositoryProvider: InstancesRepositoryProvider
+    lateinit var instancesRepositoryProvider: DatabaseInstancesRepositoryProvider
 
     @Inject
     lateinit var settingsProvider: SettingsProvider

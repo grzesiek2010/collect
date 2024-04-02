@@ -31,7 +31,7 @@ import org.odk.collect.android.storage.StorageSubdirectory;
 import org.odk.collect.android.tasks.SaveFormToDisk;
 import org.odk.collect.android.utilities.EncryptionUtils;
 import org.odk.collect.android.utilities.FormsRepositoryProvider;
-import org.odk.collect.android.utilities.InstancesRepositoryProvider;
+import org.odk.collect.android.utilities.DatabaseInstancesRepositoryProvider;
 import org.odk.collect.forms.Form;
 import org.odk.collect.forms.instances.Instance;
 import org.odk.collect.forms.instances.InstancesRepository;
@@ -68,7 +68,7 @@ public class InstanceDiskSynchronizer {
 
     public InstanceDiskSynchronizer(SettingsProvider settingsProvider) {
         this.settingsProvider = settingsProvider;
-        instancesRepository = new InstancesRepositoryProvider(Collect.getInstance()).get();
+        instancesRepository = new DatabaseInstancesRepositoryProvider(Collect.getInstance()).get();
         AppDependencyComponent component = DaggerUtils.getComponent(Collect.getInstance());
         projectsDataService = component.currentProjectProvider();
     }

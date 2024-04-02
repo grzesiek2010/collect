@@ -55,7 +55,7 @@ import org.odk.collect.android.storage.StoragePathProvider;
 import org.odk.collect.android.storage.StorageSubdirectory;
 import org.odk.collect.android.utilities.ContentUriHelper;
 import org.odk.collect.android.utilities.FormsRepositoryProvider;
-import org.odk.collect.android.utilities.InstancesRepositoryProvider;
+import org.odk.collect.android.utilities.DatabaseInstancesRepositoryProvider;
 import org.odk.collect.forms.Form;
 import org.odk.collect.forms.FormsRepository;
 import org.odk.collect.forms.instances.InstancesRepository;
@@ -82,7 +82,7 @@ public class FormsProvider extends ContentProvider {
     FormsRepositoryProvider formsRepositoryProvider;
 
     @Inject
-    InstancesRepositoryProvider instancesRepositoryProvider;
+    DatabaseInstancesRepositoryProvider instancesRepositoryProvider;
 
     @Inject
     FastExternalItemsetsRepository fastExternalItemsetsRepository;

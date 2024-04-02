@@ -32,6 +32,7 @@ import org.odk.collect.android.application.initialization.ExistingSettingsMigrat
 import org.odk.collect.android.application.initialization.FormUpdatesUpgrade;
 import org.odk.collect.android.application.initialization.GoogleDriveProjectsDeleter;
 import org.odk.collect.android.application.initialization.MapsInitializer;
+import org.odk.collect.android.application.initialization.SavepointsMigrator;
 import org.odk.collect.android.application.initialization.upgrade.UpgradeInitializer;
 import org.odk.collect.android.backgroundwork.FormUpdateAndInstanceSubmitScheduler;
 import org.odk.collect.android.backgroundwork.FormUpdateScheduler;
@@ -90,7 +91,7 @@ import org.odk.collect.android.utilities.ExternalWebPageHelper;
 import org.odk.collect.android.utilities.FileProvider;
 import org.odk.collect.android.utilities.FormsRepositoryProvider;
 import org.odk.collect.android.utilities.ImageCompressionController;
-import org.odk.collect.android.utilities.InstancesRepositoryProvider;
+import org.odk.collect.android.utilities.DatabaseInstancesRepositoryProvider;
 import org.odk.collect.android.utilities.MediaUtils;
 import org.odk.collect.android.projects.ProjectResetter;
 import org.odk.collect.android.utilities.SavepointsRepositoryProvider;
@@ -441,7 +442,7 @@ public class AppDependencyModule {
     }
 
     @Provides
-    public InstancesDataService providesInstancesDataService(Application application, InstancesRepositoryProvider instancesRepositoryProvider, ProjectsDataService projectsDataService, FormsRepositoryProvider formsRepositoryProvider, EntitiesRepositoryProvider entitiesRepositoryProvider, StoragePathProvider storagePathProvider, InstanceSubmitScheduler instanceSubmitScheduler, SavepointsRepositoryProvider savepointsRepositoryProvider, ChangeLockProvider changeLockProvider) {
+    public InstancesDataService providesInstancesDataService(Application application, DatabaseInstancesRepositoryProvider instancesRepositoryProvider, ProjectsDataService projectsDataService, FormsRepositoryProvider formsRepositoryProvider, EntitiesRepositoryProvider entitiesRepositoryProvider, StoragePathProvider storagePathProvider, InstanceSubmitScheduler instanceSubmitScheduler, SavepointsRepositoryProvider savepointsRepositoryProvider, ChangeLockProvider changeLockProvider) {
         Function0<Unit> onUpdate = () -> {
             application.getContentResolver().notifyChange(
                     InstancesContract.getUri(projectsDataService.getCurrentProject().getUuid()),
@@ -470,8 +471,8 @@ public class AppDependencyModule {
     }
 
     @Provides
-    public InstancesRepositoryProvider providesInstancesRepositoryProvider(Context context, StoragePathProvider storagePathProvider) {
-        return new InstancesRepositoryProvider(context, storagePathProvider);
+    public DatabaseInstancesRepositoryProvider providesInstancesRepositoryProvider(Context context, StoragePathProvider storagePathProvider) {
+        return new DatabaseInstancesRepositoryProvider(context, storagePathProvider);
     }
 
     @Provides
@@ -485,7 +486,7 @@ public class AppDependencyModule {
     }
 
     @Provides
-    public ReadyToSendViewModel.Factory providesReadyToSendViewModel(InstancesRepositoryProvider instancesRepositoryProvider, Scheduler scheduler) {
+    public ReadyToSendViewModel.Factory providesReadyToSendViewModel(DatabaseInstancesRepositoryProvider instancesRepositoryProvider, Scheduler scheduler) {
         return new ReadyToSendViewModel.Factory(instancesRepositoryProvider.get(), scheduler, System::currentTimeMillis);
     }
 
@@ -494,7 +495,7 @@ public class AppDependencyModule {
                                                                      SettingsProvider settingsProvider, InstancesDataService instancesDataService,
                                                                      Scheduler scheduler, ProjectsDataService projectsDataService,
                                                                      AnalyticsInitializer analyticsInitializer, PermissionsChecker permissionChecker,
-                                                                     FormsRepositoryProvider formsRepositoryProvider, InstancesRepositoryProvider instancesRepositoryProvider,
+                                                                     FormsRepositoryProvider formsRepositoryProvider, DatabaseInstancesRepositoryProvider instancesRepositoryProvider,
                                                                      AutoSendSettingsProvider autoSendSettingsProvider) {
         return new MainMenuViewModelFactory(versionInformation, application, settingsProvider, instancesDataService, scheduler, projectsDataService, analyticsInitializer, permissionChecker, formsRepositoryProvider, instancesRepositoryProvider, autoSendSettingsProvider);
     }
@@ -551,14 +552,20 @@ public class AppDependencyModule {
     }
 
     @Provides
-    public UpgradeInitializer providesUpgradeInitializer(Context context, SettingsProvider settingsProvider, ExistingProjectMigrator existingProjectMigrator, ExistingSettingsMigrator existingSettingsMigrator, FormUpdatesUpgrade formUpdatesUpgrade, GoogleDriveProjectsDeleter googleDriveProjectsDeleter) {
+    public SavepointsMigrator providesSavepointsMigrator(ProjectsRepository projectsRepository, DatabaseInstancesRepositoryProvider instancesRepositoryProvider, FormsRepositoryProvider formsRepositoryProvider, SavepointsRepositoryProvider savepointsRepositoryProvider, StoragePathProvider storagePathProvider) {
+        return new SavepointsMigrator(projectsRepository, instancesRepositoryProvider, formsRepositoryProvider, savepointsRepositoryProvider, storagePathProvider);
+    }
+
+    @Provides
+    public UpgradeInitializer providesUpgradeInitializer(Context context, SettingsProvider settingsProvider, ExistingProjectMigrator existingProjectMigrator, ExistingSettingsMigrator existingSettingsMigrator, FormUpdatesUpgrade formUpdatesUpgrade, GoogleDriveProjectsDeleter googleDriveProjectsDeleter, SavepointsMigrator savepointsMigrator) {
         return new UpgradeInitializer(
                 context,
                 settingsProvider,
                 existingProjectMigrator,
                 existingSettingsMigrator,
                 formUpdatesUpgrade,
-                googleDriveProjectsDeleter
+                googleDriveProjectsDeleter,
+                savepointsMigrator
         );
     }
 
@@ -568,7 +575,7 @@ public class AppDependencyModule {
     }
 
     @Provides
-    public ProjectDeleter providesProjectDeleter(ProjectsRepository projectsRepository, ProjectsDataService projectsDataService, FormUpdateScheduler formUpdateScheduler, InstanceSubmitScheduler instanceSubmitScheduler, InstancesRepositoryProvider instancesRepositoryProvider, StoragePathProvider storagePathProvider, ChangeLockProvider changeLockProvider, SettingsProvider settingsProvider) {
+    public ProjectDeleter providesProjectDeleter(ProjectsRepository projectsRepository, ProjectsDataService projectsDataService, FormUpdateScheduler formUpdateScheduler, InstanceSubmitScheduler instanceSubmitScheduler, DatabaseInstancesRepositoryProvider instancesRepositoryProvider, StoragePathProvider storagePathProvider, ChangeLockProvider changeLockProvider, SettingsProvider settingsProvider) {
         return new ProjectDeleter(projectsRepository, projectsDataService, formUpdateScheduler, instanceSubmitScheduler, instancesRepositoryProvider, storagePathProvider, changeLockProvider, settingsProvider);
     }
 
@@ -622,12 +629,12 @@ public class AppDependencyModule {
     }
 
     @Provides
-    public ProjectDependencyProviderFactory providesProjectDependencyProviderFactory(SettingsProvider settingsProvider, FormsRepositoryProvider formsRepositoryProvider, InstancesRepositoryProvider instancesRepositoryProvider, StoragePathProvider storagePathProvider, ChangeLockProvider changeLockProvider, FormSourceProvider formSourceProvider) {
+    public ProjectDependencyProviderFactory providesProjectDependencyProviderFactory(SettingsProvider settingsProvider, FormsRepositoryProvider formsRepositoryProvider, DatabaseInstancesRepositoryProvider instancesRepositoryProvider, StoragePathProvider storagePathProvider, ChangeLockProvider changeLockProvider, FormSourceProvider formSourceProvider) {
         return new ProjectDependencyProviderFactory(settingsProvider, formsRepositoryProvider, instancesRepositoryProvider, storagePathProvider, changeLockProvider, formSourceProvider);
     }
 
     @Provides
-    public BlankFormListViewModel.Factory providesBlankFormListViewModel(FormsRepositoryProvider formsRepositoryProvider, InstancesRepositoryProvider instancesRepositoryProvider, Application application, FormsDataService formsDataService, Scheduler scheduler, SettingsProvider settingsProvider, ChangeLockProvider changeLockProvider, ProjectsDataService projectsDataService) {
+    public BlankFormListViewModel.Factory providesBlankFormListViewModel(FormsRepositoryProvider formsRepositoryProvider, DatabaseInstancesRepositoryProvider instancesRepositoryProvider, Application application, FormsDataService formsDataService, Scheduler scheduler, SettingsProvider settingsProvider, ChangeLockProvider changeLockProvider, ProjectsDataService projectsDataService) {
         return new BlankFormListViewModel.Factory(instancesRepositoryProvider.get(), application, formsDataService, scheduler, settingsProvider.getUnprotectedSettings(), projectsDataService.getCurrentProject().getUuid());
     }
 

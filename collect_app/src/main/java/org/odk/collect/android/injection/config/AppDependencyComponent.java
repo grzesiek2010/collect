@@ -74,7 +74,7 @@ import org.odk.collect.android.tasks.MediaLoadingTask;
 import org.odk.collect.android.upload.InstanceUploader;
 import org.odk.collect.android.utilities.AuthDialogUtility;
 import org.odk.collect.android.utilities.FormsRepositoryProvider;
-import org.odk.collect.android.utilities.InstancesRepositoryProvider;
+import org.odk.collect.android.utilities.DatabaseInstancesRepositoryProvider;
 import org.odk.collect.android.projects.ProjectResetter;
 import org.odk.collect.android.utilities.ThemeUtils;
 import org.odk.collect.android.widgets.QuestionWidget;
@@ -283,7 +283,7 @@ public interface AppDependencyComponent {
 
     FormsRepositoryProvider formsRepositoryProvider();
 
-    InstancesRepositoryProvider instancesRepositoryProvider();
+    DatabaseInstancesRepositoryProvider instancesRepositoryProvider();
 
     SavepointsRepositoryProvider savepointsRepositoryProvider();
 

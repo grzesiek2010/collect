@@ -5,7 +5,7 @@ import org.odk.collect.android.backgroundwork.InstanceSubmitScheduler
 import org.odk.collect.android.database.DatabaseConnection
 import org.odk.collect.android.storage.StoragePathProvider
 import org.odk.collect.android.utilities.ChangeLockProvider
-import org.odk.collect.android.utilities.InstancesRepositoryProvider
+import org.odk.collect.android.utilities.DatabaseInstancesRepositoryProvider
 import org.odk.collect.forms.instances.Instance
 import org.odk.collect.projects.Project
 import org.odk.collect.projects.ProjectsRepository
@@ -13,14 +13,14 @@ import org.odk.collect.settings.SettingsProvider
 import java.io.File
 
 class ProjectDeleter(
-    private val projectsRepository: ProjectsRepository,
-    private val projectsDataService: ProjectsDataService,
-    private val formUpdateScheduler: FormUpdateScheduler,
-    private val instanceSubmitScheduler: InstanceSubmitScheduler,
-    private val instancesRepositoryProvider: InstancesRepositoryProvider,
-    private val storagePathProvider: StoragePathProvider,
-    private val changeLockProvider: ChangeLockProvider,
-    private val settingsProvider: SettingsProvider
+        private val projectsRepository: ProjectsRepository,
+        private val projectsDataService: ProjectsDataService,
+        private val formUpdateScheduler: FormUpdateScheduler,
+        private val instanceSubmitScheduler: InstanceSubmitScheduler,
+        private val instancesRepositoryProvider: DatabaseInstancesRepositoryProvider,
+        private val storagePathProvider: StoragePathProvider,
+        private val changeLockProvider: ChangeLockProvider,
+        private val settingsProvider: SettingsProvider
 ) {
     fun deleteProject(projectId: String = projectsDataService.getCurrentProject().uuid): DeleteProjectResult {
         return when {

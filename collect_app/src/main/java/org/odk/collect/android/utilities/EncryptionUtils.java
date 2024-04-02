@@ -267,7 +267,7 @@ public class EncryptionUtils {
         Form form = null;
 
         if (InstancesContract.CONTENT_ITEM_TYPE.equals(Collect.getInstance().getContentResolver().getType(uri))) {
-            Instance instance = new InstancesRepositoryProvider(Collect.getInstance()).get().get(ContentUriHelper.getIdFromUri(uri));
+            Instance instance = new DatabaseInstancesRepositoryProvider(Collect.getInstance()).get().get(ContentUriHelper.getIdFromUri(uri));
             if (instance == null) {
                 String msg = getLocalizedString(Collect.getInstance(), org.odk.collect.strings.R.string.not_exactly_one_record_for_this_instance);
                 Timber.e(new Error(msg));

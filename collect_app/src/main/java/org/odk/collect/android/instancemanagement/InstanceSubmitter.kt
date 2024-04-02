@@ -8,7 +8,7 @@ import org.odk.collect.android.upload.InstanceServerUploader
 import org.odk.collect.android.upload.InstanceUploader
 import org.odk.collect.android.utilities.FormsRepositoryProvider
 import org.odk.collect.android.utilities.InstanceAutoDeleteChecker
-import org.odk.collect.android.utilities.InstancesRepositoryProvider
+import org.odk.collect.android.utilities.DatabaseInstancesRepositoryProvider
 import org.odk.collect.android.utilities.WebCredentialsUtils
 import org.odk.collect.forms.FormsRepository
 import org.odk.collect.forms.instances.Instance
@@ -67,7 +67,7 @@ class InstanceSubmitter(
         // communicated to the user. Maybe successful delete should also be communicated?
         if (InstanceAutoDeleteChecker.shouldInstanceBeDeleted(formsRepository, generalSettings.getBoolean(ProjectKeys.KEY_DELETE_AFTER_SEND), instance)) {
             InstanceDeleter(
-                InstancesRepositoryProvider(Collect.getInstance()).get(),
+                DatabaseInstancesRepositoryProvider(Collect.getInstance()).get(),
                 FormsRepositoryProvider(Collect.getInstance()).get()
             ).delete(instance.dbId)
         }

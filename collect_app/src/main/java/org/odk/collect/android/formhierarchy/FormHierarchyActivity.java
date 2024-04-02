@@ -63,7 +63,7 @@ import org.odk.collect.android.utilities.ApplicationConstants;
 import org.odk.collect.android.utilities.FormEntryPromptUtils;
 import org.odk.collect.android.utilities.FormsRepositoryProvider;
 import org.odk.collect.android.utilities.HtmlUtils;
-import org.odk.collect.android.utilities.InstancesRepositoryProvider;
+import org.odk.collect.android.utilities.DatabaseInstancesRepositoryProvider;
 import org.odk.collect.android.utilities.MediaUtils;
 import org.odk.collect.android.utilities.SavepointsRepositoryProvider;
 import org.odk.collect.androidshared.ui.DialogFragmentUtils;
@@ -187,7 +187,7 @@ public class FormHierarchyActivity extends LocalizedActivity implements DeleteRe
     public AutoSendSettingsProvider autoSendSettingsProvider;
 
     @Inject
-    public InstancesRepositoryProvider instancesRepositoryProvider;
+    public DatabaseInstancesRepositoryProvider instancesRepositoryProvider;
 
     @Inject
     public FormsRepositoryProvider formsRepositoryProvider;

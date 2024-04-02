@@ -158,7 +158,7 @@ import org.odk.collect.android.utilities.ContentUriHelper;
 import org.odk.collect.android.utilities.ControllableLifecyleOwner;
 import org.odk.collect.android.utilities.ExternalAppIntentProvider;
 import org.odk.collect.android.utilities.FormsRepositoryProvider;
-import org.odk.collect.android.utilities.InstancesRepositoryProvider;
+import org.odk.collect.android.utilities.DatabaseInstancesRepositoryProvider;
 import org.odk.collect.android.utilities.MediaUtils;
 import org.odk.collect.android.utilities.SavepointsRepositoryProvider;
 import org.odk.collect.android.utilities.ScreenContext;
@@ -361,7 +361,7 @@ public class FormFillingActivity extends LocalizedActivity implements AnimationL
     public AutoSendSettingsProvider autoSendSettingsProvider;
 
     @Inject
-    public InstancesRepositoryProvider instancesRepositoryProvider;
+    public DatabaseInstancesRepositoryProvider instancesRepositoryProvider;
 
     @Inject
     public SavepointsRepositoryProvider savepointsRepositoryProvider;
@@ -1192,7 +1192,7 @@ public class FormFillingActivity extends LocalizedActivity implements AnimationL
 
             if (saveName == null && uriMimeType != null
                     && uriMimeType.equals(InstancesContract.CONTENT_ITEM_TYPE)) {
-                Instance instance = new InstancesRepositoryProvider(Collect.getInstance()).get().get(ContentUriHelper.getIdFromUri(instanceUri));
+                Instance instance = new DatabaseInstancesRepositoryProvider(Collect.getInstance()).get().get(ContentUriHelper.getIdFromUri(instanceUri));
                 if (instance != null) {
                     saveName = instance.getDisplayName();
                 }

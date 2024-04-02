@@ -19,7 +19,7 @@ import org.odk.collect.android.application.Collect;
 import org.odk.collect.android.instancemanagement.InstanceDeleter;
 import org.odk.collect.android.listeners.InstanceUploaderListener;
 import org.odk.collect.android.utilities.InstanceAutoDeleteChecker;
-import org.odk.collect.android.utilities.InstancesRepositoryProvider;
+import org.odk.collect.android.utilities.DatabaseInstancesRepositoryProvider;
 import org.odk.collect.forms.FormsRepository;
 import org.odk.collect.forms.instances.Instance;
 import org.odk.collect.android.openrosa.OpenRosaHttpInterface;
@@ -126,7 +126,7 @@ public class InstanceUploaderTask extends AsyncTask<Long, Integer, InstanceUploa
         }
 
         Stream<Instance> instancesToDelete = instanceIds.stream()
-                .map(id -> new InstancesRepositoryProvider(Collect.getInstance()).get().get(Long.parseLong(id)))
+                .map(id -> new DatabaseInstancesRepositoryProvider(Collect.getInstance()).get().get(Long.parseLong(id)))
                 .filter(instance -> instance.getStatus().equals(Instance.STATUS_SUBMITTED))
                 .filter(instance -> InstanceAutoDeleteChecker.shouldInstanceBeDeleted(formsRepository, isFormAutoDeleteOptionEnabled, instance));
 

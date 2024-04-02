@@ -24,7 +24,7 @@ import org.odk.collect.android.storage.StoragePathProvider
 import org.odk.collect.android.support.CollectHelpers
 import org.odk.collect.android.utilities.ChangeLockProvider
 import org.odk.collect.android.utilities.FormsRepositoryProvider
-import org.odk.collect.android.utilities.InstancesRepositoryProvider
+import org.odk.collect.android.utilities.DatabaseInstancesRepositoryProvider
 import org.odk.collect.metadata.PropertyManager
 import org.odk.collect.settings.SettingsProvider
 import org.odk.collect.settings.keys.ProjectKeys
@@ -52,12 +52,12 @@ class AutoSendTaskSpecTest {
             }
 
             override fun providesProjectDependencyProviderFactory(
-                settingsProvider: SettingsProvider?,
-                formsRepositoryProvider: FormsRepositoryProvider?,
-                instancesRepositoryProvider: InstancesRepositoryProvider?,
-                storagePathProvider: StoragePathProvider?,
-                changeLockProvider: ChangeLockProvider?,
-                formSourceProvider: FormSourceProvider?
+                    settingsProvider: SettingsProvider?,
+                    formsRepositoryProvider: FormsRepositoryProvider?,
+                    instancesRepositoryProvider: DatabaseInstancesRepositoryProvider?,
+                    storagePathProvider: StoragePathProvider?,
+                    changeLockProvider: ChangeLockProvider?,
+                    formSourceProvider: FormSourceProvider?
             ): ProjectDependencyProviderFactory {
                 return projectDependencyProviderFactory
             }

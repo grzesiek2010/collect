@@ -25,7 +25,7 @@ import org.odk.collect.android.savepoints.SavepointUseCases
 import org.odk.collect.android.utilities.ApplicationConstants
 import org.odk.collect.android.utilities.ContentUriHelper
 import org.odk.collect.android.utilities.FormsRepositoryProvider
-import org.odk.collect.android.utilities.InstancesRepositoryProvider
+import org.odk.collect.android.utilities.DatabaseInstancesRepositoryProvider
 import org.odk.collect.android.utilities.SavepointsRepositoryProvider
 import org.odk.collect.async.Scheduler
 import org.odk.collect.forms.savepoints.Savepoint
@@ -54,7 +54,7 @@ class FormUriActivity : LocalizedActivity() {
     lateinit var formsRepositoryProvider: FormsRepositoryProvider
 
     @Inject
-    lateinit var instanceRepositoryProvider: InstancesRepositoryProvider
+    lateinit var instanceRepositoryProvider: DatabaseInstancesRepositoryProvider
 
     @Inject
     lateinit var savepointsRepositoryProvider: SavepointsRepositoryProvider
@@ -181,15 +181,15 @@ class FormUriActivity : LocalizedActivity() {
 }
 
 private class FormUriViewModel(
-    private val uri: Uri?,
-    private val scheduler: Scheduler,
-    private val projectsRepository: ProjectsRepository,
-    private val projectsDataService: ProjectsDataService,
-    private val contentResolver: ContentResolver,
-    private val formsRepositoryProvider: FormsRepositoryProvider,
-    private val instancesRepositoryProvider: InstancesRepositoryProvider,
-    private val savepointsRepositoryProvider: SavepointsRepositoryProvider,
-    private val resources: Resources
+        private val uri: Uri?,
+        private val scheduler: Scheduler,
+        private val projectsRepository: ProjectsRepository,
+        private val projectsDataService: ProjectsDataService,
+        private val contentResolver: ContentResolver,
+        private val formsRepositoryProvider: FormsRepositoryProvider,
+        private val instancesRepositoryProvider: DatabaseInstancesRepositoryProvider,
+        private val savepointsRepositoryProvider: SavepointsRepositoryProvider,
+        private val resources: Resources
 ) : ViewModel() {
 
     private val _formInspectionResult = MutableLiveData<FormInspectionResult>()

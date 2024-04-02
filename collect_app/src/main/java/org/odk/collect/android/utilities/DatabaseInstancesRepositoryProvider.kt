@@ -5,14 +5,14 @@ import org.odk.collect.android.database.instances.DatabaseInstancesRepository
 import org.odk.collect.android.storage.StoragePathProvider
 import org.odk.collect.android.storage.StorageSubdirectory
 import org.odk.collect.forms.instances.InstancesRepository
+import org.odk.collect.forms.instances.InstancesRepositoryProvider
 
-class InstancesRepositoryProvider @JvmOverloads constructor(
+class DatabaseInstancesRepositoryProvider @JvmOverloads constructor(
     private val context: Context,
     private val storagePathProvider: StoragePathProvider = StoragePathProvider()
-) {
+) : InstancesRepositoryProvider {
 
-    @JvmOverloads
-    fun get(projectId: String? = null): InstancesRepository {
+    override fun get(projectId: String?): InstancesRepository {
         return DatabaseInstancesRepository(
             context,
             storagePathProvider.getOdkDirPath(StorageSubdirectory.METADATA, projectId),

@@ -20,7 +20,7 @@ import androidx.annotation.Nullable;
 import org.odk.collect.android.application.Collect;
 import org.odk.collect.android.instancemanagement.InstancesDataService;
 import org.odk.collect.android.injection.DaggerUtils;
-import org.odk.collect.android.utilities.InstancesRepositoryProvider;
+import org.odk.collect.android.utilities.DatabaseInstancesRepositoryProvider;
 import org.odk.collect.forms.instances.Instance;
 
 import java.util.ArrayList;
@@ -31,7 +31,7 @@ import javax.inject.Inject;
 public abstract class InstanceUploader {
 
     @Inject
-    InstancesRepositoryProvider instancesRepositoryProvider;
+    DatabaseInstancesRepositoryProvider instancesRepositoryProvider;
 
     @Inject
     InstancesDataService instancesDataService;

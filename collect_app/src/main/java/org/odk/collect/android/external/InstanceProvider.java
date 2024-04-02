@@ -40,7 +40,7 @@ import org.odk.collect.android.storage.StoragePathProvider;
 import org.odk.collect.android.storage.StorageSubdirectory;
 import org.odk.collect.android.utilities.ContentUriHelper;
 import org.odk.collect.android.utilities.FormsRepositoryProvider;
-import org.odk.collect.android.utilities.InstancesRepositoryProvider;
+import org.odk.collect.android.utilities.DatabaseInstancesRepositoryProvider;
 import org.odk.collect.forms.instances.Instance;
 import org.odk.collect.forms.instances.InstancesRepository;
 import org.odk.collect.projects.ProjectsRepository;
@@ -55,7 +55,7 @@ public class InstanceProvider extends ContentProvider {
     private static final UriMatcher URI_MATCHER = new UriMatcher(UriMatcher.NO_MATCH);
 
     @Inject
-    InstancesRepositoryProvider instancesRepositoryProvider;
+    DatabaseInstancesRepositoryProvider instancesRepositoryProvider;
 
     @Inject
     FormsRepositoryProvider formsRepositoryProvider;

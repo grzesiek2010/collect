@@ -7,11 +7,10 @@ import org.junit.Test
 import org.junit.runner.RunWith
 import org.mockito.kotlin.mock
 import org.mockito.kotlin.whenever
-import org.odk.collect.android.R
 import org.odk.collect.android.external.InstancesContract
 import org.odk.collect.android.instancemanagement.autosend.AutoSendSettingsProvider
 import org.odk.collect.android.utilities.FormsRepositoryProvider
-import org.odk.collect.android.utilities.InstancesRepositoryProvider
+import org.odk.collect.android.utilities.DatabaseInstancesRepositoryProvider
 import org.odk.collect.android.version.VersionInformation
 import org.odk.collect.forms.instances.Instance
 import org.odk.collect.formstest.FormUtils
@@ -29,7 +28,7 @@ class MainMenuViewModelTest {
         whenever(get()).thenReturn(formsRepository)
     }
     private val instancesRepository = InMemInstancesRepository()
-    private val instancesRepositoryProvider = mock<InstancesRepositoryProvider>().apply {
+    private val instancesRepositoryProvider = mock<DatabaseInstancesRepositoryProvider>().apply {
         whenever(get()).thenReturn(instancesRepository)
     }
     private val autoSendSettingsProvider = mock<AutoSendSettingsProvider>()

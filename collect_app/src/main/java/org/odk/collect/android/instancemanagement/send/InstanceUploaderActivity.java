@@ -33,7 +33,7 @@ import org.odk.collect.android.utilities.ArrayUtils;
 import org.odk.collect.android.utilities.AuthDialogUtility;
 import org.odk.collect.android.utilities.FormsRepositoryProvider;
 import org.odk.collect.android.utilities.InstanceUploaderUtils;
-import org.odk.collect.android.utilities.InstancesRepositoryProvider;
+import org.odk.collect.android.utilities.DatabaseInstancesRepositoryProvider;
 import org.odk.collect.android.views.DayNightProgressDialog;
 import org.odk.collect.forms.FormsRepository;
 import org.odk.collect.forms.instances.InstancesRepository;
@@ -83,7 +83,7 @@ public class InstanceUploaderActivity extends LocalizedActivity implements Insta
     private boolean isInstanceStateSaved;
 
     @Inject
-    InstancesRepositoryProvider instancesRepositoryProvider;
+    DatabaseInstancesRepositoryProvider instancesRepositoryProvider;
     private InstancesRepository instancesRepository;
 
     @Inject

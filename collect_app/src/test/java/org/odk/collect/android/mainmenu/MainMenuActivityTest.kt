@@ -39,7 +39,7 @@ import org.odk.collect.android.projects.ProjectsDataService
 import org.odk.collect.android.support.CollectHelpers
 import org.odk.collect.android.utilities.ApplicationConstants
 import org.odk.collect.android.utilities.FormsRepositoryProvider
-import org.odk.collect.android.utilities.InstancesRepositoryProvider
+import org.odk.collect.android.utilities.DatabaseInstancesRepositoryProvider
 import org.odk.collect.android.version.VersionInformation
 import org.odk.collect.androidshared.livedata.MutableNonNullLiveData
 import org.odk.collect.androidtest.ActivityScenarioLauncherRule
@@ -83,17 +83,17 @@ class MainMenuActivityTest {
     fun setup() {
         CollectHelpers.overrideAppDependencyModule(object : AppDependencyModule() {
             override fun providesMainMenuViewModelFactory(
-                versionInformation: VersionInformation,
-                application: Application,
-                settingsProvider: SettingsProvider,
-                instancesDataService: InstancesDataService,
-                scheduler: Scheduler,
-                projectsDataService: ProjectsDataService,
-                analyticsInitializer: AnalyticsInitializer,
-                permissionChecker: PermissionsChecker,
-                formsRepositoryProvider: FormsRepositoryProvider,
-                instancesRepositoryProvider: InstancesRepositoryProvider,
-                autoSendSettingsProvider: AutoSendSettingsProvider
+                    versionInformation: VersionInformation,
+                    application: Application,
+                    settingsProvider: SettingsProvider,
+                    instancesDataService: InstancesDataService,
+                    scheduler: Scheduler,
+                    projectsDataService: ProjectsDataService,
+                    analyticsInitializer: AnalyticsInitializer,
+                    permissionChecker: PermissionsChecker,
+                    formsRepositoryProvider: FormsRepositoryProvider,
+                    instancesRepositoryProvider: DatabaseInstancesRepositoryProvider,
+                    autoSendSettingsProvider: AutoSendSettingsProvider
             ): MainMenuViewModelFactory {
                 return object : MainMenuViewModelFactory(
                     versionInformation,

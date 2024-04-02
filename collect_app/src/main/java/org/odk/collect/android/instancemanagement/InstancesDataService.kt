@@ -14,23 +14,23 @@ import org.odk.collect.android.storage.StoragePathProvider
 import org.odk.collect.android.utilities.ChangeLockProvider
 import org.odk.collect.android.utilities.ExternalizableFormDefCache
 import org.odk.collect.android.utilities.FormsRepositoryProvider
-import org.odk.collect.android.utilities.InstancesRepositoryProvider
+import org.odk.collect.android.utilities.DatabaseInstancesRepositoryProvider
 import org.odk.collect.android.utilities.SavepointsRepositoryProvider
 import org.odk.collect.androidshared.data.AppState
 import org.odk.collect.forms.instances.Instance
 import java.io.File
 
 class InstancesDataService(
-    private val appState: AppState,
-    private val formsRepositoryProvider: FormsRepositoryProvider,
-    private val instancesRepositoryProvider: InstancesRepositoryProvider,
-    private val savepointsRepositoryProvider: SavepointsRepositoryProvider,
-    private val entitiesRepositoryProvider: EntitiesRepositoryProvider,
-    private val storagePathProvider: StoragePathProvider,
-    private val instanceSubmitScheduler: InstanceSubmitScheduler,
-    private val projectsDataService: ProjectsDataService,
-    private val changeLockProvider: ChangeLockProvider,
-    private val onUpdate: () -> Unit
+        private val appState: AppState,
+        private val formsRepositoryProvider: FormsRepositoryProvider,
+        private val instancesRepositoryProvider: DatabaseInstancesRepositoryProvider,
+        private val savepointsRepositoryProvider: SavepointsRepositoryProvider,
+        private val entitiesRepositoryProvider: EntitiesRepositoryProvider,
+        private val storagePathProvider: StoragePathProvider,
+        private val instanceSubmitScheduler: InstanceSubmitScheduler,
+        private val projectsDataService: ProjectsDataService,
+        private val changeLockProvider: ChangeLockProvider,
+        private val onUpdate: () -> Unit
 ) {
     val editableCount: LiveData<Int> = appState.getLive(EDITABLE_COUNT_KEY, 0)
     val sendableCount: LiveData<Int> = appState.getLive(SENDABLE_COUNT_KEY, 0)

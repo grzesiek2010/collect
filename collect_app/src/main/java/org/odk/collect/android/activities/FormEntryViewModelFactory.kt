@@ -23,7 +23,7 @@ import org.odk.collect.android.instancemanagement.autosend.AutoSendSettingsProvi
 import org.odk.collect.android.projects.ProjectsDataService
 import org.odk.collect.android.utilities.ApplicationConstants
 import org.odk.collect.android.utilities.FormsRepositoryProvider
-import org.odk.collect.android.utilities.InstancesRepositoryProvider
+import org.odk.collect.android.utilities.DatabaseInstancesRepositoryProvider
 import org.odk.collect.android.utilities.MediaUtils
 import org.odk.collect.android.utilities.SavepointsRepositoryProvider
 import org.odk.collect.async.Scheduler
@@ -37,25 +37,25 @@ import org.odk.collect.settings.SettingsProvider
 import java.util.function.BiConsumer
 
 class FormEntryViewModelFactory(
-    owner: SavedStateRegistryOwner,
-    private val mode: String?,
-    private val sessionId: String,
-    private val scheduler: Scheduler,
-    private val formSessionRepository: FormSessionRepository,
-    private val mediaUtils: MediaUtils,
-    private val audioRecorder: AudioRecorder,
-    private val projectsDataService: ProjectsDataService,
-    private val entitiesRepositoryProvider: EntitiesRepositoryProvider,
-    private val settingsProvider: SettingsProvider,
-    private val permissionsChecker: PermissionsChecker,
-    private val fusedLocationClient: LocationClient,
-    private val permissionsProvider: PermissionsProvider,
-    private val autoSendSettingsProvider: AutoSendSettingsProvider,
-    private val formsRepositoryProvider: FormsRepositoryProvider,
-    private val instancesRepositoryProvider: InstancesRepositoryProvider,
-    private val savepointsRepositoryProvider: SavepointsRepositoryProvider,
-    private val qrCodeCreator: QRCodeCreator,
-    private val htmlPrinter: HtmlPrinter
+        owner: SavedStateRegistryOwner,
+        private val mode: String?,
+        private val sessionId: String,
+        private val scheduler: Scheduler,
+        private val formSessionRepository: FormSessionRepository,
+        private val mediaUtils: MediaUtils,
+        private val audioRecorder: AudioRecorder,
+        private val projectsDataService: ProjectsDataService,
+        private val entitiesRepositoryProvider: EntitiesRepositoryProvider,
+        private val settingsProvider: SettingsProvider,
+        private val permissionsChecker: PermissionsChecker,
+        private val fusedLocationClient: LocationClient,
+        private val permissionsProvider: PermissionsProvider,
+        private val autoSendSettingsProvider: AutoSendSettingsProvider,
+        private val formsRepositoryProvider: FormsRepositoryProvider,
+        private val instancesRepositoryProvider: DatabaseInstancesRepositoryProvider,
+        private val savepointsRepositoryProvider: SavepointsRepositoryProvider,
+        private val qrCodeCreator: QRCodeCreator,
+        private val htmlPrinter: HtmlPrinter
 ) : AbstractSavedStateViewModelFactory(owner, null) {
 
     override fun <T : ViewModel> create(

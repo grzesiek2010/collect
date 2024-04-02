@@ -23,7 +23,7 @@ import org.odk.collect.android.storage.StorageSubdirectory
 import org.odk.collect.android.support.CollectHelpers
 import org.odk.collect.android.utilities.ChangeLockProvider
 import org.odk.collect.android.utilities.FormsRepositoryProvider
-import org.odk.collect.android.utilities.InstancesRepositoryProvider
+import org.odk.collect.android.utilities.DatabaseInstancesRepositoryProvider
 import org.odk.collect.android.utilities.SavepointsRepositoryProvider
 import org.odk.collect.forms.Form
 import org.odk.collect.forms.instances.Instance
@@ -44,7 +44,7 @@ class ProjectResetterTest {
     private lateinit var storagePathProvider: StoragePathProvider
     private lateinit var settingsProvider: SettingsProvider
     private lateinit var formsRepositoryProvider: FormsRepositoryProvider
-    private lateinit var instancesRepositoryProvider: InstancesRepositoryProvider
+    private lateinit var instancesRepositoryProvider: DatabaseInstancesRepositoryProvider
     private lateinit var savepointsRepositoryProvider: SavepointsRepositoryProvider
     private lateinit var currentProjectId: String
     private lateinit var anotherProjectId: String
@@ -312,7 +312,7 @@ class ProjectResetterTest {
     }
 
     private fun setupTestInstancesDatabase(uuid: String) {
-        InstancesRepositoryProvider(ApplicationProvider.getApplicationContext()).get(uuid).save(
+        DatabaseInstancesRepositoryProvider(ApplicationProvider.getApplicationContext()).get(uuid).save(
             Instance.Builder()
                 .instanceFilePath("testDir1/testFile1")
                 .submissionUri("submissionUri")

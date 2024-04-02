@@ -14,7 +14,7 @@ import org.odk.collect.android.backgroundwork.InstanceSubmitScheduler
 import org.odk.collect.android.preferences.Defaults
 import org.odk.collect.android.storage.StoragePathProvider
 import org.odk.collect.android.utilities.ChangeLockProvider
-import org.odk.collect.android.utilities.InstancesRepositoryProvider
+import org.odk.collect.android.utilities.DatabaseInstancesRepositoryProvider
 import org.odk.collect.forms.instances.Instance
 import org.odk.collect.formstest.InMemInstancesRepository
 import org.odk.collect.projects.InMemProjectsRepository
@@ -33,7 +33,7 @@ class ProjectDeleterTest {
         save(project1)
     }
     private val instancesRepository = InMemInstancesRepository()
-    private val instancesRepositoryProvider = mock<InstancesRepositoryProvider>().apply {
+    private val instancesRepositoryProvider = mock<DatabaseInstancesRepositoryProvider>().apply {
         whenever(get(project1.uuid)).thenReturn(instancesRepository)
     }
     private val settingsProvider = InMemSettingsProvider()
