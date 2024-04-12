@@ -61,7 +61,8 @@ class WidgetAnswerText(context: Context, attrs: AttributeSet?) : FrameLayout(con
             }
         })
         if (isMasked) {
-            this.isMasked = isMasked
+            this.isMasked = true
+            binding.editText.inputType = InputType.TYPE_TEXT_VARIATION_PASSWORD
             binding.editText.transformationMethod = PasswordTransformationMethod.getInstance()
             binding.textView.transformationMethod = PasswordTransformationMethod.getInstance()
         }
@@ -83,7 +84,11 @@ class WidgetAnswerText(context: Context, attrs: AttributeSet?) : FrameLayout(con
             binding.editText.addTextChangedListener(ThousandsSeparatorTextWatcher(binding.editText))
         }
 
-        binding.editText.inputType = InputType.TYPE_NUMBER_FLAG_SIGNED
+        if (isMasked) {
+            binding.editText.inputType = InputType.TYPE_NUMBER_FLAG_SIGNED or InputType.TYPE_NUMBER_VARIATION_PASSWORD
+        } else {
+            binding.editText.inputType = InputType.TYPE_NUMBER_FLAG_SIGNED
+        }
         binding.editText.keyListener = DigitsKeyListener(true, false) // only allows numbers and no periods
 
         // ints can only hold 2,147,483,648. we allow 999,999,999
@@ -110,7 +115,11 @@ class WidgetAnswerText(context: Context, attrs: AttributeSet?) : FrameLayout(con
             binding.editText.addTextChangedListener(ThousandsSeparatorTextWatcher(binding.editText))
         }
 
-        binding.editText.inputType = InputType.TYPE_NUMBER_FLAG_SIGNED
+        if (isMasked) {
+            binding.editText.inputType = InputType.TYPE_NUMBER_FLAG_SIGNED or InputType.TYPE_NUMBER_VARIATION_PASSWORD
+        } else {
+            binding.editText.inputType = InputType.TYPE_NUMBER_FLAG_SIGNED
+        }
         binding.editText.keyListener = object : DigitsKeyListener() {
             override fun getAcceptedChars(): CharArray {
                 return charArrayOf(
@@ -134,7 +143,11 @@ class WidgetAnswerText(context: Context, attrs: AttributeSet?) : FrameLayout(con
             binding.editText.addTextChangedListener(ThousandsSeparatorTextWatcher(binding.editText))
         }
 
-        binding.editText.inputType = InputType.TYPE_NUMBER_FLAG_DECIMAL
+        if (isMasked) {
+            binding.editText.inputType = InputType.TYPE_NUMBER_FLAG_DECIMAL or InputType.TYPE_NUMBER_VARIATION_PASSWORD
+        } else {
+            binding.editText.inputType = InputType.TYPE_NUMBER_FLAG_DECIMAL
+        }
         binding.editText.keyListener = DigitsKeyListener(true, true) // only numbers are allowed
 
         // only 15 characters allowed
