@@ -99,7 +99,6 @@ class FormNavigationTest {
     }
 
     @Test
-    @Ignore("https://github.com/getodk/collect/issues/6044")
     fun whenNavigationSettingsChangeChangesShouldBeReflectedInFormFilling() {
         rule.startAtMainMenu()
             .copyForm("two-question.xml")

@@ -101,7 +101,6 @@ public class RequiredQuestionTest {
     }
 
     @Test
-    @Ignore("https://github.com/getodk/collect/issues/5939")
     public void ifRequiredQuestionIsInFieldListAndNotFirst_shouldBeValidatedProperly() {
         rule.startAtMainMenu()
                 .copyForm("requiredQuestionInFieldList.xml")

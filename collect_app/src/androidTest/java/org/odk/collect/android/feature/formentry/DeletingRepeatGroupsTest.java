@@ -16,7 +16,6 @@ import org.odk.collect.android.support.rules.BlankFormTestRule;
 import org.odk.collect.android.support.rules.TestRuleChain;
 import org.odk.collect.testshared.RecyclerViewMatcher;
 
-@Ignore
 public class DeletingRepeatGroupsTest {
     private static final String TEST_FORM = "repeat_groups.xml";
 
