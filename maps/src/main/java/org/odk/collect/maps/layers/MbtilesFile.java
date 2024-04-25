@@ -134,6 +134,12 @@ public class MbtilesFile implements Closeable, TileSource {
         return layers;
     }
 
+    /** Returns the internal name from an MBTiles file if available or the file name. */
+    public static String getDisplayName(File file) {
+        String name = readName(file);
+        return name != null ? name : file.getName();
+    }
+
     /** Reads the internal name from an MBTiles file, or null if the file is invalid. */
     public static String readName(File file) {
         try {
