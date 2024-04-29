@@ -9,6 +9,7 @@ import android.view.ViewGroup
 import com.google.android.material.bottomsheet.BottomSheetBehavior
 import com.google.android.material.bottomsheet.BottomSheetDialogFragment
 import org.odk.collect.androidshared.ui.GroupClickListener.addOnClickListener
+import org.odk.collect.async.Scheduler
 import org.odk.collect.maps.MapsDependencyComponentProvider
 import org.odk.collect.maps.databinding.OfflineMapLayersPickerBinding
 import org.odk.collect.webpage.ExternalWebPageHelper
@@ -20,6 +21,9 @@ class OfflineMapLayersPicker : BottomSheetDialogFragment() {
 
     @Inject
     lateinit var referenceLayerRepository: ReferenceLayerRepository
+
+    @Inject
+    lateinit var scheduler: Scheduler
 
     private lateinit var offlineMapLayersPickerBinding: OfflineMapLayersPickerBinding
 
@@ -36,21 +40,31 @@ class OfflineMapLayersPicker : BottomSheetDialogFragment() {
     ): View {
         offlineMapLayersPickerBinding = OfflineMapLayersPickerBinding.inflate(inflater)
 
-        val offlineMapLayersAdapter = OfflineMapLayersAdapter(referenceLayerRepository.getAll(), null)
-        offlineMapLayersPickerBinding.layers.setAdapter(offlineMapLayersAdapter)
+        scheduler.immediate(
+            background = {
+                referenceLayerRepository.getAll()
+            },
+            foreground = { layers ->
+                offlineMapLayersPickerBinding.progressIndicator.visibility = View.GONE
+                offlineMapLayersPickerBinding.layers.visibility = View.VISIBLE
 
-        offlineMapLayersPickerBinding.cancel.setOnClickListener {
-            dismiss()
-        }
-        offlineMapLayersPickerBinding.save.setOnClickListener {
-            dismiss()
-        }
-        offlineMapLayersPickerBinding.mbtilesInfoGroup.addOnClickListener {
-            externalWebPageHelper.openWebPageInCustomTab(
-                requireActivity(),
-                Uri.parse("https://docs.getodk.org/collect-offline-maps/#transferring-offline-tilesets-to-devices")
-            )
-        }
+                val offlineMapLayersAdapter = OfflineMapLayersAdapter(layers, null)
+                offlineMapLayersPickerBinding.layers.setAdapter(offlineMapLayersAdapter)
+
+                offlineMapLayersPickerBinding.cancel.setOnClickListener {
+                    dismiss()
+                }
+                offlineMapLayersPickerBinding.save.setOnClickListener {
+                    dismiss()
+                }
+                offlineMapLayersPickerBinding.mbtilesInfoGroup.addOnClickListener {
+                    externalWebPageHelper.openWebPageInCustomTab(
+                        requireActivity(),
+                        Uri.parse("https://docs.getodk.org/collect-offline-maps/#transferring-offline-tilesets-to-devices")
+                    )
+                }
+            }
+        )
         return offlineMapLayersPickerBinding.root
     }
 
