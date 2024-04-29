@@ -41,5 +41,9 @@ class OfflineMapLayersAdapter(
 
     override fun getItemCount() = layers.size + 1
 
+    fun getSelectedLayerId(): String? {
+        return selectedLayerId
+    }
+
     class ViewHolder(val binding: OfflineMapLayerBinding) : RecyclerView.ViewHolder(binding.root)
 }

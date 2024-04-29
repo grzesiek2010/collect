@@ -12,6 +12,8 @@ import org.odk.collect.androidshared.ui.GroupClickListener.addOnClickListener
 import org.odk.collect.async.Scheduler
 import org.odk.collect.maps.MapsDependencyComponentProvider
 import org.odk.collect.maps.databinding.OfflineMapLayersPickerBinding
+import org.odk.collect.settings.SettingsProvider
+import org.odk.collect.settings.keys.ProjectKeys
 import org.odk.collect.webpage.ExternalWebPageHelper
 import javax.inject.Inject
 
@@ -24,6 +26,9 @@ class OfflineMapLayersPicker : BottomSheetDialogFragment() {
 
     @Inject
     lateinit var scheduler: Scheduler
+
+    @Inject
+    lateinit var settingsProvider: SettingsProvider
 
     private lateinit var offlineMapLayersPickerBinding: OfflineMapLayersPickerBinding
 
@@ -42,19 +47,24 @@ class OfflineMapLayersPicker : BottomSheetDialogFragment() {
 
         scheduler.immediate(
             background = {
-                referenceLayerRepository.getAll()
+                val layers = referenceLayerRepository.getAll()
+                val selectedLayerId = settingsProvider.getUnprotectedSettings().getString(ProjectKeys.KEY_REFERENCE_LAYER)
+
+                Pair(layers, selectedLayerId)
             },
-            foreground = { layers ->
+            foreground = { data ->
                 offlineMapLayersPickerBinding.progressIndicator.visibility = View.GONE
                 offlineMapLayersPickerBinding.layers.visibility = View.VISIBLE
 
-                val offlineMapLayersAdapter = OfflineMapLayersAdapter(layers, null)
+                val offlineMapLayersAdapter = OfflineMapLayersAdapter(data.first, data.second)
                 offlineMapLayersPickerBinding.layers.setAdapter(offlineMapLayersAdapter)
 
                 offlineMapLayersPickerBinding.cancel.setOnClickListener {
                     dismiss()
                 }
                 offlineMapLayersPickerBinding.save.setOnClickListener {
+                    val selectedLayerId = offlineMapLayersAdapter.getSelectedLayerId()
+                    settingsProvider.getUnprotectedSettings().save(ProjectKeys.KEY_REFERENCE_LAYER, selectedLayerId)
                     dismiss()
                 }
                 offlineMapLayersPickerBinding.mbtilesInfoGroup.addOnClickListener {
