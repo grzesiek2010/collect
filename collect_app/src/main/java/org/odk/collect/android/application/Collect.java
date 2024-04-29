@@ -395,7 +395,8 @@ public class Collect extends Application implements
                     .mapsDependencyModule(new CollectMapsDependencyModule(
                             applicationComponent.referenceLayerRepository(),
                             applicationComponent.scheduler(),
-                            applicationComponent.settingsProvider()
+                            applicationComponent.settingsProvider(),
+                            applicationComponent.externalWebPageHelper()
                     ))
                     .build();
         }

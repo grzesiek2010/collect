@@ -1,16 +1,31 @@
 package org.odk.collect.maps.layers
 
+import android.content.Context
+import android.net.Uri
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import com.google.android.material.bottomsheet.BottomSheetBehavior
 import com.google.android.material.bottomsheet.BottomSheetDialogFragment
+import org.odk.collect.androidshared.ui.GroupClickListener.addOnClickListener
+import org.odk.collect.maps.MapsDependencyComponentProvider
 import org.odk.collect.maps.databinding.OfflineMapLayersPickerBinding
 import org.odk.collect.shared.TempFiles
+import org.odk.collect.webpage.ExternalWebPageHelper
+import javax.inject.Inject
 
 class OfflineMapLayersPicker : BottomSheetDialogFragment() {
+    @Inject
+    lateinit var externalWebPageHelper: ExternalWebPageHelper
+
     private lateinit var offlineMapLayersPickerBinding: OfflineMapLayersPickerBinding
+
+    override fun onAttach(context: Context) {
+        super.onAttach(context)
+        val component = (context.applicationContext as MapsDependencyComponentProvider).mapsDependencyComponent
+        component.inject(this)
+    }
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -48,6 +63,12 @@ class OfflineMapLayersPicker : BottomSheetDialogFragment() {
         }
         offlineMapLayersPickerBinding.save.setOnClickListener {
             dismiss()
+        }
+        offlineMapLayersPickerBinding.mbtilesInfoGroup.addOnClickListener {
+            externalWebPageHelper.openWebPageInCustomTab(
+                requireActivity(),
+                Uri.parse("https://docs.getodk.org/collect-offline-maps/#transferring-offline-tilesets-to-devices")
+            )
         }
         return offlineMapLayersPickerBinding.root
     }

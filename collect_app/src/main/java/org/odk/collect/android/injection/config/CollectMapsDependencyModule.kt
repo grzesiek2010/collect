@@ -4,11 +4,13 @@ import org.odk.collect.async.Scheduler
 import org.odk.collect.maps.MapsDependencyModule
 import org.odk.collect.maps.layers.ReferenceLayerRepository
 import org.odk.collect.settings.SettingsProvider
+import org.odk.collect.webpage.ExternalWebPageHelper
 
 class CollectMapsDependencyModule(
     private val referenceLayerRepository: ReferenceLayerRepository,
     private val scheduler: Scheduler,
-    private val settingsProvider: SettingsProvider
+    private val settingsProvider: SettingsProvider,
+    private val externalWebPageHelper: ExternalWebPageHelper
 ) : MapsDependencyModule() {
     override fun providesReferenceLayerRepository(): ReferenceLayerRepository {
         return referenceLayerRepository
@@ -20,5 +22,9 @@ class CollectMapsDependencyModule(
 
     override fun providesSettingsProvider(): SettingsProvider {
         return settingsProvider
+    }
+
+    override fun providesExternalWebPageHelper(): ExternalWebPageHelper {
+        return externalWebPageHelper
     }
 }

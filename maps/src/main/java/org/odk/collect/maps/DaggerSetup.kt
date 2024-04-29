@@ -7,6 +7,7 @@ import org.odk.collect.async.Scheduler
 import org.odk.collect.maps.layers.OfflineMapLayersPicker
 import org.odk.collect.maps.layers.ReferenceLayerRepository
 import org.odk.collect.settings.SettingsProvider
+import org.odk.collect.webpage.ExternalWebPageHelper
 import javax.inject.Singleton
 
 interface MapsDependencyComponentProvider {
@@ -34,6 +35,11 @@ open class MapsDependencyModule {
 
     @Provides
     open fun providesSettingsProvider(): SettingsProvider {
+        throw UnsupportedOperationException("This should be overridden by dependent application")
+    }
+
+    @Provides
+    open fun providesExternalWebPageHelper(): ExternalWebPageHelper {
         throw UnsupportedOperationException("This should be overridden by dependent application")
     }
 }

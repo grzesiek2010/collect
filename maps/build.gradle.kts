@@ -54,6 +54,7 @@ dependencies {
     implementation(project(":icons"))
     implementation(project(":strings"))
     implementation(project(":settings"))
+    implementation(project(":web-page"))
     implementation(Dependencies.android_material)
     implementation(Dependencies.kotlin_stdlib)
     implementation(Dependencies.androidx_fragment_ktx)
