@@ -48,15 +48,19 @@ android {
 dependencies {
     coreLibraryDesugaring(Dependencies.desugar)
 
+    implementation(project(":async"))
     implementation(project(":shared"))
     implementation(project(":androidshared"))
     implementation(project(":icons"))
     implementation(project(":strings"))
+    implementation(project(":settings"))
     implementation(Dependencies.android_material)
     implementation(Dependencies.kotlin_stdlib)
     implementation(Dependencies.androidx_fragment_ktx)
     implementation(Dependencies.androidx_preference_ktx)
     implementation(Dependencies.timber)
+    implementation(Dependencies.dagger)
+    kapt(Dependencies.dagger_compiler)
 
     testImplementation(Dependencies.junit)
     testImplementation(Dependencies.androidx_test_ext_junit)

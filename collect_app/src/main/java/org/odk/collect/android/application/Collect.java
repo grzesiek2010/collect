@@ -33,6 +33,7 @@ import org.odk.collect.android.injection.config.AppDependencyComponent;
 import org.odk.collect.android.injection.config.CollectDrawDependencyModule;
 import org.odk.collect.android.injection.config.CollectGeoDependencyModule;
 import org.odk.collect.android.injection.config.CollectGoogleMapsDependencyModule;
+import org.odk.collect.android.injection.config.CollectMapsDependencyModule;
 import org.odk.collect.android.injection.config.CollectOsmDroidDependencyModule;
 import org.odk.collect.android.injection.config.CollectProjectsDependencyModule;
 import org.odk.collect.android.injection.config.CollectSelfieCameraDependencyModule;
@@ -64,6 +65,9 @@ import org.odk.collect.googlemaps.DaggerGoogleMapsDependencyComponent;
 import org.odk.collect.googlemaps.GoogleMapsDependencyComponent;
 import org.odk.collect.googlemaps.GoogleMapsDependencyComponentProvider;
 import org.odk.collect.location.LocationClient;
+import org.odk.collect.maps.DaggerMapsDependencyComponent;
+import org.odk.collect.maps.MapsDependencyComponent;
+import org.odk.collect.maps.MapsDependencyComponentProvider;
 import org.odk.collect.maps.layers.ReferenceLayerRepository;
 import org.odk.collect.osmdroid.DaggerOsmDroidDependencyComponent;
 import org.odk.collect.osmdroid.OsmDroidDependencyComponent;
@@ -99,6 +103,7 @@ public class Collect extends Application implements
         EntitiesDependencyComponentProvider,
         SelfieCameraDependencyComponentProvider,
         GoogleMapsDependencyComponentProvider,
+        MapsDependencyComponentProvider,
         DrawDependencyComponentProvider {
 
     public static String defaultSysLanguage;
@@ -117,6 +122,7 @@ public class Collect extends Application implements
     private EntitiesDependencyComponent entitiesDependencyComponent;
     private SelfieCameraDependencyComponent selfieCameraDependencyComponent;
     private GoogleMapsDependencyComponent googleMapsDependencyComponent;
+    private MapsDependencyComponent mapsDependencyComponent;
     private DrawDependencyComponent drawDependencyComponent;
 
     /**
@@ -379,6 +385,22 @@ public class Collect extends Application implements
         }
 
         return googleMapsDependencyComponent;
+    }
+
+    @NonNull
+    @Override
+    public MapsDependencyComponent getMapsDependencyComponent() {
+        if (mapsDependencyComponent == null) {
+            mapsDependencyComponent = DaggerMapsDependencyComponent.builder()
+                    .mapsDependencyModule(new CollectMapsDependencyModule(
+                            applicationComponent.referenceLayerRepository(),
+                            applicationComponent.scheduler(),
+                            applicationComponent.settingsProvider()
+                    ))
+                    .build();
+        }
+
+        return mapsDependencyComponent;
     }
 
     @NonNull
