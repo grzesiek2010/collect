@@ -11,13 +11,15 @@ import com.google.android.material.bottomsheet.BottomSheetDialogFragment
 import org.odk.collect.androidshared.ui.GroupClickListener.addOnClickListener
 import org.odk.collect.maps.MapsDependencyComponentProvider
 import org.odk.collect.maps.databinding.OfflineMapLayersPickerBinding
-import org.odk.collect.shared.TempFiles
 import org.odk.collect.webpage.ExternalWebPageHelper
 import javax.inject.Inject
 
 class OfflineMapLayersPicker : BottomSheetDialogFragment() {
     @Inject
     lateinit var externalWebPageHelper: ExternalWebPageHelper
+
+    @Inject
+    lateinit var referenceLayerRepository: ReferenceLayerRepository
 
     private lateinit var offlineMapLayersPickerBinding: OfflineMapLayersPickerBinding
 
@@ -34,28 +36,7 @@ class OfflineMapLayersPicker : BottomSheetDialogFragment() {
     ): View {
         offlineMapLayersPickerBinding = OfflineMapLayersPickerBinding.inflate(inflater)
 
-        val layers = listOf(
-            ReferenceLayer("1", TempFiles.createTempFile()),
-            ReferenceLayer("2", TempFiles.createTempFile()),
-            ReferenceLayer("3", TempFiles.createTempFile()),
-            ReferenceLayer("4", TempFiles.createTempFile()),
-            ReferenceLayer("5", TempFiles.createTempFile()),
-            ReferenceLayer("6", TempFiles.createTempFile()),
-            ReferenceLayer("7", TempFiles.createTempFile()),
-            ReferenceLayer("8", TempFiles.createTempFile()),
-            ReferenceLayer("9", TempFiles.createTempFile()),
-            ReferenceLayer("10", TempFiles.createTempFile()),
-            ReferenceLayer("11", TempFiles.createTempFile()),
-            ReferenceLayer("12", TempFiles.createTempFile()),
-            ReferenceLayer("13", TempFiles.createTempFile()),
-            ReferenceLayer("14", TempFiles.createTempFile()),
-            ReferenceLayer("15", TempFiles.createTempFile()),
-            ReferenceLayer("16", TempFiles.createTempFile()),
-            ReferenceLayer("17", TempFiles.createTempFile()),
-            ReferenceLayer("18", TempFiles.createTempFile()),
-            ReferenceLayer("19", TempFiles.createTempFile())
-        )
-        val offlineMapLayersAdapter = OfflineMapLayersAdapter(layers, null)
+        val offlineMapLayersAdapter = OfflineMapLayersAdapter(referenceLayerRepository.getAll(), null)
         offlineMapLayersPickerBinding.layers.setAdapter(offlineMapLayersAdapter)
 
         offlineMapLayersPickerBinding.cancel.setOnClickListener {
