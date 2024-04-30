@@ -47,7 +47,7 @@ class OfflineMapLayersPicker : BottomSheetDialogFragment() {
 
         scheduler.immediate(
             background = {
-                val layers = referenceLayerRepository.getAll()
+                val layers = referenceLayerRepository.getAllSupported()
                 val selectedLayerId = settingsProvider.getUnprotectedSettings().getString(ProjectKeys.KEY_REFERENCE_LAYER)
 
                 Pair(layers, selectedLayerId)
