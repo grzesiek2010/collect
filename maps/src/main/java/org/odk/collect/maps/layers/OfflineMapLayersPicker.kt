@@ -1,42 +1,26 @@
 package org.odk.collect.maps.layers
 
-import android.content.Context
 import android.net.Uri
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.fragment.app.viewModels
 import com.google.android.material.bottomsheet.BottomSheetBehavior
 import com.google.android.material.bottomsheet.BottomSheetDialogFragment
 import org.odk.collect.androidshared.ui.GroupClickListener.addOnClickListener
-import org.odk.collect.async.Scheduler
-import org.odk.collect.maps.MapsDependencyComponentProvider
 import org.odk.collect.maps.databinding.OfflineMapLayersPickerBinding
-import org.odk.collect.settings.SettingsProvider
-import org.odk.collect.settings.keys.ProjectKeys
 import org.odk.collect.webpage.ExternalWebPageHelper
-import javax.inject.Inject
 
-class OfflineMapLayersPicker : BottomSheetDialogFragment() {
-    @Inject
-    lateinit var externalWebPageHelper: ExternalWebPageHelper
-
-    @Inject
-    lateinit var referenceLayerRepository: ReferenceLayerRepository
-
-    @Inject
-    lateinit var scheduler: Scheduler
-
-    @Inject
-    lateinit var settingsProvider: SettingsProvider
+class OfflineMapLayersPicker(
+    private val viewModelFactory: OfflineMapLayersPickerViewModel.Factory,
+    private val externalWebPageHelper: ExternalWebPageHelper
+) : BottomSheetDialogFragment() {
+    private val viewModel: OfflineMapLayersPickerViewModel by viewModels {
+        viewModelFactory
+    }
 
     private lateinit var offlineMapLayersPickerBinding: OfflineMapLayersPickerBinding
-
-    override fun onAttach(context: Context) {
-        super.onAttach(context)
-        val component = (context.applicationContext as MapsDependencyComponentProvider).mapsDependencyComponent
-        component.inject(this)
-    }
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -45,36 +29,29 @@ class OfflineMapLayersPicker : BottomSheetDialogFragment() {
     ): View {
         offlineMapLayersPickerBinding = OfflineMapLayersPickerBinding.inflate(inflater)
 
-        scheduler.immediate(
-            background = {
-                val layers = referenceLayerRepository.getAllSupported()
-                val selectedLayerId = settingsProvider.getUnprotectedSettings().getString(ProjectKeys.KEY_REFERENCE_LAYER)
+        viewModel.data.observe(this) { data ->
+            offlineMapLayersPickerBinding.progressIndicator.visibility = View.GONE
+            offlineMapLayersPickerBinding.layers.visibility = View.VISIBLE
 
-                Pair(layers, selectedLayerId)
-            },
-            foreground = { data ->
-                offlineMapLayersPickerBinding.progressIndicator.visibility = View.GONE
-                offlineMapLayersPickerBinding.layers.visibility = View.VISIBLE
+            val offlineMapLayersAdapter = OfflineMapLayersAdapter(data.first, data.second)
+            offlineMapLayersPickerBinding.layers.setAdapter(offlineMapLayersAdapter)
 
-                val offlineMapLayersAdapter = OfflineMapLayersAdapter(data.first, data.second)
-                offlineMapLayersPickerBinding.layers.setAdapter(offlineMapLayersAdapter)
-
-                offlineMapLayersPickerBinding.cancel.setOnClickListener {
-                    dismiss()
-                }
-                offlineMapLayersPickerBinding.save.setOnClickListener {
-                    val selectedLayerId = offlineMapLayersAdapter.getSelectedLayerId()
-                    settingsProvider.getUnprotectedSettings().save(ProjectKeys.KEY_REFERENCE_LAYER, selectedLayerId)
-                    dismiss()
-                }
-                offlineMapLayersPickerBinding.mbtilesInfoGroup.addOnClickListener {
-                    externalWebPageHelper.openWebPageInCustomTab(
-                        requireActivity(),
-                        Uri.parse("https://docs.getodk.org/collect-offline-maps/#transferring-offline-tilesets-to-devices")
-                    )
-                }
+            offlineMapLayersPickerBinding.cancel.setOnClickListener {
+                dismiss()
             }
-        )
+            offlineMapLayersPickerBinding.save.setOnClickListener {
+                val selectedLayerId = offlineMapLayersAdapter.getSelectedLayerId()
+                viewModel.saveSelectedLayer(selectedLayerId)
+                dismiss()
+            }
+            offlineMapLayersPickerBinding.mbtilesInfoGroup.addOnClickListener {
+                externalWebPageHelper.openWebPageInCustomTab(
+                    requireActivity(),
+                    Uri.parse("https://docs.getodk.org/collect-offline-maps/#transferring-offline-tilesets-to-devices")
+                )
+            }
+        }
+
         return offlineMapLayersPickerBinding.root
     }
 

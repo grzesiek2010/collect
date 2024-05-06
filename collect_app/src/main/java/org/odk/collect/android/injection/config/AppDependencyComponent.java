@@ -84,6 +84,7 @@ import org.odk.collect.draw.DrawActivity;
 import org.odk.collect.googlemaps.GoogleMapFragment;
 import org.odk.collect.location.LocationClient;
 import org.odk.collect.maps.MapFragmentFactory;
+import org.odk.collect.maps.layers.OfflineMapLayersPickerViewModel;
 import org.odk.collect.maps.layers.ReferenceLayerRepository;
 import org.odk.collect.permissions.PermissionsChecker;
 import org.odk.collect.permissions.PermissionsProvider;
@@ -310,4 +311,6 @@ public interface AppDependencyComponent {
     FormsDataService formsDataService();
 
     ExternalWebPageHelper externalWebPageHelper();
+
+    OfflineMapLayersPickerViewModel.Factory offlineMapLayersPickerViewModelFactory();
 }

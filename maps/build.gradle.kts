@@ -60,8 +60,6 @@ dependencies {
     implementation(Dependencies.androidx_fragment_ktx)
     implementation(Dependencies.androidx_preference_ktx)
     implementation(Dependencies.timber)
-    implementation(Dependencies.dagger)
-    kapt(Dependencies.dagger_compiler)
 
     testImplementation(Dependencies.junit)
     testImplementation(Dependencies.androidx_test_ext_junit)
