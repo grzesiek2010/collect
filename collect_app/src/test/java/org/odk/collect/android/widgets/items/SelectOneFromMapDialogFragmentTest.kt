@@ -26,6 +26,7 @@ import org.mockito.kotlin.whenever
 import org.odk.collect.android.databinding.SelectOneFromMapDialogLayoutBinding
 import org.odk.collect.android.formentry.FormEntryViewModel
 import org.odk.collect.android.injection.config.AppDependencyModule
+import org.odk.collect.android.storage.StoragePathProvider
 import org.odk.collect.android.support.CollectHelpers
 import org.odk.collect.android.support.MockFormEntryPromptBuilder
 import org.odk.collect.android.utilities.Appearances
@@ -41,9 +42,11 @@ import org.odk.collect.geo.selection.IconifiedText
 import org.odk.collect.geo.selection.MappableSelectItem
 import org.odk.collect.geo.selection.SelectionMapFragment
 import org.odk.collect.geo.selection.SelectionMapFragment.Companion.REQUEST_SELECT_ITEM
+import org.odk.collect.maps.MapConfigurator
 import org.odk.collect.maps.MapFragment
 import org.odk.collect.maps.MapFragmentFactory
 import org.odk.collect.maps.MapPoint
+import org.odk.collect.maps.layers.ReferenceLayerRepository
 import org.odk.collect.settings.SettingsProvider
 import org.odk.collect.testshared.FakeScheduler
 
@@ -109,6 +112,13 @@ class SelectOneFromMapDialogFragmentTest {
 
             override fun providesScheduler(workManager: WorkManager?): Scheduler {
                 return scheduler
+            }
+
+            override fun providesReferenceLayerRepository(
+                storagePathProvider: StoragePathProvider,
+                mapConfigurator: MapConfigurator
+            ): ReferenceLayerRepository {
+                return mock()
             }
         })
     }

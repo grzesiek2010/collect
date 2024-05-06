@@ -33,7 +33,7 @@ class OfflineMapLayersPickerViewModel(
         settingsProvider.getUnprotectedSettings().save(ProjectKeys.KEY_REFERENCE_LAYER, selectedLayerId)
     }
 
-    class Factory(
+    open class Factory(
         private val referenceLayerRepository: ReferenceLayerRepository,
         private val scheduler: Scheduler,
         private val settingsProvider: SettingsProvider
