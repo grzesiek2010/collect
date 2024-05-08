@@ -8,7 +8,8 @@ import org.odk.collect.strings.localization.getLocalizedString
 
 class OfflineMapLayersAdapter(
     private val layers: List<ReferenceLayer>,
-    private var selectedLayerId: String?
+    private var selectedLayerId: String?,
+    private val onSelectedLayerChanged: (String?) -> Unit
 ) : RecyclerView.Adapter<OfflineMapLayersAdapter.ViewHolder>() {
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
@@ -30,20 +31,15 @@ class OfflineMapLayersAdapter(
             }
         }
         holder.binding.radioButton.setOnClickListener {
-            selectedLayerId = if (position == 0) {
-                null
+            if (position == 0) {
+                onSelectedLayerChanged(null)
             } else {
-                layers[position - 1].id
+                onSelectedLayerChanged(layers[position - 1].id)
             }
-            notifyDataSetChanged()
         }
     }
 
     override fun getItemCount() = layers.size + 1
-
-    fun getSelectedLayerId(): String? {
-        return selectedLayerId
-    }
 
     class ViewHolder(val binding: OfflineMapLayerBinding) : RecyclerView.ViewHolder(binding.root)
 }
