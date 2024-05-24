@@ -30,6 +30,14 @@ class DirectoryReferenceLayerRepository(
         }
     }
 
+    override fun getSharedLayersDirPath(): String {
+        return directoryPaths[1]
+    }
+
+    override fun getProjectLayersDirPath(): String {
+        return directoryPaths[0]
+    }
+
     private fun getAllFilesWithDirectory() = directoryPaths.flatMap { dir ->
         listFilesRecursively(File(dir)).map { file ->
             Pair(file, dir)
