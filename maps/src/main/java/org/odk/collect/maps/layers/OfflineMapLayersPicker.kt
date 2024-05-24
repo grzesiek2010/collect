@@ -6,11 +6,14 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.activity.result.contract.ActivityResultContracts
+import androidx.fragment.app.setFragmentResultListener
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
 import com.google.android.material.bottomsheet.BottomSheetBehavior
 import com.google.android.material.bottomsheet.BottomSheetDialogFragment
+import org.odk.collect.androidshared.ui.DialogFragmentUtils
+import org.odk.collect.androidshared.ui.FragmentFactoryBuilder
 import org.odk.collect.androidshared.ui.GroupClickListener.addOnClickListener
 import org.odk.collect.async.Scheduler
 import org.odk.collect.maps.databinding.OfflineMapLayersPickerBinding
@@ -34,6 +37,27 @@ class OfflineMapLayersPicker(
     private lateinit var offlineMapLayersPickerBinding: OfflineMapLayersPickerBinding
 
     private val getLayers = registerForActivityResult(ActivityResultContracts.GetMultipleContents()) { uris ->
+        if (uris.isNotEmpty()) {
+            val uriStrings: MutableList<String> = ArrayList()
+            for (uri in uris) {
+                uriStrings.add(uri.toString())
+            }
+
+            DialogFragmentUtils.showIfNotShowing(
+                OfflineMapLayersImportDialog::class.java,
+                Bundle().apply { putStringArrayList(OfflineMapLayersImportDialog.URIS, ArrayList<String>(uriStrings)) },
+                childFragmentManager
+            )
+        }
+    }
+
+    override fun onCreate(savedInstanceState: Bundle?) {
+        childFragmentManager.fragmentFactory = FragmentFactoryBuilder()
+            .forClass(OfflineMapLayersImportDialog::class) {
+                OfflineMapLayersImportDialog(scheduler, referenceLayerRepository.getSharedLayersDirPath(), referenceLayerRepository.getProjectLayersDirPath())
+            }
+            .build()
+        super.onCreate(savedInstanceState)
     }
 
     override fun onCreateView(
@@ -71,6 +95,10 @@ class OfflineMapLayersPicker(
         offlineMapLayersPickerBinding.save.setOnClickListener {
             viewModel.saveSelectedLayer()
             dismiss()
+        }
+
+        setFragmentResultListener(OfflineMapLayersImportDialog.RESULT_KEY) { _, _ ->
+            viewModel.refreshLayers()
         }
         return offlineMapLayersPickerBinding.root
     }
