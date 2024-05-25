@@ -108,8 +108,8 @@ class OfflineMapLayersImportDialogTest {
 
     @Test
     fun `recreating maintains the selected layers location`() {
-        val file1 = TempFiles.createTempFile("layer1", ".mbtiles")
-        val file2 = TempFiles.createTempFile("layer2", ".mbtiles")
+        val file1 = TempFiles.createTempFile("layer1", MbtilesFile.FILE_EXTENSION)
+        val file2 = TempFiles.createTempFile("layer2", MbtilesFile.FILE_EXTENSION)
 
         val scenario = launchFragment(arrayListOf(file1.toUri().toString(), file2.toUri().toString()))
         onView(withId(org.odk.collect.maps.R.id.current_project_option)).perform(click())
@@ -122,8 +122,8 @@ class OfflineMapLayersImportDialogTest {
 
     @Test
     fun `the list of selected layers should be displayed`() {
-        val file1 = TempFiles.createTempFile("layer1", ".mbtiles")
-        val file2 = TempFiles.createTempFile("layer2", ".mbtiles")
+        val file1 = TempFiles.createTempFile("layer1", MbtilesFile.FILE_EXTENSION)
+        val file2 = TempFiles.createTempFile("layer2", MbtilesFile.FILE_EXTENSION)
 
         launchFragment(arrayListOf(file1.toUri().toString(), file2.toUri().toString()))
         scheduler.flush()
@@ -133,8 +133,8 @@ class OfflineMapLayersImportDialogTest {
 
     @Test
     fun `recreating maintains the list of selected layers`() {
-        val file1 = TempFiles.createTempFile("layer1", ".mbtiles")
-        val file2 = TempFiles.createTempFile("layer2", ".mbtiles")
+        val file1 = TempFiles.createTempFile("layer1", MbtilesFile.FILE_EXTENSION)
+        val file2 = TempFiles.createTempFile("layer2", MbtilesFile.FILE_EXTENSION)
 
         val scenario = launchFragment(arrayListOf(file1.toUri().toString(), file2.toUri().toString()))
         scheduler.flush()
@@ -147,7 +147,7 @@ class OfflineMapLayersImportDialogTest {
 
     @Test
     fun `only mbtiles files are taken into account`() {
-        val file1 = TempFiles.createTempFile("layer1", ".mbtiles")
+        val file1 = TempFiles.createTempFile("layer1", MbtilesFile.FILE_EXTENSION)
         val file2 = TempFiles.createTempFile("layer2", ".txt")
 
         val scenario = launchFragment(arrayListOf(file1.toUri().toString(), file2.toUri().toString()))
@@ -161,10 +161,10 @@ class OfflineMapLayersImportDialogTest {
 
     @Test
     fun `clicking the 'add layer' button moves the files to the shared layers dir if it is selected`() {
-        val file1 = TempFiles.createTempFile("layer1", ".mbtiles").also {
+        val file1 = TempFiles.createTempFile("layer1", MbtilesFile.FILE_EXTENSION).also {
             it.writeText("blah1")
         }
-        val file2 = TempFiles.createTempFile("layer2", ".mbtiles").also {
+        val file2 = TempFiles.createTempFile("layer2", MbtilesFile.FILE_EXTENSION).also {
             it.writeText("blah2")
         }
 
@@ -188,10 +188,10 @@ class OfflineMapLayersImportDialogTest {
 
     @Test
     fun `clicking the 'add layer' button moves the files to the project layers dir if it is selected`() {
-        val file1 = TempFiles.createTempFile("layer1", ".mbtiles").also {
+        val file1 = TempFiles.createTempFile("layer1", MbtilesFile.FILE_EXTENSION).also {
             it.writeText("blah1")
         }
-        val file2 = TempFiles.createTempFile("layer2", ".mbtiles").also {
+        val file2 = TempFiles.createTempFile("layer2", MbtilesFile.FILE_EXTENSION).also {
             it.writeText("blah2")
         }
 
