@@ -4,6 +4,7 @@ import android.net.Uri
 import androidx.fragment.app.testing.FragmentScenario
 import androidx.test.espresso.Espresso.onView
 import androidx.test.espresso.action.ViewActions.click
+import androidx.test.espresso.action.ViewActions.scrollTo
 import androidx.test.espresso.assertion.ViewAssertions.matches
 import androidx.test.espresso.matcher.ViewMatchers.assertThat
 import androidx.test.espresso.matcher.ViewMatchers.isChecked
@@ -74,7 +75,7 @@ class OfflineMapLayersPickerTest {
 
         scheduler.flush()
 
-        onView(withText("layer2")).perform(click())
+        onView(withText("layer2")).perform(scrollTo(), click())
         onView(withText(string.cancel)).perform(click())
         assertThat(settingsProvider.getUnprotectedSettings().contains(ProjectKeys.KEY_REFERENCE_LAYER), equalTo(false))
     }
@@ -125,7 +126,7 @@ class OfflineMapLayersPickerTest {
 
         scheduler.flush()
 
-        onView(withText("layer2")).perform(click())
+        onView(withText("layer2")).perform(scrollTo(), click())
         onView(withText(string.save)).perform(click())
         assertThat(settingsProvider.getUnprotectedSettings().getString(ProjectKeys.KEY_REFERENCE_LAYER), equalTo("2"))
     }
@@ -199,7 +200,7 @@ class OfflineMapLayersPickerTest {
         scheduler.flush()
 
         onView(withRecyclerView(R.id.layers).atPositionOnView(0, R.id.radio_button)).check(matches(isChecked()))
-        onView(withText("layer2")).perform(click())
+        onView(withText("layer2")).perform(scrollTo(), click())
         onView(withRecyclerView(R.id.layers).atPositionOnView(2, R.id.radio_button)).check(matches(isChecked()))
         scenario.recreate()
         onView(withRecyclerView(R.id.layers).atPositionOnView(2, R.id.radio_button)).check(matches(isChecked()))
