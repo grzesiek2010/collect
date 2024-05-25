@@ -17,7 +17,7 @@ class DirectoryReferenceLayerRepositoryTest {
         val file1 = TempFiles.createTempFile(dir)
         val file2 = TempFiles.createTempFile(dir)
 
-        val repository = DirectoryReferenceLayerRepository(listOf(dir.absolutePath), mock())
+        val repository = DirectoryReferenceLayerRepository(dir.absolutePath, "", mock())
         assertThat(repository.getAll().map { it.file }, containsInAnyOrder(file1, file2))
     }
 
@@ -28,7 +28,7 @@ class DirectoryReferenceLayerRepositoryTest {
         val file1 = TempFiles.createTempFile(dir2)
         val file2 = TempFiles.createTempFile(dir2)
 
-        val repository = DirectoryReferenceLayerRepository(listOf(dir1.absolutePath), mock())
+        val repository = DirectoryReferenceLayerRepository(dir1.absolutePath, "", mock())
         assertThat(repository.getAll().map { it.file }, containsInAnyOrder(file1, file2))
     }
 
@@ -39,7 +39,7 @@ class DirectoryReferenceLayerRepositoryTest {
         val file1 = TempFiles.createTempFile(dir1)
         val file2 = TempFiles.createTempFile(dir2)
 
-        val repository = DirectoryReferenceLayerRepository(listOf(dir1.absolutePath, dir2.absolutePath), mock())
+        val repository = DirectoryReferenceLayerRepository(dir1.absolutePath, dir2.absolutePath, mock())
         assertThat(repository.getAll().map { it.file }, containsInAnyOrder(file1, file2))
     }
 
@@ -55,7 +55,7 @@ class DirectoryReferenceLayerRepositoryTest {
         val file1 = TempFiles.createTempFile(dir1, "blah", ".temp")
         TempFiles.createTempFile(dir2, "blah", ".temp")
 
-        val repository = DirectoryReferenceLayerRepository(listOf(dir1.absolutePath, dir2.absolutePath), mock())
+        val repository = DirectoryReferenceLayerRepository(dir1.absolutePath, dir2.absolutePath, mock())
         assertThat(repository.getAll().map { it.file }, containsInAnyOrder(file1))
     }
 
@@ -71,7 +71,7 @@ class DirectoryReferenceLayerRepositoryTest {
             whenever(it.supportsLayer(file3)).thenReturn(true)
         }
 
-        val repository = DirectoryReferenceLayerRepository(listOf(dir.absolutePath)) { mapConfigurator }
+        val repository = DirectoryReferenceLayerRepository(dir.absolutePath, "") { mapConfigurator }
         assertThat(repository.getAllSupported().map { it.file }, containsInAnyOrder(file1, file3))
     }
 
@@ -89,7 +89,7 @@ class DirectoryReferenceLayerRepositoryTest {
             whenever(it.supportsLayer(file3)).thenReturn(true)
         }
 
-        val repository = DirectoryReferenceLayerRepository(listOf(dir1.absolutePath)) { mapConfigurator }
+        val repository = DirectoryReferenceLayerRepository(dir1.absolutePath, "") { mapConfigurator }
         assertThat(repository.getAllSupported().map { it.file }, containsInAnyOrder(file1, file3))
     }
 
@@ -97,19 +97,16 @@ class DirectoryReferenceLayerRepositoryTest {
     fun getAllSupported_withMultipleDirectories_returnsAllSupportedLayersInAllDirectories() {
         val dir1 = TempFiles.createTempDir()
         val dir2 = TempFiles.createTempDir()
-        val dir3 = TempFiles.createTempDir()
         val file1 = TempFiles.createTempFile(dir1)
         val file2 = TempFiles.createTempFile(dir2)
-        val file3 = TempFiles.createTempFile(dir3)
         val mapConfigurator = mock<MapConfigurator>().also {
             whenever(it.supportsLayer(file1)).thenReturn(true)
             whenever(it.supportsLayer(file2)).thenReturn(false)
-            whenever(it.supportsLayer(file3)).thenReturn(true)
         }
 
         val repository =
-            DirectoryReferenceLayerRepository(listOf(dir1.absolutePath, dir2.absolutePath, dir3.absolutePath)) { mapConfigurator }
-        assertThat(repository.getAllSupported().map { it.file }, containsInAnyOrder(file1, file3))
+            DirectoryReferenceLayerRepository(dir1.absolutePath, dir2.absolutePath) { mapConfigurator }
+        assertThat(repository.getAllSupported().map { it.file }, containsInAnyOrder(file1))
     }
 
     /**
@@ -121,19 +118,20 @@ class DirectoryReferenceLayerRepositoryTest {
     fun getAllSupported_withMultipleDirectoriesWithFilesWithTheSameRelativePath_onlyReturnsTheSupportedFileFromTheFirstDirectory() {
         val dir1 = TempFiles.createTempDir()
         val dir2 = TempFiles.createTempDir()
-        val dir3 = TempFiles.createTempDir()
         val file1 = TempFiles.createTempFile(dir1, "blah", ".temp")
         val file2 = TempFiles.createTempFile(dir2, "blah", ".temp")
-        val file3 = TempFiles.createTempFile(dir3, "blah", ".temp")
+        val file3 = TempFiles.createTempFile(dir2, "blah2", ".temp")
+        val file4 = TempFiles.createTempFile(dir2, "blah3", ".temp")
         val mapConfigurator = mock<MapConfigurator>().also {
             whenever(it.supportsLayer(file1)).thenReturn(true)
-            whenever(it.supportsLayer(file2)).thenReturn(false)
-            whenever(it.supportsLayer(file3)).thenReturn(true)
+            whenever(it.supportsLayer(file2)).thenReturn(true)
+            whenever(it.supportsLayer(file3)).thenReturn(false)
+            whenever(it.supportsLayer(file4)).thenReturn(true)
         }
 
         val repository =
-            DirectoryReferenceLayerRepository(listOf(dir1.absolutePath, dir2.absolutePath, dir3.absolutePath)) { mapConfigurator }
-        assertThat(repository.getAllSupported().map { it.file }, containsInAnyOrder(file1))
+            DirectoryReferenceLayerRepository(dir1.absolutePath, dir2.absolutePath) { mapConfigurator }
+        assertThat(repository.getAllSupported().map { it.file }, containsInAnyOrder(file1, file4))
     }
 
     @Test
@@ -142,7 +140,7 @@ class DirectoryReferenceLayerRepositoryTest {
         TempFiles.createTempFile(dir)
         val file2 = TempFiles.createTempFile(dir)
 
-        val repository = DirectoryReferenceLayerRepository(listOf(dir.absolutePath), mock())
+        val repository = DirectoryReferenceLayerRepository(dir.absolutePath, "", mock())
         val file2Layer = repository.getAll().first { it.file == file2 }
         assertThat(repository.get(file2Layer.id)!!.file, equalTo(file2))
     }
@@ -154,7 +152,7 @@ class DirectoryReferenceLayerRepositoryTest {
         TempFiles.createTempFile(dir1)
         val file2 = TempFiles.createTempFile(dir2)
 
-        val repository = DirectoryReferenceLayerRepository(listOf(dir1.absolutePath, dir2.absolutePath), mock())
+        val repository = DirectoryReferenceLayerRepository(dir1.absolutePath, dir2.absolutePath, mock())
         val file2Layer = repository.getAll().first { it.file == file2 }
         assertThat(repository.get(file2Layer.id)!!.file, equalTo(file2))
     }
@@ -166,7 +164,7 @@ class DirectoryReferenceLayerRepositoryTest {
         val file1 = TempFiles.createTempFile(dir1, "blah", ".temp")
         TempFiles.createTempFile(dir2, "blah", ".temp")
 
-        val repository = DirectoryReferenceLayerRepository(listOf(dir1.absolutePath, dir2.absolutePath), mock())
+        val repository = DirectoryReferenceLayerRepository(dir1.absolutePath, dir2.absolutePath, mock())
         val layerId = repository.getAll().first().id
         assertThat(repository.get(layerId)!!.file, equalTo(file1))
     }
@@ -176,7 +174,7 @@ class DirectoryReferenceLayerRepositoryTest {
         val dir = TempFiles.createTempDir()
         val file = TempFiles.createTempFile(dir)
 
-        val repository = DirectoryReferenceLayerRepository(listOf(dir.absolutePath), mock())
+        val repository = DirectoryReferenceLayerRepository(dir.absolutePath, "", mock())
         val fileLayer = repository.getAll().first { it.file == file }
 
         file.delete()
