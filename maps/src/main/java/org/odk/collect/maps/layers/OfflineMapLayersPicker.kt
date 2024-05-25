@@ -6,7 +6,6 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.activity.result.contract.ActivityResultContracts
-import androidx.fragment.app.setFragmentResultListener
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
@@ -77,13 +76,18 @@ class OfflineMapLayersPicker(
         offlineMapLayersPickerBinding = OfflineMapLayersPickerBinding.inflate(inflater)
 
         viewModel.data.observe(this) { data ->
-            offlineMapLayersPickerBinding.progressIndicator.visibility = View.GONE
-            offlineMapLayersPickerBinding.layers.visibility = View.VISIBLE
+            if (data == null) {
+                offlineMapLayersPickerBinding.progressIndicator.visibility = View.VISIBLE
+                offlineMapLayersPickerBinding.layers.visibility = View.GONE
+            } else {
+                offlineMapLayersPickerBinding.progressIndicator.visibility = View.GONE
+                offlineMapLayersPickerBinding.layers.visibility = View.VISIBLE
 
-            val offlineMapLayersAdapter = OfflineMapLayersAdapter(data.first, data.second) {
-                viewModel.changeSelectedLayerId(it)
+                val offlineMapLayersAdapter = OfflineMapLayersAdapter(data.first, data.second) {
+                    viewModel.changeSelectedLayerId(it)
+                }
+                offlineMapLayersPickerBinding.layers.setAdapter(offlineMapLayersAdapter)
             }
-            offlineMapLayersPickerBinding.layers.setAdapter(offlineMapLayersAdapter)
         }
 
         offlineMapLayersPickerBinding.mbtilesInfoGroup.addOnClickListener {

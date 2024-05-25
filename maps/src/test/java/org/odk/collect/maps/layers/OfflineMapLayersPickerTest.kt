@@ -228,6 +228,26 @@ class OfflineMapLayersPickerTest {
     }
 
     @Test
+    fun `when result received progress indicator is displayed during loading layers`() {
+        whenever(referenceLayerRepository.getAllSupported()).thenReturn(layers)
+
+        val scenario = launchFragment()
+
+        scheduler.flush()
+
+        scenario.onFragment {
+            it.childFragmentManager.setFragmentResult(OfflineMapLayersImportDialog.RESULT_KEY, bundleOf())
+        }
+
+        onView(withId(R.id.progress_indicator)).check(matches(isDisplayed()))
+        onView(withId(R.id.layers)).check(matches(not(isDisplayed())))
+
+        scheduler.flush()
+        onView(withId(R.id.progress_indicator)).check(matches(not(isDisplayed())))
+        onView(withId(R.id.layers)).check(matches(isDisplayed()))
+    }
+
+    @Test
     fun `when result received the data should be refreshed`() {
         whenever(referenceLayerRepository.getAllSupported()).thenReturn(listOf(
             ReferenceLayer("1", TempFiles.createTempFile(), "layer1")
