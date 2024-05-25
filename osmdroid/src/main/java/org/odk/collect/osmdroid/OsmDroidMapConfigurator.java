@@ -90,11 +90,6 @@ public class OsmDroidMapConfigurator implements MapConfigurator {
         return MbtilesFile.readLayerType(file) == MbtilesFile.LayerType.RASTER;
     }
 
-    @Override public String getDisplayName(File file) {
-        String name = MbtilesFile.readName(file);
-        return name != null ? name : file.getName();
-    }
-
     public static class WmsOption {
         final String id;
         final int labelId;

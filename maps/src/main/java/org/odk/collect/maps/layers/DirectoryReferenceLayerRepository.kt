@@ -13,7 +13,7 @@ class DirectoryReferenceLayerRepository(
 
     override fun getAll(): List<ReferenceLayer> {
         return getAllFilesWithDirectory().map {
-            ReferenceLayer(getIdForFile(it.second, it.first), it.first, getName(it.first))
+            ReferenceLayer(getIdForFile(it.second, it.first), it.first, getMapConfigurator().getDisplayName(it.first))
         }.distinctBy { it.id }
     }
 
@@ -25,7 +25,7 @@ class DirectoryReferenceLayerRepository(
         val file = getAllFilesWithDirectory().firstOrNull { getIdForFile(it.second, it.first) == id }
 
         return if (file != null) {
-            ReferenceLayer(getIdForFile(file.second, file.first), file.first, getName(file.first))
+            ReferenceLayer(getIdForFile(file.second, file.first), file.first, getMapConfigurator().getDisplayName(file.first))
         } else {
             null
         }
@@ -47,9 +47,4 @@ class DirectoryReferenceLayerRepository(
 
     private fun getIdForFile(directoryPath: String, file: File) =
         PathUtils.getRelativeFilePath(directoryPath, file.absolutePath)
-
-    private fun getName(file: File): String {
-        val name = MbtilesFile.readName(file)
-        return name ?: file.getName()
-    }
 }

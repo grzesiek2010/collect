@@ -3,6 +3,7 @@ package org.odk.collect.maps
 import android.content.Context
 import android.os.Bundle
 import androidx.preference.Preference
+import org.odk.collect.maps.layers.MbtilesFile
 import org.odk.collect.shared.settings.Settings
 import java.io.File
 
@@ -45,5 +46,7 @@ interface MapConfigurator {
     fun supportsLayer(file: File): Boolean
 
     /** Returns a String name for a given overlay file, or null if unsupported.  */
-    fun getDisplayName(file: File): String
+    fun getDisplayName(file: File): String {
+        return MbtilesFile.readName(file) ?: file.name
+    }
 }

@@ -84,11 +84,6 @@ public class MapboxMapConfigurator implements MapConfigurator {
         return MbtilesFile.readLayerType(file) != null;
     }
 
-    @Override public String getDisplayName(File file) {
-        String name = MbtilesFile.readName(file);
-        return name != null ? name : file.getName();
-    }
-
     static class MapboxUrlOption {
         final String url;
         final int labelId;
