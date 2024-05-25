@@ -1,11 +1,15 @@
 package org.odk.collect.maps.layers
 
+import android.content.Intent
 import android.net.Uri
+import androidx.core.os.bundleOf
 import androidx.fragment.app.testing.FragmentScenario
 import androidx.test.espresso.Espresso.onView
 import androidx.test.espresso.action.ViewActions.click
 import androidx.test.espresso.action.ViewActions.scrollTo
 import androidx.test.espresso.assertion.ViewAssertions.matches
+import androidx.test.espresso.intent.Intents
+import androidx.test.espresso.intent.matcher.IntentMatchers
 import androidx.test.espresso.matcher.ViewMatchers.assertThat
 import androidx.test.espresso.matcher.ViewMatchers.isChecked
 import androidx.test.espresso.matcher.ViewMatchers.isDisplayed
@@ -204,6 +208,50 @@ class OfflineMapLayersPickerTest {
         onView(withRecyclerView(R.id.layers).atPositionOnView(2, R.id.radio_button)).check(matches(isChecked()))
         scenario.recreate()
         onView(withRecyclerView(R.id.layers).atPositionOnView(2, R.id.radio_button)).check(matches(isChecked()))
+    }
+
+    @Test
+    fun `clicking the 'add layer' button opens file picker that allows selecting multiple files`() {
+        Intents.init()
+        launchFragment()
+
+        onView(withText(string.add_layer)).perform(click())
+
+        Intents.getIntents()[0].apply {
+            assertThat(this, IntentMatchers.hasAction(Intent.ACTION_GET_CONTENT))
+            assertThat(categories.containsAll(listOf(Intent.CATEGORY_OPENABLE)), equalTo(true))
+            assertThat(this, IntentMatchers.hasType("*/*"))
+            assertThat(this, IntentMatchers.hasExtra(Intent.EXTRA_ALLOW_MULTIPLE, true))
+        }
+
+        Intents.release()
+    }
+
+    @Test
+    fun `when result received the data should be refreshed`() {
+        whenever(referenceLayerRepository.getAllSupported()).thenReturn(listOf(
+            ReferenceLayer("1", TempFiles.createTempFile(), "layer1")
+        ))
+
+        val scenario = launchFragment()
+
+        scheduler.flush()
+        onView(withText(string.none)).check(matches(isDisplayed()))
+        onView(withText("layer1")).check(matches(isDisplayed()))
+
+        whenever(referenceLayerRepository.getAllSupported()).thenReturn(listOf(
+            ReferenceLayer("1", TempFiles.createTempFile(), "layer1"),
+            ReferenceLayer("2", TempFiles.createTempFile(), "layer2")
+        ))
+
+        scenario.onFragment {
+            it.childFragmentManager.setFragmentResult(OfflineMapLayersImportDialog.RESULT_KEY, bundleOf())
+        }
+
+        scheduler.flush()
+        onView(withText(string.none)).check(matches(isDisplayed()))
+        onView(withText("layer1")).check(matches(isDisplayed()))
+        onView(withText("layer2")).check(matches(isDisplayed()))
     }
 
     private fun launchFragment(): FragmentScenario<OfflineMapLayersPicker> {
