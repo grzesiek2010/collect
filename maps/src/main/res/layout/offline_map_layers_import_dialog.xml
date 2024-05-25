@@ -147,6 +147,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="@string/cancel"
+        android:contentDescription="@string/cancel"
         android:layout_marginEnd="@dimen/margin_small"
         app:layout_constraintBottom_toBottomOf="@id/add_layer_button"
         app:layout_constraintEnd_toStartOf="@id/add_layer_button"
@@ -160,6 +161,7 @@
         android:layout_marginEnd="@dimen/margin_standard"
         android:layout_marginBottom="@dimen/margin_extra_small"
         android:text="@string/add_layer"
+        android:contentDescription="@string/add_layer"
         android:enabled="false"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent" />
