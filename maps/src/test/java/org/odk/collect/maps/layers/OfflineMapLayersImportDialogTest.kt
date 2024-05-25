@@ -6,6 +6,7 @@ import androidx.fragment.app.testing.FragmentScenario
 import androidx.test.espresso.Espresso.onView
 import androidx.test.espresso.action.ViewActions.click
 import androidx.test.espresso.action.ViewActions.scrollTo
+import androidx.test.espresso.assertion.ViewAssertions.doesNotExist
 import androidx.test.espresso.assertion.ViewAssertions.matches
 import androidx.test.espresso.matcher.ViewMatchers.isChecked
 import androidx.test.espresso.matcher.ViewMatchers.isDisplayed
@@ -142,6 +143,20 @@ class OfflineMapLayersImportDialogTest {
 
         onView(withText("layer1.mbtiles")).check(matches(isDisplayed()))
         onView(withText("layer2.mbtiles")).check(matches(isDisplayed()))
+    }
+
+    @Test
+    fun `only mbtiles files are taken into account`() {
+        val file1 = TempFiles.createTempFile("layer1", ".mbtiles")
+        val file2 = TempFiles.createTempFile("layer2", ".txt")
+
+        val scenario = launchFragment(arrayListOf(file1.toUri().toString(), file2.toUri().toString()))
+        scheduler.flush()
+
+        scenario.recreate()
+
+        onView(withText("layer1.mbtiles")).check(matches(isDisplayed()))
+        onView(withText("layer2.txt")).check(doesNotExist())
     }
 
     @Test
