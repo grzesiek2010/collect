@@ -119,8 +119,4 @@ class OfflineMapLayersPicker(
             // ignore
         }
     }
-
-    companion object {
-        const val TAG = "OfflineMapLayersPicker"
-    }
 }
