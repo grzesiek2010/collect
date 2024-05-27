@@ -11,12 +11,14 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
 import com.google.android.material.bottomsheet.BottomSheetBehavior
 import com.google.android.material.bottomsheet.BottomSheetDialogFragment
+import com.google.android.material.dialog.MaterialAlertDialogBuilder
 import org.odk.collect.androidshared.ui.DialogFragmentUtils
 import org.odk.collect.androidshared.ui.FragmentFactoryBuilder
 import org.odk.collect.androidshared.ui.GroupClickListener.addOnClickListener
 import org.odk.collect.async.Scheduler
 import org.odk.collect.maps.databinding.OfflineMapLayersPickerBinding
 import org.odk.collect.settings.SettingsProvider
+import org.odk.collect.strings.localization.getLocalizedString
 import org.odk.collect.webpage.ExternalWebPageHelper
 
 class OfflineMapLayersPicker(
@@ -24,7 +26,7 @@ class OfflineMapLayersPicker(
     private val scheduler: Scheduler,
     private val settingsProvider: SettingsProvider,
     private val externalWebPageHelper: ExternalWebPageHelper
-) : BottomSheetDialogFragment() {
+) : BottomSheetDialogFragment(), OfflineMapLayersAdapter.OfflineMapLayersAdapterInterface {
     private val viewModel: OfflineMapLayersPickerViewModel by viewModels {
         object : ViewModelProvider.Factory {
             override fun <T : ViewModel> create(modelClass: Class<T>): T {
@@ -64,7 +66,7 @@ class OfflineMapLayersPicker(
         super.onCreate(savedInstanceState)
 
         childFragmentManager.setFragmentResultListener(OfflineMapLayersImportDialog.RESULT_KEY, this) { _, _ ->
-            viewModel.refreshLayers()
+            viewModel.loadLayers()
         }
     }
 
@@ -75,6 +77,9 @@ class OfflineMapLayersPicker(
     ): View {
         offlineMapLayersPickerBinding = OfflineMapLayersPickerBinding.inflate(inflater)
 
+        val offlineMapLayersAdapter = OfflineMapLayersAdapter(this)
+        offlineMapLayersPickerBinding.layers.setAdapter(offlineMapLayersAdapter)
+
         viewModel.data.observe(this) { data ->
             if (data == null) {
                 offlineMapLayersPickerBinding.progressIndicator.visibility = View.VISIBLE
@@ -83,10 +88,7 @@ class OfflineMapLayersPicker(
                 offlineMapLayersPickerBinding.progressIndicator.visibility = View.GONE
                 offlineMapLayersPickerBinding.layers.visibility = View.VISIBLE
 
-                val offlineMapLayersAdapter = OfflineMapLayersAdapter(data.first, data.second) {
-                    viewModel.changeSelectedLayerId(it)
-                }
-                offlineMapLayersPickerBinding.layers.setAdapter(offlineMapLayersAdapter)
+                offlineMapLayersAdapter.setData(data)
             }
         }
 
@@ -106,7 +108,7 @@ class OfflineMapLayersPicker(
         }
 
         offlineMapLayersPickerBinding.save.setOnClickListener {
-            viewModel.saveSelectedLayer()
+            viewModel.saveCheckedLayer()
             dismiss()
         }
 
@@ -122,5 +124,28 @@ class OfflineMapLayersPicker(
         } catch (e: Exception) {
             // ignore
         }
+    }
+
+    override fun onLayerChecked(layerId: String?) {
+        viewModel.onLayerChecked(layerId)
+    }
+
+    override fun onLayerToggled(layerId: String?) {
+        viewModel.onLayerToggled(layerId)
+    }
+
+    override fun onDeleteLayer(layerItem: OfflineMapLayersAdapter.ReferenceLayerItem) {
+        MaterialAlertDialogBuilder(requireActivity())
+            .setMessage(requireActivity().getLocalizedString(org.odk.collect.strings.R.string.delete_layer_confirmation_message, layerItem.name))
+            .setPositiveButton(org.odk.collect.strings.R.string.delete_layer) { _, _ ->
+                layerItem.file?.delete()
+                if (layerItem.id == viewModel.getCheckedLayer()) {
+                    viewModel.onLayerChecked(null)
+                }
+                viewModel.onLayerDeleted(layerItem.id)
+            }
+            .setNegativeButton(org.odk.collect.strings.R.string.cancel, null)
+            .create()
+            .show()
     }
 }

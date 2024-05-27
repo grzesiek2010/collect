@@ -12,33 +12,56 @@ class OfflineMapLayersPickerViewModel(
     private val scheduler: Scheduler,
     private val settingsProvider: SettingsProvider
 ) : ViewModel() {
-    private val _data = MutableLiveData<Pair<List<ReferenceLayer>, String?>?>(null)
-    val data: LiveData<Pair<List<ReferenceLayer>, String?>?> = _data
+    private val _data = MutableLiveData<List<OfflineMapLayersAdapter.ReferenceLayerItem>?>(null)
+    val data: LiveData<List<OfflineMapLayersAdapter.ReferenceLayerItem>?> = _data
 
     init {
-        refreshLayers()
+        loadLayers()
     }
 
-    fun saveSelectedLayer() {
-        val selectedLayerId = data.value?.second
-        settingsProvider.getUnprotectedSettings().save(ProjectKeys.KEY_REFERENCE_LAYER, selectedLayerId)
+    fun saveCheckedLayer() {
+        val checkedLayerId = _data.value?.find { it.isChecked }?.id
+        settingsProvider.getUnprotectedSettings().save(ProjectKeys.KEY_REFERENCE_LAYER, checkedLayerId)
     }
 
-    fun changeSelectedLayerId(selectedLayerId: String?) {
-        _data.postValue(_data.value?.copy(second = selectedLayerId))
+    fun onLayerChecked(layerId: String?) {
+        _data.value = _data.value?.map {
+            it.copy(isChecked = it.id == layerId)
+        }
     }
 
-    fun refreshLayers() {
+    fun onLayerToggled(layerId: String?) {
+        _data.value = _data.value?.map {
+            val isExpanded = if (it.id == layerId) {
+                !it.isExpanded
+            } else {
+                it.isExpanded
+            }
+            it.copy(isExpanded = isExpanded)
+        }
+    }
+
+    fun onLayerDeleted(deletedLayerId: String?) {
+        _data.value = _data.value?.filter { it.id != deletedLayerId }
+    }
+
+    fun loadLayers() {
         _data.value = null
 
         scheduler.immediate(
             background = {
                 val layers = referenceLayerRepository.getAllSupported()
-                val selectedLayerId = settingsProvider.getUnprotectedSettings().getString(ProjectKeys.KEY_REFERENCE_LAYER)
+                val checkedLayerId = settingsProvider.getUnprotectedSettings().getString(ProjectKeys.KEY_REFERENCE_LAYER)
 
-                _data.postValue(Pair(layers, selectedLayerId))
+                val newData = mutableListOf(OfflineMapLayersAdapter.ReferenceLayerItem(null, null, "", checkedLayerId == null, false))
+                newData.addAll(layers.map { OfflineMapLayersAdapter.ReferenceLayerItem(it.id, it.file, it.name, it.id == checkedLayerId, false) })
+                _data.postValue(newData)
             },
             foreground = { }
         )
+    }
+
+    fun getCheckedLayer(): String? {
+        return _data.value?.find { it.isChecked }?.id
     }
 }
