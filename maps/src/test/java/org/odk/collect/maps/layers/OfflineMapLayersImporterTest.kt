@@ -29,7 +29,7 @@ import org.odk.collect.testshared.RobolectricHelpers
 import java.io.File
 
 @RunWith(AndroidJUnit4::class)
-class OfflineMapLayersImportDialogTest {
+class OfflineMapLayersImporterTest {
     private val scheduler = FakeScheduler()
     private val sharedLayersDirPath = TempFiles.createTempDir().absolutePath
     private val projectLayersDirPath = TempFiles.createTempDir().absolutePath
@@ -37,8 +37,8 @@ class OfflineMapLayersImportDialogTest {
     @get:Rule
     val fragmentScenarioLauncherRule = FragmentScenarioLauncherRule(
         FragmentFactoryBuilder()
-            .forClass(OfflineMapLayersImportDialog::class) {
-                OfflineMapLayersImportDialog(scheduler, sharedLayersDirPath, projectLayersDirPath)
+            .forClass(OfflineMapLayersImporter::class) {
+                OfflineMapLayersImporter(scheduler, sharedLayersDirPath, projectLayersDirPath)
             }.build()
     )
 
@@ -56,7 +56,7 @@ class OfflineMapLayersImportDialogTest {
         launchFragment(arrayListOf()).onFragment {
             var resultReceived = false
             it.parentFragmentManager.setFragmentResultListener(
-                OfflineMapLayersImportDialog.RESULT_KEY,
+                OfflineMapLayersImporter.RESULT_KEY,
                 it
             ) { _, _ ->
                 resultReceived = true
@@ -85,7 +85,7 @@ class OfflineMapLayersImportDialogTest {
             scheduler.flush()
             var resultReceived = false
             it.parentFragmentManager.setFragmentResultListener(
-                OfflineMapLayersImportDialog.RESULT_KEY,
+                OfflineMapLayersImporter.RESULT_KEY,
                 it
             ) { _, _ ->
                 resultReceived = true
@@ -260,10 +260,10 @@ class OfflineMapLayersImportDialogTest {
         assertThat(copiedFile2.readText(), equalTo("blah2"))
     }
 
-    private fun launchFragment(uris: ArrayList<String>): FragmentScenario<OfflineMapLayersImportDialog> {
+    private fun launchFragment(uris: ArrayList<String>): FragmentScenario<OfflineMapLayersImporter> {
         return fragmentScenarioLauncherRule.launchInContainer(
-            OfflineMapLayersImportDialog::class.java,
-            Bundle().apply { putStringArrayList(OfflineMapLayersImportDialog.URIS, uris) }
+            OfflineMapLayersImporter::class.java,
+            Bundle().apply { putStringArrayList(OfflineMapLayersImporter.URIS, uris) }
         )
     }
 }

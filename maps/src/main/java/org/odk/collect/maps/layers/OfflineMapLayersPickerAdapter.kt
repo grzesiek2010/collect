@@ -7,13 +7,13 @@ import androidx.core.content.ContextCompat
 import androidx.recyclerview.widget.AsyncListDiffer
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.RecyclerView
-import org.odk.collect.maps.databinding.OfflineMapLayerBinding
+import org.odk.collect.maps.databinding.OfflineMapLayersPickerItemBinding
 import org.odk.collect.strings.localization.getLocalizedString
 import java.io.File
 
-class OfflineMapLayersAdapter(
+class OfflineMapLayersPickerAdapter(
     private val listener: OfflineMapLayersAdapterInterface
-) : RecyclerView.Adapter<OfflineMapLayersAdapter.ViewHolder>() {
+) : RecyclerView.Adapter<OfflineMapLayersPickerAdapter.ViewHolder>() {
     interface OfflineMapLayersAdapterInterface {
         fun onLayerChecked(layerId: String?)
 
@@ -34,7 +34,7 @@ class OfflineMapLayersAdapter(
     private val asyncListDiffer = AsyncListDiffer(this, diffUtil)
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
-        val binding = OfflineMapLayerBinding.inflate(LayoutInflater.from(parent.context), parent, false)
+        val binding = OfflineMapLayersPickerItemBinding.inflate(LayoutInflater.from(parent.context), parent, false)
         return ViewHolder(binding)
     }
 
@@ -93,7 +93,7 @@ class OfflineMapLayersAdapter(
         asyncListDiffer.submitList(layers)
     }
 
-    class ViewHolder(val binding: OfflineMapLayerBinding) : RecyclerView.ViewHolder(binding.root)
+    class ViewHolder(val binding: OfflineMapLayersPickerItemBinding) : RecyclerView.ViewHolder(binding.root)
 
     data class ReferenceLayerItem(
         val id: String?,

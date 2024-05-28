@@ -12,8 +12,8 @@ class OfflineMapLayersPickerViewModel(
     private val scheduler: Scheduler,
     private val settingsProvider: SettingsProvider
 ) : ViewModel() {
-    private val _data = MutableLiveData<List<OfflineMapLayersAdapter.ReferenceLayerItem>?>(null)
-    val data: LiveData<List<OfflineMapLayersAdapter.ReferenceLayerItem>?> = _data
+    private val _data = MutableLiveData<List<OfflineMapLayersPickerAdapter.ReferenceLayerItem>?>(null)
+    val data: LiveData<List<OfflineMapLayersPickerAdapter.ReferenceLayerItem>?> = _data
 
     init {
         loadLayers()
@@ -53,8 +53,8 @@ class OfflineMapLayersPickerViewModel(
                 val layers = referenceLayerRepository.getAllSupported()
                 val checkedLayerId = settingsProvider.getUnprotectedSettings().getString(ProjectKeys.KEY_REFERENCE_LAYER)
 
-                val newData = mutableListOf(OfflineMapLayersAdapter.ReferenceLayerItem(null, null, "", checkedLayerId == null, false))
-                newData.addAll(layers.map { OfflineMapLayersAdapter.ReferenceLayerItem(it.id, it.file, it.name, it.id == checkedLayerId, false) })
+                val newData = mutableListOf(OfflineMapLayersPickerAdapter.ReferenceLayerItem(null, null, "", checkedLayerId == null, false))
+                newData.addAll(layers.map { OfflineMapLayersPickerAdapter.ReferenceLayerItem(it.id, it.file, it.name, it.id == checkedLayerId, false) })
                 _data.postValue(newData)
             },
             foreground = { }

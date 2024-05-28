@@ -444,7 +444,7 @@ class OfflineMapLayersPickerTest {
         scheduler.flush()
 
         scenario.onFragment {
-            it.childFragmentManager.setFragmentResult(OfflineMapLayersImportDialog.RESULT_KEY, bundleOf())
+            it.childFragmentManager.setFragmentResult(OfflineMapLayersImporter.RESULT_KEY, bundleOf())
         }
 
         onView(withId(R.id.progress_indicator)).check(matches(isDisplayed()))
@@ -471,7 +471,7 @@ class OfflineMapLayersPickerTest {
         ))
 
         scenario.onFragment {
-            it.childFragmentManager.setFragmentResult(OfflineMapLayersImportDialog.RESULT_KEY, bundleOf())
+            it.childFragmentManager.setFragmentResult(OfflineMapLayersImporter.RESULT_KEY, bundleOf())
         }
 
         scheduler.flush()
