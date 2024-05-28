@@ -84,9 +84,11 @@ class OfflineMapLayersPicker(
             if (data == null) {
                 offlineMapLayersPickerBinding.progressIndicator.visibility = View.VISIBLE
                 offlineMapLayersPickerBinding.layers.visibility = View.GONE
+                offlineMapLayersPickerBinding.save.isEnabled = false
             } else {
                 offlineMapLayersPickerBinding.progressIndicator.visibility = View.GONE
                 offlineMapLayersPickerBinding.layers.visibility = View.VISIBLE
+                offlineMapLayersPickerBinding.save.isEnabled = true
 
                 offlineMapLayersAdapter.setData(data)
             }
