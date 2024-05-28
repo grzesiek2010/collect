@@ -10,7 +10,7 @@ import androidx.test.espresso.assertion.ViewAssertions.doesNotExist
 import androidx.test.espresso.assertion.ViewAssertions.matches
 import androidx.test.espresso.matcher.ViewMatchers.isChecked
 import androidx.test.espresso.matcher.ViewMatchers.isDisplayed
-import androidx.test.espresso.matcher.ViewMatchers.withContentDescription
+import androidx.test.espresso.matcher.ViewMatchers.isEnabled
 import androidx.test.espresso.matcher.ViewMatchers.withId
 import androidx.test.espresso.matcher.ViewMatchers.withText
 import androidx.test.ext.junit.runners.AndroidJUnit4
@@ -62,7 +62,7 @@ class OfflineMapLayersImportDialogTest {
                 resultReceived = true
             }
 
-            onView(withContentDescription(R.string.cancel)).perform(click())
+            onView(withId(org.odk.collect.maps.R.id.cancel_button)).perform(click())
             assertThat(resultReceived, equalTo(false))
         }
     }
@@ -72,7 +72,7 @@ class OfflineMapLayersImportDialogTest {
         launchFragment(arrayListOf()).onFragment {
             scheduler.flush()
             assertThat(it.isVisible, equalTo(true))
-            onView(withContentDescription(R.string.add_layer)).perform(click())
+            onView(withId(org.odk.collect.maps.R.id.add_layer_button)).perform(click())
             scheduler.flush()
             RobolectricHelpers.runLooper()
             assertThat(it.isVisible, equalTo(false))
@@ -91,11 +91,45 @@ class OfflineMapLayersImportDialogTest {
                 resultReceived = true
             }
 
-            onView(withContentDescription(R.string.add_layer)).perform(click())
+            onView(withId(org.odk.collect.maps.R.id.add_layer_button)).perform(click())
             scheduler.flush()
             RobolectricHelpers.runLooper()
             assertThat(resultReceived, equalTo(true))
         }
+    }
+
+    @Test
+    fun `progress indicator is displayed during loading layers`() {
+        val file1 = TempFiles.createTempFile("layer1", MbtilesFile.FILE_EXTENSION)
+        val file2 = TempFiles.createTempFile("layer2", MbtilesFile.FILE_EXTENSION)
+
+        launchFragment(arrayListOf(file1.toUri().toString(), file2.toUri().toString()))
+
+        onView(withId(org.odk.collect.maps.R.id.progress_indicator)).check(matches(isDisplayed()))
+        onView(withId(org.odk.collect.maps.R.id.layers_list)).check(matches(not(isDisplayed())))
+
+        scheduler.flush()
+
+        onView(withId(org.odk.collect.maps.R.id.progress_indicator)).check(matches(not(isDisplayed())))
+        onView(withId(org.odk.collect.maps.R.id.layers_list)).check(matches(isDisplayed()))
+    }
+
+    @Test
+    fun `the 'cancel' button is enabled during loading layers`() {
+        launchFragment(arrayListOf())
+
+        onView(withId(org.odk.collect.maps.R.id.cancel_button)).check(matches(isEnabled()))
+        scheduler.flush()
+        onView(withId(org.odk.collect.maps.R.id.cancel_button)).check(matches(isEnabled()))
+    }
+
+    @Test
+    fun `the 'add layer' button is disabled during loading layers`() {
+        launchFragment(arrayListOf())
+
+        onView(withId(org.odk.collect.maps.R.id.add_layer_button)).check(matches(not(isEnabled())))
+        scheduler.flush()
+        onView(withId(org.odk.collect.maps.R.id.add_layer_button)).check(matches(isEnabled()))
     }
 
     @Test
@@ -107,11 +141,22 @@ class OfflineMapLayersImportDialogTest {
     }
 
     @Test
-    fun `recreating maintains the selected layers location`() {
-        val file1 = TempFiles.createTempFile("layer1", MbtilesFile.FILE_EXTENSION)
-        val file2 = TempFiles.createTempFile("layer2", MbtilesFile.FILE_EXTENSION)
+    fun `checking location sets selection correctly`() {
+        launchFragment(arrayListOf())
+        onView(withId(org.odk.collect.maps.R.id.current_project_option)).perform(click())
 
-        val scenario = launchFragment(arrayListOf(file1.toUri().toString(), file2.toUri().toString()))
+        onView(withId(org.odk.collect.maps.R.id.all_projects_option)).check(matches(not(isChecked())))
+        onView(withId(org.odk.collect.maps.R.id.current_project_option)).check(matches(isChecked()))
+
+        onView(withId(org.odk.collect.maps.R.id.all_projects_option)).perform(click())
+
+        onView(withId(org.odk.collect.maps.R.id.all_projects_option)).check(matches(isChecked()))
+        onView(withId(org.odk.collect.maps.R.id.current_project_option)).check(matches(not(isChecked())))
+    }
+
+    @Test
+    fun `recreating maintains the selected layers location`() {
+        val scenario = launchFragment(arrayListOf())
         onView(withId(org.odk.collect.maps.R.id.current_project_option)).perform(click())
 
         scenario.recreate()
@@ -171,7 +216,7 @@ class OfflineMapLayersImportDialogTest {
         launchFragment(arrayListOf(file1.toUri().toString(), file2.toUri().toString()))
         scheduler.flush()
 
-        onView(withContentDescription(R.string.add_layer)).perform(click())
+        onView(withId(org.odk.collect.maps.R.id.add_layer_button)).perform(click())
         scheduler.flush()
 
         assertThat(File(sharedLayersDirPath).listFiles().size, equalTo(2))
@@ -200,7 +245,7 @@ class OfflineMapLayersImportDialogTest {
 
         onView(withId(org.odk.collect.maps.R.id.current_project_option)).perform(scrollTo(), click())
 
-        onView(withContentDescription(R.string.add_layer)).perform(click())
+        onView(withId(org.odk.collect.maps.R.id.add_layer_button)).perform(click())
         scheduler.flush()
 
         assertThat(File(sharedLayersDirPath).listFiles().size, equalTo(0))
