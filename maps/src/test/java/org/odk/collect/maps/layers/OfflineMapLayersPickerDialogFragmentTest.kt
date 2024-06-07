@@ -33,7 +33,6 @@ import org.mockito.kotlin.any
 import org.mockito.kotlin.eq
 import org.mockito.kotlin.mock
 import org.mockito.kotlin.verify
-import org.mockito.kotlin.whenever
 import org.odk.collect.androidshared.ui.FragmentFactoryBuilder
 import org.odk.collect.androidtest.DrawableMatcher.withImageDrawable
 import org.odk.collect.fragmentstest.FragmentScenarioLauncherRule
@@ -46,11 +45,17 @@ import org.odk.collect.testshared.EspressoHelpers
 import org.odk.collect.testshared.FakeScheduler
 import org.odk.collect.testshared.RecyclerViewMatcher
 import org.odk.collect.testshared.RecyclerViewMatcher.Companion.withRecyclerView
+import org.odk.collect.testshared.RobolectricHelpers
 import org.odk.collect.webpage.ExternalWebPageHelper
+import java.io.File
 
 @RunWith(AndroidJUnit4::class)
 class OfflineMapLayersPickerDialogFragmentTest {
-    private val referenceLayerRepository = mock<ReferenceLayerRepository>()
+    private val file1 = TempFiles.createTempFile("layer1", MbtilesFile.FILE_EXTENSION)
+    private val file2 = TempFiles.createTempFile("layer2", MbtilesFile.FILE_EXTENSION)
+    private val file3 = TempFiles.createTempFile("layer3", MbtilesFile.FILE_EXTENSION)
+
+    private val referenceLayerRepository = InMemReferenceLayerRepository()
     private val scheduler = FakeScheduler()
     private val settingsProvider = InMemSettingsProvider()
     private val externalWebPageHelper = mock<ExternalWebPageHelper>()
@@ -77,10 +82,6 @@ class OfflineMapLayersPickerDialogFragmentTest {
 
     @Test
     fun `clicking the 'cancel' button does not save the layer`() {
-        whenever(referenceLayerRepository.getAll()).thenReturn(
-            listOf(ReferenceLayer("1", TempFiles.createTempFile(), "layer1"))
-        )
-
         launchFragment()
 
         scheduler.flush()
@@ -120,10 +121,6 @@ class OfflineMapLayersPickerDialogFragmentTest {
 
     @Test
     fun `clicking the 'save' button saves null when 'None' option is checked`() {
-        whenever(referenceLayerRepository.getAll()).thenReturn(
-            listOf(ReferenceLayer("1", TempFiles.createTempFile(), "layer1"))
-        )
-
         launchFragment()
 
         scheduler.flush()
@@ -134,24 +131,20 @@ class OfflineMapLayersPickerDialogFragmentTest {
 
     @Test
     fun `clicking the 'save' button saves the layer id if any is checked`() {
-        whenever(referenceLayerRepository.getAll()).thenReturn(
-            listOf(ReferenceLayer("1", TempFiles.createTempFile(), "layer1"))
-        )
+        referenceLayerRepository.addLayer(file1, false)
 
         launchFragment()
 
         scheduler.flush()
 
-        EspressoHelpers.clickOnText("layer1")
+        EspressoHelpers.clickOnText(file1.name)
         EspressoHelpers.clickOnText(string.save)
-        assertThat(settingsProvider.getUnprotectedSettings().getString(ProjectKeys.KEY_REFERENCE_LAYER), equalTo("1"))
+        assertThat(settingsProvider.getUnprotectedSettings().getString(ProjectKeys.KEY_REFERENCE_LAYER), equalTo(file1.absolutePath))
     }
 
     @Test
     fun `when no layer id is saved in settings the 'None' option should be checked`() {
-        whenever(referenceLayerRepository.getAll()).thenReturn(
-            listOf(ReferenceLayer("1", TempFiles.createTempFile(), "layer1"))
-        )
+        referenceLayerRepository.addLayer(file1, false)
 
         launchFragment()
 
@@ -163,14 +156,10 @@ class OfflineMapLayersPickerDialogFragmentTest {
 
     @Test
     fun `when layer id is saved in settings the layer it belongs to should be checked`() {
-        whenever(referenceLayerRepository.getAll()).thenReturn(
-            listOf(
-                ReferenceLayer("1", TempFiles.createTempFile(), "layer1"),
-                ReferenceLayer("2", TempFiles.createTempFile(), "layer2")
-            )
-        )
+        referenceLayerRepository.addLayer(file1, false)
+        referenceLayerRepository.addLayer(file2, false)
 
-        settingsProvider.getUnprotectedSettings().save(ProjectKeys.KEY_REFERENCE_LAYER, "2")
+        settingsProvider.getUnprotectedSettings().save(ProjectKeys.KEY_REFERENCE_LAYER, file2.absolutePath)
 
         launchFragment()
 
@@ -224,12 +213,8 @@ class OfflineMapLayersPickerDialogFragmentTest {
 
     @Test
     fun `if there are multiple layers all of them are displayed along with the 'None'`() {
-        whenever(referenceLayerRepository.getAll()).thenReturn(
-            listOf(
-                ReferenceLayer("1", TempFiles.createTempFile(), "layer1"),
-                ReferenceLayer("2", TempFiles.createTempFile(), "layer2")
-            )
-        )
+        referenceLayerRepository.addLayer(file1, false)
+        referenceLayerRepository.addLayer(file2, false)
 
         launchFragment()
 
@@ -237,21 +222,19 @@ class OfflineMapLayersPickerDialogFragmentTest {
 
         onView(withId(R.id.layers)).check(matches(RecyclerViewMatcher.withListSize(3)))
         onView(withRecyclerView(R.id.layers).atPositionOnView(0, R.id.title)).check(matches(withText(string.none)))
-        onView(withRecyclerView(R.id.layers).atPositionOnView(1, R.id.title)).check(matches(withText("layer1")))
-        onView(withRecyclerView(R.id.layers).atPositionOnView(2, R.id.title)).check(matches(withText("layer2")))
+        onView(withRecyclerView(R.id.layers).atPositionOnView(1, R.id.title)).check(matches(withText(file1.name)))
+        onView(withRecyclerView(R.id.layers).atPositionOnView(2, R.id.title)).check(matches(withText(file2.name)))
     }
 
     @Test
     fun `checking layers sets selection correctly`() {
-        whenever(referenceLayerRepository.getAll()).thenReturn(
-            listOf(ReferenceLayer("1", TempFiles.createTempFile(), "layer1"))
-        )
+        referenceLayerRepository.addLayer(file1, false)
 
         launchFragment()
 
         scheduler.flush()
 
-        EspressoHelpers.clickOnText("layer1")
+        EspressoHelpers.clickOnText(file1.name)
         onView(withRecyclerView(R.id.layers).atPositionOnView(0, R.id.radio_button)).check(matches(not(isChecked())))
         onView(withRecyclerView(R.id.layers).atPositionOnView(1, R.id.radio_button)).check(matches(isChecked()))
 
@@ -262,15 +245,13 @@ class OfflineMapLayersPickerDialogFragmentTest {
 
     @Test
     fun `recreating maintains selection`() {
-        whenever(referenceLayerRepository.getAll()).thenReturn(
-            listOf(ReferenceLayer("1", TempFiles.createTempFile(), "layer1"))
-        )
+        referenceLayerRepository.addLayer(file1, false)
 
         val scenario = launchFragment()
 
         scheduler.flush()
 
-        EspressoHelpers.clickOnText("layer1")
+        EspressoHelpers.clickOnText(file1.name)
         scenario.recreate()
         onView(withRecyclerView(R.id.layers).atPositionOnView(0, R.id.radio_button)).check(matches(not(isChecked())))
         onView(withRecyclerView(R.id.layers).atPositionOnView(1, R.id.radio_button)).check(matches(isChecked()))
@@ -307,8 +288,8 @@ class OfflineMapLayersPickerDialogFragmentTest {
 
     @Test
     fun `progress indicator is displayed during loading layers after receiving new ones`() {
-        val file1 = TempFiles.createTempFile("layer1", MbtilesFile.FILE_EXTENSION)
-        val file2 = TempFiles.createTempFile("layer2", MbtilesFile.FILE_EXTENSION)
+        referenceLayerRepository.addLayer(file1, false)
+        referenceLayerRepository.addLayer(file2, false)
 
         launchFragment()
 
@@ -331,9 +312,6 @@ class OfflineMapLayersPickerDialogFragmentTest {
 
     @Test
     fun `when new layers added the list should be updated`() {
-        val file1 = TempFiles.createTempFile("layer1", MbtilesFile.FILE_EXTENSION)
-        val file2 = TempFiles.createTempFile("layer2", MbtilesFile.FILE_EXTENSION)
-
         launchFragment()
 
         scheduler.flush()
@@ -343,13 +321,9 @@ class OfflineMapLayersPickerDialogFragmentTest {
         EspressoHelpers.clickOnText(string.add_layer)
         scheduler.flush()
         onView(withId(R.id.add_layer_button)).inRoot(isDialog()).perform(click())
-        whenever(referenceLayerRepository.getAll()).thenReturn(
-            listOf(
-                ReferenceLayer("1", TempFiles.createTempFile(), file1.name),
-                ReferenceLayer("2", TempFiles.createTempFile(), file2.name)
-            )
-        )
+
         scheduler.flush()
+        RobolectricHelpers.runLooper()
 
         onView(withId(R.id.layers)).check(matches(RecyclerViewMatcher.withListSize(3)))
         onView(withRecyclerView(R.id.layers).atPositionOnView(0, R.id.title)).check(matches(withText(string.none)))
@@ -359,12 +333,8 @@ class OfflineMapLayersPickerDialogFragmentTest {
 
     @Test
     fun `layers are collapsed by default`() {
-        whenever(referenceLayerRepository.getAll()).thenReturn(
-            listOf(
-                ReferenceLayer("1", TempFiles.createTempFile(), "layer1"),
-                ReferenceLayer("2", TempFiles.createTempFile(), "layer2")
-            )
-        )
+        referenceLayerRepository.addLayer(file1, false)
+        referenceLayerRepository.addLayer(file2, false)
 
         launchFragment()
 
@@ -376,11 +346,9 @@ class OfflineMapLayersPickerDialogFragmentTest {
 
     @Test
     fun `recreating maintains expanded layers`() {
-        whenever(referenceLayerRepository.getAll()).thenReturn(listOf(
-            ReferenceLayer("1", TempFiles.createTempFile(), "layer1"),
-            ReferenceLayer("2", TempFiles.createTempFile(), "layer2"),
-            ReferenceLayer("3", TempFiles.createTempFile(), "layer3")
-        ))
+        referenceLayerRepository.addLayer(file1, false)
+        referenceLayerRepository.addLayer(file2, false)
+        referenceLayerRepository.addLayer(file3, false)
 
         val scenario = launchFragment()
 
@@ -399,12 +367,8 @@ class OfflineMapLayersPickerDialogFragmentTest {
 
     @Test
     fun `correct path is displayed after expanding layers`() {
-        val file1 = TempFiles.createTempFile()
-        val file2 = TempFiles.createTempFile()
-        whenever(referenceLayerRepository.getAll()).thenReturn(listOf(
-            ReferenceLayer("1", file1, "layer1"),
-            ReferenceLayer("2", file2, "layer2")
-        ))
+        referenceLayerRepository.addLayer(file1, false)
+        referenceLayerRepository.addLayer(file2, false)
 
         launchFragment()
 
@@ -420,9 +384,7 @@ class OfflineMapLayersPickerDialogFragmentTest {
 
     @Test
     fun `clicking delete shows the confirmation dialog`() {
-        whenever(referenceLayerRepository.getAll()).thenReturn(listOf(
-            ReferenceLayer("1", TempFiles.createTempFile(), "layer1")
-        ))
+        referenceLayerRepository.addLayer(file1, false)
 
         launchFragment()
 
@@ -437,10 +399,7 @@ class OfflineMapLayersPickerDialogFragmentTest {
 
     @Test
     fun `clicking delete and canceling does not remove the layer`() {
-        val layerFile1 = TempFiles.createTempFile()
-        whenever(referenceLayerRepository.getAll()).thenReturn(listOf(
-            ReferenceLayer("1", layerFile1, "layer1")
-        ))
+        referenceLayerRepository.addLayer(file1, false)
 
         launchFragment()
 
@@ -454,18 +413,14 @@ class OfflineMapLayersPickerDialogFragmentTest {
         onView(withId(R.id.layers)).check(matches(RecyclerViewMatcher.withListSize(2)))
         onView(withId(R.id.layers)).perform(scrollToPosition<RecyclerView.ViewHolder>(0))
         onView(withRecyclerView(R.id.layers).atPositionOnView(0, R.id.title)).check(matches(withText(string.none)))
-        onView(withRecyclerView(R.id.layers).atPositionOnView(1, R.id.title)).check(matches(withText("layer1")))
-        assertThat(layerFile1.exists(), equalTo(true))
+        onView(withRecyclerView(R.id.layers).atPositionOnView(1, R.id.title)).check(matches(withText(file1.name)))
+        assertThat(file1.exists(), equalTo(true))
     }
 
     @Test
     fun `clicking delete and confirming removes the layer`() {
-        val layerFile1 = TempFiles.createTempFile()
-        val layerFile2 = TempFiles.createTempFile()
-        whenever(referenceLayerRepository.getAll()).thenReturn(listOf(
-            ReferenceLayer("1", layerFile1, "layer1"),
-            ReferenceLayer("2", layerFile2, "layer2")
-        ))
+        referenceLayerRepository.addLayer(file1, false)
+        referenceLayerRepository.addLayer(file2, false)
 
         launchFragment()
 
@@ -479,9 +434,9 @@ class OfflineMapLayersPickerDialogFragmentTest {
 
         onView(withId(R.id.layers)).check(matches(RecyclerViewMatcher.withListSize(2)))
         onView(withRecyclerView(R.id.layers).atPositionOnView(0, R.id.title)).check(matches(withText(string.none)))
-        onView(withRecyclerView(R.id.layers).atPositionOnView(1, R.id.title)).check(matches(withText("layer2")))
-        assertThat(layerFile1.exists(), equalTo(false))
-        assertThat(layerFile2.exists(), equalTo(true))
+        onView(withRecyclerView(R.id.layers).atPositionOnView(1, R.id.title)).check(matches(withText(file2.name)))
+        assertThat(file1.exists(), equalTo(false))
+        assertThat(file2.exists(), equalTo(true))
     }
 
     private fun assertLayerCollapsed(position: Int) {
@@ -498,6 +453,22 @@ class OfflineMapLayersPickerDialogFragmentTest {
 
     private fun launchFragment(): FragmentScenario<OfflineMapLayersPickerDialogFragment> {
         return fragmentScenarioLauncherRule.launchInContainer(OfflineMapLayersPickerDialogFragment::class.java)
+    }
+
+    private class InMemReferenceLayerRepository : ReferenceLayerRepository {
+        private val layers = mutableListOf<ReferenceLayer>()
+
+        override fun getAll(): List<ReferenceLayer> {
+            return layers
+        }
+
+        override fun get(id: String): ReferenceLayer? {
+            return layers.find { it.id == id }
+        }
+
+        override fun addLayer(file: File, shared: Boolean) {
+            layers.add(ReferenceLayer(file.absolutePath, file, file.name))
+        }
     }
 
     private class TestRegistry : ActivityResultRegistry() {

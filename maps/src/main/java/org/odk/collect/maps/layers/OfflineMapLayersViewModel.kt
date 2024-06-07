@@ -73,9 +73,11 @@ class OfflineMapLayersViewModel(
     fun importNewLayers(shared: Boolean) {
         trackableWorker.immediate(
             background = {
-                tempLayersDir.listFiles()?.forEach {
-                    referenceLayerRepository.addLayer(it, shared)
-                }
+                tempLayersDir.listFiles()
+                    ?.sortedBy { it.lastModified() }
+                    ?.forEach {
+                        referenceLayerRepository.addLayer(it, shared)
+                    }
                 tempLayersDir.delete()
             },
             foreground = {
