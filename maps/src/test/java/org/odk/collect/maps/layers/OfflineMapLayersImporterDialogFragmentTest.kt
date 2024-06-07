@@ -2,11 +2,11 @@ package org.odk.collect.maps.layers
 
 import androidx.core.net.toUri
 import androidx.fragment.app.testing.FragmentScenario
+import androidx.recyclerview.widget.RecyclerView
 import androidx.test.espresso.Espresso.onView
 import androidx.test.espresso.action.ViewActions.click
-import androidx.test.espresso.action.ViewActions.scrollTo
-import androidx.test.espresso.assertion.ViewAssertions.doesNotExist
 import androidx.test.espresso.assertion.ViewAssertions.matches
+import androidx.test.espresso.contrib.RecyclerViewActions
 import androidx.test.espresso.matcher.ViewMatchers.isChecked
 import androidx.test.espresso.matcher.ViewMatchers.isDisplayed
 import androidx.test.espresso.matcher.ViewMatchers.isEnabled
@@ -25,12 +25,14 @@ import org.mockito.kotlin.times
 import org.mockito.kotlin.verify
 import org.odk.collect.androidshared.ui.FragmentFactoryBuilder
 import org.odk.collect.fragmentstest.FragmentScenarioLauncherRule
+import org.odk.collect.maps.R
 import org.odk.collect.settings.InMemSettingsProvider
 import org.odk.collect.shared.TempFiles
-import org.odk.collect.strings.R
+import org.odk.collect.strings.R.string
 import org.odk.collect.testshared.EspressoHelpers
 import org.odk.collect.testshared.FakeScheduler
 import org.odk.collect.testshared.RecyclerViewMatcher
+import org.odk.collect.testshared.RecyclerViewMatcher.Companion.withRecyclerView
 import org.odk.collect.testshared.RobolectricHelpers
 import java.io.File
 
@@ -53,7 +55,7 @@ class OfflineMapLayersImporterDialogFragmentTest {
         launchFragment().onFragment {
             scheduler.flush()
             assertThat(it.isVisible, equalTo(true))
-            EspressoHelpers.clickOnText(R.string.cancel)
+            EspressoHelpers.clickOnText(string.cancel)
             assertThat(it.isVisible, equalTo(false))
         }
     }
@@ -64,7 +66,8 @@ class OfflineMapLayersImporterDialogFragmentTest {
             scheduler.flush()
             assertThat(it.isVisible, equalTo(true))
             it.viewModel.loadLayersToImport(emptyList(), it.requireContext())
-            onView(withId(org.odk.collect.maps.R.id.add_layer_button)).perform(click())
+            scheduler.flush()
+            onView(withId(R.id.add_layer_button)).perform(click())
             scheduler.flush()
             RobolectricHelpers.runLooper()
             assertThat(it.isVisible, equalTo(false))
@@ -80,39 +83,39 @@ class OfflineMapLayersImporterDialogFragmentTest {
             it.viewModel.loadLayersToImport(listOf(file1.toUri(), file2.toUri()), it.requireContext())
         }
 
-        onView(withId(org.odk.collect.maps.R.id.progress_indicator)).check(matches(isDisplayed()))
-        onView(withId(org.odk.collect.maps.R.id.layers)).check(matches(not(isDisplayed())))
+        onView(withId(R.id.progress_indicator)).check(matches(isDisplayed()))
+        onView(withId(R.id.layers)).check(matches(not(isDisplayed())))
 
         scheduler.flush()
 
-        onView(withId(org.odk.collect.maps.R.id.progress_indicator)).check(matches(not(isDisplayed())))
-        onView(withId(org.odk.collect.maps.R.id.layers)).check(matches(isDisplayed()))
+        onView(withId(R.id.progress_indicator)).check(matches(not(isDisplayed())))
+        onView(withId(R.id.layers)).check(matches(isDisplayed()))
     }
 
     @Test
     fun `the 'cancel' button is enabled during loading layers`() {
         launchFragment()
 
-        onView(withId(org.odk.collect.maps.R.id.cancel_button)).check(matches(isEnabled()))
+        onView(withId(R.id.cancel_button)).check(matches(isEnabled()))
         scheduler.flush()
-        onView(withId(org.odk.collect.maps.R.id.cancel_button)).check(matches(isEnabled()))
+        onView(withId(R.id.cancel_button)).check(matches(isEnabled()))
     }
 
     @Test
     fun `the 'add layer' button is disabled during loading layers`() {
         launchFragment()
 
-        onView(withId(org.odk.collect.maps.R.id.add_layer_button)).check(matches(not(isEnabled())))
+        onView(withId(R.id.add_layer_button)).check(matches(not(isEnabled())))
         scheduler.flush()
-        onView(withId(org.odk.collect.maps.R.id.add_layer_button)).check(matches(isEnabled()))
+        onView(withId(R.id.add_layer_button)).check(matches(isEnabled()))
     }
 
     @Test
     fun `'All projects' location should be selected by default`() {
         launchFragment()
 
-        onView(withId(org.odk.collect.maps.R.id.all_projects_option)).check(matches(isChecked()))
-        onView(withId(org.odk.collect.maps.R.id.current_project_option)).check(matches(not(isChecked())))
+        onView(withId(R.id.all_projects_option)).check(matches(isChecked()))
+        onView(withId(R.id.current_project_option)).check(matches(not(isChecked())))
     }
 
     @Test
@@ -120,15 +123,15 @@ class OfflineMapLayersImporterDialogFragmentTest {
         launchFragment()
         scheduler.flush()
 
-        onView(withId(org.odk.collect.maps.R.id.current_project_option)).perform(click())
+        onView(withId(R.id.current_project_option)).perform(click())
 
-        onView(withId(org.odk.collect.maps.R.id.all_projects_option)).check(matches(not(isChecked())))
-        onView(withId(org.odk.collect.maps.R.id.current_project_option)).check(matches(isChecked()))
+        onView(withId(R.id.all_projects_option)).check(matches(not(isChecked())))
+        onView(withId(R.id.current_project_option)).check(matches(isChecked()))
 
-        onView(withId(org.odk.collect.maps.R.id.all_projects_option)).perform(click())
+        onView(withId(R.id.all_projects_option)).perform(click())
 
-        onView(withId(org.odk.collect.maps.R.id.all_projects_option)).check(matches(isChecked()))
-        onView(withId(org.odk.collect.maps.R.id.current_project_option)).check(matches(not(isChecked())))
+        onView(withId(R.id.all_projects_option)).check(matches(isChecked()))
+        onView(withId(R.id.current_project_option)).check(matches(not(isChecked())))
     }
 
     @Test
@@ -136,12 +139,12 @@ class OfflineMapLayersImporterDialogFragmentTest {
         val scenario = launchFragment()
         scheduler.flush()
 
-        onView(withId(org.odk.collect.maps.R.id.current_project_option)).perform(click())
+        onView(withId(R.id.current_project_option)).perform(click())
 
         scenario.recreate()
 
-        onView(withId(org.odk.collect.maps.R.id.all_projects_option)).check(matches(not(isChecked())))
-        onView(withId(org.odk.collect.maps.R.id.current_project_option)).check(matches(isChecked()))
+        onView(withId(R.id.all_projects_option)).check(matches(not(isChecked())))
+        onView(withId(R.id.current_project_option)).check(matches(isChecked()))
     }
 
     @Test
@@ -155,9 +158,10 @@ class OfflineMapLayersImporterDialogFragmentTest {
 
         scheduler.flush()
 
-        onView(withId(org.odk.collect.maps.R.id.layers)).check(matches(RecyclerViewMatcher.withListSize(2)))
-        onView(withText(file1.name)).check(matches(isDisplayed()))
-        onView(withText(file2.name)).check(matches(isDisplayed()))
+        onView(withId(R.id.layers)).check(matches(RecyclerViewMatcher.withListSize(2)))
+        onView(withRecyclerView(R.id.layers).atPositionOnView(0, R.id.layer_name)).check(matches(withText(file1.name)))
+        onView(withId(R.id.layers)).perform(RecyclerViewActions.scrollToPosition<RecyclerView.ViewHolder>(1))
+        onView(withRecyclerView(R.id.layers).atPositionOnView(1, R.id.layer_name)).check(matches(withText(file2.name)))
     }
 
     @Test
@@ -173,9 +177,10 @@ class OfflineMapLayersImporterDialogFragmentTest {
 
         scenario.recreate()
 
-        onView(withId(org.odk.collect.maps.R.id.layers)).check(matches(RecyclerViewMatcher.withListSize(2)))
-        onView(withText(file1.name)).check(matches(isDisplayed()))
-        onView(withText(file2.name)).check(matches(isDisplayed()))
+        onView(withId(R.id.layers)).check(matches(RecyclerViewMatcher.withListSize(2)))
+        onView(withRecyclerView(R.id.layers).atPositionOnView(0, R.id.layer_name)).check(matches(withText(file1.name)))
+        onView(withId(R.id.layers)).perform(RecyclerViewActions.scrollToPosition<RecyclerView.ViewHolder>(1))
+        onView(withRecyclerView(R.id.layers).atPositionOnView(1, R.id.layer_name)).check(matches(withText(file2.name)))
     }
 
     @Test
@@ -189,9 +194,8 @@ class OfflineMapLayersImporterDialogFragmentTest {
 
         scheduler.flush()
 
-        onView(withId(org.odk.collect.maps.R.id.layers)).check(matches(RecyclerViewMatcher.withListSize(1)))
-        onView(withText(file1.name)).check(matches(isDisplayed()))
-        onView(withText(file2.name)).check(doesNotExist())
+        onView(withId(R.id.layers)).check(matches(RecyclerViewMatcher.withListSize(1)))
+        onView(withRecyclerView(R.id.layers).atPositionOnView(0, R.id.layer_name)).check(matches(withText(file1.name)))
     }
 
     @Test
@@ -205,7 +209,7 @@ class OfflineMapLayersImporterDialogFragmentTest {
 
         scheduler.flush()
 
-        onView(withId(org.odk.collect.maps.R.id.add_layer_button)).perform(click())
+        onView(withId(R.id.add_layer_button)).perform(click())
         scheduler.flush()
 
         val fileCaptor = argumentCaptor<File>()
@@ -229,9 +233,9 @@ class OfflineMapLayersImporterDialogFragmentTest {
 
         scheduler.flush()
 
-        onView(withId(org.odk.collect.maps.R.id.current_project_option)).perform(scrollTo(), click())
+        onView(withId(R.id.current_project_option)).perform(click())
 
-        onView(withId(org.odk.collect.maps.R.id.add_layer_button)).perform(click())
+        onView(withId(R.id.add_layer_button)).perform(click())
         scheduler.flush()
 
         val fileCaptor = argumentCaptor<File>()
