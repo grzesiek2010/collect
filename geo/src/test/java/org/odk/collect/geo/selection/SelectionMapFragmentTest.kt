@@ -46,7 +46,7 @@ import org.odk.collect.geo.support.RobolectricApplication
 import org.odk.collect.maps.MapFragment
 import org.odk.collect.maps.MapFragmentFactory
 import org.odk.collect.maps.MapPoint
-import org.odk.collect.maps.layers.OfflineMapLayersPicker
+import org.odk.collect.maps.layers.OfflineMapLayersPickerDialogFragment
 import org.odk.collect.maps.layers.ReferenceLayerRepository
 import org.odk.collect.material.BottomSheetBehavior
 import org.odk.collect.material.MaterialProgressDialogFragment
@@ -427,8 +427,8 @@ class SelectionMapFragmentTest {
         onView(withId(R.id.layer_menu)).perform(click())
         scenario.onFragment {
             assertThat(
-                it.childFragmentManager.findFragmentByTag(OfflineMapLayersPicker::class.java.name),
-                instanceOf(OfflineMapLayersPicker::class.java)
+                it.childFragmentManager.findFragmentByTag(OfflineMapLayersPickerDialogFragment::class.java.name),
+                instanceOf(OfflineMapLayersPickerDialogFragment::class.java)
             )
         }
     }

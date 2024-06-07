@@ -17,12 +17,12 @@ import org.odk.collect.androidshared.ui.DialogFragmentUtils
 import org.odk.collect.androidshared.ui.FragmentFactoryBuilder
 import org.odk.collect.androidshared.ui.addOnClickListener
 import org.odk.collect.async.Scheduler
-import org.odk.collect.maps.databinding.OfflineMapLayersPickerBinding
+import org.odk.collect.maps.databinding.OfflineMapLayersPickerDialogFragmentBinding
 import org.odk.collect.settings.SettingsProvider
 import org.odk.collect.strings.localization.getLocalizedString
 import org.odk.collect.webpage.ExternalWebPageHelper
 
-class OfflineMapLayersPicker(
+class OfflineMapLayersPickerDialogFragment(
     registry: ActivityResultRegistry,
     private val referenceLayerRepository: ReferenceLayerRepository,
     private val scheduler: Scheduler,
@@ -38,13 +38,13 @@ class OfflineMapLayersPicker(
         }
     }
 
-    private lateinit var binding: OfflineMapLayersPickerBinding
+    private lateinit var binding: OfflineMapLayersPickerDialogFragmentBinding
 
     private val getLayers = registerForActivityResult(ActivityResultContracts.GetMultipleContents(), registry) { uris ->
         if (uris.isNotEmpty()) {
             viewModel.loadLayersToImport(uris, requireContext())
             DialogFragmentUtils.showIfNotShowing(
-                OfflineMapLayersImporter::class.java,
+                OfflineMapLayersImporterDialogFragment::class.java,
                 childFragmentManager
             )
         }
@@ -52,8 +52,8 @@ class OfflineMapLayersPicker(
 
     override fun onCreate(savedInstanceState: Bundle?) {
         childFragmentManager.fragmentFactory = FragmentFactoryBuilder()
-            .forClass(OfflineMapLayersImporter::class) {
-                OfflineMapLayersImporter(referenceLayerRepository, scheduler, settingsProvider)
+            .forClass(OfflineMapLayersImporterDialogFragment::class) {
+                OfflineMapLayersImporterDialogFragment(referenceLayerRepository, scheduler, settingsProvider)
             }
             .build()
 
@@ -65,7 +65,7 @@ class OfflineMapLayersPicker(
         container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View {
-        binding = OfflineMapLayersPickerBinding.inflate(inflater)
+        binding = OfflineMapLayersPickerDialogFragmentBinding.inflate(inflater)
 
         binding.mbtilesInfoGroup.addOnClickListener {
             externalWebPageHelper.openWebPageInCustomTab(

@@ -27,7 +27,7 @@ import org.odk.collect.androidshared.ui.PrefUtils
 import org.odk.collect.androidshared.ui.multiclicksafe.MultiClickGuard.allowClick
 import org.odk.collect.async.Scheduler
 import org.odk.collect.maps.MapConfigurator
-import org.odk.collect.maps.layers.OfflineMapLayersPicker
+import org.odk.collect.maps.layers.OfflineMapLayersPickerDialogFragment
 import org.odk.collect.maps.layers.ReferenceLayerRepository
 import org.odk.collect.settings.keys.ProjectKeys.CATEGORY_BASEMAP
 import org.odk.collect.settings.keys.ProjectKeys.KEY_BASEMAP_SOURCE
@@ -55,8 +55,8 @@ class MapsPreferencesFragment : BaseProjectPreferencesFragment(), Preference.OnP
 
     override fun onCreate(savedInstanceState: Bundle?) {
         childFragmentManager.fragmentFactory = FragmentFactoryBuilder()
-            .forClass(OfflineMapLayersPicker::class) {
-                OfflineMapLayersPicker(requireActivity().activityResultRegistry, referenceLayerRepository, scheduler, settingsProvider, externalWebPageHelper)
+            .forClass(OfflineMapLayersPickerDialogFragment::class) {
+                OfflineMapLayersPickerDialogFragment(requireActivity().activityResultRegistry, referenceLayerRepository, scheduler, settingsProvider, externalWebPageHelper)
             }
             .build()
 
@@ -82,7 +82,7 @@ class MapsPreferencesFragment : BaseProjectPreferencesFragment(), Preference.OnP
             when (preference.key) {
                 REFERENCE_LAYER_KEY -> {
                     DialogFragmentUtils.showIfNotShowing(
-                        OfflineMapLayersPicker::class.java,
+                        OfflineMapLayersPickerDialogFragment::class.java,
                         childFragmentManager
                     )
                 }

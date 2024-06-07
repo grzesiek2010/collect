@@ -43,7 +43,7 @@ import org.odk.collect.geo.R;
 import org.odk.collect.maps.MapFragment;
 import org.odk.collect.maps.MapFragmentFactory;
 import org.odk.collect.maps.MapPoint;
-import org.odk.collect.maps.layers.OfflineMapLayersPicker;
+import org.odk.collect.maps.layers.OfflineMapLayersPickerDialogFragment;
 import org.odk.collect.maps.layers.ReferenceLayerRepository;
 import org.odk.collect.maps.markers.MarkerDescription;
 import org.odk.collect.maps.markers.MarkerIconDescription;
@@ -141,7 +141,7 @@ public class GeoPointMapActivity extends LocalizedActivity {
 
         getSupportFragmentManager().setFragmentFactory(new FragmentFactoryBuilder()
                 .forClass(MapFragment.class, () -> (Fragment) mapFragmentFactory.createMapFragment())
-                .forClass(OfflineMapLayersPicker.class, () -> new OfflineMapLayersPicker(getActivityResultRegistry(), referenceLayerRepository, scheduler, settingsProvider, externalWebPageHelper))
+                .forClass(OfflineMapLayersPickerDialogFragment.class, () -> new OfflineMapLayersPickerDialogFragment(getActivityResultRegistry(), referenceLayerRepository, scheduler, settingsProvider, externalWebPageHelper))
                 .build()
         );
 
@@ -244,7 +244,7 @@ public class GeoPointMapActivity extends LocalizedActivity {
 
         // Menu Layer Toggle
         findViewById(R.id.layer_menu).setOnClickListener(v -> {
-            DialogFragmentUtils.showIfNotShowing(OfflineMapLayersPicker.class, getSupportFragmentManager());
+            DialogFragmentUtils.showIfNotShowing(OfflineMapLayersPickerDialogFragment.class, getSupportFragmentManager());
         });
 
         clearButton = findViewById(R.id.clear);

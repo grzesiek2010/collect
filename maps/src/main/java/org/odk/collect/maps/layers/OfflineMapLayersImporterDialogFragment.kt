@@ -9,11 +9,11 @@ import androidx.fragment.app.activityViewModels
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
 import org.odk.collect.async.Scheduler
-import org.odk.collect.maps.databinding.OfflineMapLayersImporterBinding
+import org.odk.collect.maps.databinding.OfflineMapLayersImporterDialogFragmentBinding
 import org.odk.collect.material.MaterialFullScreenDialogFragment
 import org.odk.collect.settings.SettingsProvider
 
-class OfflineMapLayersImporter(
+class OfflineMapLayersImporterDialogFragment(
     private val referenceLayerRepository: ReferenceLayerRepository,
     private val scheduler: Scheduler,
     private val settingsProvider: SettingsProvider
@@ -26,14 +26,14 @@ class OfflineMapLayersImporter(
         }
     }
 
-    private lateinit var binding: OfflineMapLayersImporterBinding
+    private lateinit var binding: OfflineMapLayersImporterDialogFragmentBinding
 
     override fun onCreateView(
         inflater: LayoutInflater,
         container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View {
-        binding = OfflineMapLayersImporterBinding.inflate(inflater)
+        binding = OfflineMapLayersImporterDialogFragmentBinding.inflate(inflater)
 
         binding.cancelButton.setOnClickListener {
             dismiss()

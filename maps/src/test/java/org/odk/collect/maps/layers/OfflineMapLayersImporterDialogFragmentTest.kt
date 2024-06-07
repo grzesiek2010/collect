@@ -35,7 +35,7 @@ import org.odk.collect.testshared.RobolectricHelpers
 import java.io.File
 
 @RunWith(AndroidJUnit4::class)
-class OfflineMapLayersImporterTest {
+class OfflineMapLayersImporterDialogFragmentTest {
     private val scheduler = FakeScheduler()
     private val referenceLayerRepository = mock<ReferenceLayerRepository>()
     private val settingsProvider = InMemSettingsProvider()
@@ -43,8 +43,8 @@ class OfflineMapLayersImporterTest {
     @get:Rule
     val fragmentScenarioLauncherRule = FragmentScenarioLauncherRule(
         FragmentFactoryBuilder()
-            .forClass(OfflineMapLayersImporter::class) {
-                OfflineMapLayersImporter(referenceLayerRepository, scheduler, settingsProvider)
+            .forClass(OfflineMapLayersImporterDialogFragment::class) {
+                OfflineMapLayersImporterDialogFragment(referenceLayerRepository, scheduler, settingsProvider)
             }.build()
     )
 
@@ -244,7 +244,7 @@ class OfflineMapLayersImporterTest {
         assertThat(booleanCaptor.secondValue, equalTo(false))
     }
 
-    private fun launchFragment(): FragmentScenario<OfflineMapLayersImporter> {
-        return fragmentScenarioLauncherRule.launchInContainer(OfflineMapLayersImporter::class.java)
+    private fun launchFragment(): FragmentScenario<OfflineMapLayersImporterDialogFragment> {
+        return fragmentScenarioLauncherRule.launchInContainer(OfflineMapLayersImporterDialogFragment::class.java)
     }
 }
