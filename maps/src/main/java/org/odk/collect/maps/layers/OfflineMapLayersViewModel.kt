@@ -44,8 +44,7 @@ class OfflineMapLayersViewModel(
                 val newData = mutableListOf(CheckableReferenceLayer(null, null, "", checkedLayerId == null, false))
                 newData.addAll(layers.map { CheckableReferenceLayer(it.id, it.file, it.name, it.id == checkedLayerId, false) })
                 _existingLayers.postValue(newData)
-            },
-            foreground = { }
+            }
         )
     }
 
@@ -67,8 +66,7 @@ class OfflineMapLayersViewModel(
                     }
                 }
                 _layersToImport.postValue(layers)
-            },
-            foreground = { }
+            }
         )
     }
 
