@@ -5,6 +5,7 @@ import android.net.Uri
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
+import org.odk.collect.androidshared.async.TrackableWorker
 import org.odk.collect.androidshared.system.copyToFile
 import org.odk.collect.androidshared.system.getFileExtension
 import org.odk.collect.androidshared.system.getFileName
@@ -16,11 +17,10 @@ import java.io.File
 
 class OfflineMapLayersViewModel(
     private val referenceLayerRepository: ReferenceLayerRepository,
-    private val scheduler: Scheduler,
+    scheduler: Scheduler,
     private val settingsProvider: SettingsProvider
 ) : ViewModel() {
-    private val _isLoading = MutableLiveData<Boolean>()
-    val isLoading: LiveData<Boolean> = _isLoading
+    val trackableWorker = TrackableWorker(scheduler)
 
     private val _existingLayers = MutableLiveData<List<CheckableReferenceLayer>>()
     val existingLayers: LiveData<List<CheckableReferenceLayer>> = _existingLayers
@@ -35,8 +35,7 @@ class OfflineMapLayersViewModel(
     }
 
     private fun loadExistingLayers() {
-        _isLoading.value = true
-        scheduler.immediate(
+        trackableWorker.immediate(
             background = {
                 val layers = referenceLayerRepository.getAll()
                 val checkedLayerId =
@@ -44,7 +43,6 @@ class OfflineMapLayersViewModel(
 
                 val newData = mutableListOf(CheckableReferenceLayer(null, null, "", checkedLayerId == null, false))
                 newData.addAll(layers.map { CheckableReferenceLayer(it.id, it.file, it.name, it.id == checkedLayerId, false) })
-                _isLoading.postValue(false)
                 _existingLayers.postValue(newData)
             },
             foreground = { }
@@ -52,8 +50,7 @@ class OfflineMapLayersViewModel(
     }
 
     fun loadLayersToImport(uris: List<Uri>, context: Context) {
-        _isLoading.value = true
-        scheduler.immediate(
+        trackableWorker.immediate(
             background = {
                 tempLayersDir = TempFiles.createTempDir().also {
                     it.deleteOnExit()
@@ -69,7 +66,6 @@ class OfflineMapLayersViewModel(
                         }
                     }
                 }
-                _isLoading.postValue(false)
                 _layersToImport.postValue(layers)
             },
             foreground = { }
@@ -77,14 +73,12 @@ class OfflineMapLayersViewModel(
     }
 
     fun importNewLayers(shared: Boolean) {
-        _isLoading.value = true
-        scheduler.immediate(
+        trackableWorker.immediate(
             background = {
                 tempLayersDir.listFiles()?.forEach {
                     referenceLayerRepository.addLayer(it, shared)
                 }
                 tempLayersDir.delete()
-                _isLoading.postValue(false)
             },
             foreground = {
                 loadExistingLayers()

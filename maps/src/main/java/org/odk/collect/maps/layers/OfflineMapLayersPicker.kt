@@ -91,7 +91,7 @@ class OfflineMapLayersPicker(
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
-        viewModel.isLoading.observe(this) { isLoading ->
+        viewModel.trackableWorker.isWorking.observe(this) { isLoading ->
             if (isLoading) {
                 binding.progressIndicator.visibility = View.VISIBLE
                 binding.layers.visibility = View.GONE
