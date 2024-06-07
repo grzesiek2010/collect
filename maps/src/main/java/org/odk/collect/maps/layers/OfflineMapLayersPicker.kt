@@ -91,8 +91,6 @@ class OfflineMapLayersPicker(
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
-        super.onViewCreated(view, savedInstanceState)
-
         viewModel.isLoading.observe(this) { isLoading ->
             if (isLoading) {
                 binding.progressIndicator.visibility = View.VISIBLE
