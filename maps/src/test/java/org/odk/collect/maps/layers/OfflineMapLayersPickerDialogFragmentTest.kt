@@ -54,20 +54,7 @@ class OfflineMapLayersPickerDialogFragmentTest {
     private val scheduler = FakeScheduler()
     private val settingsProvider = InMemSettingsProvider()
     private val externalWebPageHelper = mock<ExternalWebPageHelper>()
-
-    private val uris = mutableListOf<Uri>()
-    private val testRegistry = object : ActivityResultRegistry() {
-        override fun <I, O> onLaunch(
-            requestCode: Int,
-            contract: ActivityResultContract<I, O>,
-            input: I,
-            options: ActivityOptionsCompat?
-        ) {
-            assertThat(contract, instanceOf(ActivityResultContracts.GetMultipleContents()::class.java))
-            assertThat(input, equalTo("*/*"))
-            dispatchResult(requestCode, uris)
-        }
-    }
+    private val testRegistry = TestRegistry()
 
     @get:Rule
     val fragmentScenarioLauncherRule = FragmentScenarioLauncherRule(
@@ -293,7 +280,7 @@ class OfflineMapLayersPickerDialogFragmentTest {
     fun `clicking the 'add layer' and selecting layers displays the confirmation dialog`() {
         val scenario = launchFragment()
 
-        uris.add(Uri.parse("blah"))
+        testRegistry.addUris(Uri.parse("blah"))
         EspressoHelpers.clickOnText(string.add_layer)
 
         scenario.onFragment {
@@ -327,8 +314,7 @@ class OfflineMapLayersPickerDialogFragmentTest {
 
         scheduler.flush()
 
-        uris.add(file1.toUri())
-        uris.add(file2.toUri())
+        testRegistry.addUris(file1.toUri(), file2.toUri())
 
         EspressoHelpers.clickOnText(string.add_layer)
         scheduler.flush()
@@ -352,8 +338,7 @@ class OfflineMapLayersPickerDialogFragmentTest {
 
         scheduler.flush()
 
-        uris.add(file1.toUri())
-        uris.add(file2.toUri())
+        testRegistry.addUris(file1.toUri(), file2.toUri())
 
         EspressoHelpers.clickOnText(string.add_layer)
         scheduler.flush()
@@ -513,5 +498,24 @@ class OfflineMapLayersPickerDialogFragmentTest {
 
     private fun launchFragment(): FragmentScenario<OfflineMapLayersPickerDialogFragment> {
         return fragmentScenarioLauncherRule.launchInContainer(OfflineMapLayersPickerDialogFragment::class.java)
+    }
+
+    private class TestRegistry : ActivityResultRegistry() {
+        val uris = mutableListOf<Uri>()
+
+        override fun <I, O> onLaunch(
+            requestCode: Int,
+            contract: ActivityResultContract<I, O>,
+            input: I,
+            options: ActivityOptionsCompat?
+        ) {
+            assertThat(contract, instanceOf(ActivityResultContracts.GetMultipleContents()::class.java))
+            assertThat(input, equalTo("*/*"))
+            dispatchResult(requestCode, uris)
+        }
+
+        fun addUris(vararg uris: Uri) {
+            this.uris.addAll(uris)
+        }
     }
 }
