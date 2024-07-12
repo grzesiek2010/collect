@@ -71,6 +71,7 @@ class MovingBackwardsTest {
             .assertGoToPromptChecked()
             .assertSaveAsDraftInFormEntryChecked()
             .assertSaveAsDraftInFormEndChecked()
+
             .assertFinalizeChecked()
     }
 }
