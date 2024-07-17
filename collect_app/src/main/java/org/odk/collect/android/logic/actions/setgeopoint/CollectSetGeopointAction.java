@@ -30,6 +30,7 @@ import org.odk.collect.android.location.client.MaxAccuracyWithinTimeoutLocationC
 import org.odk.collect.androidshared.system.PlayServicesChecker;
 import org.odk.collect.geo.GeoUtils;
 import org.odk.collect.location.GoogleFusedLocationClient;
+import org.odk.collect.location.GoogleFusedLocationClientNew;
 
 import timber.log.Timber;
 
@@ -67,7 +68,7 @@ public class CollectSetGeopointAction extends SetGeopointAction implements Locat
     public void requestLocationUpdates() {
         // Do initialization on first location request so the client doesn't need to be serialized
         if (maxAccuracyLocationClient == null) {
-            maxAccuracyLocationClient = new MaxAccuracyWithinTimeoutLocationClientWrapper(new GoogleFusedLocationClient(Collect.getInstance()), this);
+            maxAccuracyLocationClient = new MaxAccuracyWithinTimeoutLocationClientWrapper(new GoogleFusedLocationClientNew(Collect.getInstance()), this);
         }
 
         // Only start acquiring location if the Collect preference allows it and Google Play

@@ -6,6 +6,7 @@ import android.content.Context;
 import android.location.Location;
 import android.location.LocationManager;
 import android.os.Bundle;
+import android.util.Log;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -155,6 +156,8 @@ public class GoogleFusedLocationClient
             googleApiClient.blockingConnect();
         }
 
+        Log.i("QWERTY", "Last known location: " + fusedLocationProviderApi.getLastLocation(googleApiClient));
+
         return LocationUtils.sanitizeAccuracy(fusedLocationProviderApi.getLastLocation(googleApiClient), retainMockAccuracy);
     }
 
@@ -211,6 +214,7 @@ public class GoogleFusedLocationClient
     @Override
     public void onLocationChanged(Location location) {
         Timber.i("Location changed: %s", location.toString());
+        Log.i("QWERTY", "Location changed: " + location);
 
         if (locationListener != null) {
             locationListener.onLocationChanged(LocationUtils.sanitizeAccuracy(location, retainMockAccuracy));

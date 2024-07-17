@@ -39,6 +39,7 @@ android {
 }
 
 dependencies {
+    implementation(project(":shared"))
     coreLibraryDesugaring(Dependencies.desugar)
 
     implementation(project(":androidshared"))

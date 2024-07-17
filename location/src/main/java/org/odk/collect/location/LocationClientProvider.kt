@@ -17,7 +17,7 @@ object LocationClientProvider {
     fun getClient(application: Application): LocationClient {
         return getClient(
             application,
-            { GoogleFusedLocationClient(application) },
+            { GoogleFusedLocationClientNew(application) },
             GoogleApiAvailability.getInstance()
         )
     }
@@ -29,7 +29,7 @@ object LocationClientProvider {
     // accuracy radius below 3m: https://issuetracker.google.com/issues/118789585
     internal fun getClient(
         context: Context,
-        googleFusedLocationClientProvider: Supplier<GoogleFusedLocationClient>,
+        googleFusedLocationClientProvider: Supplier<GoogleFusedLocationClientNew>,
         googleApiAvailability: GoogleApiAvailability
     ): LocationClient {
         val playServicesAvailable = googleApiAvailability

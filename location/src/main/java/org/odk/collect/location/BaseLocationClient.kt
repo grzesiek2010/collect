@@ -12,7 +12,7 @@ import org.odk.collect.location.LocationClient.LocationClientListener
  *
  * @param locationManager The LocationManager to retrieve locations from.
  */
-internal abstract class BaseLocationClient(protected val locationManager: LocationManager?) :
+abstract class BaseLocationClient(protected val locationManager: LocationManager?) :
     LocationClient {
 
     private var listener: LocationClientListener? = null
