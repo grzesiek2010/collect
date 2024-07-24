@@ -72,6 +72,10 @@ public class DateTimeWidgetUtilsTest {
     private DatePickerDetails persianMonthYear;
     private DatePickerDetails persianYear;
 
+    private DatePickerDetails buddhist;
+    private DatePickerDetails buddhistMonthYear;
+    private DatePickerDetails buddhistYear;
+
     @Before
     public void setUp() {
         dateTimeWidgetUtils = new DateTimeWidgetUtils();
@@ -110,6 +114,10 @@ public class DateTimeWidgetUtilsTest {
         persian = new DatePickerDetails(DatePickerDetails.DatePickerType.PERSIAN, DatePickerDetails.DatePickerMode.SPINNERS);
         persianMonthYear = new DatePickerDetails(DatePickerDetails.DatePickerType.PERSIAN, DatePickerDetails.DatePickerMode.MONTH_YEAR);
         persianYear = new DatePickerDetails(DatePickerDetails.DatePickerType.PERSIAN, DatePickerDetails.DatePickerMode.YEAR);
+
+        buddhist = new DatePickerDetails(DatePickerDetails.DatePickerType.BUDDHIST, DatePickerDetails.DatePickerMode.SPINNERS);
+        buddhistMonthYear = new DatePickerDetails(DatePickerDetails.DatePickerType.BUDDHIST, DatePickerDetails.DatePickerMode.MONTH_YEAR);
+        buddhistYear = new DatePickerDetails(DatePickerDetails.DatePickerType.BUDDHIST, DatePickerDetails.DatePickerMode.YEAR);
     }
 
     @Test
@@ -195,6 +203,17 @@ public class DateTimeWidgetUtilsTest {
         assertEquals(persianYear, DateTimeWidgetUtils.getDatePickerDetails(appearance));
         appearance = "year persian";
         assertEquals(persianYear, DateTimeWidgetUtils.getDatePickerDetails(appearance));
+
+        appearance = "buddhist";
+        assertEquals(buddhist, DateTimeWidgetUtils.getDatePickerDetails(appearance));
+        appearance = "Buddhist month-year";
+        assertEquals(buddhistMonthYear, DateTimeWidgetUtils.getDatePickerDetails(appearance));
+        appearance = "month-year buddhist";
+        assertEquals(buddhistMonthYear, DateTimeWidgetUtils.getDatePickerDetails(appearance));
+        appearance = "Buddhist year";
+        assertEquals(buddhistYear, DateTimeWidgetUtils.getDatePickerDetails(appearance));
+        appearance = "year buddhist";
+        assertEquals(buddhistYear, DateTimeWidgetUtils.getDatePickerDetails(appearance));
     }
 
     @Test
