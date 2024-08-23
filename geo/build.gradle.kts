@@ -66,6 +66,7 @@ dependencies {
     implementation(Dependencies.play_services_location)
     implementation(Dependencies.androidx_fragment_ktx)
     implementation(Dependencies.dagger)
+    implementation(Dependencies.mapscaleview)
     kapt(Dependencies.dagger_compiler)
 
     debugImplementation(project(":fragments-test"))

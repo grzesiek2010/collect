@@ -1,6 +1,7 @@
 package org.odk.collect.android.widgets.support
 
 import androidx.fragment.app.Fragment
+import com.github.pengrad.mapscaleview.MapScaleView
 import org.odk.collect.maps.LineDescription
 import org.odk.collect.maps.MapFragment
 import org.odk.collect.maps.MapPoint
@@ -12,7 +13,8 @@ class NoOpMapFragment : Fragment(), MapFragment {
 
     override fun init(
         readyListener: MapFragment.ReadyListener?,
-        errorListener: MapFragment.ErrorListener?
+        errorListener: MapFragment.ErrorListener?,
+        scaleView: MapScaleView
     ) {
     }
 

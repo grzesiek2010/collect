@@ -37,6 +37,7 @@ import androidx.annotation.Nullable;
 import androidx.core.content.ContextCompat;
 import androidx.fragment.app.Fragment;
 
+import com.github.pengrad.mapscaleview.MapScaleView;
 import com.google.android.gms.location.LocationListener;
 
 import org.odk.collect.androidshared.system.ContextUtils;
@@ -67,6 +68,7 @@ import org.osmdroid.views.overlay.Marker;
 import org.osmdroid.views.overlay.Overlay;
 import org.osmdroid.views.overlay.Polygon;
 import org.osmdroid.views.overlay.Polyline;
+import org.osmdroid.views.overlay.ScaleBarOverlay;
 import org.osmdroid.views.overlay.TilesOverlay;
 import org.osmdroid.views.overlay.mylocation.IMyLocationConsumer;
 import org.osmdroid.views.overlay.mylocation.IMyLocationProvider;
@@ -113,6 +115,7 @@ public class OsmDroidMapFragment extends Fragment implements MapFragment,
     );
 
     private MapView map;
+    private MapScaleView scaleView;
     private ReadyListener readyListener;
     private PointListener clickListener;
     private PointListener longPressListener;
@@ -131,8 +134,10 @@ public class OsmDroidMapFragment extends Fragment implements MapFragment,
     private boolean hasCenter;
 
     @Override
-    public void init(@Nullable ReadyListener readyListener, @Nullable ErrorListener errorListener) {
+    public void init(@Nullable ReadyListener readyListener, @Nullable ErrorListener errorListener, MapScaleView scaleView) {
         this.readyListener = readyListener;
+        this.scaleView = scaleView;
+        this.scaleView.metersOnly();
     }
 
     @Override
@@ -201,6 +206,7 @@ public class OsmDroidMapFragment extends Fragment implements MapFragment,
         map.getController().setZoom((int) INITIAL_ZOOM);
         map.setTilesScaledToDpi(true);
         map.setFlingEnabled(false);
+        map.getOverlays().add(new ScaleBarOverlay(map));
         addAttributionAndMapEventsOverlays();
         loadReferenceOverlay();
         addMapLayoutChangeListener(map);
@@ -580,6 +586,7 @@ public class OsmDroidMapFragment extends Fragment implements MapFragment,
             @Override
             public boolean onZoom(ZoomEvent event) {
                 lastMapCenter = map.getMapCenter();
+                scaleView.update((float) map.getZoomLevelDouble(), map.getLatitudeSpanDouble());
                 return false;
             }
         });

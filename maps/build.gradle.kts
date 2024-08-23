@@ -63,6 +63,7 @@ dependencies {
     implementation(Dependencies.androidx_fragment_ktx)
     implementation(Dependencies.androidx_preference_ktx)
     implementation(Dependencies.timber)
+    implementation(Dependencies.mapscaleview)
 
     debugImplementation(project(":fragments-test"))
 

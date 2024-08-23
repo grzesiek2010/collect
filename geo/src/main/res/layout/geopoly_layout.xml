@@ -26,6 +26,15 @@
         app:layout_constraintBottom_toTopOf="@id/collection_status"
         app:layout_constraintTop_toBottomOf="@id/location_status" />
 
+    <com.github.pengrad.mapscaleview.MapScaleView
+        android:id="@+id/scale_view"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="100dp"
+        android:layout_marginStart="100dp"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/location_status" />
+
     <com.google.android.material.floatingactionbutton.ExtendedFloatingActionButton
         android:id="@+id/record_button"
         android:layout_width="wrap_content"

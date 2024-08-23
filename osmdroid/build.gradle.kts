@@ -52,5 +52,6 @@ dependencies {
     implementation(Dependencies.play_services_location)
     implementation(Dependencies.android_material)
     implementation(Dependencies.dagger)
+    implementation(Dependencies.mapscaleview)
     kapt(Dependencies.dagger_compiler)
 }

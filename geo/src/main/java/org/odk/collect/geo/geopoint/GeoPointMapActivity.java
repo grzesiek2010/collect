@@ -165,7 +165,7 @@ public class GeoPointMapActivity extends LocalizedActivity {
         zoomButton = findViewById(R.id.zoom);
 
         MapFragment mapFragment = ((FragmentContainerView) findViewById(R.id.map_container)).getFragment();
-        mapFragment.init(this::initMap, this::finish);
+        mapFragment.init(this::initMap, this::finish, null);
     }
 
     @Override protected void onSaveInstanceState(Bundle state) {

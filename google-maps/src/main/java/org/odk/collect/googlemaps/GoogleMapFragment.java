@@ -23,6 +23,7 @@ import android.os.Handler;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 
+import com.github.pengrad.mapscaleview.MapScaleView;
 import com.google.android.gms.location.LocationListener;
 import com.google.android.gms.maps.CameraUpdate;
 import com.google.android.gms.maps.CameraUpdateFactory;
@@ -100,6 +101,7 @@ public class GoogleMapFragment extends SupportMapFragment implements
     );
 
     private GoogleMap map;
+    private MapScaleView scaleView;
     private Marker locationCrosshairs;
     private Circle accuracyCircle;
     private final List<ReadyListener> gpsLocationReadyListeners = new ArrayList<>();
@@ -122,7 +124,7 @@ public class GoogleMapFragment extends SupportMapFragment implements
 
     @Override
     @SuppressLint("MissingPermission") // Permission checks for location services handled in widgets
-    public void init(@Nullable ReadyListener readyListener, @Nullable ErrorListener errorListener) {
+    public void init(@Nullable ReadyListener readyListener, @Nullable ErrorListener errorListener, MapScaleView scaleView) {
         getMapAsync((GoogleMap googleMap) -> {
             if (googleMap == null) {
                 ToastUtils.showShortToast(requireContext(), org.odk.collect.strings.R.string.google_play_services_error_occured);
@@ -132,6 +134,7 @@ public class GoogleMapFragment extends SupportMapFragment implements
                 return;
             }
             this.map = googleMap;
+            this.scaleView = scaleView;
             googleMap.setMapType(mapType);
             googleMap.setOnMapClickListener(this);
             googleMap.setOnMapLongClickListener(this);
@@ -140,6 +143,8 @@ public class GoogleMapFragment extends SupportMapFragment implements
             googleMap.setOnPolygonClickListener(this);
             googleMap.setOnMarkerDragListener(this);
             googleMap.getUiSettings().setCompassEnabled(true);
+            googleMap.setOnCameraMoveListener(() -> scaleView.update(googleMap.getCameraPosition().zoom, googleMap.getCameraPosition().target.latitude));
+            googleMap.setOnCameraIdleListener(() -> scaleView.update(googleMap.getCameraPosition().zoom, googleMap.getCameraPosition().target.latitude));
             // Don't show the blue dot on the map; we'll draw crosshairs instead.
             googleMap.setMyLocationEnabled(false);
             googleMap.setMinZoomPreference(1);
@@ -155,6 +160,10 @@ public class GoogleMapFragment extends SupportMapFragment implements
                 readyListener.onReady(this);
             }
         });
+    }
+
+    public void setScale(MapScaleView scaleView) {
+        this.scaleView = scaleView;
     }
 
     @Override

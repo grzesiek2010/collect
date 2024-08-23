@@ -10,8 +10,11 @@ import android.view.ViewGroup
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.lifecycleScope
 import androidx.startup.AppInitializer
+import com.github.pengrad.mapscaleview.MapScaleView
 import com.google.android.gms.location.LocationListener
 import com.mapbox.geojson.Point
+import com.mapbox.maps.CameraChanged
+import com.mapbox.maps.CameraChangedCallback
 import com.mapbox.maps.EdgeInsets
 import com.mapbox.maps.ImageHolder
 import com.mapbox.maps.MapView
@@ -81,6 +84,7 @@ class MapboxMapFragment :
 
     private lateinit var mapView: MapView
     private lateinit var mapboxMap: MapboxMap
+    private lateinit var scaleView: MapScaleView
 
     private lateinit var pointAnnotationManager: PointAnnotationManager
     private lateinit var polylineAnnotationManager: PolylineAnnotationManager
@@ -126,8 +130,9 @@ class MapboxMapFragment :
         (requireActivity().applicationContext as ObjectProviderHost).getObjectProvider().provide(LocationClient::class.java)
     }
 
-    override fun init(readyListener: ReadyListener?, errorListener: ErrorListener?) {
+    override fun init(readyListener: ReadyListener?, errorListener: ErrorListener?, scaleView: MapScaleView) {
         mapReadyListener = readyListener
+        this.scaleView = scaleView
 
         // Mapbox SDK only knows how to fetch tiles via HTTP. If we want it to
         // display tiles from a local file, we have to serve them locally over HTTP.
@@ -152,7 +157,6 @@ class MapboxMapFragment :
         savedInstanceState: Bundle?
     ): View {
         mapView = MapView(inflater.context).apply {
-            scalebar.enabled = false
             compass.position = Gravity.TOP or Gravity.START
             compass.marginTop = 36f
             compass.marginBottom = 36f
@@ -165,6 +169,12 @@ class MapboxMapFragment :
             .apply {
                 addOnMapClickListener(this@MapboxMapFragment)
                 addOnMapLongClickListener(this@MapboxMapFragment)
+                subscribeCameraChanged { cameraChanged ->
+                    scaleView.update(
+                        cameraChanged.cameraState.zoom.toFloat(),
+                        cameraChanged.cameraState.center.latitude()
+                    )
+                }
             }
 
         polylineAnnotationManager = mapView

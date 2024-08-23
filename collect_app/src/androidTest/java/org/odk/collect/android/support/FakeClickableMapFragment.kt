@@ -2,7 +2,9 @@ package org.odk.collect.android.support
 
 import android.os.Handler
 import android.os.Looper
+import android.view.View
 import androidx.fragment.app.Fragment
+import com.github.pengrad.mapscaleview.MapScaleView
 import org.odk.collect.maps.LineDescription
 import org.odk.collect.maps.MapFragment
 import org.odk.collect.maps.MapPoint
@@ -17,7 +19,8 @@ class FakeClickableMapFragment : Fragment(), MapFragment {
 
     override fun init(
         readyListener: MapFragment.ReadyListener?,
-        errorListener: MapFragment.ErrorListener?
+        errorListener: MapFragment.ErrorListener?,
+        scaleView: MapScaleView
     ) {
         readyListener?.onReady(this)
     }

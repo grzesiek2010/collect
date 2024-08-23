@@ -30,6 +30,7 @@ import androidx.activity.OnBackPressedCallback;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentContainerView;
 
+import com.github.pengrad.mapscaleview.MapScaleView;
 import com.google.android.material.dialog.MaterialAlertDialogBuilder;
 
 import org.odk.collect.androidshared.ui.DialogFragmentUtils;
@@ -100,6 +101,7 @@ public class GeoPolyActivity extends LocalizedActivity implements GeoPolySetting
     ExternalWebPageHelper externalWebPageHelper;
 
     private MapFragment map;
+    private MapScaleView scaleView;
     private int featureId = -1;  // will be a positive featureId once map is ready
     private List<MapPoint> originalPoly;
 
@@ -183,7 +185,7 @@ public class GeoPolyActivity extends LocalizedActivity implements GeoPolySetting
         setContentView(R.layout.geopoly_layout);
 
         MapFragment mapFragment = ((FragmentContainerView) findViewById(R.id.map_container)).getFragment();
-        mapFragment.init(this::initMap, this::finish);
+        mapFragment.init(this::initMap, this::finish, findViewById(R.id.scale_view));
 
         getOnBackPressedDispatcher().addCallback(onBackPressedCallback);
     }

@@ -50,6 +50,7 @@ dependencies {
     implementation(Dependencies.mapbox_android_sdk)
     implementation(Dependencies.timber)
     implementation(Dependencies.androidx_startup)
+    implementation(Dependencies.mapscaleview)
 
     testImplementation(project(":test-shared"))
     testImplementation(Dependencies.junit)

@@ -146,7 +146,8 @@ class SelectionMapFragment(
         val mapFragment = binding.mapContainer.getFragment<Fragment?>() as MapFragment
         mapFragment.init(
             { newMapFragment -> initMap(newMapFragment, binding) },
-            { requireActivity().finish() }
+            { requireActivity().finish() },
+            null
         )
 
         selectionMapData.getMapTitle().observe(viewLifecycleOwner) {

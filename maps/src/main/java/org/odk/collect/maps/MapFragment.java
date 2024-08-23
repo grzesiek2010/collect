@@ -18,6 +18,8 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.annotation.StringDef;
 
+import com.github.pengrad.mapscaleview.MapScaleView;
+
 import org.odk.collect.maps.markers.MarkerDescription;
 import org.odk.collect.maps.markers.MarkerIconDescription;
 
@@ -59,7 +61,7 @@ public interface MapFragment {
     String CENTER = "center";
     String BOTTOM = "bottom";
 
-    void init(@Nullable ReadyListener readyListener, @Nullable ErrorListener errorListener);
+    void init(@Nullable ReadyListener readyListener, @Nullable ErrorListener errorListener, MapScaleView scaleView);
 
     /** Gets the point currently shown at the center of the map view. */
     @NonNull MapPoint getCenter();
