@@ -9,6 +9,11 @@ import java.io.File
 import java.io.FileNotFoundException
 import java.io.InputStream
 
+/**
+ * This is a basic XML parser for forms, designed to read the content without
+ * the advanced parsing typically performed by JavaRosa. Currently, it provides
+ * simple functionality but can be extended to meet future requirements.
+ */
 object FormParser {
     @JvmStatic
     @Throws(FileNotFoundException::class, XmlPullParserException::class)
