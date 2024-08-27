@@ -2,9 +2,9 @@ package org.odk.collect.android.openrosa
 
 import org.hamcrest.MatcherAssert.assertThat
 import org.hamcrest.Matchers.equalTo
+import org.javarosa.xform.parse.XFormParser
 import org.junit.Test
 import org.kxml2.kdom.Document
-import org.odk.collect.android.javarosawrapper.XFormParser
 
 class OpenRosaResponseParserImplTest {
 
@@ -29,7 +29,7 @@ class OpenRosaResponseParserImplTest {
             .appendLine("</xforms>")
             .toString()
 
-        val doc = XFormParser.parseXml(response.byteInputStream())
+        val doc = XFormParser.getXMLDocument(response.reader())
         val formList = OpenRosaResponseParserImpl().parseFormList(doc)
         assertThat(formList!![0].hash, equalTo(null))
     }
@@ -47,7 +47,7 @@ class OpenRosaResponseParserImplTest {
             .appendLine("</manifest>")
             .toString()
 
-        val doc = XFormParser.parseXml(response.byteInputStream())
+        val doc = XFormParser.getXMLDocument(response.reader())
         val mediaFiles = OpenRosaResponseParserImpl().parseManifest(doc)
         assertThat(mediaFiles, equalTo(null))
     }
@@ -96,7 +96,7 @@ class OpenRosaResponseParserImplTest {
             .appendLine("</manifest>")
             .toString()
 
-        val doc = XFormParser.parseXml(response.byteInputStream())
+        val doc = XFormParser.getXMLDocument(response.reader())
         val mediaFiles = OpenRosaResponseParserImpl().parseManifest(doc)!!
         assertThat(mediaFiles.size, equalTo(1))
         assertThat(mediaFiles[0].isEntityList, equalTo(true))
@@ -115,7 +115,7 @@ class OpenRosaResponseParserImplTest {
             .appendLine("</manifest>")
             .toString()
 
-        val doc = XFormParser.parseXml(response.byteInputStream())
+        val doc = XFormParser.getXMLDocument(response.reader())
         val mediaFiles = OpenRosaResponseParserImpl().parseManifest(doc)!!
         assertThat(mediaFiles.size, equalTo(1))
         assertThat(mediaFiles[0].isEntityList, equalTo(false))
