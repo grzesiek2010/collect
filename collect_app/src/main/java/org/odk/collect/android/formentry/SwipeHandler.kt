@@ -3,8 +3,8 @@ package org.odk.collect.android.formentry
 import android.content.Context
 import android.view.GestureDetector
 import android.view.MotionEvent
+import android.view.ViewGroup
 import android.widget.FrameLayout
-import androidx.core.widget.NestedScrollView
 import org.odk.collect.android.utilities.ActionRegister
 import org.odk.collect.androidshared.utils.ScreenUtils
 import org.odk.collect.settings.keys.ProjectKeys
@@ -128,6 +128,6 @@ class SwipeHandler(context: Context, generalSettings: Settings) {
 
     abstract class View(context: Context) : FrameLayout(context) {
         abstract fun shouldSuppressFlingGesture(): Boolean
-        abstract fun verticalScrollView(): NestedScrollView?
+        abstract fun verticalScrollView(): ViewGroup?
     }
 }

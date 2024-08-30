@@ -9,11 +9,11 @@ import android.text.style.ClickableSpan
 import android.text.style.TextAppearanceSpan
 import android.view.LayoutInflater
 import android.view.View
+import android.view.ViewGroup
 import androidx.core.text.color
 import androidx.core.text.inSpans
 import androidx.core.text.underline
 import androidx.core.view.isVisible
-import androidx.core.widget.NestedScrollView
 import org.odk.collect.android.R
 import org.odk.collect.android.databinding.FormEntryEndBinding
 import org.odk.collect.androidshared.system.ContextUtils
@@ -99,7 +99,7 @@ class FormEndView(
 
     override fun shouldSuppressFlingGesture() = false
 
-    override fun verticalScrollView(): NestedScrollView? {
+    override fun verticalScrollView(): ViewGroup? {
         return findViewById(R.id.scroll_view)
     }
 

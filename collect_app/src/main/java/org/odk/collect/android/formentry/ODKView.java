@@ -39,7 +39,6 @@ import android.widget.Toast;
 import androidx.activity.ComponentActivity;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
-import androidx.core.widget.NestedScrollView;
 import androidx.lifecycle.LifecycleOwner;
 
 import org.javarosa.core.model.Constants;
@@ -589,7 +588,7 @@ public class ODKView extends SwipeHandler.View implements OnLongClickListener, W
 
     @Nullable
     @Override
-    public NestedScrollView verticalScrollView() {
+    public ViewGroup verticalScrollView() {
         return findViewById(R.id.odk_view_container);
     }
 
