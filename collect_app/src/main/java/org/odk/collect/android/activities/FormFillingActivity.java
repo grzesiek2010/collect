@@ -61,6 +61,7 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.widget.Toolbar;
+import androidx.core.widget.NestedScrollView;
 import androidx.fragment.app.FragmentActivity;
 import androidx.lifecycle.LifecycleOwner;
 import androidx.lifecycle.ViewModelProvider;
@@ -265,6 +266,7 @@ public class FormFillingActivity extends LocalizedActivity implements AnimationL
 
     private FrameLayout questionHolder;
     private SwipeHandler.View currentView;
+    private NestedScrollView scrollableContainer;
 
     private AlertDialog alertDialog;
     private FormError formError;
@@ -468,6 +470,7 @@ public class FormFillingActivity extends LocalizedActivity implements AnimationL
 
         formError = null;
 
+        scrollableContainer = findViewById(R.id.scrollable_container);
         questionHolder = findViewById(R.id.questionholder);
 
         initToolbar();
@@ -1417,6 +1420,7 @@ public class FormFillingActivity extends LocalizedActivity implements AnimationL
         } else {
             animationCompletionSet = 2;
         }
+        scrollableContainer.scrollTo(0, 0);
         // start InAnimation for transition...
         currentView.startAnimation(inAnimation);
 
