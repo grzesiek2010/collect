@@ -148,7 +148,7 @@ public abstract class QuestionWidget extends FrameLayout implements Widget {
             ViewGroup answerContainer = findViewById(R.id.answer_container);
 
             RelativeLayout.LayoutParams params = new RelativeLayout.LayoutParams(
-                    ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT);
+                    ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT);
             params.addRule(RelativeLayout.ALIGN_PARENT_LEFT, RelativeLayout.TRUE);
 
             answerContainer.addView(answerView, params);
