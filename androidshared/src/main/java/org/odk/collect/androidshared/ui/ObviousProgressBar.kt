@@ -9,9 +9,21 @@ import android.widget.ProgressBar
  * A progress bar that shows for a minimum amount fo time so it's obvious to the user that
  * something has happened.
  */
-class ObviousProgressBar(context: Context, attrs: AttributeSet?) : ProgressBar(context, attrs) {
+class ObviousProgressBar(
+    context: Context,
+    attrs: AttributeSet?
+) : ProgressBar(
+        context,
+        attrs,
+        android.R.attr.progressBarStyleHorizontal
+    ) {
     private val handler = Handler()
     private var shownAt: Long? = null
+
+    init {
+        super.setIndeterminate(true)
+        super.setVisibility(GONE)
+    }
 
     fun show() {
         handler.removeCallbacksAndMessages(null)
