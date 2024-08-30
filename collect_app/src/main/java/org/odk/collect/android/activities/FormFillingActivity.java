@@ -2232,7 +2232,7 @@ public class FormFillingActivity extends LocalizedActivity implements AnimationL
 
         @Nullable
         @Override
-        public ViewGroup verticalScrollView() {
+        public ViewGroup view() {
             return null;
         }
     }

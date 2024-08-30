@@ -99,7 +99,7 @@ class FormEndView(
 
     override fun shouldSuppressFlingGesture() = false
 
-    override fun verticalScrollView(): ViewGroup? {
+    override fun view(): ViewGroup? {
         return findViewById(R.id.form_end_view)
     }
 

@@ -114,7 +114,7 @@ class SwipeHandler(context: Context, generalSettings: Settings) {
         }
 
         private fun canScrollVertically(): Boolean {
-            val scrollView = view!!.verticalScrollView()
+            val scrollView = view!!.view()
 
             return if (scrollView != null) {
                 val screenHeight = scrollView.height
@@ -128,6 +128,6 @@ class SwipeHandler(context: Context, generalSettings: Settings) {
 
     abstract class View(context: Context) : FrameLayout(context) {
         abstract fun shouldSuppressFlingGesture(): Boolean
-        abstract fun verticalScrollView(): ViewGroup?
+        abstract fun view(): ViewGroup?
     }
 }
