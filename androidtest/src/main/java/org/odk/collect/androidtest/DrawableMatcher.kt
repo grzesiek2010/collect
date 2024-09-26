@@ -3,6 +3,7 @@ package org.odk.collect.androidtest
 import android.app.Application
 import android.graphics.Bitmap
 import android.graphics.drawable.BitmapDrawable
+import android.graphics.drawable.PictureDrawable
 import android.graphics.drawable.VectorDrawable
 import android.os.StrictMode
 import android.os.StrictMode.ThreadPolicy
@@ -47,7 +48,11 @@ object DrawableMatcher {
                     return false
                 }
 
-                val actual = (drawable as BitmapDrawable).bitmap
+                val actual: Bitmap? = when (drawable) {
+                    is BitmapDrawable -> drawable.bitmap
+                    is PictureDrawable -> drawable.toBitmap()
+                    else -> null
+                }
 
                 val originalThreadPolicy = StrictMode.getThreadPolicy()
 
@@ -58,7 +63,7 @@ object DrawableMatcher {
                             .permitCustomSlowCalls().build()
                     )
 
-                    return actual.sameAs(match)
+                    return match?.rowBytes == actual?.rowBytes
                 } finally {
                     StrictMode.setThreadPolicy(originalThreadPolicy)
                 }
