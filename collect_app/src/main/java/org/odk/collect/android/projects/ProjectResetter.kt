@@ -70,12 +70,13 @@ class ProjectResetter(
     }
 
     private fun resetInstances() {
-        entitiesRepositoryFactory.create(projectId).clear()
-
         if (!instancesDataService.deleteAll(projectId) ||
             !deleteFolderContent(storagePaths.instancesDir)
         ) {
             failedResetActions.add(ResetAction.RESET_INSTANCES)
+        } else {
+            entitiesRepositoryFactory.create(projectId).clear()
+            savepointsRepositoryProvider.create(projectId).deleteAll()
         }
     }
 
