@@ -76,8 +76,8 @@ public class ExternalDataReaderImpl implements ExternalDataReader {
                 return true;
             }
         }
-        ExternalSQLiteOpenHelper externalSQLiteOpenHelper = new ExternalSQLiteOpenHelper(
-                dbFile);
+        ExternalDataManagerImpl externalDataManager = new ExternalDataManagerImpl(dataSetFile.getParentFile());
+        ExternalSQLiteOpenHelper externalSQLiteOpenHelper = externalDataManager.getDatabase(dataSetName, false);
         externalSQLiteOpenHelper.importFromCSV(dataSetFile, this, isCancelled, progressReporter);
 
         if (isCancelled.get()) {
