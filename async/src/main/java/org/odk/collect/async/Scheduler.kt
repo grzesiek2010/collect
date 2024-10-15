@@ -13,6 +13,8 @@ import java.util.function.Supplier
  */
 interface Scheduler {
 
+    fun <T> immediate(background: suspend () -> T, foreground: (T) -> Unit)
+
     /**
      * Run work in the background (off the UI thread) and then use the result of that work
      * in the foreground. Cancelled if application closed.
