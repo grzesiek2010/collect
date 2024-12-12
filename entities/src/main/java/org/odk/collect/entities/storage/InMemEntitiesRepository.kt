@@ -46,6 +46,14 @@ class InMemEntitiesRepository : EntitiesRepository {
         }
     }
 
+    override fun query(
+        list: String,
+        selection: String,
+        selectionArgs: Array<String>
+    ): List<Entity.Saved> {
+        TODO("Not yet implemented")
+    }
+
     override fun getById(list: String, id: String): Entity.Saved? {
         return getEntities(list).firstOrNull { it.id == id }
     }

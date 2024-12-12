@@ -38,71 +38,10 @@ class LocalEntitiesInstanceAdapter(private val entitiesRepository: EntitiesRepos
         }
     }
 
-    fun queryEq(instanceId: String, child: String, value: String): List<TreeElement> {
-        return when (child) {
-            EntityItemElement.ID -> {
-                val entity = entitiesRepository.getById(
-                    instanceId,
-                    value
-                )
-
-                if (entity != null) {
-                    listOf(convertToElement(entity))
-                } else {
-                    emptyList()
-                }
-            }
-
-            EntityItemElement.LABEL -> {
-                entitiesRepository.getByLabel(
-                    instanceId,
-                    value
-                ).map { convertToElement(it) }
-            }
-
-            EntityItemElement.VERSION -> {
-                filterAndConvertEntities(instanceId) { it.version == value.toInt() }
-            }
-
-            EntityItemElement.TRUNK_VERSION -> {
-                filterAndConvertEntities(instanceId) { it.trunkVersion == value.toInt() }
-            }
-
-            EntityItemElement.BRANCH_ID -> {
-                filterAndConvertEntities(instanceId) { it.branchId == value }
-            }
-
-            else -> {
-                val entities = entitiesRepository.getAllByProperty(
-                    instanceId,
-                    child,
-                    value
-                )
-
-                entities.map { convertToElement(it) }
-            }
-        }
-    }
-
-    fun queryNotEq(instanceId: String, child: String, value: String): List<TreeElement>? {
-        return when (child) {
-            EntityItemElement.ID -> {
-                entitiesRepository.getByIdNot(
-                    instanceId,
-                    value
-                ).map { convertToElement(it) }
-            }
-
-            else -> null
-        }
-    }
-
-    private fun filterAndConvertEntities(
-        list: String,
-        filter: (Entity.Saved) -> Boolean
-    ): List<TreeElement> {
-        val entities = entitiesRepository.getEntities(list)
-        return entities.filter(filter).map { convertToElement(it) }
+    fun query(list: String, selection: String, selectionArgs: Array<String>): List<TreeElement> {
+        return entitiesRepository
+            .query(list, selection, selectionArgs)
+            .map { convertToElement(it) }
     }
 
     private fun convertToElement(entity: Entity.Saved): TreeElement {

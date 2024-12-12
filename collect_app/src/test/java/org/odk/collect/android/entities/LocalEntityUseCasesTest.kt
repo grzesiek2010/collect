@@ -1,5 +1,7 @@
-package org.odk.collect.entities
+package org.odk.collect.android.entities
 
+import androidx.test.core.app.ApplicationProvider
+import androidx.test.ext.junit.runners.AndroidJUnit4
 import org.apache.commons.csv.CSVFormat
 import org.apache.commons.csv.CSVPrinter
 import org.hamcrest.MatcherAssert.assertThat
@@ -8,19 +10,25 @@ import org.hamcrest.Matchers.containsInAnyOrder
 import org.hamcrest.Matchers.equalTo
 import org.hamcrest.Matchers.not
 import org.junit.Test
+import org.junit.runner.RunWith
+import org.odk.collect.android.database.entities.DatabaseEntitiesRepository
+import org.odk.collect.entities.LocalEntityUseCases
 import org.odk.collect.entities.javarosa.finalization.EntitiesExtra
 import org.odk.collect.entities.javarosa.finalization.FormEntity
 import org.odk.collect.entities.javarosa.parse.EntityItemElement
 import org.odk.collect.entities.javarosa.spec.EntityAction
 import org.odk.collect.entities.storage.EntitiesRepository
 import org.odk.collect.entities.storage.Entity
-import org.odk.collect.entities.storage.InMemEntitiesRepository
 import org.odk.collect.shared.TempFiles
 import java.io.File
 
+@RunWith(AndroidJUnit4::class)
 class LocalEntityUseCasesTest {
 
-    private val entitiesRepository = InMemEntitiesRepository()
+    private val entitiesRepository = DatabaseEntitiesRepository(
+        ApplicationProvider.getApplicationContext(),
+        TempFiles.createTempDir().absolutePath
+    )
 
     @Test
     fun `updateLocalEntitiesFromForm saves a new entity on create`() {
