@@ -480,6 +480,44 @@ class LocalEntitiesFilterStrategyTest {
         val choices = scenario.choicesOf("/data/question").map { it.value }
         assertThat(choices, containsInAnyOrder("thing1"))
     }
+
+    @Test
+    fun `x`() {
+        entitiesRepository.save("things", Entity.New("thing1", "Thing1", properties = listOf("foo" to "1", "bar" to "1")))
+        entitiesRepository.save("things", Entity.New("thing2", "Thing2", properties = listOf("foo" to "1", "bar" to "2")))
+        entitiesRepository.save("things", Entity.New("thing3", "Thing3", properties = listOf("foo" to "2", "bar" to "3")))
+
+        val scenario = Scenario.init(
+            "Secondary instance form",
+            html(
+                head(
+                    title("Secondary instance form"),
+                    model(
+                        mainInstance(
+                            t(
+                                "data id=\"create-entity-form\"",
+                                t("question"),
+                            )
+                        ),
+                        t("instance id=\"things\" src=\"jr://file-csv/things.csv\""),
+                        bind("/data/question").type("string")
+                    )
+                ),
+                body(
+                    select1Dynamic(
+                        "/data/question",
+                        "instance('things')/root/item[foo='1' and bar='2']",
+                        "name",
+                        "label"
+                    )
+                )
+            ),
+            controllerSupplier
+        )
+
+        val choices = scenario.choicesOf("/data/question").map { it.value }
+        assertThat(choices, containsInAnyOrder("thing2"))
+    }
 }
 
 private class FallthroughFilterStrategy : FilterStrategy {
