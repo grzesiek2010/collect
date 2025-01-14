@@ -3,6 +3,7 @@ package org.odk.collect.mapbox
 import android.graphics.Color
 import android.location.Location
 import android.os.Bundle
+import android.util.Log
 import android.view.Gravity
 import android.view.LayoutInflater
 import android.view.View
@@ -12,6 +13,8 @@ import androidx.fragment.app.Fragment
 import androidx.lifecycle.lifecycleScope
 import androidx.startup.AppInitializer
 import com.google.android.gms.location.LocationListener
+import com.mapbox.android.gestures.MoveGestureDetector
+import com.mapbox.android.gestures.StandardScaleGestureDetector
 import com.mapbox.geojson.Point
 import com.mapbox.maps.EdgeInsets
 import com.mapbox.maps.MapView
@@ -41,8 +44,12 @@ import com.mapbox.maps.plugin.annotation.generated.createPolylineAnnotationManag
 import com.mapbox.maps.plugin.compass.compass
 import com.mapbox.maps.plugin.gestures.OnMapClickListener
 import com.mapbox.maps.plugin.gestures.OnMapLongClickListener
+import com.mapbox.maps.plugin.gestures.OnMoveListener
+import com.mapbox.maps.plugin.gestures.OnScaleListener
 import com.mapbox.maps.plugin.gestures.addOnMapClickListener
 import com.mapbox.maps.plugin.gestures.addOnMapLongClickListener
+import com.mapbox.maps.plugin.gestures.addOnMoveListener
+import com.mapbox.maps.plugin.gestures.addOnScaleListener
 import com.mapbox.maps.plugin.locationcomponent.location
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
@@ -161,6 +168,15 @@ class MapboxMapFragment :
         mapboxMap = mapView
             .getMapboxMap()
             .apply {
+                addOnScaleListener(object: OnScaleListener {
+                    override fun onScale(detector: StandardScaleGestureDetector) = Unit
+
+                    override fun onScaleBegin(detector: StandardScaleGestureDetector) = Unit
+
+                    override fun onScaleEnd(detector: StandardScaleGestureDetector) {
+                        Log.i("QWERTY", "Zoom: " + cameraState.zoom)
+                    }
+                })
                 addOnMapClickListener(this@MapboxMapFragment)
                 addOnMapLongClickListener(this@MapboxMapFragment)
             }

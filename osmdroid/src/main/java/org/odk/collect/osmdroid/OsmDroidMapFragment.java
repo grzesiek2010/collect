@@ -28,6 +28,7 @@ import android.graphics.drawable.Drawable;
 import android.location.Location;
 import android.os.Bundle;
 import android.os.Handler;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -54,6 +55,7 @@ import org.odk.collect.maps.markers.MarkerIconCreator;
 import org.odk.collect.maps.markers.MarkerIconDescription;
 import org.odk.collect.settings.SettingsProvider;
 import org.osmdroid.api.IGeoPoint;
+import org.osmdroid.events.MapEvent;
 import org.osmdroid.events.MapListener;
 import org.osmdroid.events.ScrollEvent;
 import org.osmdroid.events.ZoomEvent;
@@ -130,6 +132,7 @@ public class OsmDroidMapFragment extends Fragment implements MapFragment,
     private File referenceLayerFile;
     private TilesOverlay referenceOverlay;
     private boolean hasCenter;
+    private boolean isProgrammaticZoom;
 
     @Override
     public void init(@Nullable ReadyListener readyListener, @Nullable ErrorListener errorListener) {
@@ -203,6 +206,20 @@ public class OsmDroidMapFragment extends Fragment implements MapFragment,
         map.setTilesScaledToDpi(true);
         map.setFlingEnabled(false);
         map.getOverlays().add(new ScaleBarOverlay(map));
+        map.addMapListener(new MapListener() {
+            @Override
+            public boolean onZoom(ZoomEvent event) {
+                if (!isProgrammaticZoom) {
+                    Log.i("QWERTY", "Zoom: " + event.getZoomLevel());
+                }
+                return false;
+            }
+
+            @Override
+            public boolean onScroll(ScrollEvent event) {
+                return false;
+            }
+        });
         addAttributionAndMapEventsOverlays();
         loadReferenceOverlay();
         addMapLayoutChangeListener(map);
@@ -261,9 +278,13 @@ public class OsmDroidMapFragment extends Fragment implements MapFragment,
         // We're ignoring the 'animate' flag because OSMDroid doesn't provide
         // support for simultaneously animating the viewport center and zoom level.
         if (center != null) {
+            isProgrammaticZoom = true;
+
             // setCenter() must be done last; setZoom() does not preserve the center.
             map.getController().setZoom((int) Math.round(zoom));
             map.getController().setCenter(toGeoPoint(center));
+
+            isProgrammaticZoom = false;
         }
 
         hasCenter = true;
@@ -292,7 +313,11 @@ public class OsmDroidMapFragment extends Fragment implements MapFragment,
                 // did it, not because it's known to be the best solution.
                 final BoundingBox box = BoundingBox.fromGeoPoints(geoPoints)
                         .increaseByScale((float) (1 / scaleFactor));
-                new Handler().postDelayed(() -> map.zoomToBoundingBox(box, animate), 100);
+                new Handler().postDelayed(() -> {
+                    isProgrammaticZoom = true;
+                    map.zoomToBoundingBox(box, animate);
+                    isProgrammaticZoom = false;
+                }, 100);
             }
         }
 

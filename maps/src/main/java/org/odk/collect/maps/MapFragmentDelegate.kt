@@ -38,6 +38,7 @@ class MapFragmentDelegate(
     }
 
     fun onStop() {
+        settings.save()
         settings.unregisterOnSettingChangeListener(this)
     }
 

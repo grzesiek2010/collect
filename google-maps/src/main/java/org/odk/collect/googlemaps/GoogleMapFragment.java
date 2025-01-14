@@ -19,6 +19,7 @@ import android.content.Context;
 import android.location.Location;
 import android.os.Bundle;
 import android.os.Handler;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -173,6 +174,11 @@ public class GoogleMapFragment extends Fragment implements
                     toLatLng(INITIAL_CENTER), INITIAL_ZOOM));
             googleMap.setOnCameraMoveListener(() -> scaleView.update(googleMap.getCameraPosition().zoom, googleMap.getCameraPosition().target.latitude));
             googleMap.setOnCameraIdleListener(() -> scaleView.update(googleMap.getCameraPosition().zoom, googleMap.getCameraPosition().target.latitude));
+            googleMap.setOnCameraMoveStartedListener(reason -> {
+                if (reason == GoogleMap.OnCameraMoveStartedListener.REASON_GESTURE) {
+                    Log.i("QWERTY", "Zoom: " + googleMap.getCameraPosition().zoom);
+                }
+            });
             loadReferenceOverlay();
 
             // If the screen is rotated before the map is ready, this fragment
