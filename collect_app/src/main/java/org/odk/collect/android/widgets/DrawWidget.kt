@@ -48,14 +48,14 @@ class DrawWidget(
                 "drawButton"
             )
         }
-        binding.image.setOnClickListener { imageClickHandler.clickImage("viewImage") }
+        binding.answerView.setOnClickListener { imageClickHandler.clickImage("viewImage") }
 
         if (questionDetails.isReadOnly) {
             binding.drawButton.visibility = GONE
         }
 
         errorTextView = binding.errorMessage
-        imageView = binding.image
+        answerView = binding.image
 
         return binding.root
     }

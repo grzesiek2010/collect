@@ -48,14 +48,14 @@ class SignatureWidget(
                 "signButton"
             )
         }
-        binding.image.setOnClickListener { imageClickHandler.clickImage("viewImage") }
+        binding.answerView.setOnClickListener { imageClickHandler.clickImage("viewImage") }
 
         if (questionDetails.isReadOnly) {
             binding.signButton.visibility = GONE
         }
 
         errorTextView = binding.errorMessage
-        imageView = binding.image
+        answerView = binding.answerView
 
         return binding.root
     }

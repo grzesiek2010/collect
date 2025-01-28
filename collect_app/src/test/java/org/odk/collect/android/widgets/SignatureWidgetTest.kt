@@ -75,8 +75,8 @@ class SignatureWidgetTest : FileWidgetTest<SignatureWidget>() {
     fun `When there is no answer hide image view and error message`() {
         val widget = createWidget()
 
-        assertThat(widget.imageView.visibility, equalTo(View.GONE))
-        assertThat(widget.imageView.drawable, nullValue())
+        assertThat(widget.answerView.visibility, equalTo(View.GONE))
+        assertThat(widget.answerView.drawable, nullValue())
         assertThat(widget.errorTextView.visibility, equalTo(View.GONE))
     }
 
@@ -97,8 +97,8 @@ class SignatureWidgetTest : FileWidgetTest<SignatureWidget>() {
 
         val widget = createWidget()
 
-        assertThat(widget.imageView.visibility, equalTo(View.GONE))
-        assertThat(widget.imageView.drawable, nullValue())
+        assertThat(widget.answerView.visibility, equalTo(View.GONE))
+        assertThat(widget.answerView.drawable, nullValue())
         assertThat(widget.errorTextView.visibility, equalTo(View.VISIBLE))
     }
 
@@ -127,7 +127,7 @@ class SignatureWidgetTest : FileWidgetTest<SignatureWidget>() {
 
         val widget = createWidget()
 
-        val imageView = widget.imageView
+        val imageView = widget.answerView
         assertThat(imageView.visibility, equalTo(View.VISIBLE))
 
         val drawable = imageView.drawable
@@ -154,7 +154,7 @@ class SignatureWidgetTest : FileWidgetTest<SignatureWidget>() {
 
         val widget = createWidget()
 
-        val imageView = widget.imageView
+        val imageView = widget.answerView
         assertThat(imageView.visibility, equalTo(View.VISIBLE))
 
         val drawable = imageView.drawable

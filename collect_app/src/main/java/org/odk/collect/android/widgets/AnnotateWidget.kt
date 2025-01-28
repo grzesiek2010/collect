@@ -53,14 +53,14 @@ class AnnotateWidget(
     override fun onCreateAnswerView(context: Context, prompt: FormEntryPrompt, answerFontSize: Int): View {
         binding = AnnotateWidgetBinding.inflate((context as Activity).layoutInflater)
         errorTextView = binding.errorMessage
-        imageView = binding.image
+        answerView = binding.answerView
         updateAnswer()
 
         if (formEntryPrompt.appearanceHint != null && formEntryPrompt.appearanceHint.lowercase().contains(Appearances.NEW)) {
             binding.chooseButton.visibility = GONE
         }
 
-        if (binaryName == null || binding.image.visibility == GONE) {
+        if (binaryName == null || binding.answerView.visibility == GONE) {
             binding.annotateButton.isEnabled = false
         }
 
@@ -87,7 +87,7 @@ class AnnotateWidget(
                 "annotateButton"
             )
         }
-        binding.image.setOnClickListener { imageClickHandler.clickImage("viewImage") }
+        binding.answerView.setOnClickListener { imageClickHandler.clickImage("viewImage") }
 
         if (questionDetails.isReadOnly) {
             binding.captureButton.visibility = GONE

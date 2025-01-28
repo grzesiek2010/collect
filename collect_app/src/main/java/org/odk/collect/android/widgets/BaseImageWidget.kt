@@ -33,7 +33,7 @@ abstract class BaseImageWidget(
     protected val tmpImageFilePath: String
 ) : QuestionWidget(context, prompt), FileWidget, WidgetDataReceiver {
     lateinit var errorTextView: TextView
-    lateinit var imageView: ImageView
+    lateinit var answerView: ImageWidgetAnswer
     protected lateinit var imageClickHandler: ImageClickHandler
     protected lateinit var imageCaptureHandler: ExternalImageCaptureHandler
     protected var binaryName: String?
@@ -48,8 +48,8 @@ abstract class BaseImageWidget(
 
     override fun clearAnswer() {
         deleteFile()
-        imageView.setImageDrawable(null)
-        imageView.visibility = GONE
+        answerView.setImageDrawable(null)
+        answerView.visibility = GONE
         errorTextView.visibility = GONE
         widgetValueChanged()
     }
@@ -82,29 +82,29 @@ abstract class BaseImageWidget(
     }
 
     override fun setOnLongClickListener(l: OnLongClickListener?) {
-        imageView.setOnLongClickListener(l)
+        answerView.setOnLongClickListener(l)
     }
 
     override fun cancelLongPress() {
         super.cancelLongPress()
-        imageView.cancelLongPress()
+        answerView.cancelLongPress()
     }
 
     protected fun updateAnswer() {
-        imageView.visibility = GONE
+        answerView.visibility = GONE
         errorTextView.visibility = GONE
 
         if (binaryName != null) {
             val f = getFile()
             if (f != null && f.exists()) {
-                imageView.visibility = VISIBLE
+                answerView.visibility = VISIBLE
                 imageLoader.loadImage(
-                    imageView,
+                    answerView,
                     f,
                     ImageView.ScaleType.FIT_CENTER,
                     object : ImageLoaderCallback {
                         override fun onLoadFailed() {
-                            imageView.visibility = GONE
+                            answerView.visibility = GONE
                             errorTextView.visibility = VISIBLE
                         }
 

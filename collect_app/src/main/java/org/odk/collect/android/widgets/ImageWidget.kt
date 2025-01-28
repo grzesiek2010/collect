@@ -71,7 +71,7 @@ class ImageWidget(
                 R.string.choose_image
             )
         }
-        binding.image.setOnClickListener { v: View? -> imageClickHandler.clickImage("viewImage") }
+        binding.answerView.setOnClickListener { v: View? -> imageClickHandler.clickImage("viewImage") }
 
         if (questionDetails.isReadOnly) {
             binding.captureButton.visibility = GONE
@@ -79,7 +79,7 @@ class ImageWidget(
         }
 
         errorTextView = binding.errorMessage
-        imageView = binding.image
+        answerView = binding.answerView
 
         return binding.root
     }
