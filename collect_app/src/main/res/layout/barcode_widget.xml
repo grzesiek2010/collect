@@ -14,9 +14,9 @@
         app:layout_constraintStart_toStartOf="parent"
         app:icon="@drawable/ic_baseline_barcode_scanner_white_24" />
 
-    <org.odk.collect.android.widgets.BarcodeWidgetAnswer
-        android:id="@+id/answer_view"
-        android:layout_width="wrap_content"
+    <FrameLayout
+        android:id="@+id/answer_view_container"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
         app:layout_constraintTop_toBottomOf="@id/barcode_button"
         app:layout_constraintStart_toStartOf="parent"

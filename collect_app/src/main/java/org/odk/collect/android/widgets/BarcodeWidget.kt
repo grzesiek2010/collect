@@ -25,6 +25,7 @@ import org.odk.collect.strings.R
 class BarcodeWidget(
     context: Context,
     questionDetails: QuestionDetails,
+    private val widgetAnswer: WidgetAnswer,
     private val waitingForDataRegistry: WaitingForDataRegistry,
     private val cameraUtils: CameraUtils
 ) : QuestionWidget(context, questionDetails), WidgetDataReceiver {
@@ -47,26 +48,28 @@ class BarcodeWidget(
         if (!answer.isNullOrEmpty()) {
             binding.barcodeButton.text = getContext().getString(R.string.replace_barcode)
         }
-        binding.answerView.setup(prompt.answerValue, answerFontSize.toFloat())
+        widgetAnswer.setAnswer(answer)
+        widgetAnswer.setTextSize(answerFontSize.toFloat())
+        binding.answerViewContainer.addView(widgetAnswer)
         updateAnswerVisibility()
 
         return binding.root
     }
 
     override fun clearAnswer() {
-        binding.answerView.setAnswer(null)
+        widgetAnswer.setAnswer(null)
         binding.barcodeButton.text = context.getString(R.string.get_barcode)
         updateAnswerVisibility()
         widgetValueChanged()
     }
 
     override fun getAnswer(): IAnswerData? {
-        val answer = binding.answerView.getAnswer()
+        val answer = widgetAnswer.getAnswer()
         return if (answer.isEmpty()) null else StringData(answer)
     }
 
     override fun setData(answer: Any) {
-        binding.answerView.setAnswer(answer as String)
+        widgetAnswer.setAnswer(answer as String)
         binding.barcodeButton.text = context.getString(R.string.replace_barcode)
         updateAnswerVisibility()
         widgetValueChanged()
@@ -74,18 +77,18 @@ class BarcodeWidget(
 
     override fun setOnLongClickListener(l: OnLongClickListener?) {
         binding.barcodeButton.setOnLongClickListener(l)
-        binding.answerView.setOnLongClickListener(l)
+        widgetAnswer.setOnLongClickListener(l)
     }
 
     override fun cancelLongPress() {
         super.cancelLongPress()
         binding.barcodeButton.cancelLongPress()
-        binding.answerView.cancelLongPress()
+        widgetAnswer.cancelLongPress()
     }
 
     private fun updateAnswerVisibility() {
         val isAnswerHidden = hasAppearance(formEntryPrompt, Appearances.HIDDEN_ANSWER)
-        binding.answerView.visibility = if (isAnswerHidden || binding.answerView.getAnswer().isBlank()) GONE else VISIBLE
+        widgetAnswer.visibility = if (isAnswerHidden || widgetAnswer.getAnswer().isBlank()) GONE else VISIBLE
     }
 
     private fun onButtonClick() {
