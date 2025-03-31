@@ -3,6 +3,7 @@ package org.odk.collect.android.database
 import android.content.ContentValues
 import android.database.Cursor
 import android.provider.BaseColumns
+import androidx.core.database.getLongOrNull
 import org.odk.collect.android.database.forms.DatabaseFormColumns
 import org.odk.collect.android.database.instances.DatabaseInstanceColumns
 import org.odk.collect.androidshared.utils.PathUtils.getAbsoluteFilePath
@@ -156,7 +157,7 @@ object DatabaseObjectMapper {
             .formId(cursor.getString(jrFormIdColumnIndex))
             .formVersion(cursor.getString(jrVersionColumnIndex))
             .status(cursor.getString(statusColumnIndex))
-            .lastStatusChangeDate(cursor.getLong(lastStatusChangeDateColumnIndex))
+            .lastStatusChangeDate(cursor.getLongOrNull(lastStatusChangeDateColumnIndex))
             .deletedDate(
                 if (cursor.isNull(deletedDateColumnIndex)) {
                     null

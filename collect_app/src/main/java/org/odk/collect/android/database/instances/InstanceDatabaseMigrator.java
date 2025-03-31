@@ -36,8 +36,12 @@ public class InstanceDatabaseMigrator implements DatabaseMigrator {
             CAN_EDIT_WHEN_COMPLETE, INSTANCE_FILE_PATH, JR_FORM_ID, JR_VERSION, STATUS,
             LAST_STATUS_CHANGE_DATE, DELETED_DATE, GEOMETRY, GEOMETRY_TYPE};
 
+    private static final String[] COLUMN_NAMES_V8 = {_ID, DISPLAY_NAME, SUBMISSION_URI,
+            CAN_EDIT_WHEN_COMPLETE, INSTANCE_FILE_PATH, JR_FORM_ID, JR_VERSION, STATUS,
+            LAST_STATUS_CHANGE_DATE, DELETED_DATE, GEOMETRY, GEOMETRY_TYPE, CAN_DELETE_BEFORE_SEND};
+
     public void onCreate(SQLiteDatabase db) {
-        createInstancesTableV8(db);
+        createInstancesTableV9(db);
     }
 
     @SuppressWarnings({"checkstyle:FallThrough"})
@@ -59,8 +63,10 @@ public class InstanceDatabaseMigrator implements DatabaseMigrator {
             case 7:
                 upgradeToVersion8(db);
             case 8:
+                upgradeToVersion9(db);
+            case 9:
                 // Remember to bump the database version number in {@link org.odk.collect.android.database.DatabaseConstants}
-                // upgradeToVersion9(db);
+                // upgradeToVersion10(db);
         }
     }
 
@@ -143,6 +149,14 @@ public class InstanceDatabaseMigrator implements DatabaseMigrator {
         db.execSQL("UPDATE " + INSTANCES_TABLE_NAME + " SET " + CAN_DELETE_BEFORE_SEND + " = 'true';");
     }
 
+    private void upgradeToVersion9(SQLiteDatabase db) {
+        String temporaryTable = INSTANCES_TABLE_NAME + "_tmp";
+        SQLiteUtils.renameTable(db, INSTANCES_TABLE_NAME, temporaryTable);
+        createInstancesTableV9(db);
+        SQLiteUtils.copyRows(db, temporaryTable, COLUMN_NAMES_V8, INSTANCES_TABLE_NAME);
+        SQLiteUtils.dropTable(db, temporaryTable);
+    }
+
     private void createInstancesTableV5(SQLiteDatabase db, String name) {
         db.execSQL("CREATE TABLE IF NOT EXISTS " + name + " ("
                 + _ID + " integer primary key, "
@@ -201,6 +215,23 @@ public class InstanceDatabaseMigrator implements DatabaseMigrator {
                 + JR_VERSION + " text, "
                 + STATUS + " text not null, "
                 + LAST_STATUS_CHANGE_DATE + " date not null, "
+                + DELETED_DATE + " date, "
+                + GEOMETRY + " text, "
+                + GEOMETRY_TYPE + " text);");
+    }
+
+    public void createInstancesTableV9(SQLiteDatabase db) {
+        db.execSQL("CREATE TABLE IF NOT EXISTS " + INSTANCES_TABLE_NAME + " ("
+                + _ID + " integer primary key autoincrement, "
+                + DISPLAY_NAME + " text not null, "
+                + SUBMISSION_URI + " text, "
+                + CAN_EDIT_WHEN_COMPLETE + " text, "
+                + CAN_DELETE_BEFORE_SEND + " text, "
+                + INSTANCE_FILE_PATH + " text not null, "
+                + JR_FORM_ID + " text not null, "
+                + JR_VERSION + " text, "
+                + STATUS + " text not null, "
+                + LAST_STATUS_CHANGE_DATE + " date, "
                 + DELETED_DATE + " date, "
                 + GEOMETRY + " text, "
                 + GEOMETRY_TYPE + " text);");
