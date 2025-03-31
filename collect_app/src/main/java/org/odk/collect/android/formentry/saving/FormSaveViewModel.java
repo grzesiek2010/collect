@@ -169,9 +169,14 @@ public class FormSaveViewModel extends ViewModel implements MaterialProgressDial
                 SaveFormToDisk.removeIndexFile(formController.getInstanceFile().getName());
 
                 // if it's not already saved, erase everything
-                if (!InstancesDaoHelper.isInstanceAvailable(getAbsoluteInstancePath())) {
+                if (instance == null) {
                     String instanceFolder = formController.getInstanceFile().getParent();
                     FileUtils.purgeMediaPath(instanceFolder);
+                } else if (instance.getLastStatusChangeDate() == null) {
+                    scheduler.immediate(() -> {
+                        instancesRepository.delete(instance.getDbId());
+                        return null;
+                    }, result -> {});
                 }
             }
         }
