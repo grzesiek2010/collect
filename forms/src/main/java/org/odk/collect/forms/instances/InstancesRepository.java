@@ -42,6 +42,8 @@ public interface InstancesRepository {
 
     Instance save(Instance instance);
 
+    Instance clone(Instance instance, String newInstanceFilePath);
+
     /**
      * Deletes any sensitive data (the submission file and geometry data) but leaves the Instance
      * record in place.
