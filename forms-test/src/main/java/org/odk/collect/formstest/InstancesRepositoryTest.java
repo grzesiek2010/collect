@@ -261,6 +261,44 @@ public abstract class InstancesRepositoryTest {
     }
 
     @Test
+    public void clone_returnsInstanceWithId() {
+        InstancesRepository instancesRepository = buildSubject();
+
+        Instance instance = instancesRepository.save(InstanceUtils.buildInstance("formid", "1", getInstancesDir()).build());
+        Instance clonedInstance = instancesRepository.clone(instance, "blah/blah.xml");
+        assertThat(instancesRepository.get(clonedInstance.getDbId()), is(clonedInstance));
+        assertThat(instancesRepository.get(clonedInstance.getDbId()), not(instance));
+    }
+
+    @Test
+    public void clone_setsInstanceStatusToStatusValid() {
+        InstancesRepository instancesRepository = buildSubject();
+
+        Instance instance = instancesRepository.save(InstanceUtils.buildInstance("formid", "1", "Form", Instance.STATUS_COMPLETE, null, getInstancesDir()).build());
+        Instance clonedInstance = instancesRepository.clone(instance, "blah/blah.xml");
+        assertThat(instancesRepository.get(clonedInstance.getDbId()).getStatus(), is(Instance.STATUS_VALID));
+    }
+
+    @Test
+    public void clone_clearsLastStatusChangeDate() {
+        InstancesRepository instancesRepository = buildSubject();
+
+        Instance instance = instancesRepository.save(InstanceUtils.buildInstance("formid", "1", getInstancesDir()).build());
+        Instance clonedInstance = instancesRepository.clone(instance, "blah/blah.xml");
+        assertThat(instancesRepository.get(clonedInstance.getDbId()).getLastStatusChangeDate(), is(nullValue()));
+    }
+
+    @Test
+    public void clone_setsInstanceFilePathToTheNewOne() {
+        InstancesRepository instancesRepository = buildSubject();
+
+        String instancesDir = getInstancesDir();
+        Instance instance = instancesRepository.save(InstanceUtils.buildInstance("formid", "1", instancesDir).build());
+        Instance clonedInstance = instancesRepository.clone(instance, "blah/blah.xml");
+        assertThat(instancesRepository.get(clonedInstance.getDbId()).getInstanceFilePath(), is(instancesDir + "/blah/blah.xml"));
+    }
+
+    @Test
     public void deleteWithLogging_setsDeletedDate() {
         InstancesRepository instancesRepository = buildSubject();
         Instance instance = instancesRepository.save(InstanceUtils.buildInstance("formid", "1", getInstancesDir()).build());
