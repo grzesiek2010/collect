@@ -4,7 +4,6 @@ import android.app.Activity
 import androidx.appcompat.app.AlertDialog
 import androidx.core.view.isVisible
 import com.google.android.material.dialog.MaterialAlertDialogBuilder
-import org.odk.collect.android.R
 import org.odk.collect.android.databinding.QuitFormDialogLayoutBinding
 import org.odk.collect.android.formentry.saving.FormSaveViewModel
 import org.odk.collect.settings.SettingsProvider
@@ -71,7 +70,7 @@ object QuitFormDialog {
         }
 
         binding.discardChanges.setText(
-            if (lastSavedTime != null) {
+            if (lastSavedTime != null && lastSavedTime >= 0) {
                 org.odk.collect.strings.R.string.discard_changes
             } else {
                 org.odk.collect.strings.R.string.do_not_save

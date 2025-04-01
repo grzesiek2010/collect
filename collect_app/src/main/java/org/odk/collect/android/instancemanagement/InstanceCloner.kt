@@ -19,6 +19,7 @@ class InstanceCloner(
             Instance.Builder(sourceInstance)
                 .dbId(null)
                 .status(Instance.STATUS_VALID)
+                .lastStatusChangeDate(-1)
                 .instanceFilePath(getRelativeFilePath(instancesPath, targetInstanceFile.absolutePath))
                 .build()
         ).dbId

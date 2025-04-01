@@ -18,7 +18,6 @@ import androidx.lifecycle.ViewModel;
 import org.apache.commons.io.IOUtils;
 import org.javarosa.form.api.FormEntryController;
 import org.odk.collect.android.application.Collect;
-import org.odk.collect.android.dao.helpers.InstancesDaoHelper;
 import org.odk.collect.android.dynamicpreload.ExternalDataManager;
 import org.odk.collect.android.formentry.FormSession;
 import org.odk.collect.android.formentry.audit.AuditEvent;
@@ -169,9 +168,14 @@ public class FormSaveViewModel extends ViewModel implements MaterialProgressDial
                 SaveFormToDisk.removeIndexFile(formController.getInstanceFile().getName());
 
                 // if it's not already saved, erase everything
-                if (!InstancesDaoHelper.isInstanceAvailable(getAbsoluteInstancePath())) {
+                if (instance == null) {
                     String instanceFolder = formController.getInstanceFile().getParent();
                     FileUtils.purgeMediaPath(instanceFolder);
+                } else if (instance.getLastStatusChangeDate() < 0) {
+                    scheduler.immediate(() -> {
+                        instancesRepository.delete(instance.getDbId());
+                        return null;
+                    }, result -> {});
                 }
             }
         }
@@ -200,11 +204,6 @@ public class FormSaveViewModel extends ViewModel implements MaterialProgressDial
             this.saveResult.setValue(new SaveResult(SaveResult.State.SAVING, saveRequest));
             saveToDisk(saveRequest);
         }
-    }
-
-    @Nullable
-    public String getAbsoluteInstancePath() {
-        return formController != null ? formController.getAbsoluteInstancePath() : null;
     }
 
     public boolean isSaving() {
