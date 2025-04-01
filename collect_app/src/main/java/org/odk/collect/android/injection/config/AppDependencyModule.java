@@ -661,15 +661,7 @@ public class AppDependencyModule {
     }
 
     @Provides
-    public InstanceCloner providesInstanceCloner(
-            ProjectsDataService projectsDataService,
-            InstancesRepositoryProvider instancesRepositoryProvider,
-            StoragePathProvider storagePathProvider
-    ) {
-        String currentProjectId = projectsDataService.getCurrentProject().getValue().getUuid();
-        return new InstanceCloner(
-                instancesRepositoryProvider.create(currentProjectId),
-                storagePathProvider.create(currentProjectId).getInstancesDir()
-        );
+    public InstanceCloner providesInstanceCloner() {
+        return new InstanceCloner();
     }
 }

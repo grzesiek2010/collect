@@ -31,7 +31,7 @@ import org.odk.collect.android.activities.FormDownloadListActivity
 import org.odk.collect.android.activities.InstanceChooserList
 import org.odk.collect.android.application.initialization.AnalyticsInitializer
 import org.odk.collect.android.fakes.FakePermissionsProvider
-import org.odk.collect.android.formentry.FormOpeningMode
+import org.odk.collect.android.formentry.FormIntentExtras
 import org.odk.collect.android.formlists.blankformlist.BlankFormListActivity
 import org.odk.collect.android.injection.config.AppDependencyModule
 import org.odk.collect.android.instancemanagement.InstancesDataService
@@ -216,8 +216,8 @@ class MainMenuActivityTest {
             button.performClick()
             assertThat(Intents.getIntents()[0], hasComponent(InstanceChooserList::class.java.name))
             assertThat(
-                Intents.getIntents()[0].extras!!.get(FormOpeningMode.FORM_MODE_KEY),
-                `is`(FormOpeningMode.EDIT_SAVED)
+                Intents.getIntents()[0].extras!!.get(FormIntentExtras.FORM_MODE_KEY),
+                `is`(FormIntentExtras.FORM_MODE_EDIT_SAVED)
             )
 
             Intents.release()
@@ -269,8 +269,8 @@ class MainMenuActivityTest {
             button.performClick()
             assertThat(Intents.getIntents()[0], hasComponent(InstanceChooserList::class.java.name))
             assertThat(
-                Intents.getIntents()[0].extras!!.get(FormOpeningMode.FORM_MODE_KEY),
-                `is`(FormOpeningMode.VIEW_SENT)
+                Intents.getIntents()[0].extras!!.get(FormIntentExtras.FORM_MODE_KEY),
+                `is`(FormIntentExtras.FORM_MODE_VIEW_SENT)
             )
 
             Intents.release()

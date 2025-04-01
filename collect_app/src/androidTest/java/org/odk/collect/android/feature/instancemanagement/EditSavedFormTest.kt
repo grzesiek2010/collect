@@ -160,4 +160,30 @@ class EditSavedFormTest {
             .editForm("One Question")
             .assertText("123")
     }
+
+    @Test
+    fun editingAFinalizedForm_doesNotCreateNewFormWhenUserDiscards() {
+        rule.startAtMainMenu()
+            .copyForm("one-question.xml")
+            .startBlankForm("One Question")
+            .answerQuestion("what is your age", "123")
+            .swipeToEndScreen()
+            .clickFinalize()
+
+            .clickSendFinalizedForm(1)
+            .clickOnForm("One Question")
+            .editForm("One Question")
+            .clickOnQuestion("what is your age")
+            .answerQuestion("what is your age", "456")
+            .pressBackAndDiscardForm(SendFinalizedFormPage())
+            .pressBack(MainMenuPage())
+
+            .clickDrafts(0)
+            .pressBack(MainMenuPage())
+
+            .clickSendFinalizedForm(1)
+            .clickOnForm("One Question")
+            .editForm("One Question")
+            .assertText("123")
+    }
 }

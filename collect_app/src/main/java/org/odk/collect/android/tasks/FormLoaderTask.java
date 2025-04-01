@@ -101,7 +101,7 @@ public class FormLoaderTask extends SchedulerAsyncTaskMimic<Void, String, FormLo
     private Instance instance;
     private Savepoint savepoint;
     private final SavepointsRepository savepointsRepository;
-    private final boolean isFinalizedFormEdit;
+    private final String finalizedFormEditInstanceFilePath;
 
     @Override
     protected void onPreExecute() {
@@ -146,7 +146,7 @@ public class FormLoaderTask extends SchedulerAsyncTaskMimic<Void, String, FormLo
 
     public FormLoaderTask(Uri uri, String uriMimeType, String xpath, String waitingXPath,
                           FormEntryControllerFactory formEntryControllerFactory, Scheduler scheduler,
-                          SavepointsRepository savepointsRepository, boolean isFinalizedFormEdit) {
+                          SavepointsRepository savepointsRepository, String finalizedFormEditInstanceFilePath) {
         super(scheduler);
         this.uri = uri;
         this.uriMimeType = uriMimeType;
@@ -154,7 +154,7 @@ public class FormLoaderTask extends SchedulerAsyncTaskMimic<Void, String, FormLo
         this.waitingXPath = waitingXPath;
         this.formEntryControllerFactory = formEntryControllerFactory;
         this.savepointsRepository = savepointsRepository;
-        this.isFinalizedFormEdit = isFinalizedFormEdit;
+        this.finalizedFormEditInstanceFilePath = finalizedFormEditInstanceFilePath;
     }
 
     /**
@@ -181,8 +181,12 @@ public class FormLoaderTask extends SchedulerAsyncTaskMimic<Void, String, FormLo
                 return null;
             }
 
-            savepoint = savepointsRepository.get(form.getDbId(), null);
-            instancePath = savepoint != null ? savepoint.getInstanceFilePath() : null;
+            if (finalizedFormEditInstanceFilePath != null) {
+                instancePath = finalizedFormEditInstanceFilePath;
+            } else {
+                savepoint = savepointsRepository.get(form.getDbId(), null);
+                instancePath = savepoint != null ? savepoint.getInstanceFilePath() : null;
+            }
         }
 
         if (form.getFormFilePath() == null) {
@@ -422,7 +426,7 @@ public class FormLoaderTask extends SchedulerAsyncTaskMimic<Void, String, FormLo
                     Timber.i("Importing data");
                     publishProgress(getLocalizedString(Collect.getInstance(), org.odk.collect.strings.R.string.survey_loading_reading_data_message));
                     importData(instanceXml, fec);
-                    formDef.initialize(isFinalizedFormEdit ? FormInitializationMode.FINALIZED_FORM_EDIT : FormInitializationMode.DRAFT_FORM_EDIT);
+                    formDef.initialize(finalizedFormEditInstanceFilePath != null ? FormInitializationMode.FINALIZED_FORM_EDIT : FormInitializationMode.DRAFT_FORM_EDIT);
                 } catch (IOException | RuntimeException e) {
                     // Skip a savepoint file that is corrupted or 0-sized
                     if (usedSavepoint && !(e.getCause() instanceof XPathTypeMismatchException)) {

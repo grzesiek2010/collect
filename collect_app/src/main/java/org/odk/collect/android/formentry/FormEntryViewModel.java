@@ -415,6 +415,10 @@ public class FormEntryViewModel extends ViewModel implements SelectChoiceLoader 
         });
     }
 
+    public Form getForm() {
+        return form;
+    }
+
     public interface AnswerListener {
         void onAnswer(FormIndex index, IAnswerData answer);
     }

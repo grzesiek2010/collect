@@ -94,6 +94,7 @@ import org.odk.collect.android.formentry.BackgroundAudioPermissionDialogFragment
 import org.odk.collect.android.formentry.BackgroundAudioViewModel;
 import org.odk.collect.android.formentry.FormAnimation;
 import org.odk.collect.android.formentry.FormAnimationType;
+import org.odk.collect.android.formentry.FormIntentExtras;
 import org.odk.collect.android.formentry.FormEndView;
 import org.odk.collect.android.formentry.FormEndViewModel;
 import org.odk.collect.android.formentry.FormEntryMenuProvider;
@@ -102,7 +103,6 @@ import org.odk.collect.android.formentry.FormError;
 import org.odk.collect.android.formentry.FormIndexAnimationHandler;
 import org.odk.collect.android.formentry.FormIndexAnimationHandler.Direction;
 import org.odk.collect.android.formentry.FormLoadingDialogFragment;
-import org.odk.collect.android.formentry.FormOpeningMode;
 import org.odk.collect.android.formentry.FormSessionRepository;
 import org.odk.collect.android.formentry.ODKView;
 import org.odk.collect.android.formentry.PrinterWidgetViewModel;
@@ -411,7 +411,7 @@ public class FormFillingActivity extends LocalizedActivity implements AnimationL
         }
 
         viewModelFactory = new FormEntryViewModelFactory(this,
-                getIntent().getStringExtra(FormOpeningMode.FORM_MODE_KEY),
+                getIntent().getStringExtra(FormIntentExtras.FORM_MODE_KEY),
                 sessionId,
                 scheduler,
                 formSessionRepository,
@@ -732,7 +732,8 @@ public class FormFillingActivity extends LocalizedActivity implements AnimationL
             uriMimeType = getContentResolver().getType(uri);
         }
 
-        formLoaderTask = new FormLoaderTask(uri, uriMimeType, startingXPath, waitingXPath, formEntryControllerFactory, scheduler, savepointsRepositoryProvider.create(), FormOpeningMode.EDIT_FINALIZED.equalsIgnoreCase(intent.getStringExtra(FormOpeningMode.FORM_MODE_KEY)));
+        String instanceFilePath = intent.getStringExtra(FormIntentExtras.INSTANCE_FILE_PATH_KEY);
+        formLoaderTask = new FormLoaderTask(uri, uriMimeType, startingXPath, waitingXPath, formEntryControllerFactory, scheduler, savepointsRepositoryProvider.create(), instanceFilePath);
         formLoaderTask.setFormLoaderListener(this);
         showIfNotShowing(FormLoadingDialogFragment.class, getSupportFragmentManager());
         formLoaderTask.execute();
@@ -864,7 +865,7 @@ public class FormFillingActivity extends LocalizedActivity implements AnimationL
 
         switch (requestCode) {
             case RequestCodes.OSM_CAPTURE:
-                setWidgetData(intent.getStringExtra("OSM_FILE_NAME"));
+                setWidgetData(intent.getStringExtra(FormIntentExtras.OSM_FILE_NAME_KEY));
                 break;
             case RequestCodes.EX_ARBITRARY_FILE_CHOOSER:
             case RequestCodes.EX_VIDEO_CHOOSER:
@@ -1984,8 +1985,8 @@ public class FormFillingActivity extends LocalizedActivity implements AnimationL
                 Intent reqIntent = getIntent();
 
                 // we've just loaded a saved form, so start in the hierarchy view
-                String formMode = reqIntent.getStringExtra(FormOpeningMode.FORM_MODE_KEY);
-                if (FormOpeningMode.isEditableMode(formMode)) {
+                String formMode = reqIntent.getStringExtra(FormIntentExtras.FORM_MODE_KEY);
+                if (formMode == null || FormIntentExtras.FORM_MODE_EDIT_SAVED.equalsIgnoreCase(formMode)) {
                     identityPromptViewModel.formLoaded(formController);
                     identityPromptViewModel.requiresIdentityToContinue().observe(this, requiresIdentity -> {
                         if (!requiresIdentity) {
@@ -2021,7 +2022,7 @@ public class FormFillingActivity extends LocalizedActivity implements AnimationL
                     });
                 } else {
                     formControllerAvailable(formController, form, instance);
-                    if (FormOpeningMode.VIEW_SENT.equalsIgnoreCase(formMode)) {
+                    if (FormIntentExtras.FORM_MODE_VIEW_SENT.equalsIgnoreCase(formMode)) {
                         Intent intent = new Intent(this, FormHierarchyFragmentHostActivity.class);
                         intent.putExtra(FormHierarchyFragmentHostActivity.EXTRA_SESSION_ID, sessionId);
                         intent.putExtra(FormHierarchyFragmentHostActivity.EXTRA_VIEW_ONLY, true);

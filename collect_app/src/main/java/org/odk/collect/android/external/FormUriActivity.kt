@@ -17,7 +17,7 @@ import org.odk.collect.analytics.Analytics
 import org.odk.collect.android.R
 import org.odk.collect.android.activities.FormFillingActivity
 import org.odk.collect.android.analytics.AnalyticsEvents
-import org.odk.collect.android.formentry.FormOpeningMode
+import org.odk.collect.android.formentry.FormIntentExtras
 import org.odk.collect.android.injection.DaggerUtils
 import org.odk.collect.android.instancemanagement.InstanceDeleter
 import org.odk.collect.android.instancemanagement.canBeEdited
@@ -312,8 +312,8 @@ private class FormUriViewModel(
     private fun assertNonEditableFormsAreStartedWithCorrectMode(): String? {
         if (!canFormBeEdited()) {
             intent.putExtra(
-                FormOpeningMode.FORM_MODE_KEY,
-                FormOpeningMode.VIEW_SENT
+                FormIntentExtras.FORM_MODE_KEY,
+                FormIntentExtras.FORM_MODE_VIEW_SENT
             )
         }
         return null
@@ -323,7 +323,7 @@ private class FormUriViewModel(
         val uriMimeType = contentResolver.getType(uri!!)
         val projectId = projectsDataService.requireCurrentProject().uuid
 
-        if (intent.extras?.getString(FormOpeningMode.FORM_MODE_KEY) == FormOpeningMode.VIEW_SENT) {
+        if (intent.extras?.getString(FormIntentExtras.FORM_MODE_KEY) == FormIntentExtras.FORM_MODE_VIEW_SENT) {
             return null
         }
 

@@ -28,16 +28,16 @@ class FormHierarchyViewModel(
 
     fun shouldShowRepeatGroupPicker() = repeatGroupPickerIndex != null
 
-    fun editInstance(formController: FormController): LiveData<Consumable<Long>> {
-        val result = MutableLiveData<Consumable<Long>>()
+    fun editInstance(formController: FormController): LiveData<Consumable<String>> {
+        val result = MutableLiveData<Consumable<String>>()
 
         trackableWorker.immediate(
             background = {
                 instanceCloner.clone(formController)
             },
-            foreground = { dbId ->
-                if (dbId != null) {
-                    result.value = Consumable(dbId)
+            foreground = { instanceFilePath ->
+                if (instanceFilePath != null) {
+                    result.value = Consumable(instanceFilePath)
                 }
             }
         )

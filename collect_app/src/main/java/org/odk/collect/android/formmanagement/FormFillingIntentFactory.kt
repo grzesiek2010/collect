@@ -5,8 +5,9 @@ import android.content.Context
 import android.content.Intent
 import android.net.Uri
 import org.odk.collect.android.external.FormUriActivity
+import org.odk.collect.android.external.FormsContract
 import org.odk.collect.android.external.InstancesContract
-import org.odk.collect.android.formentry.FormOpeningMode
+import org.odk.collect.android.formentry.FormIntentExtras
 import kotlin.reflect.KClass
 
 object FormFillingIntentFactory {
@@ -53,13 +54,14 @@ object FormFillingIntentFactory {
     fun editFinalizedFormIntent(
         context: Context,
         projectId: String,
-        instanceId: Long,
+        formDbId: Long,
+        instanceFilePath: String,
         clazz: KClass<out Activity> = FormUriActivity::class
     ): Intent {
         return Intent(context, clazz.java).also {
             it.action = Intent.ACTION_EDIT
-            it.data = InstancesContract.getUri(projectId, instanceId)
-            it.putExtra(FormOpeningMode.FORM_MODE_KEY, FormOpeningMode.EDIT_FINALIZED)
+            it.data = FormsContract.getUri(projectId, formDbId)
+            it.putExtra(FormIntentExtras.INSTANCE_FILE_PATH_KEY, instanceFilePath)
         }
     }
 }
