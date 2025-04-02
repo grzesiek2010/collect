@@ -211,7 +211,7 @@ class FormEntryUseCasesTest {
         val instanceFile = TempFiles.createTempFile("instance", ".xml")
 
         val formController = FormEntryUseCases.loadBlankForm(
-            form,
+            form.formMediaPath,
             FormEntryController(FormEntryModel(formDef)),
             instanceFile
         )

@@ -67,14 +67,28 @@ object FormEntryUseCases {
     }
 
     fun loadBlankForm(
-        form: Form,
+        formMediaPath: String?,
         formEntryController: FormEntryController,
         instanceFile: File
     ): FormController {
         formEntryController.model.form.initialize(FormInitializationMode.NEW_FORM)
 
         return JavaRosaFormController(
-            File(form.formMediaPath),
+            File(formMediaPath),
+            formEntryController,
+            instanceFile
+        )
+    }
+
+    fun loadEditedForm(
+        formMediaPath: String?,
+        formEntryController: FormEntryController,
+        instanceFile: File
+    ): FormController {
+        formEntryController.model.form.initialize(FormInitializationMode.FINALIZED_FORM_EDIT)
+
+        return JavaRosaFormController(
+            File(formMediaPath),
             formEntryController,
             instanceFile
         )
@@ -177,7 +191,7 @@ object FormEntryUseCases {
         return instancesRepository.getOneByPath(instancePath)
     }
 
-    private fun saveInstanceToDisk(formController: FormController) {
+    fun saveInstanceToDisk(formController: FormController) {
         val payload = formController.getSubmissionXml()
         FileUtils.write(formController.getInstanceFile(), payload!!.payloadBytes)
     }
