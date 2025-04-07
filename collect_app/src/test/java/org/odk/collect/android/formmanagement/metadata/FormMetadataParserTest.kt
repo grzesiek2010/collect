@@ -145,6 +145,7 @@ class FormMetadataParserTest {
         assertThat(formMetadata.submissionUri, equalTo(null))
         assertThat(formMetadata.autoSend, equalTo(null))
         assertThat(formMetadata.autoDelete, equalTo(null))
+        assertThat(formMetadata.editable, equalTo(null))
         assertThat(formMetadata.base64RsaPublicKey, equalTo(null))
         assertThat(formMetadata.geometryXPath, equalTo(null))
         assertThat(formMetadata.isEntityForm, equalTo(false))
@@ -171,6 +172,7 @@ class FormMetadataParserTest {
                                 action="foo" 
                                 orx:auto-send="bar" 
                                 orx:auto-delete="baz" 
+                                orx:editable="qux" 
                                 base64RsaPublicKey="quux" 
                             />
                             <bind nodeset="/data/location1" type="geopoint" />
@@ -189,6 +191,7 @@ class FormMetadataParserTest {
         assertThat(formMetadata.submissionUri, equalTo("foo"))
         assertThat(formMetadata.autoSend, equalTo("bar"))
         assertThat(formMetadata.autoDelete, equalTo("baz"))
+        assertThat(formMetadata.editable, equalTo("qux"))
         assertThat(formMetadata.base64RsaPublicKey, equalTo("quux"))
         assertThat(formMetadata.geometryXPath, equalTo("/data/location1"))
         assertThat(formMetadata.isEntityForm, equalTo(true))
