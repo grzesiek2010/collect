@@ -43,6 +43,7 @@ public final class Form {
     private final String language;
     private final String autoSend;
     private final String autoDelete;
+    private final String editable;
     private final String geometryXPath;
     private final boolean deleted;
     private final Long lastDetectedAttachmentsUpdateDate;
@@ -64,6 +65,7 @@ public final class Form {
         language = builder.language;
         autoSend = builder.autoSend;
         autoDelete = builder.autoDelete;
+        editable = builder.editable;
         geometryXPath = builder.geometryXpath;
         deleted = builder.deleted;
         lastDetectedAttachmentsUpdateDate = builder.lastDetectedAttachmentsUpdateDate;
@@ -86,6 +88,7 @@ public final class Form {
         private String language;
         private String autoSend;
         private String autoDelete;
+        private String editable;
         private String geometryXpath;
         private boolean deleted;
         private Long lastDetectedAttachmentsUpdateDate;
@@ -110,6 +113,7 @@ public final class Form {
             language = form.language;
             autoSend = form.autoSend;
             autoDelete = form.autoDelete;
+            editable = form.editable;
             geometryXpath = form.geometryXPath;
             deleted = form.deleted;
             lastDetectedAttachmentsUpdateDate = form.lastDetectedAttachmentsUpdateDate;
@@ -188,6 +192,11 @@ public final class Form {
 
         public Builder autoDelete(String autoDelete) {
             this.autoDelete = autoDelete;
+            return this;
+        }
+
+        public Builder editable(String editable) {
+            this.editable = editable;
             return this;
         }
 
@@ -280,6 +289,11 @@ public final class Form {
         return autoDelete;
     }
 
+    @Nullable
+    public String getEditable() {
+        return editable;
+    }
+
     public String getGeometryXpath() {
         return geometryXPath;
     }
@@ -323,6 +337,7 @@ public final class Form {
                 Objects.equals(language, form.language) &&
                 Objects.equals(autoSend, form.autoSend) &&
                 Objects.equals(autoDelete, form.autoDelete) &&
+                Objects.equals(editable, form.editable) &&
                 Objects.equals(geometryXPath, form.geometryXPath) &&
                 Objects.equals(lastDetectedAttachmentsUpdateDate, form.lastDetectedAttachmentsUpdateDate) &&
                 Objects.equals(usesEntities, form.usesEntities);
@@ -332,8 +347,8 @@ public final class Form {
     public int hashCode() {
         return Objects.hash(dbId, displayName, description, formId, version, formFilePath,
                 submissionUri, base64RSAPublicKey, md5Hash, date, jrCacheFilePath, formMediaPath,
-                language, autoSend, autoDelete, geometryXPath, deleted, lastDetectedAttachmentsUpdateDate,
-                usesEntities);
+                language, autoSend, autoDelete, editable, geometryXPath, deleted,
+                lastDetectedAttachmentsUpdateDate, usesEntities);
     }
 
     @Override

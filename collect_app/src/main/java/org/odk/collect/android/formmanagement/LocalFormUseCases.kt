@@ -276,6 +276,7 @@ object LocalFormUseCases {
         }
         builder.autoDelete(formMetadata.autoDelete)
         builder.autoSend(formMetadata.autoSend)
+        builder.editable(formMetadata.editable)
         builder.geometryXpath(formMetadata.geometryXPath)
         builder.usesEntities(formMetadata.isEntityForm)
 

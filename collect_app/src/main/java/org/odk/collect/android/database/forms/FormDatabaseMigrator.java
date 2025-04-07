@@ -16,6 +16,7 @@ import static org.odk.collect.android.database.forms.DatabaseFormColumns.DELETED
 import static org.odk.collect.android.database.forms.DatabaseFormColumns.DESCRIPTION;
 import static org.odk.collect.android.database.forms.DatabaseFormColumns.DISPLAY_NAME;
 import static org.odk.collect.android.database.forms.DatabaseFormColumns.DISPLAY_SUBTEXT;
+import static org.odk.collect.android.database.forms.DatabaseFormColumns.EDITABLE;
 import static org.odk.collect.android.database.forms.DatabaseFormColumns.USES_ENTITIES;
 import static org.odk.collect.android.database.forms.DatabaseFormColumns.FORM_FILE_PATH;
 import static org.odk.collect.android.database.forms.DatabaseFormColumns.FORM_MEDIA_PATH;
@@ -43,7 +44,7 @@ public class FormDatabaseMigrator implements DatabaseMigrator {
     private static final String MODEL_VERSION = "modelVersion";
 
     public void onCreate(SQLiteDatabase db) {
-        createFormsTableV14(db);
+        createFormsTableV15(db);
     }
 
     @SuppressWarnings({"checkstyle:FallThrough"})
@@ -76,8 +77,10 @@ public class FormDatabaseMigrator implements DatabaseMigrator {
             case 13:
                 upgradeToVersion14(db);
             case 14:
+                upgradeToVersion15(db);
+            case 15:
                 // Remember to bump the database version number in {@link org.odk.collect.android.database.DatabaseConstants}
-                // upgradeToVersion15(db);
+                // upgradeToVersion16(db);
         }
     }
 
@@ -279,6 +282,10 @@ public class FormDatabaseMigrator implements DatabaseMigrator {
         SQLiteUtils.addColumn(db, FORMS_TABLE_NAME, USES_ENTITIES, "text");
     }
 
+    private void upgradeToVersion15(SQLiteDatabase db) {
+        SQLiteUtils.addColumn(db, FORMS_TABLE_NAME, EDITABLE, "text");
+    }
+
     private void createFormsTableV4(SQLiteDatabase db, String tableName) {
         db.execSQL("CREATE TABLE IF NOT EXISTS " + tableName + " ("
                 + _ID + " integer primary key, "
@@ -448,7 +455,7 @@ public class FormDatabaseMigrator implements DatabaseMigrator {
                 + LAST_DETECTED_ATTACHMENTS_UPDATE_DATE + " integer);"); // milliseconds
     }
 
-    private void createFormsTableV14(SQLiteDatabase db) {
+    public void createFormsTableV14(SQLiteDatabase db) {
         db.execSQL("CREATE TABLE IF NOT EXISTS " + FORMS_TABLE_NAME + " ("
                 + _ID + " integer primary key autoincrement, "
                 + DISPLAY_NAME + " text not null, "
@@ -465,6 +472,30 @@ public class FormDatabaseMigrator implements DatabaseMigrator {
                 + JRCACHE_FILE_PATH + " text not null, "
                 + AUTO_SEND + " text, "
                 + AUTO_DELETE + " text, "
+                + GEOMETRY_XPATH + " text, "
+                + DELETED_DATE + " integer, "
+                + LAST_DETECTED_ATTACHMENTS_UPDATE_DATE + " integer, " // milliseconds
+                + USES_ENTITIES + " text);");
+    }
+
+    private void createFormsTableV15(SQLiteDatabase db) {
+        db.execSQL("CREATE TABLE IF NOT EXISTS " + FORMS_TABLE_NAME + " ("
+                + _ID + " integer primary key autoincrement, "
+                + DISPLAY_NAME + " text not null, "
+                + DESCRIPTION + " text, "
+                + JR_FORM_ID + " text not null, "
+                + JR_VERSION + " text, "
+                + MD5_HASH + " text not null UNIQUE ON CONFLICT IGNORE, "
+                + DATE + " integer not null, " // milliseconds
+                + FORM_MEDIA_PATH + " text not null, "
+                + FORM_FILE_PATH + " text not null, "
+                + LANGUAGE + " text, "
+                + SUBMISSION_URI + " text, "
+                + BASE64_RSA_PUBLIC_KEY + " text, "
+                + JRCACHE_FILE_PATH + " text not null, "
+                + AUTO_SEND + " text, "
+                + AUTO_DELETE + " text, "
+                + EDITABLE + " text, "
                 + GEOMETRY_XPATH + " text, "
                 + DELETED_DATE + " integer, "
                 + LAST_DETECTED_ATTACHMENTS_UPDATE_DATE + " integer, " // milliseconds

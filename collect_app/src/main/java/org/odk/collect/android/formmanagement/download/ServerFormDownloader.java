@@ -252,6 +252,7 @@ public class ServerFormDownloader implements FormDownloader {
                 .base64RSAPublicKey(formMetadata.getBase64RsaPublicKey())
                 .autoDelete(formMetadata.getAutoDelete())
                 .autoSend(formMetadata.getAutoSend())
+                .editable(formMetadata.getEditable())
                 .geometryXpath(formMetadata.getGeometryXPath())
                 .usesEntities(formMetadata.isEntityForm() || entityAttachmentsDetected)
                 .build();

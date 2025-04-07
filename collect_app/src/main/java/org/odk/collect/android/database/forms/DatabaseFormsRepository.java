@@ -11,6 +11,7 @@ import static org.odk.collect.android.database.forms.DatabaseFormColumns.DATE;
 import static org.odk.collect.android.database.forms.DatabaseFormColumns.DELETED_DATE;
 import static org.odk.collect.android.database.forms.DatabaseFormColumns.DESCRIPTION;
 import static org.odk.collect.android.database.forms.DatabaseFormColumns.DISPLAY_NAME;
+import static org.odk.collect.android.database.forms.DatabaseFormColumns.EDITABLE;
 import static org.odk.collect.android.database.forms.DatabaseFormColumns.USES_ENTITIES;
 import static org.odk.collect.android.database.forms.DatabaseFormColumns.FORM_FILE_PATH;
 import static org.odk.collect.android.database.forms.DatabaseFormColumns.FORM_MEDIA_PATH;
@@ -271,6 +272,7 @@ public class DatabaseFormsRepository implements FormsRepository {
                     JRCACHE_FILE_PATH,
                     AUTO_SEND,
                     AUTO_DELETE,
+                    EDITABLE,
                     GEOMETRY_XPATH,
                     DELETED_DATE,
                     LAST_DETECTED_ATTACHMENTS_UPDATE_DATE,

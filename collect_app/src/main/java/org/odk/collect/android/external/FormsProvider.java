@@ -22,6 +22,7 @@ import static org.odk.collect.android.database.forms.DatabaseFormColumns.DATE;
 import static org.odk.collect.android.database.forms.DatabaseFormColumns.DELETED_DATE;
 import static org.odk.collect.android.database.forms.DatabaseFormColumns.DESCRIPTION;
 import static org.odk.collect.android.database.forms.DatabaseFormColumns.DISPLAY_NAME;
+import static org.odk.collect.android.database.forms.DatabaseFormColumns.EDITABLE;
 import static org.odk.collect.android.database.forms.DatabaseFormColumns.FORM_FILE_PATH;
 import static org.odk.collect.android.database.forms.DatabaseFormColumns.FORM_MEDIA_PATH;
 import static org.odk.collect.android.database.forms.DatabaseFormColumns.GEOMETRY_XPATH;
@@ -135,6 +136,7 @@ public class FormsProvider extends ContentProvider {
                 maxDateColumns.add(LANGUAGE);
                 maxDateColumns.add(AUTO_DELETE);
                 maxDateColumns.add(AUTO_SEND);
+                maxDateColumns.add(EDITABLE);
                 maxDateColumns.add(GEOMETRY_XPATH);
                 maxDateColumns.add(DELETED_DATE);
                 maxDateColumns.add("MAX(date)");
