@@ -11,7 +11,8 @@ object FormFixtures {
         version: String = "1",
         formFilePath: String? = null,
         mediaFiles: List<Pair<String, String>> = emptyList(),
-        autoSend: String? = null
+        autoSend: String? = null,
+        editable: String? = null
     ): Form {
         val formFilesPath = TempFiles.createTempDir().absolutePath
         val mediaFilePath = TempFiles.createTempDir().absolutePath
@@ -33,6 +34,7 @@ object FormFixtures {
             )
             .formMediaPath(mediaFilePath)
             .autoSend(autoSend)
+            .editable(editable)
             .build()
     }
 }

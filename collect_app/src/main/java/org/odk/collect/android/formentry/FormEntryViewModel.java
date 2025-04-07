@@ -24,6 +24,7 @@ import org.odk.collect.android.exception.JavaRosaException;
 import org.odk.collect.android.formentry.audit.AuditEvent;
 import org.odk.collect.android.formentry.audit.AuditUtils;
 import org.odk.collect.android.formentry.questions.SelectChoiceUtils;
+import org.odk.collect.android.instancemanagement.autosend.FormExtKt;
 import org.odk.collect.android.javarosawrapper.FailedValidationResult;
 import org.odk.collect.android.javarosawrapper.FormController;
 import org.odk.collect.android.javarosawrapper.RepeatsInFieldListException;
@@ -413,6 +414,10 @@ public class FormEntryViewModel extends ViewModel implements SelectChoiceLoader 
                     .build()
             );
         });
+    }
+
+    public boolean isFormEditable() {
+        return FormExtKt.isEditable(form);
     }
 
     public interface AnswerListener {

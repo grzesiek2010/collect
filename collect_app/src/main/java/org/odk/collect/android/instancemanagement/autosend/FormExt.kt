@@ -20,6 +20,10 @@ fun Form.getAutoSendMode(): FormAutoSendMode {
     }
 }
 
+fun Form.isEditable(): Boolean {
+    return editable?.trim()?.lowercase() == "true"
+}
+
 enum class FormAutoSendMode {
     OPT_OUT,
     FORCED,
