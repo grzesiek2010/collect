@@ -77,4 +77,34 @@ class FormExtTest {
         val form = FormFixtures.form(autoSend = " false ")
         assertThat(form.getAutoSendMode(), equalTo(FormAutoSendMode.OPT_OUT))
     }
+
+    @Test
+    fun `#isEditable returns false when it is not set at form level`() {
+        val form = FormFixtures.form()
+        assertThat(form.isEditable(), equalTo(false))
+    }
+
+    @Test
+    fun `#isEditable returns false when editable is set to an unsupported value at form level`() {
+        val form = FormFixtures.form(editable = "blah")
+        assertThat(form.isEditable(), equalTo(false))
+    }
+
+    @Test
+    fun `#isEditable returns false when editable is 'false' at form level`() {
+        val form = FormFixtures.form(editable = "false")
+        assertThat(form.isEditable(), equalTo(false))
+    }
+
+    @Test
+    fun `#isEditable returns true when editable is 'true' at form level`() {
+        val form = FormFixtures.form(editable = "true")
+        assertThat(form.isEditable(), equalTo(true))
+    }
+
+    @Test
+    fun `#isEditable returns true when editable is 'true' (not sanitized) at form level`() {
+        val form = FormFixtures.form(editable = " TruE ")
+        assertThat(form.isEditable(), equalTo(true))
+    }
 }
