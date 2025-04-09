@@ -1942,11 +1942,11 @@ public class FormFillingActivity extends LocalizedActivity implements AnimationL
 
             if (formController.getInstanceFile() == null) {
                 FormInstanceFileCreator formInstanceFileCreator = new FormInstanceFileCreator(
-                        storagePathProvider,
+                        storagePathProvider.create(projectsDataService.getCurrentProject().getValue().getUuid()).getInstancesDir(),
                         System::currentTimeMillis
                 );
 
-                File instanceFile = formInstanceFileCreator.createInstanceFile(formPath);
+                File instanceFile = formInstanceFileCreator.createInstanceFileBasedOnFormName(formPath);
                 if (instanceFile != null) {
                     formController.setInstanceFile(instanceFile);
                 } else {

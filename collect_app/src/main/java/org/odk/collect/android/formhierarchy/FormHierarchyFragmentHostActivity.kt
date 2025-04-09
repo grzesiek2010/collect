@@ -7,11 +7,13 @@ import org.odk.collect.android.activities.FormEntryViewModelFactory
 import org.odk.collect.android.entities.EntitiesRepositoryProvider
 import org.odk.collect.android.formentry.FormOpeningMode
 import org.odk.collect.android.formentry.FormSessionRepository
+import org.odk.collect.android.formentry.loading.FormInstanceFileCreator
 import org.odk.collect.android.formentry.repeats.DeleteRepeatDialogFragment
 import org.odk.collect.android.injection.DaggerUtils
 import org.odk.collect.android.instancemanagement.InstancesDataService
 import org.odk.collect.android.instancemanagement.autosend.AutoSendSettingsProvider
 import org.odk.collect.android.projects.ProjectsDataService
+import org.odk.collect.android.storage.StoragePathProvider
 import org.odk.collect.android.utilities.ChangeLockProvider
 import org.odk.collect.android.utilities.FormsRepositoryProvider
 import org.odk.collect.android.utilities.InstancesRepositoryProvider
@@ -82,6 +84,9 @@ class FormHierarchyFragmentHostActivity : LocalizedActivity() {
     @Inject
     lateinit var changeLockProvider: ChangeLockProvider
 
+    @Inject
+    lateinit var storagePathProvider: StoragePathProvider
+
     private val sessionId by lazy { intent.getStringExtra(EXTRA_SESSION_ID)!! }
     private val viewModelFactory by lazy {
         FormEntryViewModelFactory(
@@ -113,6 +118,8 @@ class FormHierarchyFragmentHostActivity : LocalizedActivity() {
         DaggerUtils.getComponent(this).inject(this)
 
         val viewOnly = intent.getBooleanExtra(EXTRA_VIEW_ONLY, false)
+        val projectId = projectsDataService.getCurrentProject().value!!.uuid
+
         supportFragmentManager.fragmentFactory = FragmentFactoryBuilder()
             .forClass(FormHierarchyFragment::class) {
                 FormHierarchyFragment(
@@ -120,8 +127,10 @@ class FormHierarchyFragmentHostActivity : LocalizedActivity() {
                     viewModelFactory,
                     this,
                     scheduler,
-                    instancesDataService,
-                    projectsDataService.getCurrentProject().value?.uuid
+                    storagePathProvider.create(projectId).instancesDir,
+                    instancesRepositoryProvider.create(projectId),
+                    FormInstanceFileCreator(storagePathProvider.create(projectId).instancesDir) { System.currentTimeMillis() },
+                    projectId
                 )
             }
             .forClass(DeleteRepeatDialogFragment::class) {
