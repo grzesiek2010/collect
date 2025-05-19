@@ -182,6 +182,10 @@ class StubOpenRosaServer : OpenRosaHttpInterface {
         alwaysReturnError = true
     }
 
+    fun neverReturnError() {
+        alwaysReturnError = false
+    }
+
     fun errorOnFetchingForms() {
         fetchingFormsError = true
     }
