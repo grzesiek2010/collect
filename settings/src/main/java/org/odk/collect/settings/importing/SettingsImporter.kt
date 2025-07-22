@@ -27,10 +27,8 @@ internal class SettingsImporter(
         }
 
         val generalSettings = settingsProvider.getUnprotectedSettings(project.uuid)
-        val oldFormUpdateMode = generalSettings.getString(ProjectKeys.KEY_FORM_UPDATE_MODE)
-        val oldPeriodicFormUpdatesCheck = generalSettings.getString(ProjectKeys.KEY_PERIODIC_FORM_UPDATES_CHECK)
-
         val adminSettings = settingsProvider.getProtectedSettings(project.uuid)
+        val oldSettings = generalSettings.getAll() + adminSettings.getAll()
 
         generalSettings.clear()
         adminSettings.clear()
@@ -43,8 +41,6 @@ internal class SettingsImporter(
 
         // Import unprotected settings
         importToPrefs(jsonObject, AppConfigurationKeys.GENERAL, generalSettings, deviceUnsupportedSettings)
-        val newFormUpdateMode = generalSettings.getString(ProjectKeys.KEY_FORM_UPDATE_MODE)
-        val newPeriodicFormUpdatesCheck = generalSettings.getString(ProjectKeys.KEY_PERIODIC_FORM_UPDATES_CHECK)
 
         // Import protected settings
         importToPrefs(jsonObject, AppConfigurationKeys.ADMIN, adminSettings, deviceUnsupportedSettings)
@@ -68,9 +64,13 @@ internal class SettingsImporter(
 
         loadDefaults(generalSettings, generalDefaults)
         loadDefaults(adminSettings, adminDefaults)
+        val newSettings = generalSettings.getAll() + adminSettings.getAll()
 
-        val formUpdateSettingsChanged = oldFormUpdateMode != newFormUpdateMode || oldPeriodicFormUpdatesCheck != newPeriodicFormUpdatesCheck
-        settingsChangedHandler.onSettingsChanged(project.uuid, formUpdateSettingsChanged)
+        val changedKeys = oldSettings.keys.filter { key ->
+            newSettings[key] != oldSettings[key]
+        }
+
+        settingsChangedHandler.onSettingsChanged(project.uuid, changedKeys)
 
         return ProjectConfigurationResult.SUCCESS
     }
@@ -150,7 +150,7 @@ internal interface SettingsValidator {
 interface SettingsChangeHandler {
     fun onSettingChanged(projectId: String, newValue: Any?, changedKey: String)
 
-    fun onSettingsChanged(projectId: String, formUpdateSettingsChanged: Boolean)
+    fun onSettingsChanged(projectId: String, changedKeys: List<String>)
 }
 
 internal fun interface SettingsMigrator {

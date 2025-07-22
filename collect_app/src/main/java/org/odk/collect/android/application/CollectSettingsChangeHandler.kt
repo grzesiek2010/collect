@@ -31,9 +31,9 @@ class CollectSettingsChangeHandler(
         }
     }
 
-    override fun onSettingsChanged(projectId: String, formUpdateSettingsChanged: Boolean) {
+    override fun onSettingsChanged(projectId: String, changedKeys: List<String>) {
         propertyManager.reload()
-        if (formUpdateSettingsChanged) {
+        if (changedKeys.contains(ProjectKeys.KEY_FORM_UPDATE_MODE) || changedKeys.contains(ProjectKeys.KEY_PERIODIC_FORM_UPDATES_CHECK)) {
             formUpdateScheduler.scheduleUpdates(projectId)
         }
     }
