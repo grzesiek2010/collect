@@ -48,7 +48,7 @@ class SettingsImporterTest {
     )
 
     private val adminDefaults: Map<String, Any> = mapOf(
-        "key1" to 5
+        "key3" to 5
     )
 
     private lateinit var importer: SettingsImporter
@@ -75,23 +75,23 @@ class SettingsImporterTest {
 
     @Test
     fun `unsupported settings should be ignored`() {
-        whenever(settingsValidator.isKeySupported(AppConfigurationKeys.GENERAL, "key3")).thenReturn(false)
-        whenever(settingsValidator.isKeySupported(AppConfigurationKeys.ADMIN, "key3")).thenReturn(false)
+        whenever(settingsValidator.isKeySupported(AppConfigurationKeys.GENERAL, "key4")).thenReturn(false)
+        whenever(settingsValidator.isKeySupported(AppConfigurationKeys.ADMIN, "key4")).thenReturn(false)
 
         val json = emptySettingsObject()
             .put(
                 AppConfigurationKeys.GENERAL,
-                JSONObject().put("key3", "foo")
+                JSONObject().put("key4", "foo")
             )
             .put(
                 AppConfigurationKeys.ADMIN,
-                JSONObject().put("key3", 5)
+                JSONObject().put("key4", 5)
             )
 
         assertThat(importer.fromJSON(json.toString(), currentProject, JSONObject()), `is`(ProjectConfigurationResult.SUCCESS))
 
-        assertThat(generalSettings.contains("key3"), `is`(false))
-        assertThat(adminSettings.contains("key3"), `is`(false))
+        assertThat(generalSettings.contains("key4"), `is`(false))
+        assertThat(adminSettings.contains("key4"), `is`(false))
     }
 
     @Test
@@ -147,7 +147,7 @@ class SettingsImporterTest {
         )
         assertSettings(
             adminSettings,
-            "key1",
+            "key3",
             5
         )
     }
@@ -177,7 +177,7 @@ class SettingsImporterTest {
         )
         assertSettings(
             adminSettings,
-            "key1",
+            "key3",
             5
         )
     }
@@ -206,7 +206,7 @@ class SettingsImporterTest {
         )
         assertSettings(
             adminSettings,
-            "key1",
+            "key3",
             5
         )
     }
@@ -259,24 +259,7 @@ class SettingsImporterTest {
     }
 
     @Test
-    fun afterSettingsImportedAndMigrated_runsSettingsChangeHandler() {
-        importer = SettingsImporter(
-            settingsProvider,
-            { _: Settings?, _: Settings? -> },
-            settingsValidator,
-            generalDefaults,
-            adminDefaults,
-            settingsChangeHandler,
-            projectsRepository,
-            projectDetailsCreator
-        )
-        assertThat(importer.fromJSON(emptySettings(), currentProject, JSONObject()), `is`(ProjectConfigurationResult.SUCCESS))
-        verify(settingsChangeHandler).onSettingsChanged("1", false)
-        verifyNoMoreInteractions(settingsChangeHandler)
-    }
-
-    @Test
-    fun afterSettingsImportedAndMigrated_runsSettingsChangeIfFormUpdateSettingsChanged() {
+    fun afterSettingsImportedAndMigrated_runsSettingsChangeWithChangedKeys() {
         importer = SettingsImporter(
             settingsProvider,
             { _: Settings?, _: Settings? -> },
@@ -288,42 +271,23 @@ class SettingsImporterTest {
             projectDetailsCreator
         )
 
-        // First import
         var generalJson = JSONObject()
-            .put(ProjectKeys.KEY_FORM_UPDATE_MODE, "foo")
-            .put(ProjectKeys.KEY_PERIODIC_FORM_UPDATES_CHECK, "bar")
+            .put("key1", "default")
         var settings = JSONObject()
             .put(AppConfigurationKeys.GENERAL, generalJson)
             .put(AppConfigurationKeys.ADMIN, JSONObject())
 
         assertThat(importer.fromJSON(settings.toString(), currentProject, JSONObject()), `is`(ProjectConfigurationResult.SUCCESS))
-        verify(settingsChangeHandler).onSettingsChanged("1", true)
+        verify(settingsChangeHandler).onSettingsChanged("1", emptyList())
 
-        // Second import - the same settings
-        assertThat(importer.fromJSON(settings.toString(), currentProject, JSONObject()), `is`(ProjectConfigurationResult.SUCCESS))
-        verify(settingsChangeHandler).onSettingsChanged("1", false)
-
-        // Third import - ProjectKeys.KEY_PERIODIC_FORM_UPDATES_CHECK updated
         generalJson = JSONObject()
-            .put(ProjectKeys.KEY_FORM_UPDATE_MODE, "bar")
-            .put(ProjectKeys.KEY_PERIODIC_FORM_UPDATES_CHECK, "bar")
+            .put("key1", "blah")
         settings = JSONObject()
             .put(AppConfigurationKeys.GENERAL, generalJson)
             .put(AppConfigurationKeys.ADMIN, JSONObject())
 
         assertThat(importer.fromJSON(settings.toString(), currentProject, JSONObject()), `is`(ProjectConfigurationResult.SUCCESS))
-        verify(settingsChangeHandler, times(2)).onSettingsChanged("1", true)
-
-        // Fourth import - ProjectKeys.KEY_FORM_UPDATE_MODE updated
-        generalJson = JSONObject()
-            .put(ProjectKeys.KEY_FORM_UPDATE_MODE, "bar")
-            .put(ProjectKeys.KEY_PERIODIC_FORM_UPDATES_CHECK, "foo")
-        settings = JSONObject()
-            .put(AppConfigurationKeys.GENERAL, generalJson)
-            .put(AppConfigurationKeys.ADMIN, JSONObject())
-
-        assertThat(importer.fromJSON(settings.toString(), currentProject, JSONObject()), `is`(ProjectConfigurationResult.SUCCESS))
-        verify(settingsChangeHandler, times(3)).onSettingsChanged("1", true)
+        verify(settingsChangeHandler).onSettingsChanged("1", listOf("key1"))
 
         verifyNoMoreInteractions(settingsChangeHandler)
     }
