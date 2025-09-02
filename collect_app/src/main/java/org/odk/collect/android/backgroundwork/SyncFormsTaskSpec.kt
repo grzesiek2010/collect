@@ -39,7 +39,7 @@ class SyncFormsTaskSpec : TaskSpec {
 
         val projectId = inputData[TaskData.DATA_PROJECT_ID]
         if (projectId != null) {
-            formsDataService.matchFormsWithServerStopped(projectId)
+            formsDataService.matchFormsWithServerStoped(projectId)
             notifier.onSyncStopped(projectId)
         } else {
             throw IllegalArgumentException("No project ID provided!")

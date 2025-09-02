@@ -31,9 +31,9 @@ class FormsDataService(
         val projectDependencies = projectDependencyModuleFactory.create(projectId)
         projectDependencies.formsRepository.all
     }
-    private val matchFormsWithServerStopedTime by qualifiedData(DataKeys.MATCH_FORMS_WITH_SERVER_STOPPED_TIME, null) { projectId ->
+    private val lastMatchFormsWithServerCompletedTime by qualifiedData(DataKeys.LAST_MATCH_FORMS_WITH_SERVER_COMPLETED_TIME, null) { projectId ->
         val projectDependencies = projectDependencyModuleFactory.create(projectId)
-        projectDependencies.generalSettings.getLong(ProjectKeys.KEY_LAST_FAILED_FORMS_SYNC)
+        projectDependencies.generalSettings.getLong(ProjectKeys.KEY_LAST_MATCH_FORMS_WITH_SERVER_COMPLETED_TIME)
     }
 
     private val syncing by qualifiedData(DataKeys.SYNC_STATUS_SYNCING, false)
@@ -44,8 +44,8 @@ class FormsDataService(
         return forms.flow(projectId)
     }
 
-    fun getMatchFormsWithServerStoppedTime(projectId: String): LiveData<Long?> {
-        return matchFormsWithServerStopedTime.flow(projectId).asLiveData()
+    fun getLastMatchFormsWithServerCompletedTime(projectId: String): LiveData<Long?> {
+        return lastMatchFormsWithServerCompletedTime.flow(projectId).asLiveData()
     }
 
     fun isSyncing(projectId: String): LiveData<Boolean> {
@@ -186,19 +186,15 @@ class FormsDataService(
             }
         }
 
-        keepMatchFormsWithServerStopedTime(projectId, null)
+        matchFormsWithServerCompleted(projectId)
 
         return result
     }
 
-    fun matchFormsWithServerStopped(projectId: String) {
-        keepMatchFormsWithServerStopedTime(projectId, System.currentTimeMillis())
-    }
-
-    private fun keepMatchFormsWithServerStopedTime(projectId: String, timeOfLastFailure: Long?) {
+    fun matchFormsWithServerStoped(projectId: String) {
         val projectDependencies = projectDependencyModuleFactory.create(projectId)
-        projectDependencies.generalSettings.save(ProjectKeys.KEY_LAST_FAILED_FORMS_SYNC, timeOfLastFailure)
-        matchFormsWithServerStopedTime.set(projectId, timeOfLastFailure)
+        projectDependencies.generalSettings.save(ProjectKeys.KEY_LAST_MATCH_FORMS_WITH_SERVER_COMPLETED_TIME, -1L)
+        lastMatchFormsWithServerCompletedTime.set(projectId, -1)
     }
 
     fun deleteForm(projectId: String, formId: Long) {
@@ -210,6 +206,13 @@ class FormsDataService(
         )
 
         update(projectId)
+    }
+
+    private fun matchFormsWithServerCompleted(projectId: String) {
+        val projectDependencies = projectDependencyModuleFactory.create(projectId)
+        val currentTime = System.currentTimeMillis()
+        projectDependencies.generalSettings.save(ProjectKeys.KEY_LAST_MATCH_FORMS_WITH_SERVER_COMPLETED_TIME, currentTime)
+        lastMatchFormsWithServerCompletedTime.set(projectId, currentTime)
     }
 
     private fun syncWithStorage(projectId: String) {

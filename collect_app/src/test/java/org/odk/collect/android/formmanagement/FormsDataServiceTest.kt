@@ -6,6 +6,7 @@ import androidx.test.core.app.ApplicationProvider
 import androidx.test.ext.junit.runners.AndroidJUnit4
 import org.hamcrest.MatcherAssert.assertThat
 import org.hamcrest.Matchers.equalTo
+import org.hamcrest.Matchers.not
 import org.junit.Before
 import org.junit.Rule
 import org.junit.Test
@@ -222,10 +223,18 @@ class FormsDataServiceTest {
     }
 
     @Test
-    fun `matchFormsWithServer() clears #matchFormsWithServerStoppedTime after completion`() {
-        formsDataService.matchFormsWithServerStopped(project.uuid)
+    fun `matchFormsWithServerStoped() sets last sync time to -1`() {
+        assertThat(formsDataService.getLastMatchFormsWithServerCompletedTime(project.uuid).getOrAwaitValue(), equalTo(null))
+        formsDataService.matchFormsWithServerStoped(project.uuid)
+        assertThat(formsDataService.getLastMatchFormsWithServerCompletedTime(project.uuid).getOrAwaitValue(), equalTo(-1))
+    }
+
+    @Test
+    fun `matchFormsWithServer() sets last sync time`() {
+        formsDataService.matchFormsWithServerStoped(project.uuid)
         formsDataService.matchFormsWithServer(project.uuid)
-        assertThat(formsDataService.getMatchFormsWithServerStoppedTime(project.uuid).getOrAwaitValue(), equalTo(null))
+        assertThat(formsDataService.getLastMatchFormsWithServerCompletedTime(project.uuid).getOrAwaitValue(), not(equalTo(null)))
+        assertThat(formsDataService.getLastMatchFormsWithServerCompletedTime(project.uuid).getOrAwaitValue(), not(equalTo(-1)))
     }
 
     @Test

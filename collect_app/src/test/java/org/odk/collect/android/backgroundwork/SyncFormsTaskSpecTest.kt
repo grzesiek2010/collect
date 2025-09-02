@@ -97,12 +97,12 @@ class SyncFormsTaskSpecTest {
     }
 
     @Test
-    fun `#onStopedBySystem saves last failed sync date`() {
+    fun `#onStopedBySystem calls formsDataService#matchFormsWithServerStoped`() {
         val inputData = HashMap<String, String>().also {
             it[TaskData.DATA_PROJECT_ID] = "projectId"
         }
         SyncFormsTaskSpec().onStopedBySystem(ApplicationProvider.getApplicationContext(), inputData)
-        verify(formsDataService).matchFormsWithServerStopped("projectId")
+        verify(formsDataService).matchFormsWithServerStoped("projectId")
     }
 
     @Test(expected = IllegalArgumentException::class)
