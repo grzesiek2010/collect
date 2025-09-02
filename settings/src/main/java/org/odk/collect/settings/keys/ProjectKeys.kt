@@ -76,4 +76,6 @@ object ProjectKeys {
     // remembered defaults
     const val KEY_SAVED_FORM_SORT_ORDER = "instanceUploaderListSortingOrder"
     const val KEY_BLANK_FORM_SORT_ORDER = "formChooserListSortingOrder"
+
+    const val KEY_LAST_FAILED_FORMS_SYNC = "last_failed_forms_sync"
 }
