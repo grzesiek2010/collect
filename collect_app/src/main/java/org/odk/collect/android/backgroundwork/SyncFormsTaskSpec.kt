@@ -7,8 +7,6 @@ import org.odk.collect.android.formmanagement.FormsDataService
 import org.odk.collect.android.injection.DaggerUtils
 import org.odk.collect.android.notifications.Notifier
 import org.odk.collect.async.TaskSpec
-import org.odk.collect.settings.SettingsProvider
-import org.odk.collect.settings.keys.ProjectKeys
 import java.util.function.Supplier
 import javax.inject.Inject
 
@@ -18,9 +16,6 @@ class SyncFormsTaskSpec : TaskSpec {
 
     @Inject
     lateinit var notifier: Notifier
-
-    @Inject
-    lateinit var settingsProvider: SettingsProvider
 
     override val maxRetries = 3
     override val backoffPolicy = BackoffPolicy.EXPONENTIAL
@@ -32,11 +27,7 @@ class SyncFormsTaskSpec : TaskSpec {
         return Supplier {
             val projectId = inputData[TaskData.DATA_PROJECT_ID]
             if (projectId != null) {
-                val result = formsDataService.matchFormsWithServer(projectId, isLastUniqueExecution)
-                settingsProvider
-                    .getUnprotectedSettings(projectId)
-                    .remove(ProjectKeys.KEY_LAST_FAILED_FORMS_SYNC)
-                result
+                formsDataService.matchFormsWithServer(projectId, isLastUniqueExecution)
             } else {
                 throw IllegalArgumentException("No project ID provided!")
             }
@@ -48,9 +39,7 @@ class SyncFormsTaskSpec : TaskSpec {
 
         val projectId = inputData[TaskData.DATA_PROJECT_ID]
         if (projectId != null) {
-            settingsProvider
-                .getUnprotectedSettings(projectId)
-                .save(ProjectKeys.KEY_LAST_FAILED_FORMS_SYNC, System.currentTimeMillis())
+            formsDataService.matchFormsWithServerStopped(projectId)
             notifier.onSyncStopped(projectId)
         } else {
             throw IllegalArgumentException("No project ID provided!")

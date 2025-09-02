@@ -222,6 +222,13 @@ class FormsDataServiceTest {
     }
 
     @Test
+    fun `matchFormsWithServer() clears #matchFormsWithServerStoppedTime after completion`() {
+        formsDataService.matchFormsWithServerStopped(project.uuid)
+        formsDataService.matchFormsWithServer(project.uuid)
+        assertThat(formsDataService.getMatchFormsWithServerStoppedTime(project.uuid).getOrAwaitValue(), equalTo(null))
+    }
+
+    @Test
     fun `clear() clears error state`() {
         val error = FormSourceException.FetchError()
         whenever(formSource.fetchFormList()).thenThrow(error)

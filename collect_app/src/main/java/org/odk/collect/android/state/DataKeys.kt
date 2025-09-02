@@ -11,4 +11,5 @@ object DataKeys {
     const val SYNC_STATUS_SYNCING = "syncStatusSyncing"
     const val SYNC_STATUS_ERROR = "syncStatusError"
     const val DISK_ERROR = "diskError"
+    const val MATCH_FORMS_WITH_SERVER_STOPPED_TIME = "matchFormsWithServerStoppedTime"
 }

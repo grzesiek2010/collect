@@ -31,6 +31,10 @@ class FormsDataService(
         val projectDependencies = projectDependencyModuleFactory.create(projectId)
         projectDependencies.formsRepository.all
     }
+    private val matchFormsWithServerStopedTime by qualifiedData(DataKeys.MATCH_FORMS_WITH_SERVER_STOPPED_TIME, null) { projectId ->
+        val projectDependencies = projectDependencyModuleFactory.create(projectId)
+        projectDependencies.generalSettings.getLong(ProjectKeys.KEY_LAST_FAILED_FORMS_SYNC)
+    }
 
     private val syncing by qualifiedData(DataKeys.SYNC_STATUS_SYNCING, false)
     private val serverError by qualifiedData<FormSourceException?>(DataKeys.SYNC_STATUS_ERROR, null)
@@ -38,6 +42,10 @@ class FormsDataService(
 
     fun getForms(projectId: String): Flow<List<Form>> {
         return forms.flow(projectId)
+    }
+
+    fun getMatchFormsWithServerStoppedTime(projectId: String): LiveData<Long?> {
+        return matchFormsWithServerStopedTime.flow(projectId).asLiveData()
     }
 
     fun isSyncing(projectId: String): LiveData<Boolean> {
@@ -140,7 +148,7 @@ class FormsDataService(
     @JvmOverloads
     fun matchFormsWithServer(projectId: String, notify: Boolean = true): Boolean {
         val projectDependencies = projectDependencyModuleFactory.create(projectId)
-        return projectDependencies.formsLock.withLock { acquiredLock ->
+        val result = projectDependencies.formsLock.withLock { acquiredLock ->
             if (acquiredLock) {
                 startSync(projectId)
                 syncWithStorage(projectId)
@@ -177,6 +185,20 @@ class FormsDataService(
                 false
             }
         }
+
+        keepMatchFormsWithServerStopedTime(projectId, null)
+
+        return result
+    }
+
+    fun matchFormsWithServerStopped(projectId: String) {
+        keepMatchFormsWithServerStopedTime(projectId, System.currentTimeMillis())
+    }
+
+    private fun keepMatchFormsWithServerStopedTime(projectId: String, timeOfLastFailure: Long?) {
+        val projectDependencies = projectDependencyModuleFactory.create(projectId)
+        projectDependencies.generalSettings.save(ProjectKeys.KEY_LAST_FAILED_FORMS_SYNC, timeOfLastFailure)
+        matchFormsWithServerStopedTime.set(projectId, timeOfLastFailure)
     }
 
     fun deleteForm(projectId: String, formId: Long) {
