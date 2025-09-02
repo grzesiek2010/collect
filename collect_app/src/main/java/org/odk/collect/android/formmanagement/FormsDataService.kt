@@ -165,6 +165,7 @@ class FormsDataService(
 
                 val exception = try {
                     serverFormsSynchronizer.synchronize()
+                    matchFormsWithServerCompleted(projectId)
                     if (notify) {
                         notifier.onSync(null, projectId)
                     }
@@ -185,8 +186,6 @@ class FormsDataService(
                 false
             }
         }
-
-        matchFormsWithServerCompleted(projectId)
 
         return result
     }

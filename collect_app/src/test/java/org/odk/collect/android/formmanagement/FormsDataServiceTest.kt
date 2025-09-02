@@ -238,6 +238,15 @@ class FormsDataServiceTest {
     }
 
     @Test
+    fun `matchFormsWithServer() does not set last sync time if there is an exception thrown`() {
+        val error = FormSourceException.FetchError()
+        whenever(formSource.fetchFormList()).thenThrow(error)
+        formsDataService.matchFormsWithServerStoped(project.uuid)
+        formsDataService.matchFormsWithServer(project.uuid)
+        assertThat(formsDataService.getLastMatchFormsWithServerCompletedTime(project.uuid).getOrAwaitValue(), equalTo(-1))
+    }
+
+    @Test
     fun `clear() clears error state`() {
         val error = FormSourceException.FetchError()
         whenever(formSource.fetchFormList()).thenThrow(error)
