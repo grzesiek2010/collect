@@ -7,6 +7,11 @@
 
     <include layout="@layout/app_bar_layout" />
 
+    <org.odk.collect.android.formlists.blankformlist.MatchFormsWithServerBanner
+        android:id="@+id/match_forms_with_server_banner"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"/>
+
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/form_list"
         android:layout_width="match_parent"
