@@ -593,8 +593,8 @@ public class AppDependencyModule {
     }
 
     @Provides
-    public BlankFormListViewModel.Factory providesBlankFormListViewModel(FormsRepositoryProvider formsRepositoryProvider, InstancesRepositoryProvider instancesRepositoryProvider, Application application, FormsDataService formsDataService, Scheduler scheduler, SettingsProvider settingsProvider, ChangeLockProvider changeLockProvider, ProjectsDataService projectsDataService) {
-        return new BlankFormListViewModel.Factory(instancesRepositoryProvider.create(), application, formsDataService, scheduler, settingsProvider.getUnprotectedSettings(), projectsDataService.requireCurrentProject().getUuid());
+    public BlankFormListViewModel.Factory providesBlankFormListViewModel(InstancesRepositoryProvider instancesRepositoryProvider, Application application, FormsDataService formsDataService, Scheduler scheduler, SettingsProvider settingsProvider, ProjectsDataService projectsDataService) {
+        return new BlankFormListViewModel.Factory(instancesRepositoryProvider.create(), application, formsDataService, scheduler, settingsProvider, projectsDataService.requireCurrentProject().getUuid());
     }
 
     @Provides

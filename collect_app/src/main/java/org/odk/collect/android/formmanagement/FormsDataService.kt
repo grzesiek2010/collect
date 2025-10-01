@@ -16,6 +16,7 @@ import org.odk.collect.androidshared.data.DataService
 import org.odk.collect.forms.Form
 import org.odk.collect.forms.FormSourceException
 import org.odk.collect.projects.ProjectDependencyFactory
+import org.odk.collect.settings.SettingsProvider
 import org.odk.collect.settings.keys.ProjectKeys
 import java.io.File
 import java.util.function.Supplier
@@ -148,6 +149,7 @@ class FormsDataService(
     @JvmOverloads
     fun matchFormsWithServer(
         projectId: String,
+        settingsProvider: SettingsProvider,
         notify: Boolean = true,
         isStopped: (() -> Boolean) = { false }
     ): Boolean {
@@ -173,6 +175,10 @@ class FormsDataService(
                         notifier.onSync(null, projectId)
                     }
 
+                    settingsProvider.getUnprotectedSettings(projectId).apply {
+                        save(ProjectKeys.KEY_LAST_SUCCESSFUL_FORMS_SYNC, clock.get())
+                        save(ProjectKeys.KEY_LAST_FORMS_SYNC_FAILED, false)
+                    }
                     null
                 } catch (e: FormSourceException) {
                     if (notify) {
@@ -181,6 +187,7 @@ class FormsDataService(
                         notifier.onSyncStopped(projectId)
                     }
 
+                    settingsProvider.getUnprotectedSettings(projectId).save(ProjectKeys.KEY_LAST_FORMS_SYNC_FAILED, true)
                     e
                 }
 
@@ -188,6 +195,7 @@ class FormsDataService(
                 finishSyncWithServer(projectId, exception)
                 exception == null
             } else {
+                settingsProvider.getUnprotectedSettings(projectId).save(ProjectKeys.KEY_LAST_FORMS_SYNC_FAILED, true)
                 false
             }
         }

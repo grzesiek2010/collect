@@ -35,7 +35,7 @@ import org.odk.collect.androidshared.ui.ListFragmentStateAdapter
 import org.odk.collect.androidshared.utils.AppBarUtils.setupAppBarLayout
 import org.odk.collect.async.Scheduler
 import org.odk.collect.forms.instances.InstancesRepository
-import org.odk.collect.shared.settings.Settings
+import org.odk.collect.settings.SettingsProvider
 import org.odk.collect.strings.localization.LocalizedActivity
 import javax.inject.Inject
 
@@ -55,6 +55,9 @@ class DeleteFormsActivity : LocalizedActivity() {
     @Inject
     lateinit var instanceDataService: InstancesDataService
 
+    @Inject
+    lateinit var settingsProvider: SettingsProvider
+
     private lateinit var binding: TabsLayoutBinding
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -68,7 +71,7 @@ class DeleteFormsActivity : LocalizedActivity() {
             this.application,
             formsDataService,
             scheduler,
-            projectDependencyModule.generalSettings,
+            settingsProvider,
             projectId,
             instanceDataService
         )
@@ -124,7 +127,7 @@ class DeleteFormsActivity : LocalizedActivity() {
         private val application: Application,
         private val formsDataService: FormsDataService,
         private val scheduler: Scheduler,
-        private val generalSettings: Settings,
+        private val settingsProvider: SettingsProvider,
         private val projectId: String,
         private val instancesDataService: InstancesDataService
     ) :
@@ -137,14 +140,14 @@ class DeleteFormsActivity : LocalizedActivity() {
                     application,
                     formsDataService,
                     scheduler,
-                    generalSettings,
+                    settingsProvider,
                     projectId,
                     showAllVersions = true
                 )
 
                 SavedFormListViewModel::class.java -> SavedFormListViewModel(
                     scheduler,
-                    generalSettings,
+                    settingsProvider.getUnprotectedSettings(),
                     instancesDataService,
                     projectId
                 )

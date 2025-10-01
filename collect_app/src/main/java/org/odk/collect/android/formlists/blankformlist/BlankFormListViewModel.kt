@@ -21,17 +21,17 @@ import org.odk.collect.forms.Form
 import org.odk.collect.forms.FormSourceException
 import org.odk.collect.forms.FormSourceException.AuthRequired
 import org.odk.collect.forms.instances.InstancesRepository
+import org.odk.collect.settings.SettingsProvider
 import org.odk.collect.settings.enums.FormUpdateMode
 import org.odk.collect.settings.enums.StringIdEnumUtils.getFormUpdateMode
 import org.odk.collect.settings.keys.ProjectKeys
-import org.odk.collect.shared.settings.Settings
 
 class BlankFormListViewModel(
     private val instancesRepository: InstancesRepository,
     private val application: Application,
     private val formsDataService: FormsDataService,
     private val scheduler: Scheduler,
-    private val generalSettings: Settings,
+    private val settingsProvider: SettingsProvider,
     private val projectId: String,
     private val showAllVersions: Boolean = false
 ) : ViewModel() {
@@ -58,7 +58,7 @@ class BlankFormListViewModel(
 
         set(value) {
             field = value
-            generalSettings.save(ProjectKeys.KEY_BLANK_FORM_SORT_ORDER, value.ordinal)
+            settingsProvider.getUnprotectedSettings().save(ProjectKeys.KEY_BLANK_FORM_SORT_ORDER, value.ordinal)
             _sortingOrder.value = value
         }
 
@@ -95,7 +95,7 @@ class BlankFormListViewModel(
         } else {
             scheduler.immediate(
                 {
-                    formsDataService.matchFormsWithServer(projectId)
+                    formsDataService.matchFormsWithServer(projectId, settingsProvider)
                 },
                 { value: Boolean ->
                     result.value = value
@@ -107,7 +107,7 @@ class BlankFormListViewModel(
     }
 
     fun isMatchExactlyEnabled(): Boolean {
-        return generalSettings.getFormUpdateMode(application) == FormUpdateMode.MATCH_EXACTLY
+        return settingsProvider.getUnprotectedSettings().getFormUpdateMode(application) == FormUpdateMode.MATCH_EXACTLY
     }
 
     fun isOutOfSyncWithServer(): LiveData<Boolean> {
@@ -175,14 +175,14 @@ class BlankFormListViewModel(
     }
 
     private fun getSortOrder() =
-        SortOrder.entries[generalSettings.getInt(ProjectKeys.KEY_BLANK_FORM_SORT_ORDER)]
+        SortOrder.entries[settingsProvider.getUnprotectedSettings().getInt(ProjectKeys.KEY_BLANK_FORM_SORT_ORDER)]
 
     open class Factory(
         private val instancesRepository: InstancesRepository,
         private val application: Application,
         private val formsDataService: FormsDataService,
         private val scheduler: Scheduler,
-        private val generalSettings: Settings,
+        private val settingsProvider: SettingsProvider,
         private val projectId: String
     ) : ViewModelProvider.Factory {
 
@@ -192,9 +192,9 @@ class BlankFormListViewModel(
                 application,
                 formsDataService,
                 scheduler,
-                generalSettings,
+                settingsProvider,
                 projectId,
-                !generalSettings.getBoolean(ProjectKeys.KEY_HIDE_OLD_FORM_VERSIONS)
+                !settingsProvider.getUnprotectedSettings().getBoolean(ProjectKeys.KEY_HIDE_OLD_FORM_VERSIONS)
             ) as T
         }
     }
