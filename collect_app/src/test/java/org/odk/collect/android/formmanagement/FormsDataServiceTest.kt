@@ -62,6 +62,7 @@ class FormsDataServiceTest {
     private lateinit var formsDataService: FormsDataService
 
     private lateinit var project: Project.Saved
+    private var currentTime = 0L
 
     @Before
     fun setup() {
@@ -87,7 +88,7 @@ class FormsDataServiceTest {
             appState = AppState(),
             notifier = notifier,
             projectDependencyModuleFactory = projectDependencyModuleFactory
-        ) { 0 }
+        ) { currentTime }
     }
 
     @Test
@@ -187,6 +188,42 @@ class FormsDataServiceTest {
 
         assertThat(formsDataService.getServerError(project.uuid).getOrAwaitValue(), equalTo(error))
         assertThat(formsDataService.getServerError("other").getOrAwaitValue(), equalTo(null))
+    }
+
+    @Test
+    fun `matchFormsWithServer() does not update last successful sync date and marks last attempt as failed when an error occurs`() {
+        settingsProvider.getUnprotectedSettings(project.uuid).save(ProjectKeys.KEY_LAST_FORMS_SYNC_FAILED, false)
+        settingsProvider.getUnprotectedSettings(project.uuid).save(ProjectKeys.KEY_LAST_SUCCESSFUL_FORMS_SYNC, 0L)
+        val error = FormSourceException.FetchError()
+        whenever(formSource.fetchFormList()).thenThrow(error)
+
+        formsDataService.matchFormsWithServer(project.uuid, settingsProvider)
+        assertThat(settingsProvider.getUnprotectedSettings(project.uuid).getBoolean(ProjectKeys.KEY_LAST_FORMS_SYNC_FAILED), equalTo(true))
+        assertThat(settingsProvider.getUnprotectedSettings(project.uuid).getLong(ProjectKeys.KEY_LAST_SUCCESSFUL_FORMS_SYNC), equalTo(0L))
+    }
+
+    @Test
+    fun `matchFormsWithServer() updates last successful sync date and marks last attempt as successful when no error occurs`() {
+        settingsProvider.getUnprotectedSettings(project.uuid).save(ProjectKeys.KEY_LAST_FORMS_SYNC_FAILED, true)
+        settingsProvider.getUnprotectedSettings(project.uuid).save(ProjectKeys.KEY_LAST_SUCCESSFUL_FORMS_SYNC, 0L)
+        currentTime = 1L
+
+        formsDataService.matchFormsWithServer(project.uuid, settingsProvider)
+        assertThat(settingsProvider.getUnprotectedSettings(project.uuid).getBoolean(ProjectKeys.KEY_LAST_FORMS_SYNC_FAILED), equalTo(false))
+        assertThat(settingsProvider.getUnprotectedSettings(project.uuid).getLong(ProjectKeys.KEY_LAST_SUCCESSFUL_FORMS_SYNC), equalTo(1L))
+    }
+
+    @Test
+    fun `matchFormsWithServer() does not update last successful sync date and marks last attempt as failed when change lock is locked`() {
+        settingsProvider.getUnprotectedSettings(project.uuid).save(ProjectKeys.KEY_LAST_FORMS_SYNC_FAILED, false)
+        settingsProvider.getUnprotectedSettings(project.uuid).save(ProjectKeys.KEY_LAST_SUCCESSFUL_FORMS_SYNC, 0L)
+
+        val changeLock = changeLockProvider.create(project.uuid).formsLock as BooleanChangeLock
+        changeLock.lock("blah")
+
+        formsDataService.matchFormsWithServer(project.uuid, settingsProvider)
+        assertThat(settingsProvider.getUnprotectedSettings(project.uuid).getBoolean(ProjectKeys.KEY_LAST_FORMS_SYNC_FAILED), equalTo(true))
+        assertThat(settingsProvider.getUnprotectedSettings(project.uuid).getLong(ProjectKeys.KEY_LAST_SUCCESSFUL_FORMS_SYNC), equalTo(0L))
     }
 
     @Test
