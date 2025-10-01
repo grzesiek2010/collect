@@ -25,10 +25,10 @@ import org.odk.collect.forms.FormSourceException
 import org.odk.collect.forms.instances.Instance
 import org.odk.collect.formstest.FormUtils
 import org.odk.collect.formstest.InMemInstancesRepository
+import org.odk.collect.settings.InMemSettingsProvider
 import org.odk.collect.settings.enums.FormUpdateMode
 import org.odk.collect.settings.keys.ProjectKeys
 import org.odk.collect.shared.locks.BooleanChangeLock
-import org.odk.collect.shared.settings.InMemSettings
 import org.odk.collect.testshared.FakeScheduler
 import org.odk.collect.testshared.getOrAwaitValue
 
@@ -45,7 +45,7 @@ class BlankFormListViewModelTest {
     }
 
     private val scheduler = FakeScheduler()
-    private val generalSettings = InMemSettings()
+    private val settingsProvider = InMemSettingsProvider()
     private val changeLockProvider: ChangeLockProvider = mock()
     private val projectId = "projectId"
 
@@ -63,8 +63,8 @@ class BlankFormListViewModelTest {
         assumeFalse(FeatureFlags.FOREGROUND_SERVICE_UPDATES)
 
         createViewModel()
-        generalSettings.save(ProjectKeys.KEY_SERVER_URL, "https://sample.com")
-        doReturn(true).whenever(formsDataService).matchFormsWithServer(projectId)
+        settingsProvider.getUnprotectedSettings().save(ProjectKeys.KEY_SERVER_URL, "https://sample.com")
+        doReturn(true).whenever(formsDataService).matchFormsWithServer(projectId, settingsProvider)
         val result = viewModel.syncWithServer()
         scheduler.flush()
         assertThat(result.value, `is`(true))
@@ -75,8 +75,8 @@ class BlankFormListViewModelTest {
         assumeFalse(FeatureFlags.FOREGROUND_SERVICE_UPDATES)
 
         createViewModel()
-        generalSettings.save(ProjectKeys.KEY_SERVER_URL, "https://sample.com")
-        doReturn(false).whenever(formsDataService).matchFormsWithServer(projectId)
+        settingsProvider.getUnprotectedSettings().save(ProjectKeys.KEY_SERVER_URL, "https://sample.com")
+        doReturn(false).whenever(formsDataService).matchFormsWithServer(projectId, settingsProvider)
         val result = viewModel.syncWithServer()
         scheduler.flush()
         assertThat(result.value, `is`(false))
@@ -84,7 +84,7 @@ class BlankFormListViewModelTest {
 
     @Test
     fun `isMatchExactlyEnabled returns correct value based on settings`() {
-        generalSettings.save(
+        settingsProvider.getUnprotectedSettings().save(
             ProjectKeys.KEY_FORM_UPDATE_MODE,
             FormUpdateMode.MANUAL.getValue(context)
         )
@@ -93,7 +93,7 @@ class BlankFormListViewModelTest {
 
         assertThat(viewModel.isMatchExactlyEnabled(), `is`(false))
 
-        generalSettings.save(
+        settingsProvider.getUnprotectedSettings().save(
             ProjectKeys.KEY_FORM_UPDATE_MODE,
             FormUpdateMode.MATCH_EXACTLY.getValue(context)
         )
@@ -456,7 +456,7 @@ class BlankFormListViewModelTest {
             context,
             formsDataService,
             scheduler,
-            generalSettings,
+            settingsProvider,
             projectId,
             showAllVersions
         )

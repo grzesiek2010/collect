@@ -1,6 +1,7 @@
 package org.odk.collect.android.backgroundwork
 
 import android.app.Application
+import android.content.Context
 import androidx.test.core.app.ApplicationProvider
 import androidx.test.ext.junit.runners.AndroidJUnit4
 import org.hamcrest.CoreMatchers.`is`
@@ -19,12 +20,14 @@ import org.odk.collect.android.injection.config.ProjectDependencyModuleFactory
 import org.odk.collect.android.notifications.Notifier
 import org.odk.collect.android.support.CollectHelpers
 import org.odk.collect.projects.ProjectsRepository
+import org.odk.collect.settings.InMemSettingsProvider
 import org.odk.collect.settings.SettingsProvider
 
 @RunWith(AndroidJUnit4::class)
 class SyncFormsTaskSpecTest {
     private val formsDataService = mock<FormsDataService>()
     private val notifier = mock<Notifier>()
+    private val settingsProvider = InMemSettingsProvider()
 
     @Before
     fun setup() {
@@ -44,6 +47,10 @@ class SyncFormsTaskSpecTest {
             ): Notifier {
                 return notifier
             }
+
+            override fun providesSettingsProvider(context: Context): SettingsProvider {
+                return settingsProvider
+            }
         })
     }
 
@@ -53,7 +60,7 @@ class SyncFormsTaskSpecTest {
             it[TaskData.DATA_PROJECT_ID] = "projectId"
         }
         SyncFormsTaskSpec().getTask(ApplicationProvider.getApplicationContext(), inputData, true) { false }.get()
-        verify(formsDataService).matchFormsWithServer(eq("projectId"), eq(true), any())
+        verify(formsDataService).matchFormsWithServer(eq("projectId"), eq(settingsProvider), eq(true), any())
     }
 
     @Test
@@ -62,7 +69,7 @@ class SyncFormsTaskSpecTest {
             it[TaskData.DATA_PROJECT_ID] = "projectId"
         }
         SyncFormsTaskSpec().getTask(ApplicationProvider.getApplicationContext(), inputData, false) { false }.get()
-        verify(formsDataService).matchFormsWithServer(eq("projectId"), eq(false), any())
+        verify(formsDataService).matchFormsWithServer(eq("projectId"), eq(settingsProvider), eq(false), any())
     }
 
     @Test
@@ -72,7 +79,7 @@ class SyncFormsTaskSpecTest {
         }
         val isStopped = { false }
         SyncFormsTaskSpec().getTask(ApplicationProvider.getApplicationContext(), inputData, false, isStopped).get()
-        verify(formsDataService).matchFormsWithServer("projectId", false, isStopped)
+        verify(formsDataService).matchFormsWithServer("projectId", settingsProvider, false, isStopped)
     }
 
     @Test
@@ -80,11 +87,11 @@ class SyncFormsTaskSpecTest {
         val inputData = HashMap<String, String>().also {
             it[TaskData.DATA_PROJECT_ID] = "projectId"
         }
-        whenever(formsDataService.matchFormsWithServer(eq("projectId"), any(), any())).thenReturn(true)
+        whenever(formsDataService.matchFormsWithServer(eq("projectId"), any(), any(), any())).thenReturn(true)
         var result = SyncFormsTaskSpec().getTask(ApplicationProvider.getApplicationContext(), inputData, true) { false }.get()
         assertThat(result, `is`(true))
 
-        whenever(formsDataService.matchFormsWithServer(eq("projectId"), any(), any())).thenReturn(false)
+        whenever(formsDataService.matchFormsWithServer(eq("projectId"), any(), any(), any())).thenReturn(false)
         result = SyncFormsTaskSpec().getTask(ApplicationProvider.getApplicationContext(), inputData, false) { false }.get()
         assertThat(result, `is`(false))
     }

@@ -137,7 +137,7 @@ class FormsDataServiceTest {
         changeLock.lock("blah")
 
         isSyncing.recordValues { projectValues ->
-            formsDataService.matchFormsWithServer(project.uuid)
+            formsDataService.matchFormsWithServer(project.uuid, settingsProvider)
             verifyNoInteractions(formSource)
             verifyNoInteractions(notifier)
             verifyNoInteractions(analytics)
@@ -155,13 +155,13 @@ class FormsDataServiceTest {
         val changeLock = changeLockProvider.create(project.uuid).formsLock as BooleanChangeLock
         changeLock.lock("blah")
 
-        assertThat(formsDataService.matchFormsWithServer(project.uuid), equalTo(false))
+        assertThat(formsDataService.matchFormsWithServer(project.uuid, settingsProvider), equalTo(false))
     }
 
     @Test
     fun `matchFormsWithServer() returns false when there is an error communicating with the server`() {
         whenever(formSource.fetchFormList()).thenThrow(FormSourceException.FetchError())
-        assertThat(formsDataService.matchFormsWithServer(project.uuid), equalTo(false))
+        assertThat(formsDataService.matchFormsWithServer(project.uuid, settingsProvider), equalTo(false))
     }
 
     @Test
@@ -171,7 +171,7 @@ class FormsDataServiceTest {
 
         projectState.recordValues { projectValues ->
             otherProjectState.recordValues { otherProjectValues ->
-                formsDataService.matchFormsWithServer(project.uuid)
+                formsDataService.matchFormsWithServer(project.uuid, settingsProvider)
 
                 assertThat(projectValues, equalTo(listOf(false, true, false)))
                 assertThat(otherProjectValues, equalTo(listOf(false)))
@@ -183,7 +183,7 @@ class FormsDataServiceTest {
     fun `matchFormsWithServer() when there is an error updates project error state`() {
         val error = FormSourceException.FetchError()
         whenever(formSource.fetchFormList()).thenThrow(error)
-        formsDataService.matchFormsWithServer(project.uuid)
+        formsDataService.matchFormsWithServer(project.uuid, settingsProvider)
 
         assertThat(formsDataService.getServerError(project.uuid).getOrAwaitValue(), equalTo(error))
         assertThat(formsDataService.getServerError("other").getOrAwaitValue(), equalTo(null))
@@ -193,7 +193,7 @@ class FormsDataServiceTest {
     fun `update() called after matchFormsWithServer() does not clear error state`() {
         val error = FormSourceException.FetchError()
         whenever(formSource.fetchFormList()).thenThrow(error)
-        formsDataService.matchFormsWithServer(project.uuid)
+        formsDataService.matchFormsWithServer(project.uuid, settingsProvider)
 
         assertThat(formsDataService.getServerError(project.uuid).getOrAwaitValue(), equalTo(error))
         formsDataService.refresh(project.uuid)
@@ -204,14 +204,14 @@ class FormsDataServiceTest {
     fun `matchFormsWithServer() notifies on error when called with default notify value`() {
         val error = FormSourceException.FetchError()
         whenever(formSource.fetchFormList()).thenThrow(error)
-        formsDataService.matchFormsWithServer(project.uuid) { false }
+        formsDataService.matchFormsWithServer(project.uuid, settingsProvider) { false }
         verify(notifier).onSync(error, project.uuid)
         verifyNoMoreInteractions(notifier)
     }
 
     @Test
     fun `matchFormsWithServer() notifies on success when called with default notify value`() {
-        formsDataService.matchFormsWithServer(project.uuid) { false }
+        formsDataService.matchFormsWithServer(project.uuid, settingsProvider) { false }
         verify(notifier).onSync(null, project.uuid)
         verifyNoMoreInteractions(notifier)
     }
@@ -220,14 +220,14 @@ class FormsDataServiceTest {
     fun `matchFormsWithServer() notifies on error when called with notify true`() {
         val error = FormSourceException.FetchError()
         whenever(formSource.fetchFormList()).thenThrow(error)
-        formsDataService.matchFormsWithServer(project.uuid, true) { false }
+        formsDataService.matchFormsWithServer(project.uuid, settingsProvider, true) { false }
         verify(notifier).onSync(error, project.uuid)
         verifyNoMoreInteractions(notifier)
     }
 
     @Test
     fun `matchFormsWithServer() notifies on success when called with notify true`() {
-        formsDataService.matchFormsWithServer(project.uuid, true) { false }
+        formsDataService.matchFormsWithServer(project.uuid, settingsProvider, true) { false }
         verify(notifier).onSync(null, project.uuid)
         verifyNoMoreInteractions(notifier)
     }
@@ -236,13 +236,13 @@ class FormsDataServiceTest {
     fun `matchFormsWithServer() does not notify on error when called with default isStopped value`() {
         val error = FormSourceException.FetchError()
         whenever(formSource.fetchFormList()).thenThrow(error)
-        formsDataService.matchFormsWithServer(project.uuid, notify = false)
+        formsDataService.matchFormsWithServer(project.uuid, settingsProvider, notify = false)
         verifyNoInteractions(notifier)
     }
 
     @Test
     fun `matchFormsWithServer() does not notify on success when called with default isStopped value`() {
-        formsDataService.matchFormsWithServer(project.uuid, notify = false)
+        formsDataService.matchFormsWithServer(project.uuid, settingsProvider, notify = false)
         verifyNoInteractions(notifier)
     }
 
@@ -250,7 +250,7 @@ class FormsDataServiceTest {
     fun `matchFormsWithServer() does not notify on error when called with isStopped false`() {
         val error = FormSourceException.FetchError()
         whenever(formSource.fetchFormList()).thenThrow(error)
-        formsDataService.matchFormsWithServer(project.uuid, false) { false }
+        formsDataService.matchFormsWithServer(project.uuid, settingsProvider, false) { false }
         verifyNoInteractions(notifier)
     }
 
@@ -258,7 +258,7 @@ class FormsDataServiceTest {
     fun `matchFormsWithServer() notifies on error when called with isStopped true`() {
         val error = FormSourceException.FetchError()
         whenever(formSource.fetchFormList()).thenThrow(error)
-        formsDataService.matchFormsWithServer(project.uuid, false) { true }
+        formsDataService.matchFormsWithServer(project.uuid, settingsProvider, false) { true }
         verify(notifier).onSyncStopped(project.uuid)
         verifyNoMoreInteractions(notifier)
     }
@@ -267,7 +267,7 @@ class FormsDataServiceTest {
     fun `clear() clears error state`() {
         val error = FormSourceException.FetchError()
         whenever(formSource.fetchFormList()).thenThrow(error)
-        formsDataService.matchFormsWithServer(project.uuid)
+        formsDataService.matchFormsWithServer(project.uuid, settingsProvider)
 
         formsDataService.clear(project.uuid)
         assertThat(formsDataService.getServerError(project.uuid).getOrAwaitValue(), equalTo(null))
