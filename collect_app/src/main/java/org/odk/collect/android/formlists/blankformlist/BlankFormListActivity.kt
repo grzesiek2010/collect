@@ -6,13 +6,16 @@ import android.os.Bundle
 import android.view.View
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.activity.viewModels
+import androidx.compose.ui.platform.ComposeView
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import org.odk.collect.android.R
 import org.odk.collect.android.activities.FormMapActivity
+import org.odk.collect.android.application.CollectComposeThemeProvider
 import org.odk.collect.android.formmanagement.FormFillingIntentFactory
 import org.odk.collect.android.injection.DaggerUtils
 import org.odk.collect.android.preferences.dialogs.ServerAuthDialogFragment
+import org.odk.collect.androidshared.ui.ComposeThemeProvider.Companion.setContextThemedContent
 import org.odk.collect.androidshared.ui.DialogFragmentUtils
 import org.odk.collect.androidshared.ui.ObviousProgressBar
 import org.odk.collect.androidshared.ui.SnackbarUtils
@@ -25,7 +28,7 @@ import org.odk.collect.permissions.PermissionsProvider
 import org.odk.collect.strings.localization.LocalizedActivity
 import javax.inject.Inject
 
-class BlankFormListActivity : LocalizedActivity(), OnFormItemClickListener {
+class BlankFormListActivity : LocalizedActivity(), CollectComposeThemeProvider, OnFormItemClickListener {
 
     @Inject
     lateinit var viewModelFactory: BlankFormListViewModel.Factory
@@ -52,6 +55,10 @@ class BlankFormListActivity : LocalizedActivity(), OnFormItemClickListener {
         setContentView(R.layout.activity_blank_form_list)
         title = getString(org.odk.collect.strings.R.string.enter_data)
         setSupportActionBar(findViewById(org.odk.collect.androidshared.R.id.toolbar))
+
+        findViewById<ComposeView>(R.id.forms_sync_status_banner).setContextThemedContent {
+            FormsSyncStatusBanner(1759405483003)
+        }
 
         val menuProvider = BlankFormListMenuProvider(this, viewModel, networkStateProvider)
         addMenuProvider(menuProvider, this)

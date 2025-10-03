@@ -354,6 +354,7 @@ dependencies {
     implementation(composeBom)
     implementation(libs.androidXComposeMaterial)
     implementation(libs.androidXConstraintLayoutCompose)
+    implementation(libs.androidXComposePreview)
 
     testImplementation project(':forms-test')
 
@@ -397,6 +398,7 @@ dependencies {
     androidTestImplementation libs.uiautomator
     androidTestImplementation libs.mockitoKotlin
 
+    debugImplementation(libs.androidXComposeTooling)
     debugImplementation project(':fragments-test')
     debugImplementation(project(':test-shared',)) {
         exclude group: 'org.robolectric' // Some tests in `collect_app` don't work with newer Robolectric

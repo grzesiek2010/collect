@@ -23,12 +23,14 @@ fun CollectTheme(
     val lightColors = lightColorScheme(
         primary = Color(resources.getColor(R.color.colorPrimaryLight)),
         onPrimary = Color(resources.getColor(R.color.colorOnPrimaryLight)),
-        surface = Color(resources.getColor(R.color.colorSurfaceLight))
+        surface = Color(resources.getColor(R.color.colorSurfaceLight)),
+        surfaceContainerHighest = Color(resources.getColor(R.color.colorSurfaceContainerHighest))
     )
     val darkColors = darkColorScheme(
         primary = Color(resources.getColor(R.color.colorPrimaryDark)),
         onPrimary = Color(resources.getColor(R.color.colorOnPrimaryDark)),
-        surface = Color(resources.getColor(R.color.colorSurfaceDark))
+        surface = Color(resources.getColor(R.color.colorSurfaceDark)),
+        surfaceContainerHighest = Color(resources.getColor(R.color.colorSurfaceContainerHighest))
     )
     val colorScheme = if (isSystemInDarkTheme()) darkColors else lightColors
 
