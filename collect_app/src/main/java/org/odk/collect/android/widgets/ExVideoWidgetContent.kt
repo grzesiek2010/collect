@@ -23,7 +23,7 @@ fun ExVideoWidgetContent(
     videoUri: Uri?,
     mediaUtils: MediaUtils?,
     readOnly: Boolean,
-    onRecordClick: () -> Unit,
+    onLaunchClick: () -> Unit,
     onLongClick: () -> Unit
 ) {
     Column {
@@ -31,7 +31,7 @@ fun ExVideoWidgetContent(
             WidgetIconButton(
                 Icons.Default.OpenInNew,
                 stringResource(string.launch_app),
-                onRecordClick,
+                onLaunchClick,
                 onLongClick,
                 Modifier.testTag("record_video_button")
             )
