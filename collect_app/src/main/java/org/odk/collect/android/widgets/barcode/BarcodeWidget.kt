@@ -56,7 +56,7 @@ class BarcodeWidget(
             context as ComponentActivity,
             viewModelFactory {
                 addInitializer(WidgetAnswerViewModel::class) {
-                    WidgetAnswerViewModel(scheduler, dependencies.formController)
+                    WidgetAnswerViewModel(scheduler, dependencies.formController, settings)
                 }
             }
         )
@@ -78,7 +78,6 @@ class BarcodeWidget(
                     WidgetAnswer(
                         Modifier.padding(top = dimensionResource(id = dimen.margin_standard)),
                         formEntryPrompt,
-                        answerFontSize,
                         viewModelProvider,
                         onLongClick = { showContextMenu() }
                     )

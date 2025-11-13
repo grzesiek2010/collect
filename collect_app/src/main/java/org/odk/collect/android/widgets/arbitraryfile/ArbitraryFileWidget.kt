@@ -48,7 +48,7 @@ class ArbitraryFileWidget(
             context as ComponentActivity,
             viewModelFactory {
                 addInitializer(WidgetAnswerViewModel::class) {
-                    WidgetAnswerViewModel(scheduler, dependencies.formController)
+                    WidgetAnswerViewModel(scheduler, dependencies.formController, settings)
                 }
                 addInitializer(ArbitraryFileWidgetAnswerViewModel::class) {
                     ArbitraryFileWidgetAnswerViewModel(questionMediaManager, mediaUtils)
@@ -70,7 +70,6 @@ class ArbitraryFileWidget(
                     WidgetAnswer(
                         Modifier.padding(top = dimensionResource(id = dimen.margin_standard)),
                         formEntryPrompt,
-                        answerFontSize,
                         viewModelProvider,
                         onLongClick = { showContextMenu() }
                     )

@@ -21,22 +21,24 @@ import org.javarosa.form.api.FormEntryPrompt
 import org.odk.collect.android.formhierarchy.QuestionAnswerProcessor
 import org.odk.collect.android.javarosawrapper.FormController
 import org.odk.collect.android.widgets.arbitraryfile.ArbitraryFileWidgetAnswerViewModel
+import org.odk.collect.android.widgets.utilities.QuestionFontSizeUtils
 import org.odk.collect.android.widgets.video.VideoWidgetAnswer
 import org.odk.collect.async.Scheduler
 import org.odk.collect.icons.R
+import org.odk.collect.shared.settings.Settings
 
 @Composable
 fun WidgetAnswer(
     modifier: Modifier = Modifier,
     prompt: FormEntryPrompt,
-    fontSize: Int = 0,
     viewModelProvider: ViewModelProvider,
     onLongClick: () -> Unit = {}
 ) {
     val context = LocalContext.current
-    val viewModel = viewModelProvider[WidgetAnswerViewModel::class]
-    val answerFlow = remember(prompt) { viewModel.getQuestionAnswer(prompt, context) }
+    val widgetAnswerViewModel = viewModelProvider[WidgetAnswerViewModel::class]
+    val answerFlow = remember(prompt) { widgetAnswerViewModel.getAnswerText(prompt, context) }
     val answer by answerFlow.collectAsStateWithLifecycle()
+    val answerFontSize = widgetAnswerViewModel.getAnswerFontSize()
 
     answer?.let {
         if (it.isBlank()) {
@@ -50,7 +52,7 @@ fun WidgetAnswer(
                         modifier,
                         ImageVector.vectorResource(R.drawable.ic_baseline_barcode_scanner_white_24),
                         it,
-                        fontSize,
+                        answerFontSize,
                         onLongClick
                     )
                 }
@@ -64,7 +66,7 @@ fun WidgetAnswer(
                     modifier,
                     Icons.Default.AttachFile,
                     it,
-                    fontSize,
+                    answerFontSize,
                     onLongClick,
                     stringResource(org.odk.collect.strings.R.string.open_file)
                 ) { viewModel.openFile(context, answer) }
@@ -76,9 +78,10 @@ fun WidgetAnswer(
 
 class WidgetAnswerViewModel(
     private val scheduler: Scheduler,
-    private val formController: FormController
+    private val formController: FormController,
+    private val settings: Settings
 ) : ViewModel() {
-    fun getQuestionAnswer(prompt: FormEntryPrompt, context: Context): StateFlow<String?> {
+    fun getAnswerText(prompt: FormEntryPrompt, context: Context): StateFlow<String?> {
         val answer = MutableStateFlow<String?>(null)
 
         scheduler.immediate {
@@ -86,5 +89,9 @@ class WidgetAnswerViewModel(
         }
 
         return answer
+    }
+
+    fun getAnswerFontSize(): Int {
+        return QuestionFontSizeUtils.getFontSize(settings, QuestionFontSizeUtils.FontSize.HEADLINE_6)
     }
 }

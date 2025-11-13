@@ -58,7 +58,7 @@ class ExVideoWidget(
             context as ComponentActivity,
             viewModelFactory {
                 addInitializer(WidgetAnswerViewModel::class) {
-                    WidgetAnswerViewModel(scheduler, dependencies.formController)
+                    WidgetAnswerViewModel(scheduler, dependencies.formController, settings)
                 }
                 addInitializer(VideoWidgetAnswerViewModel::class) {
                     VideoWidgetAnswerViewModel(scheduler, questionMediaManager, mediaUtils)
