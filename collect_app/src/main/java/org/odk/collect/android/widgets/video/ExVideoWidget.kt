@@ -5,13 +5,10 @@ import android.app.Activity
 import android.content.Context
 import android.view.View
 import androidx.activity.ComponentActivity
-import androidx.compose.foundation.layout.padding
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.setValue
-import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.ComposeView
-import androidx.compose.ui.res.dimensionResource
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.viewmodel.viewModelFactory
 import org.javarosa.core.model.data.IAnswerData
@@ -29,7 +26,6 @@ import org.odk.collect.android.widgets.interfaces.WidgetDataReceiver
 import org.odk.collect.android.widgets.utilities.FileRequester
 import org.odk.collect.android.widgets.utilities.QuestionFontSizeUtils
 import org.odk.collect.android.widgets.utilities.WaitingForDataRegistry
-import org.odk.collect.androidshared.R.dimen
 import org.odk.collect.androidshared.ui.ComposeThemeProvider.Companion.setContextThemedContent
 import org.odk.collect.androidshared.ui.ToastUtils.showLongToast
 import org.odk.collect.strings.R
@@ -75,7 +71,6 @@ class ExVideoWidget(
                     onLongClick = { showContextMenu() }
                 ) {
                     WidgetAnswer(
-                        Modifier.padding(top = dimensionResource(id = dimen.margin_standard)),
                         formEntryPrompt,
                         viewModelProvider = viewModelProvider,
                         onLongClick = { showContextMenu() }

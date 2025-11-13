@@ -5,6 +5,7 @@ import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.width
 import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
@@ -20,7 +21,6 @@ import org.odk.collect.androidshared.ui.multiclicksafe.MultiClickGuard
 
 @Composable
 fun TextWidgetAnswer(
-    modifier: Modifier,
     icon: ImageVector?,
     answer: String,
     fontSize: Int,
@@ -29,7 +29,8 @@ fun TextWidgetAnswer(
     onClick: () -> Unit = {}
 ) {
     Row(
-        modifier = modifier
+        modifier = Modifier
+            .padding(top = dimensionResource(id = dimen.margin_standard))
             .fillMaxWidth()
             .combinedClickable(
                 onClick = {

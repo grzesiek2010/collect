@@ -5,13 +5,10 @@ import android.app.Activity
 import android.content.Context
 import android.view.View
 import androidx.activity.ComponentActivity
-import androidx.compose.foundation.layout.padding
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.setValue
-import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.ComposeView
-import androidx.compose.ui.res.dimensionResource
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.viewmodel.viewModelFactory
 import org.javarosa.form.api.FormEntryPrompt
@@ -26,7 +23,6 @@ import org.odk.collect.android.widgets.interfaces.WidgetDataReceiver
 import org.odk.collect.android.widgets.utilities.FileRequester
 import org.odk.collect.android.widgets.utilities.QuestionFontSizeUtils
 import org.odk.collect.android.widgets.utilities.WaitingForDataRegistry
-import org.odk.collect.androidshared.R.dimen
 import org.odk.collect.androidshared.ui.ComposeThemeProvider.Companion.setContextThemedContent
 
 @SuppressLint("ViewConstructor")
@@ -70,7 +66,6 @@ class ExArbitraryFileWidget(
                     onLongClick = { showContextMenu() }
                 ) {
                     WidgetAnswer(
-                        Modifier.padding(top = dimensionResource(id = dimen.margin_standard)),
                         formEntryPrompt,
                         viewModelProvider,
                         onLongClick = { showContextMenu() }

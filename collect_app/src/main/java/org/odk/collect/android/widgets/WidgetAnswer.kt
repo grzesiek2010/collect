@@ -6,7 +6,6 @@ import androidx.compose.material.icons.filled.AttachFile
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.remember
-import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
@@ -29,7 +28,6 @@ import org.odk.collect.shared.settings.Settings
 
 @Composable
 fun WidgetAnswer(
-    modifier: Modifier = Modifier,
     prompt: FormEntryPrompt,
     viewModelProvider: ViewModelProvider,
     onLongClick: () -> Unit = {}
@@ -49,22 +47,20 @@ fun WidgetAnswer(
             Constants.CONTROL_INPUT -> {
                 when (prompt.dataType) {
                     Constants.DATATYPE_BARCODE -> TextWidgetAnswer(
-                        modifier,
                         ImageVector.vectorResource(R.drawable.ic_baseline_barcode_scanner_white_24),
                         it,
                         answerFontSize,
                         onLongClick
                     )
-                    else -> TextWidgetAnswer(modifier, null, it, answerFontSize, onLongClick)
+                    else -> TextWidgetAnswer(null, it, answerFontSize, onLongClick)
                 }
             }
-            Constants.CONTROL_VIDEO_CAPTURE -> VideoWidgetAnswer(modifier, it, viewModelProvider, onLongClick)
+            Constants.CONTROL_VIDEO_CAPTURE -> VideoWidgetAnswer(it, viewModelProvider, onLongClick)
             Constants.CONTROL_FILE_CAPTURE -> {
                 val context = LocalContext.current
                 val viewModel = viewModelProvider[ArbitraryFileWidgetAnswerViewModel::class]
 
                 TextWidgetAnswer(
-                    modifier,
                     Icons.Default.AttachFile,
                     it,
                     answerFontSize,
@@ -72,7 +68,7 @@ fun WidgetAnswer(
                     stringResource(org.odk.collect.strings.R.string.open_file)
                 ) { viewModel.openFile(context, answer) }
             }
-            else -> TextWidgetAnswer(modifier, null, it, answerFontSize, onLongClick)
+            else -> TextWidgetAnswer(null, it, answerFontSize, onLongClick)
         }
     }
 }

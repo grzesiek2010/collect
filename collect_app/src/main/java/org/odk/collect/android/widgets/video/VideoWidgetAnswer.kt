@@ -7,6 +7,7 @@ import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.heightIn
+import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.PlayCircle
@@ -21,15 +22,16 @@ import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.res.dimensionResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
+import org.odk.collect.androidshared.R.dimen
 import org.odk.collect.androidshared.ui.multiclicksafe.MultiClickGuard
 
 @Composable
 fun VideoWidgetAnswer(
-    modifier: Modifier,
     answer: String,
     viewModelProvider: ViewModelProvider,
     onLongClick: () -> Unit
@@ -41,7 +43,8 @@ fun VideoWidgetAnswer(
     val bitmap by bitmapFlow.collectAsStateWithLifecycle()
 
     Box(
-        modifier = modifier
+        modifier = Modifier
+            .padding(top = dimensionResource(id = dimen.margin_standard))
             .fillMaxWidth()
             .heightIn(max = 200.dp)
             .clip(MaterialTheme.shapes.large)
