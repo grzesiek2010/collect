@@ -55,6 +55,7 @@ fun WidgetAnswer(
                         answerFontSize,
                         onLongClick
                     )
+                    else -> TextWidgetAnswer(modifier, null, it, answerFontSize, onLongClick)
                 }
             }
             Constants.CONTROL_VIDEO_CAPTURE -> VideoWidgetAnswer(modifier, it, viewModelProvider, onLongClick)
@@ -71,7 +72,7 @@ fun WidgetAnswer(
                     stringResource(org.odk.collect.strings.R.string.open_file)
                 ) { viewModel.openFile(context, answer) }
             }
-            else -> throw IllegalArgumentException("Unsupported control type: ${prompt.controlType}")
+            else -> TextWidgetAnswer(modifier, null, it, answerFontSize, onLongClick)
         }
     }
 }
