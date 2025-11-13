@@ -137,7 +137,7 @@ public class WidgetFactory {
     public QuestionWidget createWidgetFromPrompt(FormEntryPrompt prompt, PermissionsProvider permissionsProvider, boolean readOnlyOverride) {
         String appearance = Appearances.getSanitizedAppearanceHint(prompt);
         QuestionDetails questionDetails = new QuestionDetails(prompt, readOnlyOverride);
-        QuestionWidget.Dependencies dependencies = new QuestionWidget.Dependencies(audioPlayer);
+        QuestionWidget.Dependencies dependencies = new QuestionWidget.Dependencies(audioPlayer, formController);
 
         final QuestionWidget questionWidget;
         switch (prompt.getControlType()) {

@@ -40,6 +40,7 @@ import org.javarosa.form.api.FormEntryPrompt;
 import org.odk.collect.android.R;
 import org.odk.collect.android.formentry.questions.AudioVideoImageTextLabel;
 import org.odk.collect.android.formentry.questions.QuestionDetails;
+import org.odk.collect.android.javarosawrapper.FormController;
 import org.odk.collect.android.listeners.WidgetValueChangedListener;
 import org.odk.collect.android.utilities.AnimationUtils;
 import org.odk.collect.android.utilities.FormEntryPromptUtils;
@@ -412,13 +413,19 @@ public abstract class QuestionWidget extends FrameLayout implements Widget {
     public static class Dependencies {
 
         private final AudioPlayer audioPlayer;
+        private final FormController formController;
 
-        public Dependencies(AudioPlayer audioPlayer) {
+        public Dependencies(AudioPlayer audioPlayer, FormController formController) {
             this.audioPlayer = audioPlayer;
+            this.formController = formController;
         }
 
         public AudioPlayer getAudioPlayer() {
             return audioPlayer;
+        }
+
+        public FormController getFormController() {
+            return formController;
         }
     }
 }

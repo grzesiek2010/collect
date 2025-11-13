@@ -27,6 +27,7 @@ import org.odk.collect.android.utilities.ApplicationConstants.RequestCodes
 import org.odk.collect.android.utilities.QuestionMediaManager
 import org.odk.collect.android.widgets.QuestionWidget
 import org.odk.collect.android.widgets.WidgetAnswer
+import org.odk.collect.android.widgets.WidgetAnswerViewModel
 import org.odk.collect.android.widgets.interfaces.FileWidget
 import org.odk.collect.android.widgets.interfaces.WidgetDataReceiver
 import org.odk.collect.android.widgets.utilities.QuestionFontSizeUtils
@@ -43,7 +44,7 @@ import java.io.File
 class VideoWidget(
     context: Context,
     questionDetails: QuestionDetails,
-    dependencies: Dependencies,
+    private val dependencies: Dependencies,
     private val questionMediaManager: QuestionMediaManager,
     private val waitingForDataRegistry: WaitingForDataRegistry
 ) : QuestionWidget(context, dependencies, questionDetails), FileWidget, WidgetDataReceiver {
@@ -60,6 +61,9 @@ class VideoWidget(
         val viewModelProvider = ViewModelProvider(
             context as ComponentActivity,
             viewModelFactory {
+                addInitializer(WidgetAnswerViewModel::class) {
+                    WidgetAnswerViewModel(scheduler, dependencies.formController)
+                }
                 addInitializer(VideoWidgetAnswerViewModel::class) {
                     VideoWidgetAnswerViewModel(scheduler, questionMediaManager, mediaUtils)
                 }
@@ -88,7 +92,6 @@ class VideoWidget(
                     WidgetAnswer(
                         Modifier.padding(top = dimensionResource(id = dimen.margin_standard)),
                         formEntryPrompt,
-                        binaryName,
                         viewModelProvider = viewModelProvider,
                         onLongClick = { showContextMenu() }
                     )

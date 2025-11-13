@@ -23,6 +23,7 @@ import org.odk.collect.android.utilities.FileUtils
 import org.odk.collect.android.utilities.QuestionMediaManager
 import org.odk.collect.android.widgets.QuestionWidget
 import org.odk.collect.android.widgets.WidgetAnswer
+import org.odk.collect.android.widgets.WidgetAnswerViewModel
 import org.odk.collect.android.widgets.interfaces.FileWidget
 import org.odk.collect.android.widgets.interfaces.WidgetDataReceiver
 import org.odk.collect.android.widgets.utilities.FileRequester
@@ -39,7 +40,7 @@ import java.io.File
 class ExVideoWidget(
     context: Context,
     questionDetails: QuestionDetails,
-    dependencies: Dependencies,
+    private val dependencies: Dependencies,
     private val questionMediaManager: QuestionMediaManager,
     private val waitingForDataRegistry: WaitingForDataRegistry,
     private val fileRequester: FileRequester
@@ -56,6 +57,9 @@ class ExVideoWidget(
         val viewModelProvider = ViewModelProvider(
             context as ComponentActivity,
             viewModelFactory {
+                addInitializer(WidgetAnswerViewModel::class) {
+                    WidgetAnswerViewModel(scheduler, dependencies.formController)
+                }
                 addInitializer(VideoWidgetAnswerViewModel::class) {
                     VideoWidgetAnswerViewModel(scheduler, questionMediaManager, mediaUtils)
                 }
@@ -73,7 +77,6 @@ class ExVideoWidget(
                     WidgetAnswer(
                         Modifier.padding(top = dimensionResource(id = dimen.margin_standard)),
                         formEntryPrompt,
-                        binaryName,
                         viewModelProvider = viewModelProvider,
                         onLongClick = { showContextMenu() }
                     )

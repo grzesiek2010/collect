@@ -4,6 +4,7 @@ import android.annotation.SuppressLint
 import android.app.Activity
 import android.content.Context
 import android.view.View
+import androidx.activity.ComponentActivity
 import androidx.compose.foundation.layout.padding
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
@@ -11,6 +12,8 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.ComposeView
 import androidx.compose.ui.res.dimensionResource
+import androidx.lifecycle.ViewModelProvider
+import androidx.lifecycle.viewmodel.viewModelFactory
 import com.google.zxing.integration.android.IntentIntegrator
 import org.javarosa.core.model.data.IAnswerData
 import org.javarosa.core.model.data.StringData
@@ -22,6 +25,8 @@ import org.odk.collect.android.utilities.Appearances.hasAppearance
 import org.odk.collect.android.utilities.Appearances.isFrontCameraAppearance
 import org.odk.collect.android.widgets.QuestionWidget
 import org.odk.collect.android.widgets.WidgetAnswer
+import org.odk.collect.android.widgets.WidgetAnswerViewModel
+import org.odk.collect.android.widgets.arbitraryfile.ArbitraryFileWidgetAnswerViewModel
 import org.odk.collect.android.widgets.interfaces.WidgetDataReceiver
 import org.odk.collect.android.widgets.utilities.QuestionFontSizeUtils
 import org.odk.collect.android.widgets.utilities.WaitingForDataRegistry
@@ -36,7 +41,7 @@ import org.odk.collect.strings.R
 class BarcodeWidget(
     context: Context,
     questionDetails: QuestionDetails,
-    dependencies: Dependencies,
+    private val dependencies: Dependencies,
     private val waitingForDataRegistry: WaitingForDataRegistry,
     private val cameraUtils: CameraUtils
 ) : QuestionWidget(context, dependencies, questionDetails), WidgetDataReceiver {
@@ -47,6 +52,15 @@ class BarcodeWidget(
     }
 
     override fun onCreateWidgetView(context: Context, prompt: FormEntryPrompt, answerFontSize: Int): View {
+        val viewModelProvider = ViewModelProvider(
+            context as ComponentActivity,
+            viewModelFactory {
+                addInitializer(WidgetAnswerViewModel::class) {
+                    WidgetAnswerViewModel(scheduler, dependencies.formController)
+                }
+            }
+        )
+
         return ComposeView(context).apply {
             val readOnly = questionDetails.isReadOnly
             val isAnswerHidden = hasAppearance(formEntryPrompt, Appearances.HIDDEN_ANSWER)
@@ -64,8 +78,8 @@ class BarcodeWidget(
                     WidgetAnswer(
                         Modifier.padding(top = dimensionResource(id = dimen.margin_standard)),
                         formEntryPrompt,
-                        answer,
                         answerFontSize,
+                        viewModelProvider,
                         onLongClick = { showContextMenu() }
                     )
                 }

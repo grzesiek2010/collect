@@ -20,6 +20,7 @@ import org.odk.collect.android.utilities.ApplicationConstants
 import org.odk.collect.android.utilities.QuestionMediaManager
 import org.odk.collect.android.widgets.QuestionWidget
 import org.odk.collect.android.widgets.WidgetAnswer
+import org.odk.collect.android.widgets.WidgetAnswerViewModel
 import org.odk.collect.android.widgets.interfaces.FileWidget
 import org.odk.collect.android.widgets.interfaces.WidgetDataReceiver
 import org.odk.collect.android.widgets.utilities.FileRequester
@@ -32,7 +33,7 @@ import org.odk.collect.androidshared.ui.ComposeThemeProvider.Companion.setContex
 class ExArbitraryFileWidget(
     context: Context,
     questionDetails: QuestionDetails,
-    dependencies: Dependencies,
+    private val dependencies: Dependencies,
     private val questionMediaManager: QuestionMediaManager,
     private val waitingForDataRegistry: WaitingForDataRegistry,
     private val fileRequester: FileRequester,
@@ -48,6 +49,9 @@ class ExArbitraryFileWidget(
         val viewModelProvider = ViewModelProvider(
             context as ComponentActivity,
             viewModelFactory {
+                addInitializer(WidgetAnswerViewModel::class) {
+                    WidgetAnswerViewModel(scheduler, dependencies.formController)
+                }
                 addInitializer(ArbitraryFileWidgetAnswerViewModel::class) {
                     ArbitraryFileWidgetAnswerViewModel(questionMediaManager, mediaUtils)
                 }
@@ -68,7 +72,6 @@ class ExArbitraryFileWidget(
                     WidgetAnswer(
                         Modifier.padding(top = dimensionResource(id = dimen.margin_standard)),
                         formEntryPrompt,
-                        answer,
                         answerFontSize,
                         viewModelProvider,
                         onLongClick = { showContextMenu() }
