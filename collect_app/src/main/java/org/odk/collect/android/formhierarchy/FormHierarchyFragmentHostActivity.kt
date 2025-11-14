@@ -1,14 +1,19 @@
 package org.odk.collect.android.formhierarchy
 
 import android.os.Bundle
+import androidx.lifecycle.ViewModelProvider
+import androidx.lifecycle.viewmodel.viewModelFactory
 import androidx.navigation.fragment.NavHostFragment
 import org.odk.collect.analytics.Analytics
 import org.odk.collect.android.R
 import org.odk.collect.android.activities.FormEntryViewModelFactory
+import org.odk.collect.android.application.CollectComposeThemeProvider
 import org.odk.collect.android.entities.EntitiesRepositoryProvider
+import org.odk.collect.android.formentry.FormEntryViewModel
 import org.odk.collect.android.formentry.FormOpeningMode
 import org.odk.collect.android.formentry.FormSessionRepository
 import org.odk.collect.android.formentry.repeats.DeleteRepeatDialogFragment
+import org.odk.collect.android.formentry.saving.FormSaveViewModel
 import org.odk.collect.android.injection.DaggerUtils
 import org.odk.collect.android.instancemanagement.InstancesDataService
 import org.odk.collect.android.instancemanagement.autosend.AutoSendSettingsProvider
@@ -18,6 +23,9 @@ import org.odk.collect.android.utilities.FormsRepositoryProvider
 import org.odk.collect.android.utilities.InstancesRepositoryProvider
 import org.odk.collect.android.utilities.MediaUtils
 import org.odk.collect.android.utilities.SavepointsRepositoryProvider
+import org.odk.collect.android.widgets.WidgetAnswerViewModel
+import org.odk.collect.android.widgets.arbitraryfile.ArbitraryFileWidgetAnswerViewModel
+import org.odk.collect.android.widgets.video.VideoWidgetAnswerViewModel
 import org.odk.collect.androidshared.ui.FragmentFactoryBuilder
 import org.odk.collect.async.Scheduler
 import org.odk.collect.audiorecorder.recording.AudioRecorder
@@ -30,7 +38,7 @@ import org.odk.collect.settings.SettingsProvider
 import org.odk.collect.strings.localization.LocalizedActivity
 import javax.inject.Inject
 
-class FormHierarchyFragmentHostActivity : LocalizedActivity() {
+class FormHierarchyFragmentHostActivity : LocalizedActivity(), CollectComposeThemeProvider {
 
     @Inject
     lateinit var scheduler: Scheduler
@@ -116,13 +124,31 @@ class FormHierarchyFragmentHostActivity : LocalizedActivity() {
         val viewOnly = intent.getBooleanExtra(EXTRA_VIEW_ONLY, false)
         supportFragmentManager.fragmentFactory = FragmentFactoryBuilder()
             .forClass(FormHierarchyFragment::class) {
+                val formEntryViewModel = ViewModelProvider(this, viewModelFactory)[FormEntryViewModel::class]
+                val formSaveViewModel = ViewModelProvider(this, viewModelFactory)[FormSaveViewModel::class]
+                val viewModelProvider = ViewModelProvider(
+                    this,
+                    viewModelFactory {
+                        addInitializer(WidgetAnswerViewModel::class) {
+                            WidgetAnswerViewModel(scheduler, formEntryViewModel.formController, settingsProvider.getUnprotectedSettings())
+                        }
+                        addInitializer(VideoWidgetAnswerViewModel::class) {
+                            VideoWidgetAnswerViewModel(scheduler, formSaveViewModel, mediaUtils)
+                        }
+                        addInitializer(ArbitraryFileWidgetAnswerViewModel::class) {
+                            ArbitraryFileWidgetAnswerViewModel(formSaveViewModel, mediaUtils)
+                        }
+                    }
+                )
+
                 FormHierarchyFragment(
                     viewOnly,
                     viewModelFactory,
                     this,
                     scheduler,
                     instancesDataService,
-                    projectsDataService.getCurrentProject().value!!.uuid
+                    projectsDataService.getCurrentProject().value!!.uuid,
+                    viewModelProvider
                 )
             }
             .forClass(DeleteRepeatDialogFragment::class) {

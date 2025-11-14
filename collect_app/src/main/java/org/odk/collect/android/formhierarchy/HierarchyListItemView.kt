@@ -24,7 +24,7 @@ class HierarchyListItemView(context: Context, viewType: Int) : FrameLayout(conte
         findViewById<MaterialTextView>(R.id.primary_text).text = item.primaryText
         if (item.hierarchyItemType == HierarchyItemType.QUESTION) {
             findViewById<ComposeView>(R.id.answer_view).setContextThemedContent {
-                WidgetAnswer(prompt = item.formEntryPrompt!!, viewModelProvider = viewModelProvider)
+                WidgetAnswer(prompt = item.formEntryPrompt!!, viewModelProvider = viewModelProvider, summaryMode = true)
             }
         }
     }

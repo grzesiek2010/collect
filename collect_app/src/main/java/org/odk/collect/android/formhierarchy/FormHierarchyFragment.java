@@ -85,13 +85,16 @@ public class FormHierarchyFragment extends Fragment {
     private final InstancesDataService instancesDataService;
     private final String currentProjectId;
 
+    private final ViewModelProvider viewModelProvider;
+
     public FormHierarchyFragment(
             boolean viewOnly,
             ViewModelProvider.Factory viewModelFactory,
             MenuHost menuHost,
             Scheduler scheduler,
             InstancesDataService instancesDataService,
-            String currentProjectId
+            String currentProjectId,
+            ViewModelProvider viewModelProvider
     ) {
         super(R.layout.form_hierarchy_layout);
         this.viewOnly = viewOnly;
@@ -100,6 +103,7 @@ public class FormHierarchyFragment extends Fragment {
         this.scheduler = scheduler;
         this.instancesDataService = instancesDataService;
         this.currentProjectId = currentProjectId;
+        this.viewModelProvider = viewModelProvider;
     }
 
     @Override
@@ -331,7 +335,7 @@ public class FormHierarchyFragment extends Fragment {
             formHierarchyViewModel.setCurrentIndex(formController.getFormIndex());
 
             calculateElementsToDisplay(formController, groupIcon, groupPathTextView);
-            recyclerView.setAdapter(new HierarchyListAdapter(formHierarchyViewModel.getElementsToDisplay(), this::onElementClick));
+            recyclerView.setAdapter(new HierarchyListAdapter(viewModelProvider, formHierarchyViewModel.getElementsToDisplay(), this::onElementClick));
 
             formController.jumpToIndex(formHierarchyViewModel.getCurrentIndex());
 
@@ -420,13 +424,12 @@ public class FormHierarchyFragment extends Fragment {
 
                     FormEntryPrompt fp = formController.getQuestionPrompt();
                     String label = fp.getShortText();
-                    String answerDisplay = QuestionAnswerProcessor.getQuestionAnswer(fp, requireContext(), formController);
                     elementsToDisplay.add(
                             new HierarchyItem(
                                     fp.getIndex(),
                                     HierarchyItemType.QUESTION,
                                     FormEntryPromptUtils.styledQuestionText(label, fp.isRequired()),
-                                    answerDisplay
+                                    fp
                             )
                     );
                     break;

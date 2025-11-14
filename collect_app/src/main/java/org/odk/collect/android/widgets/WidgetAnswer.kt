@@ -30,6 +30,7 @@ import org.odk.collect.shared.settings.Settings
 fun WidgetAnswer(
     prompt: FormEntryPrompt,
     viewModelProvider: ViewModelProvider,
+    summaryMode: Boolean = false,
     onLongClick: () -> Unit = {}
 ) {
     val context = LocalContext.current
@@ -50,9 +51,10 @@ fun WidgetAnswer(
                         ImageVector.vectorResource(R.drawable.ic_baseline_barcode_scanner_white_24),
                         it,
                         answerFontSize,
+                        summaryMode,
                         onLongClick
                     )
-                    else -> TextWidgetAnswer(null, it, answerFontSize, onLongClick)
+                    else -> TextWidgetAnswer(null, it, answerFontSize, summaryMode, onLongClick)
                 }
             }
             Constants.CONTROL_VIDEO_CAPTURE -> VideoWidgetAnswer(it, viewModelProvider, onLongClick)
@@ -64,11 +66,12 @@ fun WidgetAnswer(
                     Icons.Default.AttachFile,
                     it,
                     answerFontSize,
+                    summaryMode,
                     onLongClick,
                     stringResource(org.odk.collect.strings.R.string.open_file)
                 ) { viewModel.openFile(context, answer) }
             }
-            else -> TextWidgetAnswer(null, it, answerFontSize, onLongClick)
+            else -> TextWidgetAnswer(null, it, answerFontSize, summaryMode, onLongClick)
         }
     }
 }

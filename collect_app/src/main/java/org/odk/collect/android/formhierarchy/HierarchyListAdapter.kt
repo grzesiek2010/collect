@@ -16,9 +16,12 @@
 package org.odk.collect.android.formhierarchy
 
 import android.view.ViewGroup
+import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.RecyclerView
+import org.odk.collect.android.widgets.WidgetAnswer
 
 class HierarchyListAdapter(
+    private val viewModelProvider: ViewModelProvider,
     private val hierarchyItems: List<HierarchyItem>,
     private val listener: OnElementClickListener
 ) : RecyclerView.Adapter<HierarchyListAdapter.ViewHolder>() {
@@ -26,7 +29,7 @@ class HierarchyListAdapter(
         val item = HierarchyListItemView(parent.context, viewType).apply {
             layoutParams = ViewGroup.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT)
         }
-        return ViewHolder(item)
+        return ViewHolder(item, viewModelProvider)
     }
 
     override fun getItemViewType(position: Int): Int {
@@ -41,9 +44,12 @@ class HierarchyListAdapter(
         return hierarchyItems.size
     }
 
-    class ViewHolder(private val view: HierarchyListItemView) : RecyclerView.ViewHolder(view) {
+    class ViewHolder(
+        private val view: HierarchyListItemView,
+        private val viewModelProvider: ViewModelProvider
+    ) : RecyclerView.ViewHolder(view) {
         fun bind(element: HierarchyItem, listener: OnElementClickListener) {
-            view.setElement(element)
+            view.setElement(element, viewModelProvider)
             view.setOnClickListener { listener.onElementClick(element) }
         }
     }

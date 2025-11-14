@@ -24,6 +24,7 @@ fun TextWidgetAnswer(
     icon: ImageVector?,
     answer: String,
     fontSize: Int,
+    summaryMode: Boolean = false,
     onLongClick: () -> Unit,
     onClickLabel: String? = null,
     onClick: () -> Unit = {}
@@ -42,7 +43,7 @@ fun TextWidgetAnswer(
                 onClickLabel = onClickLabel
             ),
         verticalAlignment = Alignment.CenterVertically,
-        horizontalArrangement = Arrangement.Center
+        horizontalArrangement = if (summaryMode) Arrangement.Start else Arrangement.Center
     ) {
         if (icon != null) {
             Icon(
