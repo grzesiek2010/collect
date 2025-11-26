@@ -31,7 +31,7 @@ public class EntityFormFinalizationProcessor implements FormEntryFinalizationPro
         if (entityFormExtra != null) {
             List<Pair<XPathReference, String>> saveTos = entityFormExtra.getSaveTos();
 
-            TreeElement entityElement = EntityFormParser.getEntityElement(mainInstance);
+            TreeElement entityElement = EntityFormParser.getEntityElement(mainInstance.getRoot());
             if (entityElement != null) {
                 EntityAction action = EntityFormParser.parseAction(entityElement);
                 String dataset = EntityFormParser.parseDataset(entityElement);

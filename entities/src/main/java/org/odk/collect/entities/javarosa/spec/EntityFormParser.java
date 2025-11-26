@@ -14,6 +14,9 @@ import org.javarosa.xpath.expr.XPathFuncExpr;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
+import java.util.ArrayList;
+import java.util.List;
+
 public class EntityFormParser {
 
     private EntityFormParser() {
@@ -47,15 +50,33 @@ public class EntityFormParser {
     }
 
     @Nullable
-    public static TreeElement getEntityElement(FormInstance mainInstance) {
-        TreeElement root = mainInstance.getRoot();
-        TreeElement meta = root.getFirstChild("meta");
-
-        if (meta != null) {
-            return meta.getFirstChild(ELEMENT_ENTITY);
-        } else {
+    public static TreeElement getEntityElement(TreeElement treeElement) {
+        List<TreeElement> entityElements = getEntityElements(treeElement);
+        if (entityElements.isEmpty()) {
             return null;
+        } else {
+            return entityElements.get(0);
         }
+    }
+
+    public static List<TreeElement> getEntityElements(TreeElement treeElement) {
+        List<TreeElement> entityElements = new ArrayList<>();
+
+        int numOfChildren = treeElement.getNumChildren();
+        for (int i = 0; i < numOfChildren; i++) {
+            TreeElement child = treeElement.getChildAt(i);
+            if ("meta".equals(child.getName())) {
+                TreeElement entity = child.getFirstChild(ELEMENT_ENTITY);
+                if (entity != null) {
+                    entityElements.add(entity);
+                }
+            }
+            if (child.getNumChildren() > 0) {
+                entityElements.addAll(getEntityElements(child));
+            }
+        }
+
+        return entityElements;
     }
 
     @Nullable
