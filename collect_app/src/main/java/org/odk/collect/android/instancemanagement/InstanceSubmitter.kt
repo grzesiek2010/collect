@@ -4,7 +4,7 @@ import org.odk.collect.analytics.Analytics
 import org.odk.collect.android.analytics.AnalyticsEvents
 import org.odk.collect.android.application.Collect
 import org.odk.collect.android.instancemanagement.send.FormUploadException
-import org.odk.collect.android.instancemanagement.send.InstanceUploader
+import org.odk.collect.android.instancemanagement.send.InstanceUploaderImpl
 import org.odk.collect.android.utilities.FormsRepositoryProvider
 import org.odk.collect.android.utilities.InstanceAutoDeleteChecker
 import org.odk.collect.android.utilities.InstancesRepositoryProvider
@@ -35,12 +35,12 @@ class InstanceSubmitter(
 
         for (instance in toUpload.sortedBy { it.finalizationDate }) {
             try {
-                val destinationUrl = uploader.getUrlToSubmitTo(instance, deviceId, null, null)
+                val destinationUrl = uploader.getUrlToSubmitTo(instance, deviceId, null)
                 uploader.uploadOneSubmission(instance, destinationUrl)
                 result[instance] = null
 
                 deleteInstance(instance)
-                logUploadedForm(instance)
+                logUploadedForm(instance, formsRepository)
             } catch (e: FormUploadException) {
                 Timber.d(e)
                 result[instance] = e
@@ -49,8 +49,8 @@ class InstanceSubmitter(
         return result
     }
 
-    private fun setUpODKUploader(): InstanceUploader {
-        return InstanceUploader(
+    private fun setUpODKUploader(): InstanceUploaderImpl {
+        return InstanceUploaderImpl(
             httpInterface,
             WebCredentialsUtils(generalSettings),
             generalSettings,
@@ -72,8 +72,8 @@ class InstanceSubmitter(
         }
     }
 
-    private fun logUploadedForm(instance: Instance) {
-        val value = Collect.getFormIdentifierHash(instance.formId, instance.formVersion)
+    private fun logUploadedForm(instance: Instance, formsRepository: FormsRepository) {
+        val value = Collect.getFormIdentifierHash(instance.formId, instance.formVersion, formsRepository)
 
         Analytics.log(AnalyticsEvents.SUBMISSION, "HTTP auto", value)
     }

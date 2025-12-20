@@ -30,6 +30,7 @@ import androidx.lifecycle.ViewModelProvider;
 import org.odk.collect.android.activities.FormFillingActivity;
 import org.odk.collect.android.fragments.dialogs.SimpleDialog;
 import org.odk.collect.android.injection.DaggerUtils;
+import org.odk.collect.android.instancemanagement.InstanceDeleter;
 import org.odk.collect.android.instancemanagement.InstancesDataService;
 import org.odk.collect.android.projects.ProjectsDataService;
 import org.odk.collect.android.utilities.ApplicationConstants;
@@ -56,6 +57,7 @@ import java.util.Set;
 
 import javax.inject.Inject;
 
+import kotlinx.coroutines.Dispatchers;
 import timber.log.Timber;
 
 /**
@@ -132,7 +134,9 @@ public class InstanceUploaderActivity extends LocalizedActivity implements AuthD
                     public <T extends ViewModel> T create(@NonNull Class<T> modelClass) {
                         if (modelClass.isAssignableFrom(InstanceUploadViewModel.class)) {
                             return (T) new InstanceUploadViewModel(
-                                    httpInterface,
+                                    Dispatchers.getIO(),
+                                    new InstanceUploaderImpl(httpInterface, webCredentialsUtils, settingsProvider.getUnprotectedSettings(), instancesRepository),
+                                    new InstanceDeleter(instancesRepository, formsRepository),
                                     webCredentialsUtils,
                                     propertyManager,
                                     instancesRepository,
