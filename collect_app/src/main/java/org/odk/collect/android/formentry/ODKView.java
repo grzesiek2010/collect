@@ -568,6 +568,15 @@ public class ODKView extends SwipeHandler.View implements OnLongClickListener, W
         }
     }
 
+    public void scrollToTopOf(FormIndex index) {
+        for (QuestionWidget widget : widgets) {
+            if (widget.getFormEntryPrompt().getIndex().equals(index)) {
+                scrollToTopOf(widget);
+                break;
+            }
+        }
+    }
+
     /**
      * Saves answers for the widgets in this view. Called when the widgets are in an intent group.
      */

@@ -43,6 +43,8 @@ import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Build;
 import android.os.Bundle;
+import android.os.Handler;
+import android.os.Looper;
 import android.view.ContextMenu;
 import android.view.ContextMenu.ContextMenuInfo;
 import android.view.KeyEvent;
@@ -560,13 +562,16 @@ public class FormFillingActivity extends LocalizedActivity implements CollectCom
         formEntryViewModel = viewModelProvider.get(FormEntryViewModel.class);
         printerWidgetViewModel = viewModelProvider.get(PrinterWidgetViewModel.class);
 
-        formEntryViewModel.getCurrentIndex().observe(this, indexAndValidationResult -> {
-            if (indexAndValidationResult != null) {
-                FormIndex formIndex = indexAndValidationResult.component1();
-                FailedValidationResult validationResult = indexAndValidationResult.component2();
-                formIndexAnimationHandler.handle(formIndex);
-                if (validationResult != null) {
+        formEntryViewModel.getCurrentIndex().observe(this, currentIndex -> {
+            if (currentIndex != null) {
+                FormIndex screenIndex = currentIndex.getScreenIndex();
+                ValidationResult validationResult = currentIndex.getValidationResult();
+                formIndexAnimationHandler.handle(screenIndex);
+                if (validationResult instanceof FailedValidationResult) {
                     handleValidationResult(validationResult);
+                } else {
+                    new Handler(Looper.getMainLooper()).postDelayed(() ->
+                            odkView.scrollToTopOf(currentIndex.getQuestionIndex()), 400);
                 }
             }
         });

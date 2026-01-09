@@ -503,7 +503,7 @@ public class FormEntryViewModelTest {
         FormIndex originalIndex = formController.getFormIndex();
         viewModel.answerQuestion(formIndex, new StringData("answer"));
         scheduler.flush(true);
-        assertThat(getOrAwaitValue(viewModel.getCurrentIndex()).getSecond(), equalTo(failedValidationResult));
+        assertThat(getOrAwaitValue(viewModel.getCurrentIndex()).getValidationResult(), equalTo(failedValidationResult));
         assertThat(formController.getFormIndex(), equalTo(new FormIndex(null, originalIndex.getLocalIndex(), 0, new TreeReference())));
     }
 }
