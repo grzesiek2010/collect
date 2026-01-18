@@ -513,7 +513,7 @@ class GeoPolyFragment @JvmOverloads constructor(
             }
         }
 
-        if (map!!.supportsDraggablePolygon() && outputMode == OutputMode.GEOSHAPE) {
+        if (outputMode == OutputMode.GEOSHAPE) {
             val polygonDescription = PolygonDescription(
                 viewModel.points.value,
                 draggable = !readOnly
