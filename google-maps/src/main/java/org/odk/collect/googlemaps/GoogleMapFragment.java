@@ -57,6 +57,7 @@ import org.odk.collect.googlemaps.scaleview.MapScaleView;
 import org.odk.collect.location.LocationClient;
 import org.odk.collect.maps.LineDescription;
 import org.odk.collect.maps.MapConfigurator;
+import org.odk.collect.maps.MapConsts;
 import org.odk.collect.maps.MapFragment;
 import org.odk.collect.maps.MapPoint;
 import org.odk.collect.maps.MapViewModel;
@@ -731,6 +732,15 @@ public class GoogleMapFragment extends MapViewModelMapFragment implements
         return true;
     }
 
+    @NonNull
+    private Marker getLinePointMarker(MapPoint point, float strokeWidth, boolean isLast) {
+        if (isLast) {
+            return createMarker(requireContext(), new MarkerDescription(point, true, CENTER, new MarkerIconDescription.LinePoint(strokeWidth, MapConsts.DEFAULT_HIGHLIGHT_COLOR)), map);
+        } else {
+            return createMarker(requireContext(), new MarkerDescription(point, true, CENTER, new MarkerIconDescription.LinePoint(strokeWidth, MapConsts.DEFAULT_STROKE_COLOR)), map);
+        }
+    }
+
     /**
      * A MapFeature is a physical feature on a map, such as a point, a road,
      * a building, a region, etc.  It is presented to the user as one editable
@@ -864,7 +874,7 @@ public class GoogleMapFragment extends MapViewModelMapFragment implements
     }
 
     /** A polyline or polygon that can be manipulated by dragging markers at its vertices. */
-    private static class DynamicPolyLineFeature implements LineFeature {
+    private class DynamicPolyLineFeature implements LineFeature {
 
         private final GoogleMap map;
         private final List<Marker> markers = new ArrayList<>();
@@ -879,8 +889,10 @@ public class GoogleMapFragment extends MapViewModelMapFragment implements
                 return;
             }
 
-            for (MapPoint point : lineDescription.getPoints()) {
-                markers.add(createMarker(context, new MarkerDescription(point, true, CENTER, new MarkerIconDescription.Resource(org.odk.collect.icons.R.drawable.ic_map_point)), map));
+            List<MapPoint> points = lineDescription.getPoints();
+            for (int i = 0; i < points.size(); i++) {
+                MapPoint point = points.get(i);
+                markers.add(getLinePointMarker(point, lineDescription.getStrokeWidth(), i == points.size() - 1));
             }
 
             update();
@@ -951,7 +963,7 @@ public class GoogleMapFragment extends MapViewModelMapFragment implements
     }
 
     /** A polyline or polygon that can be manipulated by dragging markers at its vertices. */
-    private static class DynamicPolygonFeature implements LineFeature {
+    private class DynamicPolygonFeature implements LineFeature {
 
         private final GoogleMap map;
         private final List<Marker> markers = new ArrayList<>();
@@ -966,8 +978,9 @@ public class GoogleMapFragment extends MapViewModelMapFragment implements
                 return;
             }
 
-            for (MapPoint point : polygonDescription.getPoints()) {
-                markers.add(createMarker(context, new MarkerDescription(point, true, CENTER, new MarkerIconDescription.Resource(org.odk.collect.icons.R.drawable.ic_map_point)), map));
+            for (int i = 0; i < polygonDescription.getPoints().size(); i++) {
+                MapPoint point = polygonDescription.getPoints().get(i);
+                markers.add(getLinePointMarker(point, polygonDescription.getStrokeWidth(), i == polygonDescription.getPoints().size() - 1));
             }
 
             update();
