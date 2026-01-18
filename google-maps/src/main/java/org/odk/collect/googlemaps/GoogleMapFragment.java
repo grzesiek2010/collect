@@ -334,7 +334,11 @@ public class GoogleMapFragment extends MapViewModelMapFragment implements
     }
 
     private void addPolygon(int featureId, PolygonDescription polygonDescription) {
-        features.put(featureId, new StaticPolygonFeature(map, polygonDescription));
+        if (polygonDescription.getDraggable()) {
+            features.put(featureId, new DynamicPolygonFeature(map, polygonDescription));
+        } else {
+            features.put(featureId, new StaticPolygonFeature(map, polygonDescription));
+        }
     }
 
     @Override
@@ -970,9 +974,9 @@ public class GoogleMapFragment extends MapViewModelMapFragment implements
         private final PolygonDescription polygonDescription;
         private Polygon polygon;
 
-        DynamicPolygonFeature(Context context, PolygonDescription polygonDescription, GoogleMap map) {
-            this.polygonDescription = polygonDescription;
+        DynamicPolygonFeature(GoogleMap map, PolygonDescription polygonDescription) {
             this.map = map;
+            this.polygonDescription = polygonDescription;
 
             if (map == null) {  // during Robolectric tests, map will be null
                 return;
