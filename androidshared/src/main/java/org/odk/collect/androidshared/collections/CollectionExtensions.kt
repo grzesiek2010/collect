@@ -1,4 +1,4 @@
-package org.odk.collect.shared.collections
+package org.odk.collect.androidshared.collections
 
 import org.json.JSONArray
 import kotlin.math.abs

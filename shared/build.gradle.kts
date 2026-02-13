@@ -12,8 +12,9 @@ java {
 
 dependencies {
     implementation(libs.kotlinStdlib)
-    implementation(libs.emojiJava)
-
+    implementation(libs.emojiJava) {
+        exclude(group = "org.json", module = "json")
+    }
     testImplementation(libs.junit)
     testImplementation(libs.hamcrest)
     testImplementation(libs.mockitoKotlin)

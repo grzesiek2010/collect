@@ -1,13 +1,13 @@
 package org.odk.collect.settings.importing
 
 import org.json.JSONObject
+import org.odk.collect.androidshared.collections.CollectionExtensions.has
 import org.odk.collect.projects.Project
 import org.odk.collect.projects.ProjectConfigurationResult
 import org.odk.collect.projects.ProjectsRepository
 import org.odk.collect.settings.SettingsProvider
 import org.odk.collect.settings.keys.AppConfigurationKeys
 import org.odk.collect.settings.keys.ProjectKeys
-import org.odk.collect.shared.collections.CollectionExtensions.has
 import org.odk.collect.shared.settings.Settings
 
 internal class SettingsImporter(

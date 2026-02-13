@@ -1,8 +1,8 @@
 package org.odk.collect.settings.importing
 
+import org.odk.collect.androidshared.collections.CollectionExtensions.itemFromHashOf
 import org.odk.collect.projects.Project
 import org.odk.collect.settings.keys.ProjectKeys
-import org.odk.collect.shared.collections.CollectionExtensions.itemFromHashOf
 import org.odk.collect.shared.strings.StringUtils
 import java.net.URL
 import java.util.regex.Pattern

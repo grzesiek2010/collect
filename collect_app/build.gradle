@@ -145,6 +145,8 @@ android {
 
         debug {
             debuggable(true)
+            minifyEnabled(true)
+            proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.txt'
             resValue("string", "GOOGLE_MAPS_API_KEY", googleMapsApiKey)
             resValue("string", "mapbox_access_token", mapboxAccessToken)
             buildConfigField("String", "ENTITIES_FILTER_PROJECT_URL", "\"$entitiesFilterProjectUrl\"")

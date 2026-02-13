@@ -6,8 +6,8 @@ import com.networknt.schema.SchemaRegistry
 import com.networknt.schema.dialect.Dialects
 import com.networknt.schema.keyword.KeywordType
 import org.json.JSONObject
+import org.odk.collect.androidshared.collections.CollectionExtensions.has
 import org.odk.collect.settings.importing.SettingsValidator
-import org.odk.collect.shared.collections.CollectionExtensions.has
 import tools.jackson.core.exc.StreamReadException
 import tools.jackson.databind.ObjectMapper
 import java.io.InputStream
