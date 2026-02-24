@@ -27,6 +27,7 @@ fun HorizontalRangeSlider(
     enabled: Boolean,
     startLabel: String,
     endLabel: String,
+    labels: List<String>,
     onValueChanging: (Boolean) -> Unit,
     onValueChange: (Float) -> Unit,
     onValueChangeFinished: () -> Unit
@@ -61,32 +62,24 @@ fun HorizontalRangeSlider(
             enabled = enabled
         )
 
-        HorizontalEdgeLabels(startLabel, endLabel)
+        HorizontalTickLabels(labels)
     }
 }
 
 @Composable
-private fun HorizontalEdgeLabels(labelStart: String, labelEnd: String) {
-    val sliderStartLabelContentDescription = stringResource(org.odk.collect.strings.R.string.slider_start_label)
-    val sliderEndLabelContentDescription = stringResource(org.odk.collect.strings.R.string.slider_end_label)
-
+private fun HorizontalTickLabels(labels: List<String>) {
     Row(
         modifier = Modifier.fillMaxWidth(),
         horizontalArrangement = Arrangement.SpaceBetween
     ) {
-        Text(
-            text = labelStart,
-            modifier = Modifier.semantics {
-                contentDescription = sliderStartLabelContentDescription
-            },
-            style = MaterialTheme.typography.titleLarge
-        )
-        Text(
-            text = labelEnd,
-            modifier = Modifier.semantics {
-                contentDescription = sliderEndLabelContentDescription
-            },
-            style = MaterialTheme.typography.titleLarge
-        )
+        labels.forEach { label ->
+            Text(
+                text = label
+                    .trim()
+                    .split(Regex("\\s+"))
+                    .joinToString("\n"),
+                style = MaterialTheme.typography.bodyMedium
+            )
+        }
     }
 }

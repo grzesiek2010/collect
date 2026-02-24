@@ -17,6 +17,7 @@ data class RangeSliderState(
     val rangeEnd: Float,
     val step: Float,
     val numOfSteps: Int,
+    val labels: List<String>,
     val isDiscrete: Boolean,
     val isHorizontal: Boolean,
     val isValid: Boolean,
@@ -60,6 +61,7 @@ data class RangeSliderState(
             val start = rangeQuestion.rangeStart.toFloat()
             val end = rangeQuestion.rangeEnd.toFloat()
             val step = rangeQuestion.rangeStep.toFloat().absoluteValue
+            val labels = getLabels(prompt, start, end)
             val sanitizedAppearance = Appearances.getSanitizedAppearanceHint(prompt)
             val isHorizontal = !sanitizedAppearance.contains(Appearances.VERTICAL)
             val isDiscrete = prompt.dataType == DATATYPE_INTEGER
@@ -89,6 +91,7 @@ data class RangeSliderState(
                 rangeEnd = end,
                 step = step,
                 numOfSteps = numOfSteps,
+                labels = labels,
                 isDiscrete = isDiscrete,
                 isHorizontal = isHorizontal,
                 isValid = isValid,
@@ -109,6 +112,16 @@ data class RangeSliderState(
             val nearestInteger = round(quotient)
             val epsilon = 1e-6f
             return abs(quotient - nearestInteger) < epsilon
+        }
+
+        private fun getLabels(prompt: FormEntryPrompt, start: Float, end: Float): List<String> {
+            return prompt.selectChoices
+                ?.sortedBy { it.value.toFloatOrNull() }
+                ?.let { sorted ->
+                    if (start <= end) sorted else sorted.reversed()
+                }
+                ?.map { prompt.getSelectChoiceText(it) }
+                ?: emptyList()
         }
     }
 }

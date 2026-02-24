@@ -15,6 +15,7 @@ fun RangeSlider(
     horizontal: Boolean,
     startLabel: String,
     endLabel: String,
+    labels: List<String>,
     onValueChanging: (Boolean) -> Unit,
     onValueChange: (Float) -> Unit,
     onValueChangeFinished: () -> Unit,
@@ -36,6 +37,7 @@ fun RangeSlider(
                 enabled = enabled,
                 startLabel = startLabel,
                 endLabel = endLabel,
+                labels = labels,
                 onValueChanging = onValueChanging,
                 onValueChange = onValueChange,
                 onValueChangeFinished = onValueChangeFinished
