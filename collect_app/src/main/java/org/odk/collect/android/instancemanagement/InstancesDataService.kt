@@ -10,6 +10,7 @@ import org.odk.collect.android.formmanagement.CollectFormEntryControllerFactory
 import org.odk.collect.android.instancemanagement.autosend.FormAutoSendMode
 import org.odk.collect.android.instancemanagement.autosend.InstanceAutoSendFetcher
 import org.odk.collect.android.instancemanagement.autosend.getAutoSendMode
+import org.odk.collect.android.instancemanagement.send.UploadResult
 import org.odk.collect.android.notifications.Notifier
 import org.odk.collect.android.projects.ProjectDependencyModule
 import org.odk.collect.android.state.DataKeys
@@ -212,7 +213,24 @@ class InstancesDataService(
         }
     }
 
-    fun sendInstances(projectId: String, formAutoSend: Boolean = false): Boolean {
+    fun sendInstance(projectId: String, instance: Instance, overrideURL: String?): String? {
+        val projectDependencyModule =
+            projectDependencyModuleFactory.create(projectId)
+
+        val instanceSubmitter = InstanceSubmitter(
+            projectDependencyModule.formsRepository,
+            projectDependencyModule.generalSettings,
+            propertyManager,
+            httpInterface,
+            projectDependencyModule.instancesRepository
+        )
+
+        val result = instanceSubmitter.submitInstances(listOf(instance), overrideURL)
+
+        return (result[instance] as UploadResult.Success).message
+    }
+
+    fun sendInstances(projectId: String, instances: List<Instance>): Boolean {
         val projectDependencyModule =
             projectDependencyModuleFactory.create(projectId)
 
@@ -226,14 +244,8 @@ class InstancesDataService(
 
         return projectDependencyModule.instancesLock.withLock { acquiredLock: Boolean ->
             if (acquiredLock) {
-                val toUpload = InstanceAutoSendFetcher.getInstancesToAutoSend(
-                    projectDependencyModule.instancesRepository,
-                    projectDependencyModule.formsRepository,
-                    formAutoSend
-                )
-
-                if (toUpload.isNotEmpty()) {
-                    val results = instanceSubmitter.submitInstances(toUpload)
+                if (instances.isNotEmpty()) {
+                    val results = instanceSubmitter.submitInstances(instances)
                     notifier.onSubmission(results, projectDependencyModule.projectId)
                     update(projectId)
 
@@ -245,6 +257,19 @@ class InstancesDataService(
                 false
             }
         }
+    }
+
+    fun autosendInstances(projectId: String, formAutoSend: Boolean = false) {
+        val projectDependencyModule =
+            projectDependencyModuleFactory.create(projectId)
+
+        val toUpload = InstanceAutoSendFetcher.getInstancesToAutoSend(
+            projectDependencyModule.instancesRepository,
+            projectDependencyModule.formsRepository,
+            formAutoSend
+        )
+
+        sendInstances(projectId, toUpload)
     }
 
     fun instanceFinalized(projectId: String, form: Form) {

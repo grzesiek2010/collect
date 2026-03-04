@@ -5,6 +5,7 @@ import org.odk.collect.android.analytics.AnalyticsEvents
 import org.odk.collect.android.application.Collect
 import org.odk.collect.android.instancemanagement.send.FormUploadException
 import org.odk.collect.android.instancemanagement.send.ServerInstanceUploader
+import org.odk.collect.android.instancemanagement.send.UploadResult
 import org.odk.collect.android.utilities.FormsRepositoryProvider
 import org.odk.collect.android.utilities.InstanceAutoDeleteChecker
 import org.odk.collect.android.utilities.InstancesRepositoryProvider
@@ -27,22 +28,22 @@ class InstanceSubmitter(
     private val instancesRepository: InstancesRepository
 ) {
 
-    fun submitInstances(toUpload: List<Instance>): Map<Instance, FormUploadException?> {
-        val result = mutableMapOf<Instance, FormUploadException?>()
+    fun submitInstances(toUpload: List<Instance>, overrideURL: String? = null): Map<Instance, UploadResult> {
+        val result = mutableMapOf<Instance, UploadResult>()
         val deviceId = propertyManager.getSingularProperty(PROPMGR_DEVICE_ID)
 
         val uploader = setUpODKUploader()
 
         for (instance in toUpload.sortedBy { it.finalizationDate }) {
             try {
-                uploader.uploadOneSubmission(instance, deviceId, null)
-                result[instance] = null
+                val message = uploader.uploadOneSubmission(instance, deviceId, overrideURL)
+                result[instance] = UploadResult.Success(message)
 
                 deleteInstance(instance)
                 logUploadedForm(formsRepository, instance)
             } catch (e: FormUploadException) {
                 Timber.d(e)
-                result[instance] = e
+                result[instance] = UploadResult.Error(e)
             }
         }
         return result
@@ -76,4 +77,5 @@ class InstanceSubmitter(
 
         Analytics.log(AnalyticsEvents.SUBMISSION, "HTTP auto", value)
     }
+
 }

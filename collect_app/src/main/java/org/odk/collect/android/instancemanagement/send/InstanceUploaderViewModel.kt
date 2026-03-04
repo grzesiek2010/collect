@@ -26,7 +26,6 @@ import org.odk.collect.settings.keys.ProjectKeys
 
 class InstanceUploadViewModel(
     private val dispatcher: CoroutineDispatcher,
-    private val instanceUploader: InstanceUploader,
     private val instanceDeleter: InstanceDeleter,
     private val webCredentialsUtils: WebCredentialsUtils,
     private val propertyManager: PropertyManager,
@@ -63,7 +62,6 @@ class InstanceUploadViewModel(
 
         uploadJob = viewModelScope.launch(dispatcher) {
             val instancesToUpload = getInstancesToUpload(instanceIdsToUpload)
-            val deviceId = propertyManager.getSingularProperty(PropertyManager.PROPMGR_DEVICE_ID)
             val results = mutableMapOf<String, String>()
 
             try {
@@ -75,12 +73,13 @@ class InstanceUploadViewModel(
                         Analytics.log(
                             AnalyticsEvents.INSTANCE_UPLOAD_CUSTOM_SERVER,
                             "label",
-                            referrer ?: ""
+                            referrer
                         )
                     }
 
                     try {
-                        results[instance.dbId.toString()] = uploadInstance(instance, deviceId)
+                        val message = instancesDataService.sendInstance(projectId, instance, externalUrl) ?: defaultSuccessMessage
+                        results[instance.dbId.toString()] = message
 
                         Analytics.log(
                             SUBMISSION,
@@ -141,13 +140,6 @@ class InstanceUploadViewModel(
         instanceIds
             .mapNotNull { instancesRepository.get(it) }
             .sortedBy { it.finalizationDate }
-
-    private fun uploadInstance(instance: Instance, deviceId: String): String {
-        val message = instanceUploader.uploadOneSubmission(instance, deviceId, externalUrl)
-            ?: defaultSuccessMessage
-
-        return message
-    }
 
     // Delete instances that were successfully sent and that need to be deleted
     // either because app-level auto-delete is enabled or because the form

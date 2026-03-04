@@ -44,7 +44,6 @@ import org.odk.collect.forms.FormsRepository;
 import org.odk.collect.forms.instances.InstancesRepository;
 import org.odk.collect.metadata.PropertyManager;
 import org.odk.collect.openrosa.http.OpenRosaConstants;
-import org.odk.collect.openrosa.http.OpenRosaHttpInterface;
 import org.odk.collect.settings.SettingsProvider;
 import org.odk.collect.strings.localization.LocalizedActivity;
 
@@ -74,9 +73,6 @@ public class InstanceUploaderActivity extends LocalizedActivity implements AuthD
     // maintain a list of what we've yet to send, in case we're interrupted by auth requests
     private Long[] instancesToSend;
     private boolean isInstanceStateSaved;
-
-    @Inject
-    OpenRosaHttpInterface httpInterface;
 
     @Inject
     WebCredentialsUtils webCredentialsUtils;
@@ -180,7 +176,6 @@ public class InstanceUploaderActivity extends LocalizedActivity implements AuthD
                         if (modelClass.isAssignableFrom(InstanceUploadViewModel.class)) {
                             return (T) new InstanceUploadViewModel(
                                     Dispatchers.getIO(),
-                                    new ServerInstanceUploader(httpInterface, webCredentialsUtils, settingsProvider.getUnprotectedSettings(), instancesRepository),
                                     new InstanceDeleter(instancesRepository, formsRepository),
                                     webCredentialsUtils,
                                     propertyManager,

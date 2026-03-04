@@ -4,7 +4,7 @@ import android.app.Application
 import android.app.Notification
 import androidx.core.app.NotificationCompat
 import org.odk.collect.android.R
-import org.odk.collect.android.instancemanagement.send.FormUploadException
+import org.odk.collect.android.instancemanagement.send.UploadResult
 import org.odk.collect.android.notifications.NotificationManagerNotifier
 import org.odk.collect.android.notifications.NotificationUtils
 import org.odk.collect.android.utilities.FormsUploadResultInterpreter
@@ -15,7 +15,7 @@ object FormsSubmissionNotificationBuilder {
 
     fun build(
         application: Application,
-        result: Map<Instance, FormUploadException?>,
+        result: Map<Instance, UploadResult>,
         projectName: String,
         notificationId: Int
     ): Notification {
@@ -57,7 +57,7 @@ object FormsSubmissionNotificationBuilder {
         }
     }
 
-    private fun getMessage(application: Application, allFormsUploadedSuccessfully: Boolean, result: Map<Instance, FormUploadException?>): String {
+    private fun getMessage(application: Application, allFormsUploadedSuccessfully: Boolean, result: Map<Instance, UploadResult>): String {
         return if (allFormsUploadedSuccessfully) {
             application.getLocalizedString(org.odk.collect.strings.R.string.all_uploads_succeeded)
         } else {
