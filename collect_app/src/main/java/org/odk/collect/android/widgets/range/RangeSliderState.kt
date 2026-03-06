@@ -86,7 +86,7 @@ data class RangeSliderState(
             end: BigDecimal,
             step: BigDecimal
         ): BigDecimal? {
-            if (value == null || start.compareTo(end) == 0) return null
+            if (value == null || start.compareTo(end) == 0 || value !in start..end) return null
 
             val nearestStepValue = roundToStep(value, start, step)
             val stepWithinRange = (nearestStepValue - start).abs()
