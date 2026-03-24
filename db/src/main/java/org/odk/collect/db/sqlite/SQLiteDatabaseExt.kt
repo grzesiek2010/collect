@@ -47,13 +47,13 @@ object SQLiteDatabaseExt {
         if (default != null) {
             this.execSQL(
                 """
-                ALTER TABLE $table ADD $column $type DEFAULT $default;
+                ALTER TABLE "$table" ADD "$column" $type DEFAULT $default;
                 """.trimIndent()
             )
         } else {
             this.execSQL(
                 """
-                ALTER TABLE $table ADD $column $type;
+                ALTER TABLE "$table" ADD "$column" $type;
                 """.trimIndent()
             )
         }
