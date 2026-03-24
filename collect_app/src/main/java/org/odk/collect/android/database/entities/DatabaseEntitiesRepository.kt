@@ -19,8 +19,11 @@ import org.odk.collect.db.sqlite.RowNumbers.invalidateRowNumbers
 import org.odk.collect.db.sqlite.RowNumbers.rawQueryWithRowNumber
 import org.odk.collect.db.sqlite.SQLiteColumns.ROW_NUMBER
 import org.odk.collect.db.sqlite.SQLiteDatabaseExt.addColumn
+import org.odk.collect.db.sqlite.SQLiteDatabaseExt.copyTableContent
+import org.odk.collect.db.sqlite.SQLiteDatabaseExt.dropTable
 import org.odk.collect.db.sqlite.SQLiteDatabaseExt.getColumnNames
 import org.odk.collect.db.sqlite.SQLiteDatabaseExt.query
+import org.odk.collect.db.sqlite.SQLiteDatabaseExt.renameTable
 import org.odk.collect.db.sqlite.SynchronizedDatabaseConnection
 import org.odk.collect.db.sqlite.toSql
 import org.odk.collect.entities.javarosa.parse.EntitySchema
@@ -356,9 +359,9 @@ class DatabaseEntitiesRepository(context: Context, dbPath: String, private val c
 
             val columnList = remainingColumns.joinToString { "\"$it\"" }
             databaseConnection.resetTransaction {
-                execSQL("""INSERT INTO "$tempTable" SELECT $columnList FROM "$list";""")
-                execSQL("""DROP TABLE "$list";""")
-                execSQL("""ALTER TABLE "$tempTable" RENAME TO "$list";""")
+                copyTableContent(tempTable, list, columnList)
+                dropTable(list)
+                renameTable(tempTable, list)
             }
         }
     }
@@ -366,11 +369,7 @@ class DatabaseEntitiesRepository(context: Context, dbPath: String, private val c
     private fun addPropertyColumns(list: String, columns: List<String>) {
         databaseConnection.resetTransaction {
             columns.forEach {
-                execSQL(
-                    """
-                    ALTER TABLE "$list" ADD "$it" text NOT NULL DEFAULT "";
-                    """.trimIndent()
-                )
+                addColumn(list, it, "text NOT NULL", default = "''")
             }
         }
     }
