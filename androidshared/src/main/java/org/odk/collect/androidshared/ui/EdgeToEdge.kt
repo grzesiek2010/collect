@@ -46,13 +46,14 @@ object EdgeToEdge {
 
     private fun View.addSystemBarInsetMargins() {
         ViewCompat.setOnApplyWindowInsetsListener(this) { v, windowInsets ->
-            val insets = windowInsets.getInsets(WindowInsetsCompat.Type.systemBars())
-            v.updateLayoutParams<ViewGroup.MarginLayoutParams> {
-                topMargin = insets.top
-                bottomMargin = insets.bottom
+            val systemBarsInsets = windowInsets.getInsets(WindowInsetsCompat.Type.systemBars())
+            val keyboardInsets = windowInsets.getInsets(WindowInsetsCompat.Type.ime())
 
-                leftMargin = insets.left
-                rightMargin = insets.right
+            v.updateLayoutParams<ViewGroup.MarginLayoutParams> {
+                topMargin = systemBarsInsets.top
+                leftMargin = systemBarsInsets.left
+                rightMargin = systemBarsInsets.right
+                bottomMargin = maxOf(systemBarsInsets.bottom, keyboardInsets.bottom)
             }
 
             WindowInsetsCompat.CONSUMED
