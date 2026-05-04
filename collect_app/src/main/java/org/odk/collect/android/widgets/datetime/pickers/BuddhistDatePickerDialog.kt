@@ -84,7 +84,7 @@ class BuddhistDatePickerDialog : CustomDatePickerDialog() {
     }
 
     companion object {
-        const val MIN_SUPPORTED_YEAR = 2443 // 1900 in Gregorian calendar
+        const val MIN_SUPPORTED_YEAR = 2343 // 1800 in Gregorian calendar
         const val MAX_SUPPORTED_YEAR = 2643 // 2100 in Gregorian calendar
     }
 }

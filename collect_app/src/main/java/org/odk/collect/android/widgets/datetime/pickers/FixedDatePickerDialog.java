@@ -19,6 +19,8 @@ import org.odk.collect.android.utilities.ThemeUtils;
 import org.odk.collect.android.widgets.utilities.DateTimeWidgetUtils;
 import org.odk.collect.android.widgets.viewmodels.DateTimeViewModel;
 
+import java.util.GregorianCalendar;
+
 public class FixedDatePickerDialog extends DialogFragment {
     private ThemeUtils themeUtils;
     private DateTimeViewModel viewModel;
@@ -50,6 +52,8 @@ public class FixedDatePickerDialog extends DialogFragment {
     public Dialog onCreateDialog(@Nullable Bundle savedInstanceState) {
         DatePickerDialog dialog = new DatePickerDialog(requireActivity(), viewModel.getDialogTheme(), viewModel.getDateSetListener(),
                 viewModel.getLocalDateTime().getYear(), viewModel.getLocalDateTime().getMonthOfYear() - 1, viewModel.getLocalDateTime().getDayOfMonth());
+
+        dialog.getDatePicker().setMinDate(new GregorianCalendar(1800, 0, 1).getTimeInMillis());
 
         if (themeUtils.isSpinnerDatePickerDialogTheme(viewModel.getDialogTheme())) {
             dialog.setTitle(requireContext().getString(org.odk.collect.strings.R.string.select_date));

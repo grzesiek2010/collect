@@ -25,7 +25,7 @@ import java.util.Arrays;
 
 public class IslamicDatePickerDialog extends CustomDatePickerDialog {
 
-    private static final int MIN_SUPPORTED_YEAR = 1318; //1900 in Gregorian calendar
+    private static final int MIN_SUPPORTED_YEAR = 1214; //1800 in Gregorian calendar
     private static final int MAX_SUPPORTED_YEAR = 1524; //2100 in Gregorian calendar
 
     private String[] monthsArray;

@@ -28,7 +28,7 @@ import java.util.Arrays;
  * @author Aurelio Di Pasquale (aurelio.dipasquale@unibas.ch)
  */
 public class EthiopianDatePickerDialog extends CustomDatePickerDialog {
-    private static final int MIN_SUPPORTED_YEAR = 1893; //1900 in Gregorian calendar
+    private static final int MIN_SUPPORTED_YEAR = 1793; //1800 in Gregorian calendar
     private static final int MAX_SUPPORTED_YEAR = 2093; //2100 in Gregorian calendar
 
     private String[] monthsArray;

@@ -26,7 +26,7 @@ import mmcalendar.MyanmarCalendarKernel;
 import mmcalendar.MyanmarDate;
 
 public class MyanmarDatePickerDialog extends CustomDatePickerDialog {
-    private static final int MIN_SUPPORTED_YEAR = 1261; //1900 in Gregorian calendar
+    private static final int MIN_SUPPORTED_YEAR = 1161; //1800 in Gregorian calendar
     private static final int MAX_SUPPORTED_YEAR = 1462; //2100 in Gregorian calendar
 
     @Override

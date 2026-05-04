@@ -24,7 +24,7 @@ import org.odk.collect.android.widgets.datetime.DateTimeUtils;
 import java.util.Arrays;
 
 public class CopticDatePickerDialog extends CustomDatePickerDialog {
-    private static final int MIN_SUPPORTED_YEAR = 1617; //1900 in Gregorian calendar
+    private static final int MIN_SUPPORTED_YEAR = 1517; //1800 in Gregorian calendar
     private static final int MAX_SUPPORTED_YEAR = 1817; //2100 in Gregorian calendar
 
     private String[] monthsArray;

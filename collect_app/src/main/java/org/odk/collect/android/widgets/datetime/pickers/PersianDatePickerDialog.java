@@ -24,7 +24,7 @@ import org.odk.collect.android.widgets.datetime.DateTimeUtils;
 import java.util.Arrays;
 
 public class PersianDatePickerDialog extends CustomDatePickerDialog {
-    private static final int MIN_SUPPORTED_YEAR = 1278; //1900 in Gregorian calendar
+    private static final int MIN_SUPPORTED_YEAR = 1178; //1800 in Gregorian calendar
     private static final int MAX_SUPPORTED_YEAR = 1478; //2100 in Gregorian calendar
 
     private String[] monthsArray;
