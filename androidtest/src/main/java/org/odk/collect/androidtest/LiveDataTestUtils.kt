@@ -42,6 +42,8 @@ fun <T> LiveData<T>.getOrAwaitValue(
     return data as T
 }
 
+
+
 fun <T> LiveData<T>.recordValues(block: (List<T>) -> Unit) {
     val list = mutableListOf<T>()
     val observer = Observer<T> {
