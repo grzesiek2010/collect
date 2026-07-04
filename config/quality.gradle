@@ -52,3 +52,13 @@ apply plugin: "org.jlleitschuh.gradle.ktlint"
 ktlint {
     version = "1.8.0"
 }
+
+//------------------------detekt------------------------//
+
+apply plugin: "dev.detekt"
+
+detekt {
+    config.setFrom(files("$configDir/detekt.yml"))
+    buildUponDefaultConfig = true
+    source.setFrom(files("src/main/java", "src/main/kotlin", "src/test/java", "src/test/kotlin"))
+}

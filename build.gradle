@@ -17,6 +17,7 @@ buildscript {
         classpath libs.firebaseCrashlyticsGradle
         classpath libs.kotlinGradlePlugin
         classpath libs.ktlintGradle
+        classpath libs.detektGradle
         classpath libs.navigationSafeArgsGradlePlugin
         classpath libs.ossLicensesPlugin
     }
@@ -70,7 +71,7 @@ configurations.all {
 }
 
 task checkCode(type: GradleBuild) {
-    tasks = ['pmd', 'ktlintCheck', 'checkstyle', 'lintDebug']
+    tasks = ['pmd', 'ktlintCheck', 'detekt', 'checkstyle', 'lintDebug']
 }
 
 // Create local Maven repo from cached Gradle dependencies

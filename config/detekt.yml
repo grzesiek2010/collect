@@ -1,0 +1,69 @@
+complexity:
+  TooManyFunctions:
+    active: false
+  ComplexCondition:
+    active: false
+  CyclomaticComplexMethod:
+    active: false
+  LargeClass:
+    active: false
+  LongMethod:
+    active: false
+  NestedBlockDepth:
+    active: false
+
+empty-blocks:
+  EmptyDefaultConstructor:
+    active: false
+  EmptyFunctionBlock:
+    active: false
+
+potential-bugs:
+  EqualsWithHashCodeExist:
+    active: false
+
+exceptions:
+  ThrowingExceptionsWithoutMessageOrCause:
+    active: false
+  SwallowedException:
+    active: false
+  TooGenericExceptionCaught:
+    active: false
+  TooGenericExceptionThrown:
+    active: false
+
+style:
+  MagicNumber:
+    active: false
+  MaxLineLength:
+    active: false
+  NewLineAtEndOfFile:
+    active: false
+  ForbiddenComment:
+    active: false
+  MayBeConstant:
+    active: false
+  ExplicitItLambdaParameter:
+    active: false
+  DestructuringDeclarationWithTooManyEntries:
+    active: false
+  FunctionOnlyReturningConstant:
+    active: false
+  LoopWithTooManyJumpStatements:
+    active: false
+  ReturnCount:
+    active: false
+  SerialVersionUIDInSerializableClass:
+    active: false
+  ThrowsCount:
+    active: false
+  UnusedParameter:
+    active: false
+
+naming:
+  FunctionNaming:
+    active: false
+  InvalidPackageDeclaration:
+    active: false
+  MatchingDeclarationName:
+    active: false
