@@ -28,15 +28,20 @@ class ForegroundServiceLocationTracker(private val application: Application) : L
         return application.getState().getFlow(LOCATION_KEY, null)
     }
 
-    override fun start(retainMockAccuracy: Boolean, updateInterval: Long?) {
+    override fun start(retainMockAccuracy: Boolean, updateInterval: Long?, notification: Boolean) {
         val intent = Intent(application, LocationTrackerService::class.java).also { intent ->
             intent.putExtra(LocationTrackerService.EXTRA_RETAIN_MOCK_ACCURACY, retainMockAccuracy)
+            intent.putExtra(LocationTrackerService.EXTRA_NOTIFICATION, notification)
             updateInterval?.let {
                 intent.putExtra(LocationTrackerService.EXTRA_UPDATE_INTERVAL, it)
             }
         }
 
-        application.startForegroundService(intent)
+        if (notification) {
+            application.startForegroundService(intent)
+        } else {
+            application.startService(intent)
+        }
     }
 
     override fun stop() {
@@ -64,11 +69,13 @@ class LocationTrackerService : Service(), LocationClient.LocationClientListener 
     }
 
     override fun onStartCommand(intent: Intent?, flags: Int, startId: Int): Int {
-        setupNotificationChannel()
-        startForeground(
-            uniqueIdGenerator.getInt(NOTIFICATION_IDENTIFIER),
-            createNotification()
-        )
+        if (intent?.getBooleanExtra(EXTRA_NOTIFICATION, true) ?: true) {
+            setupNotificationChannel()
+            startForeground(
+                uniqueIdGenerator.getInt(NOTIFICATION_IDENTIFIER),
+                createNotification()
+            )
+        }
 
         locationClient.setRetainMockAccuracy(
             intent?.getBooleanExtra(
@@ -120,7 +127,12 @@ class LocationTrackerService : Service(), LocationClient.LocationClientListener 
     }
 
     private fun createNotificationIntent() =
-        PendingIntent.getActivity(this, 0, Intent(this, ReturnToAppActivity::class.java), PendingIntent.FLAG_IMMUTABLE)
+        PendingIntent.getActivity(
+            this,
+            0,
+            Intent(this, ReturnToAppActivity::class.java),
+            PendingIntent.FLAG_IMMUTABLE
+        )
 
     private fun setupNotificationChannel() {
         val notificationChannel = NotificationChannel(
@@ -137,6 +149,7 @@ class LocationTrackerService : Service(), LocationClient.LocationClientListener 
     companion object {
         const val EXTRA_RETAIN_MOCK_ACCURACY = "retain_mock_accuracy"
         const val EXTRA_UPDATE_INTERVAL = "update_interval"
+        const val EXTRA_NOTIFICATION = "notification"
 
         private const val NOTIFICATION_IDENTIFIER = "location_tracking"
         private const val NOTIFICATION_CHANNEL = "location_tracking"
