@@ -24,9 +24,31 @@ class OriginalJsonSchemaSettingsValidatorTest {
         }
     }
 
+    /*
+     * Some setting values end up replaced by new values but we need the schema to still
+     * recognize the old values so that we can migrate them correctly.
+     */
+    @Test
+    fun `isValueSupported returns true for values we no longer use`() {
+        val validator = JsonSchemaSettingsValidator {
+            javaClass.getResourceAsStream("/client-settings.schema.json")!!
+        }
+
+        removedValues.forEach {
+            assertThat(
+                validator.isValueSupported(it.first, it.second, it.third),
+                equalTo(true)
+            )
+        }
+    }
+
     private val removedKeys = listOf(
         Pair("admin", "mark_as_finalized"),
         Pair("general", "default_completed"),
         Pair("admin", "finalize")
+    )
+
+    private val removedValues = listOf(
+        Triple("general", "basemap_source", "mapbox")
     )
 }
