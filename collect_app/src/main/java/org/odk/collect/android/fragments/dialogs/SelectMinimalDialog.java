@@ -91,7 +91,7 @@ public abstract class SelectMinimalDialog extends MaterialFullScreenDialogFragme
 
         initRecyclerView();
         initToolbar();
-        applyBottomInsets(view);
+        applyBottomInsets(binding.choicesRecyclerView);
     }
 
     @Override
