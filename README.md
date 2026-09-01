@@ -150,7 +150,7 @@ Certain functions in ODK Collect depend on cloud services that require API keys 
     MAPBOX_ACCESS_TOKEN=pk.eyJk3bumVp4i...
     ```
 
-*Note: Mapbox will not be available as an option in compiled versions of Collect unless you follow the steps above. Mapbox will also not be available on x86 devices as the native libraries are excluded to reduce the APK size. If you need to use an x86 device, you can force the build to include x86 libs by include the `x86Libs` Gradle parameter. For example, to build a debug APK with x86 libs: `./gradlew assembleDebug -Px86Libs`.*
+*Note: The basemaps under "MapLibre SDK" are hosted by Mapbox and will not load in compiled versions of Collect unless you follow the steps above. The "OpenStreetMap", "USGS" and "Carto" sources are also rendered with MapLibre but need no access token. None of the MapLibre based sources are available on x86 devices, as the native library is excluded to reduce the APK size. If you need to use an x86 device, you can force the build to include x86 libs by including the `x86Libs` Gradle parameter. For example, to build a debug APK with x86 libs: `./gradlew assembleDebug -Px86Libs`.*
 
 ## Debugging JavaRosa
 
