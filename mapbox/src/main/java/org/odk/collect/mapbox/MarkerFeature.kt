@@ -67,10 +67,8 @@ class MarkerFeature(
         override fun onAnnotationDragFinished(annotation: com.mapbox.maps.plugin.annotation.Annotation<*>) {
             onAnnotationDrag(annotation)
             if (annotation.id == pointAnnotation.id && featureDragEndListener != null) {
-                /**
-                 * Prevents listener from accidentally interfering with features while Mapbox
-                 * performs updates which can cause a `ConcurrentModificationException`
-                 */
+                // Prevents listener from accidentally interfering with features while Mapbox
+                // performs updates which can cause a `ConcurrentModificationException`
                 Handler(Looper.getMainLooper()).post {
                     featureDragEndListener.onFeature(featureId)
                 }

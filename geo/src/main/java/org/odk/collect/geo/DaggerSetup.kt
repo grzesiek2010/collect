@@ -8,10 +8,10 @@ import dagger.Component
 import dagger.Module
 import dagger.Provides
 import org.odk.collect.async.Scheduler
+import org.odk.collect.geo.geopoint.FindLocationViewModelFactory
 import org.odk.collect.geo.geopoint.GeoPointActivity
 import org.odk.collect.geo.geopoint.GeoPointDialogFragment
 import org.odk.collect.geo.geopoint.GeoPointMapFragment
-import org.odk.collect.geo.geopoint.FindLocationViewModelFactory
 import org.odk.collect.geo.geopoint.LocationTrackerFindLocationViewModel
 import org.odk.collect.geo.geopoly.GeoPolyFragment
 import org.odk.collect.geo.selection.SelectionMapFragment

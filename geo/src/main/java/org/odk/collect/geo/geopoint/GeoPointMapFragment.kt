@@ -98,6 +98,7 @@ class GeoPointMapFragment(
      * no new marker has been placed.
      */
     private var setClear = false
+
     /**
      * While true, the point cannot be moved by dragging or long-pressing.
      */
