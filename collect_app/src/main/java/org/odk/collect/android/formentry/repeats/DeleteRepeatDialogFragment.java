@@ -59,7 +59,7 @@ public class DeleteRepeatDialogFragment extends DialogFragment {
         DialogInterface.OnClickListener quitListener = (dialog, i) -> {
             if (i == BUTTON_POSITIVE) { // yes
                 formController.getAuditEventLogger().logEvent(AuditEvent.AuditEventType.DELETE_REPEAT, true, System.currentTimeMillis());
-                formController.deleteRepeat();
+                formEntryViewModel.deleteRepeat();
                 getParentFragmentManager().setFragmentResult(REQUEST_DELETE_REPEAT, new Bundle());
             }
             alertDialog.cancel();

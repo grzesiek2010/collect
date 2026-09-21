@@ -43,11 +43,10 @@ public class DeleteRepeatDialogFragmentTest {
     private DeleteRepeatDialogFragment dialogFragment;
 
     private final FormController formController = mock(FormController.class, RETURNS_MOCKS);
+    private final FormEntryViewModel formEntryViewModel = mock(FormEntryViewModel.class);
 
     @Before
     public void setup() {
-        FormEntryViewModel formEntryViewModel = mock(FormEntryViewModel.class);
-
         when(formEntryViewModel.getFormController()).thenReturn(formController);
         when(formController.getLastRepeatedGroupName()).thenReturn("blah");
         when(formController.getLastRepeatedGroupRepeatCount()).thenReturn(0);
@@ -119,7 +118,7 @@ public class DeleteRepeatDialogFragmentTest {
 
         dialog.getButton(DialogInterface.BUTTON_POSITIVE).performClick();
         RobolectricHelpers.runLooper();
-        verify(formController).deleteRepeat();
+        verify(formEntryViewModel).deleteRepeat();
     }
 
     private AlertDialog launchDialog() {

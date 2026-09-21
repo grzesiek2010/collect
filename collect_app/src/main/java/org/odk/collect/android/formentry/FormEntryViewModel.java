@@ -164,6 +164,18 @@ public class FormEntryViewModel extends ViewModel implements SelectChoiceLoader 
         updateIndex(false, null);
     }
 
+    public void deleteRepeat() {
+        if (formController == null) {
+            return;
+        }
+
+        try {
+            formController.deleteRepeat();
+        } catch (RuntimeException e) {
+            error.setValue(new FormError.NonFatal(e.getCause() != null ? e.getCause().getMessage() : e.getMessage()));
+        }
+    }
+
     public void cancelRepeatPrompt() {
         if (formController == null) {
             return;
