@@ -310,7 +310,7 @@ public class FormEntryViewModel extends ViewModel implements SelectChoiceLoader 
                     }
                 }
             } catch (JavaRosaException e) {
-                throw new RuntimeException(e);
+                error.postValue(new FormError.NonFatal(e.getMessage()));
             }
         });
     }
