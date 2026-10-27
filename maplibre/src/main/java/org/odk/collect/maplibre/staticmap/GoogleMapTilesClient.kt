@@ -6,6 +6,7 @@ import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 import org.json.JSONArray
 import org.json.JSONObject
+import org.maplibre.android.geometry.LatLngBounds
 import java.net.HttpURLConnection
 import java.net.URL
 import java.util.Locale
@@ -27,6 +28,17 @@ object GoogleMapTilesClient {
                 ?: createSession(apiKey, style)?.also { sessions[style] = it }
 
             withContext(Dispatchers.Main) { callback(session?.token) }
+        }
+    }
+
+    fun getCopyright(apiKey: String, session: String, zoom: Int, bounds: LatLngBounds, callback: (String?) -> Unit) {
+        // Doesn't touch the sessions, so it doesn't have to wait for other requests
+        scope.launch(Dispatchers.IO) {
+            val url = "https://tile.googleapis.com/tile/v1/viewport?session=$session&key=$apiKey&zoom=$zoom" +
+                "&north=${bounds.latitudeNorth}&south=${bounds.latitudeSouth}&east=${bounds.longitudeEast}&west=${bounds.longitudeWest}"
+            val copyright = request(url) { it.optString("copyright").ifBlank { null } }
+
+            withContext(Dispatchers.Main) { callback(copyright) }
         }
     }
 

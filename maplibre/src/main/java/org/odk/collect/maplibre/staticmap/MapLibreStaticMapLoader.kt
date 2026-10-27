@@ -32,6 +32,8 @@ import org.odk.collect.settings.keys.ProjectKeys.BASEMAP_SOURCE_OSM
 import org.odk.collect.shared.injection.Keys
 import java.io.File
 import javax.inject.Inject
+import kotlin.math.log2
+import kotlin.math.max
 
 /**
  * Loads a static image of a map showing a line or a polygon, rendering it off-screen if it isn't cached.
@@ -105,7 +107,13 @@ class MapLibreStaticMapLoader(context: Context) : StaticMapLoader {
             }
 
             if (session != null) {
-                cancelSnapshot = snapshot(googleBasemapStyle(apiKey, session), configuration, cache, trace, width, height, callback)
+                getGoogleCopyright(apiKey, session, trace, width) { copyright ->
+                    if (!cancelled) {
+                        // Not cached without the copyright so that it's requested again next time
+                        val snapshotCache = if (copyright != null) cache else null
+                        cancelSnapshot = snapshot(googleBasemapStyle(apiKey, session, copyright), configuration, snapshotCache, trace, width, height, callback)
+                    }
+                }
             } else {
                 // Not cached so that Google is tried again next time
                 cancelSnapshot = snapshot(fallbackStyle, configuration, null, trace, width, height, callback)
@@ -163,11 +171,7 @@ class MapLibreStaticMapLoader(context: Context) : StaticMapLoader {
             .withPixelRatio(density)
             .withStyleBuilder(buildStyle(basemap, referenceLayer, trace))
             .withLogo(false)
-            .withRegion(
-                LatLngBounds.Builder()
-                    .includes(trace.points.map { LatLng(it.latitude, it.longitude) })
-                    .build()
-            )
+            .withRegion(bounds(trace))
             .withPadding(horizontalPadding, verticalPadding, horizontalPadding, verticalPadding)
     }
 
@@ -187,8 +191,30 @@ class MapLibreStaticMapLoader(context: Context) : StaticMapLoader {
         }
     }
 
-    private fun googleBasemapStyle(apiKey: String, session: String): Style.Builder {
-        return rasterBasemapStyle(GoogleMapTilesClient.getTilesUrl(apiKey, session), null, GOOGLE_MAX_ZOOM)
+    private fun getGoogleCopyright(apiKey: String, session: String, trace: TraceDescription, width: Int, callback: (String?) -> Unit) {
+        val bounds = bounds(trace)
+
+        // Roughly the zoom of Google's 256dp tiles at which the trace fills the map (copyright only changes
+        // every few zoom levels, so it doesn't need to be exact) up to the highest one Google has
+        val density = context.resources.displayMetrics.density
+        val zoom = (log2(360 / max(bounds.longitudeSpan, bounds.latitudeSpan) * width / density / 256).toInt() - 1)
+            .coerceIn(0, GOOGLE_MAX_ZOOM.toInt())
+
+        GoogleMapTilesClient.getCopyright(apiKey, session, zoom, bounds, callback)
+    }
+
+    private fun bounds(trace: TraceDescription): LatLngBounds {
+        return LatLngBounds.Builder()
+            .includes(trace.points.map { LatLng(it.latitude, it.longitude) })
+            .build()
+    }
+
+    private fun googleBasemapStyle(apiKey: String, session: String, copyright: String?): Style.Builder {
+        // MapLibre only shows attributions that are links
+        val attribution = listOfNotNull("Google Maps", copyright)
+            .joinToString(" ") { "<a href=\"https://www.google.com/maps\">$it</a>" }
+
+        return rasterBasemapStyle(GoogleMapTilesClient.getTilesUrl(apiKey, session), attribution, GOOGLE_MAX_ZOOM)
             .fromUri("asset://maplibre_empty_style.json")
     }
 
