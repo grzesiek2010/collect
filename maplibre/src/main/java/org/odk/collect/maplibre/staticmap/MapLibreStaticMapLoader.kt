@@ -64,7 +64,7 @@ class MapLibreStaticMapLoader(context: Context) : StaticMapLoader {
         }
 
         val basemapConfiguration = when (configuration.basemapSource) {
-            // Google Maps can't render off-screen, so its previews use OpenStreetMap instead
+            // Without Google tiles (no API key or no session) Google previews use OpenStreetMap instead
             BASEMAP_SOURCE_GOOGLE -> Configurations.all.getValue(BASEMAP_SOURCE_OSM)
             else -> Configurations.all[configuration.basemapSource]
         }
@@ -76,12 +76,61 @@ class MapLibreStaticMapLoader(context: Context) : StaticMapLoader {
 
         MapLibreSupport.initialize(context)
 
-        val style = basemapStyle(basemapConfiguration, configuration.basemapStyle, keys)
+        val fallbackStyle = basemapStyle(basemapConfiguration, configuration.basemapStyle, keys)
 
+        val googleApiKey = keys.get("google")
+        return if (configuration.basemapSource == BASEMAP_SOURCE_GOOGLE && !googleApiKey.isNullOrBlank()) {
+            snapshotWithGoogleTiles(googleApiKey, fallbackStyle, configuration, cache, trace, width, height, callback)
+        } else {
+            snapshot(fallbackStyle, configuration, cache, trace, width, height, callback)
+        }
+    }
+
+    private fun snapshotWithGoogleTiles(
+        apiKey: String,
+        fallbackStyle: Style.Builder,
+        configuration: StaticMapConfiguration,
+        cache: StaticMapCache,
+        trace: TraceDescription,
+        width: Int,
+        height: Int,
+        callback: (Bitmap?) -> Unit
+    ): () -> Unit {
+        var cancelled = false
+        var cancelSnapshot: () -> Unit = {}
+
+        GoogleMapTilesClient.getSession(apiKey, configuration.basemapStyle) { session ->
+            if (cancelled) {
+                return@getSession
+            }
+
+            if (session != null) {
+                cancelSnapshot = snapshot(googleBasemapStyle(apiKey, session), configuration, cache, trace, width, height, callback)
+            } else {
+                // Not cached so that Google is tried again next time
+                cancelSnapshot = snapshot(fallbackStyle, configuration, null, trace, width, height, callback)
+            }
+        }
+
+        return {
+            cancelled = true
+            cancelSnapshot()
+        }
+    }
+
+    private fun snapshot(
+        style: Style.Builder,
+        configuration: StaticMapConfiguration,
+        cache: StaticMapCache?,
+        trace: TraceDescription,
+        width: Int,
+        height: Int,
+        callback: (Bitmap?) -> Unit
+    ): () -> Unit {
         var snapshotter = MapSnapshotter(context, snapshotOptions(context, style, configuration.referenceLayer, trace, width, height))
         snapshotter.start(
             {
-                cache.put(configuration, trace, width, height, it.bitmap)
+                cache?.put(configuration, trace, width, height, it.bitmap)
                 callback(it.bitmap)
             },
             {
@@ -138,6 +187,11 @@ class MapLibreStaticMapLoader(context: Context) : StaticMapLoader {
         }
     }
 
+    private fun googleBasemapStyle(apiKey: String, session: String): Style.Builder {
+        return rasterBasemapStyle(GoogleMapTilesClient.getTilesUrl(apiKey, session), null, GOOGLE_MAX_ZOOM)
+            .fromUri("asset://maplibre_empty_style.json")
+    }
+
     private fun blankBasemap(): Style.Builder {
         return Style.Builder()
             .fromUri("asset://maplibre_empty_style.json")
@@ -185,5 +239,8 @@ class MapLibreStaticMapLoader(context: Context) : StaticMapLoader {
     private companion object {
         // Shared by all loaders so that widgets, which are recreated often, don't each start a server
         val referenceLayersServer = ReferenceLayersServer()
+
+        // Google often has no satellite tiles above this zoom level and responds with HTTP 404 for them
+        const val GOOGLE_MAX_ZOOM = 21f
     }
 }
