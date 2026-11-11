@@ -48,7 +48,7 @@ class ExImageWidget(
 
         return ComposeView(context).apply {
             setContextThemedContent(ViewCompositionStrategy.DisposeOnDetachedFromWindowOrReleasedFromPool) {
-                ExImageWidgetContent(
+                ExWidgetContent(
                     dependencies.mediaWidgetAnswerViewModel,
                     formEntryPrompt,
                     binaryName,

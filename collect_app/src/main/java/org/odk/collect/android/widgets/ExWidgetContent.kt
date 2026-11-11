@@ -12,7 +12,7 @@ import org.odk.collect.androidshared.ui.compose.marginStandard
 import org.odk.collect.strings.R.string
 
 @Composable
-fun ExImageWidgetContent(
+fun ExWidgetContent(
     mediaWidgetAnswerViewModel: MediaWidgetAnswerViewModel,
     formEntryPrompt: FormEntryPrompt,
     answer: String?,
