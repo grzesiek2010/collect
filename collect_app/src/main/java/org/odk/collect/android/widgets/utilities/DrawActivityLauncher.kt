@@ -28,7 +28,8 @@ class DrawActivityLauncher(
         drawOption: String,
         binaryName: String?,
         requestCode: Int,
-        errorStringResource: Int
+        errorStringResource: Int,
+        screenOrientation: Int? = null
     ) {
         if (!MultiClickGuard.allowClick(javaClass.name)) {
             return
@@ -41,6 +42,9 @@ class DrawActivityLauncher(
                 putExtra(DrawActivity.REF_IMAGE, Uri.fromFile(file))
             }
             putExtra(DrawActivity.EXTRA_OUTPUT, Uri.fromFile(File(tmpImageFilePath)))
+            if (screenOrientation != null) {
+                putExtra(DrawActivity.SCREEN_ORIENTATION, screenOrientation)
+            }
         }
 
         try {
@@ -56,7 +60,7 @@ class DrawActivityLauncher(
         }
     }
 
-    private fun getAnswerOrDefaultImageFile(binaryName: String?): File? {
+    fun getAnswerOrDefaultImageFile(binaryName: String?): File? {
         if (binaryName == null) {
             return null
         }

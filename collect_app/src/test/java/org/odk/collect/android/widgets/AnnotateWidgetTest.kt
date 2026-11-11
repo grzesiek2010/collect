@@ -24,7 +24,7 @@ import org.odk.collect.android.support.CollectHelpers
 import org.odk.collect.android.support.CollectHelpers.overrideReferenceManager
 import org.odk.collect.android.support.CollectHelpers.setupFakeReferenceManager
 import org.odk.collect.android.support.MockFormEntryPromptBuilder
-import org.odk.collect.android.widgets.base.FileWidgetTest
+import org.odk.collect.android.widgets.base.BinaryWidgetTest
 import org.odk.collect.android.widgets.support.FakeQuestionMediaManager
 import org.odk.collect.android.widgets.support.FakeWaitingForDataRegistry
 import org.odk.collect.android.widgets.support.SynchronousImageLoader
@@ -36,22 +36,21 @@ import org.robolectric.shadows.ShadowBitmapFactory
 import org.robolectric.shadows.ShadowToast
 import java.io.File
 
-class AnnotateWidgetTest : FileWidgetTest<AnnotateWidget>() {
+class AnnotateWidgetTest : BinaryWidgetTest<AnnotateWidget, StringData>() {
     private var currentFile: File? = null
-    private lateinit var questionMediaManager: FakeQuestionMediaManager
+    private val questionMediaManager = object : FakeQuestionMediaManager() {
+        override fun getAnswerFile(fileName: String?): File? {
+            return if (currentFile == null) {
+                super.getAnswerFile(fileName)
+            } else {
+                if (fileName == DrawWidgetTest.USER_SPECIFIED_IMAGE_ANSWER) currentFile else null
+            }
+        }
+    }
 
     private val file = TempFiles.createTempFile("sample", ".jpg")
 
     override fun createWidget(): AnnotateWidget {
-        questionMediaManager = object : FakeQuestionMediaManager() {
-            override fun getAnswerFile(fileName: String?): File? {
-                return if (currentFile == null) {
-                    super.getAnswerFile(fileName)
-                } else {
-                    if (fileName == DrawWidgetTest.USER_SPECIFIED_IMAGE_ANSWER) currentFile else null
-                }
-            }
-        }
         return AnnotateWidget(
             activity,
             QuestionDetails(formEntryPrompt, readOnlyOverride),
@@ -68,6 +67,24 @@ class AnnotateWidgetTest : FileWidgetTest<AnnotateWidget>() {
 
     override fun createBinaryData(answerData: StringData): Any {
         return file
+    }
+
+    @Test
+    fun `setting a new answer removes the old file and keeps the new one`() {
+        super.settingANewAnswerShouldRemoveTheOldAnswer()
+
+        val promptIndex = formEntryPrompt.index.toString()
+        assertThat(questionMediaManager.originalFiles[promptIndex], equalTo(formEntryPrompt.answerText))
+        assertThat(questionMediaManager.recentFiles[promptIndex], notNullValue())
+    }
+
+    @Test
+    fun `clearing the answer removes the existing answer and its file`() {
+        super.callingClearShouldRemoveTheExistingAnswer()
+
+        val promptIndex = formEntryPrompt.index.toString()
+        assertThat(questionMediaManager.originalFiles[promptIndex], equalTo(formEntryPrompt.answerText))
+        assertThat(questionMediaManager.recentFiles[promptIndex], equalTo(null))
     }
 
     @Test
@@ -133,10 +150,10 @@ class AnnotateWidgetTest : FileWidgetTest<AnnotateWidget>() {
     fun `the image and error message are hidden when there is no answer`() {
         val widget = createWidget()
 
-        assertThat(widget.imageView.visibility, `is`(View.GONE))
-        assertThat(widget.imageView.drawable, nullValue())
+        assertThat(widget.binding.image.visibility, `is`(View.GONE))
+        assertThat(widget.binding.image.drawable, nullValue())
 
-        assertThat(widget.errorTextView.visibility, `is`(View.GONE))
+        assertThat(widget.binding.errorMessage.visibility, `is`(View.GONE))
     }
 
     @Test
@@ -147,8 +164,8 @@ class AnnotateWidgetTest : FileWidgetTest<AnnotateWidget>() {
         questionMediaManager.addAnswerFile(file)
         widget.setData(file)
 
-        assertThat(widget.imageView.visibility, `is`(View.GONE))
-        assertThat(widget.imageView.drawable, nullValue())
+        assertThat(widget.binding.image.visibility, `is`(View.GONE))
+        assertThat(widget.binding.image.drawable, nullValue())
 
         assertThat(ShadowToast.getTextOfLatestToast(), `is`("Gif files are not supported"))
     }
@@ -170,10 +187,10 @@ class AnnotateWidgetTest : FileWidgetTest<AnnotateWidget>() {
 
         val widget = createWidget()
 
-        assertThat(widget.imageView.visibility, `is`(View.GONE))
-        assertThat(widget.imageView.drawable, nullValue())
+        assertThat(widget.binding.image.visibility, `is`(View.GONE))
+        assertThat(widget.binding.image.drawable, nullValue())
 
-        assertThat(widget.errorTextView.visibility, `is`(View.VISIBLE))
+        assertThat(widget.binding.errorMessage.visibility, `is`(View.VISIBLE))
     }
 
     @Test
@@ -194,10 +211,10 @@ class AnnotateWidgetTest : FileWidgetTest<AnnotateWidget>() {
             .build()
 
         val widget = createWidget()
-        val imageView = widget.imageView
+        val imageView = widget.binding.image
         assertThat(imageView.visibility, `is`(View.GONE))
         assertThat(imageView.drawable, nullValue())
-        assertThat(widget.errorTextView.visibility, `is`(View.GONE))
+        assertThat(widget.binding.errorMessage.visibility, `is`(View.GONE))
         assertThat(widget.binding.annotateButton.isEnabled, `is`(true))
     }
 
@@ -264,7 +281,7 @@ class AnnotateWidgetTest : FileWidgetTest<AnnotateWidget>() {
             .build()
 
         val widget = createWidget()
-        val imageView = widget.imageView
+        val imageView = widget.binding.image
         assertThat(imageView.visibility, `is`(View.VISIBLE))
         val drawable = imageView.drawable
         assertThat(drawable, notNullValue())
