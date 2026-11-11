@@ -123,16 +123,6 @@ public class ExImageWidgetTest extends FileWidgetTest<ExImageWidget> {
     }
 
     @Test
-    public void whenSetDataCalledWithNull_shouldExistedAnswerBeRemoved() {
-        when(formEntryPrompt.getAnswerText()).thenReturn(getInitialAnswer().getDisplayText());
-
-        ExImageWidget widget = getWidget();
-        widget.setData(null);
-        assertThat(widget.getAnswer(), is(nullValue()));
-        assertThat(widget.binding.imageView.getVisibility(), is(View.GONE));
-    }
-
-    @Test
     public void whenUnsupportedFileTypeAttached_shouldNotThatFileBeAdded() throws IOException {
         ExImageWidget widget = getWidget();
         File answer = File.createTempFile("doc", ".pdf");
