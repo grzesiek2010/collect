@@ -2,13 +2,11 @@ package org.odk.collect.android.widgets
 
 import android.annotation.SuppressLint
 import android.app.Activity
-import android.content.ActivityNotFoundException
 import android.content.Context
 import android.content.Intent
 import android.content.pm.ActivityInfo.SCREEN_ORIENTATION_LANDSCAPE
 import android.content.pm.ActivityInfo.SCREEN_ORIENTATION_PORTRAIT
 import android.view.View
-import android.widget.Toast
 import androidx.compose.runtime.remember
 import androidx.compose.ui.platform.ComposeView
 import androidx.compose.ui.platform.ViewCompositionStrategy
@@ -26,6 +24,7 @@ import org.odk.collect.android.widgets.utilities.DrawActivityLauncher
 import org.odk.collect.android.widgets.utilities.ImageCaptureIntentCreator
 import org.odk.collect.android.widgets.utilities.QuestionFontSizeUtils
 import org.odk.collect.android.widgets.utilities.WaitingForDataRegistry
+import org.odk.collect.android.widgets.utilities.launchForResult
 import org.odk.collect.androidshared.bitmap.ImageFileUtils
 import org.odk.collect.androidshared.ui.ComposeThemeProvider.Companion.setContextThemedContent
 import org.odk.collect.androidshared.ui.ToastUtils
@@ -153,16 +152,6 @@ class AnnotateWidget(
     }
 
     private fun launchActivityForResult(intent: Intent, requestCode: Int, errorStringResource: Int) {
-        try {
-            waitingForDataRegistry.waitForData(formEntryPrompt.index)
-            (context as Activity).startActivityForResult(intent, requestCode)
-        } catch (_: ActivityNotFoundException) {
-            Toast.makeText(
-                context,
-                context.getString(R.string.activity_not_found, context.getString(errorStringResource)),
-                Toast.LENGTH_SHORT
-            ).show()
-            waitingForDataRegistry.cancelWaitingForData()
-        }
+        waitingForDataRegistry.launchForResult(context as Activity, formEntryPrompt.index, intent, requestCode, errorStringResource)
     }
 }

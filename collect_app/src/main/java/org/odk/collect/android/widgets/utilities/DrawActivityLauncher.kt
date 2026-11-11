@@ -1,10 +1,8 @@
 package org.odk.collect.android.widgets.utilities
 
 import android.app.Activity
-import android.content.ActivityNotFoundException
 import android.content.Intent
 import android.net.Uri
-import android.widget.Toast
 import org.javarosa.core.model.FormIndex
 import org.javarosa.core.reference.InvalidReferenceException
 import org.javarosa.core.reference.ReferenceManager
@@ -12,7 +10,6 @@ import org.odk.collect.android.utilities.QuestionMediaManager
 import org.odk.collect.android.utilities.getExistingAnswerFile
 import org.odk.collect.androidshared.ui.multiclicksafe.MultiClickGuard
 import org.odk.collect.draw.DrawActivity
-import org.odk.collect.strings.R.string
 import timber.log.Timber
 import java.io.File
 
@@ -47,17 +44,7 @@ class DrawActivityLauncher(
             }
         }
 
-        try {
-            waitingForDataRegistry.waitForData(formIndex)
-            activity.startActivityForResult(intent, requestCode)
-        } catch (_: ActivityNotFoundException) {
-            Toast.makeText(
-                activity,
-                activity.getString(string.activity_not_found, activity.getString(errorStringResource)),
-                Toast.LENGTH_SHORT
-            ).show()
-            waitingForDataRegistry.cancelWaitingForData()
-        }
+        waitingForDataRegistry.launchForResult(activity, formIndex, intent, requestCode, errorStringResource)
     }
 
     fun getAnswerOrDefaultImageFile(binaryName: String?): File? {

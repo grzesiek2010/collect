@@ -2,12 +2,10 @@ package org.odk.collect.android.widgets.video
 
 import android.annotation.SuppressLint
 import android.app.Activity
-import android.content.ActivityNotFoundException
 import android.content.Context
 import android.content.Intent
 import android.provider.MediaStore
 import android.view.View
-import android.widget.Toast
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.setValue
@@ -25,6 +23,7 @@ import org.odk.collect.android.widgets.interfaces.FileWidget
 import org.odk.collect.android.widgets.interfaces.WidgetDataReceiver
 import org.odk.collect.android.widgets.utilities.QuestionFontSizeUtils
 import org.odk.collect.android.widgets.utilities.WaitingForDataRegistry
+import org.odk.collect.android.widgets.utilities.launchForResult
 import org.odk.collect.androidshared.ui.ComposeThemeProvider.Companion.setContextThemedContent
 import org.odk.collect.permissions.PermissionListener
 import org.odk.collect.settings.keys.ProjectKeys
@@ -131,40 +130,12 @@ class VideoWidget(
             intent.putExtra(MediaStore.EXTRA_VIDEO_QUALITY, 1)
         }
 
-        try {
-            waitingForDataRegistry.waitForData(formEntryPrompt.getIndex())
-            (context as Activity).startActivityForResult(intent, requestCode)
-        } catch (_: ActivityNotFoundException) {
-            Toast.makeText(
-                context,
-                context.getString(
-                    R.string.activity_not_found,
-                    context.getString(R.string.capture_video)
-                ), Toast.LENGTH_SHORT
-            ).show()
-            waitingForDataRegistry.cancelWaitingForData()
-        }
+        waitingForDataRegistry.launchForResult(context as Activity, formEntryPrompt.index, intent, requestCode, R.string.capture_video)
     }
 
     private fun chooseVideo() {
         val intent = Intent(Intent.ACTION_GET_CONTENT)
         intent.type = "video/*"
-        try {
-            waitingForDataRegistry.waitForData(formEntryPrompt.getIndex())
-            (context as Activity).startActivityForResult(
-                intent,
-                RequestCodes.VIDEO_CHOOSER
-            )
-        } catch (_: ActivityNotFoundException) {
-            Toast.makeText(
-                context,
-                context.getString(
-                    R.string.activity_not_found,
-                    context.getString(R.string.choose_video)
-                ), Toast.LENGTH_SHORT
-            ).show()
-
-            waitingForDataRegistry.cancelWaitingForData()
-        }
+        waitingForDataRegistry.launchForResult(context as Activity, formEntryPrompt.index, intent, RequestCodes.VIDEO_CHOOSER, R.string.choose_video)
     }
 }
