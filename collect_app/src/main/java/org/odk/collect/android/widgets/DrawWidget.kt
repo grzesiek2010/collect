@@ -4,51 +4,53 @@ import android.annotation.SuppressLint
 import android.app.Activity
 import android.content.Context
 import android.view.View
-import android.widget.ImageView
+import androidx.compose.ui.platform.ComposeView
+import androidx.compose.ui.platform.ViewCompositionStrategy
 import org.javarosa.core.model.data.IAnswerData
 import org.javarosa.form.api.FormEntryPrompt
-import org.odk.collect.android.databinding.DrawWidgetBinding
 import org.odk.collect.android.formentry.questions.QuestionDetails
 import org.odk.collect.android.utilities.ApplicationConstants.RequestCodes
 import org.odk.collect.android.utilities.QuestionMediaManager
-import org.odk.collect.android.utilities.getExistingAnswerFile
 import org.odk.collect.android.widgets.image.FileAnswerDelegate
 import org.odk.collect.android.widgets.interfaces.WidgetDataReceiver
 import org.odk.collect.android.widgets.utilities.DrawActivityLauncher
+import org.odk.collect.android.widgets.utilities.QuestionFontSizeUtils
 import org.odk.collect.android.widgets.utilities.WaitingForDataRegistry
+import org.odk.collect.androidshared.ui.ComposeThemeProvider.Companion.setContextThemedContent
 import org.odk.collect.draw.DrawActivity
-import org.odk.collect.imageloader.GlideImageLoader
 import org.odk.collect.strings.R
 
 @SuppressLint("ViewConstructor")
 class DrawWidget(
     context: Context,
     questionDetails: QuestionDetails,
-    private val questionMediaManager: QuestionMediaManager,
+    questionMediaManager: QuestionMediaManager,
     waitingForDataRegistry: WaitingForDataRegistry,
     tmpImageFilePath: String,
-    dependencies: Dependencies
+    private val dependencies: Dependencies
 ) : QuestionWidget(context, dependencies, questionDetails), WidgetDataReceiver {
-    lateinit var binding: DrawWidgetBinding
-
     private val fileAnswerDelegate = FileAnswerDelegate(this, questionMediaManager, questionDetails.prompt)
     private val drawActivityLauncher = DrawActivityLauncher(questionMediaManager, referenceManager, waitingForDataRegistry, tmpImageFilePath)
 
-    init {
-        render()
-        updateAnswer()
-    }
+    init { render() }
 
     override fun onCreateWidgetView(context: Context, prompt: FormEntryPrompt, answerFontSize: Int): View {
-        binding = DrawWidgetBinding.inflate((context as Activity).layoutInflater)
-        binding.drawButton.setOnClickListener { launchDrawActivity() }
-        binding.image.setOnClickListener { launchDrawActivity() }
+        val readOnly = questionDetails.isReadOnly
+        val buttonFontSize = QuestionFontSizeUtils.getFontSize(settings, QuestionFontSizeUtils.FontSize.BODY_LARGE)
 
-        if (questionDetails.isReadOnly) {
-            binding.drawButton.visibility = View.GONE
+        return ComposeView(context).apply {
+            setContextThemedContent(ViewCompositionStrategy.DisposeOnDetachedFromWindowOrReleasedFromPool) {
+                DrawWidgetContent(
+                    dependencies.mediaWidgetAnswerViewModel,
+                    formEntryPrompt,
+                    fileAnswerDelegate.binaryName,
+                    readOnly,
+                    buttonFontSize,
+                    onDrawClick = { launchDrawActivity() },
+                    onLongClick = { showContextMenu() }
+                )
+            }
         }
-
-        return binding.root
     }
 
     override fun getAnswer(): IAnswerData? {
@@ -57,25 +59,13 @@ class DrawWidget(
 
     override fun clearAnswer() {
         fileAnswerDelegate.deleteFile()
-        binding.image.setImageDrawable(null)
-        updateAnswer()
     }
 
     override fun setData(answer: Any) {
         fileAnswerDelegate.setData(answer)
-        updateAnswer()
     }
 
-    override fun setOnLongClickListener(l: OnLongClickListener?) {
-        binding.drawButton.setOnLongClickListener(l)
-        binding.image.setOnLongClickListener(l)
-    }
-
-    override fun cancelLongPress() {
-        super.cancelLongPress()
-        binding.drawButton.cancelLongPress()
-        binding.image.cancelLongPress()
-    }
+    override fun setOnLongClickListener(listener: OnLongClickListener?) {}
 
     private fun launchDrawActivity() {
         drawActivityLauncher.launch(
@@ -86,23 +76,5 @@ class DrawWidget(
             RequestCodes.DRAW_IMAGE,
             R.string.draw_image
         )
-    }
-
-    private fun updateAnswer() {
-        binding.image.visibility = View.GONE
-        binding.errorMessage.visibility = View.GONE
-
-        val file = questionMediaManager.getExistingAnswerFile(fileAnswerDelegate.binaryName)
-        if (file != null) {
-            binding.image.visibility = View.VISIBLE
-            imageLoader.loadImage(binding.image, file, ImageView.ScaleType.FIT_CENTER, object : GlideImageLoader.ImageLoaderCallback {
-                override fun onLoadFailed() {
-                    binding.image.visibility = View.GONE
-                    binding.errorMessage.visibility = View.VISIBLE
-                }
-
-                override fun onLoadSucceeded() {}
-            })
-        }
     }
 }
