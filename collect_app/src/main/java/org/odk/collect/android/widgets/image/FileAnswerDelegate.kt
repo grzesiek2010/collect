@@ -47,7 +47,7 @@ class FileAnswerDelegate(
     }
 
     private fun clearFile() {
-        questionMediaManager.deleteAnswerFile(prompt.index.toString(), binaryName)
+        questionMediaManager.deleteAnswerFile(prompt.index.toString(), questionMediaManager.getAnswerFile(binaryName)?.absolutePath)
         binaryName = null
     }
 }

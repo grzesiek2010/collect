@@ -47,7 +47,7 @@ class FileAnswerDelegateTest {
         delegate.deleteFile()
 
         assertThat(delegate.binaryName, nullValue())
-        assertThat(questionMediaManager.originalFiles["1"], equalTo("image.jpg"))
+        assertThat(questionMediaManager.originalFiles["1"], equalTo(questionMediaManager.getAnswerFile("image.jpg")!!.absolutePath))
         verify(widget).widgetValueChanged()
     }
 
@@ -73,7 +73,7 @@ class FileAnswerDelegateTest {
         val file = File.createTempFile("new_image", ".jpg")
         delegate.setData(file)
 
-        assertThat(questionMediaManager.originalFiles["1"], equalTo("old_image.jpg"))
+        assertThat(questionMediaManager.originalFiles["1"], equalTo(questionMediaManager.getAnswerFile("old_image.jpg")!!.absolutePath))
     }
 
     @Test

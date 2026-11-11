@@ -97,7 +97,7 @@ class SignatureWidgetTest : BinaryWidgetTest<SignatureWidget, StringData>() {
         super.settingANewAnswerShouldRemoveTheOldAnswer()
 
         val promptIndex = formEntryPrompt.index.toString()
-        assertThat(questionMediaManager.originalFiles[promptIndex], equalTo(formEntryPrompt.answerText))
+        assertThat(questionMediaManager.originalFiles[promptIndex], equalTo(questionMediaManager.getAnswerFile(formEntryPrompt.answerText)!!.absolutePath))
         assertThat(questionMediaManager.recentFiles[promptIndex], notNullValue())
     }
 
@@ -106,7 +106,7 @@ class SignatureWidgetTest : BinaryWidgetTest<SignatureWidget, StringData>() {
         super.callingClearShouldRemoveTheExistingAnswer()
 
         val promptIndex = formEntryPrompt.index.toString()
-        assertThat(questionMediaManager.originalFiles[promptIndex], equalTo(formEntryPrompt.answerText))
+        assertThat(questionMediaManager.originalFiles[promptIndex], equalTo(questionMediaManager.getAnswerFile(formEntryPrompt.answerText)!!.absolutePath))
         assertThat(questionMediaManager.recentFiles[promptIndex], equalTo(null))
     }
 
