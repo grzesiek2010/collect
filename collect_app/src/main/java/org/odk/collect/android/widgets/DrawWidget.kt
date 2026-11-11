@@ -45,6 +45,7 @@ class DrawWidget(
                     formEntryPrompt,
                     fileAnswerDelegate.binaryName,
                     readOnly,
+                    DrawButtonDetails.DRAW,
                     buttonFontSize,
                     onDrawClick = { launchDrawActivity() },
                     onLongClick = { showContextMenu() }

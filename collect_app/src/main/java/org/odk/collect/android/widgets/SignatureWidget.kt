@@ -40,13 +40,14 @@ class SignatureWidget(
 
         return ComposeView(context).apply {
             setContextThemedContent(ViewCompositionStrategy.DisposeOnDetachedFromWindowOrReleasedFromPool) {
-                SignatureWidgetContent(
+                DrawWidgetContent(
                     dependencies.mediaWidgetAnswerViewModel,
                     formEntryPrompt,
                     fileAnswerDelegate.binaryName,
                     readOnly,
+                    DrawButtonDetails.SIGNATURE,
                     buttonFontSize,
-                    onSignClick = { launchDrawActivity() },
+                    onDrawClick = { launchDrawActivity() },
                     onLongClick = { showContextMenu() }
                 )
             }

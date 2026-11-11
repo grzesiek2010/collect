@@ -1,5 +1,7 @@
 package org.odk.collect.android.widgets
 
+import androidx.annotation.DrawableRes
+import androidx.annotation.StringRes
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.padding
 import androidx.compose.runtime.Composable
@@ -18,6 +20,7 @@ fun DrawWidgetContent(
     formEntryPrompt: FormEntryPrompt,
     answer: String?,
     readOnly: Boolean,
+    buttonDetails: DrawButtonDetails,
     buttonFontSize: Int,
     onDrawClick: () -> Unit,
     onLongClick: () -> Unit
@@ -25,8 +28,8 @@ fun DrawWidgetContent(
     Column {
         if (!readOnly) {
             WidgetIconButton(
-                ImageVector.vectorResource(R.drawable.ic_baseline_draw_white_24),
-                stringResource(string.draw_image),
+                ImageVector.vectorResource(buttonDetails.icon),
+                stringResource(buttonDetails.text),
                 buttonFontSize,
                 onDrawClick,
                 onLongClick
@@ -41,4 +44,12 @@ fun DrawWidgetContent(
             onLongClick = onLongClick
         )
     }
+}
+
+enum class DrawButtonDetails(
+    @DrawableRes val icon: Int,
+    @StringRes val text: Int
+) {
+    DRAW(R.drawable.ic_baseline_draw_white_24, string.draw_image),
+    SIGNATURE(R.drawable.ic_baseline_signature_white_24, string.sign_button)
 }
