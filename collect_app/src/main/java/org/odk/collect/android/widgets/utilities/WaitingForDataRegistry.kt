@@ -8,6 +8,14 @@ import androidx.annotation.StringRes
 import org.javarosa.core.model.FormIndex
 import org.odk.collect.strings.R.string
 
+interface WaitingForDataRegistry {
+    fun waitForData(index: FormIndex)
+
+    fun isWaitingForData(index: FormIndex): Boolean
+
+    fun cancelWaitingForData()
+}
+
 fun WaitingForDataRegistry.launchForResult(
     activity: Activity,
     formIndex: FormIndex,
