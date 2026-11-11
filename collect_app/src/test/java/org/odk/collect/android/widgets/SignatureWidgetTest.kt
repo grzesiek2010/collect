@@ -20,7 +20,7 @@ import org.odk.collect.android.injection.config.AppDependencyModule
 import org.odk.collect.android.support.CollectHelpers
 import org.odk.collect.android.support.CollectHelpers.setupFakeReferenceManager
 import org.odk.collect.android.support.MockFormEntryPromptBuilder
-import org.odk.collect.android.widgets.base.FileWidgetTest
+import org.odk.collect.android.widgets.base.BinaryWidgetTest
 import org.odk.collect.android.widgets.support.FakeQuestionMediaManager
 import org.odk.collect.android.widgets.support.FakeWaitingForDataRegistry
 import org.odk.collect.android.widgets.support.SynchronousImageLoader
@@ -30,23 +30,23 @@ import org.odk.collect.shared.TempFiles
 import org.robolectric.Shadows.shadowOf
 import java.io.File
 
-class SignatureWidgetTest : FileWidgetTest<SignatureWidget>() {
+class SignatureWidgetTest : BinaryWidgetTest<SignatureWidget, StringData>() {
     private var currentFile: File? = null
-
-    override fun createWidget(): SignatureWidget {
-        val fakeQuestionMediaManager = object : FakeQuestionMediaManager() {
-            override fun getAnswerFile(fileName: String?): File? {
-                return if (currentFile == null) {
-                    super.getAnswerFile(fileName)
-                } else {
-                    if (fileName == DrawWidgetTest.USER_SPECIFIED_IMAGE_ANSWER) currentFile else null
-                }
+    private val questionMediaManager = object : FakeQuestionMediaManager() {
+        override fun getAnswerFile(fileName: String?): File? {
+            return if (currentFile == null) {
+                super.getAnswerFile(fileName)
+            } else {
+                if (fileName == DrawWidgetTest.USER_SPECIFIED_IMAGE_ANSWER) currentFile else null
             }
         }
+    }
+
+    override fun createWidget(): SignatureWidget {
         return SignatureWidget(
             activity,
             QuestionDetails(formEntryPrompt, readOnlyOverride),
-            fakeQuestionMediaManager,
+            questionMediaManager,
             FakeWaitingForDataRegistry(),
             TempFiles.getPathInTempDir(),
             dependencies
@@ -55,6 +55,28 @@ class SignatureWidgetTest : FileWidgetTest<SignatureWidget>() {
 
     override fun getNextAnswer(): StringData {
         return StringData(RandomString.make())
+    }
+
+    override fun createBinaryData(answerData: StringData): Any {
+        return TempFiles.createTempFileWithName(answerData.displayText)
+    }
+
+    @Test
+    fun `setting a new answer removes the old file and keeps the new one`() {
+        super.settingANewAnswerShouldRemoveTheOldAnswer()
+
+        val promptIndex = formEntryPrompt.index.toString()
+        assertThat(questionMediaManager.originalFiles[promptIndex], equalTo(formEntryPrompt.answerText))
+        assertThat(questionMediaManager.recentFiles[promptIndex], notNullValue())
+    }
+
+    @Test
+    fun `clearing the answer removes the existing answer and its file`() {
+        super.callingClearShouldRemoveTheExistingAnswer()
+
+        val promptIndex = formEntryPrompt.index.toString()
+        assertThat(questionMediaManager.originalFiles[promptIndex], equalTo(formEntryPrompt.answerText))
+        assertThat(questionMediaManager.recentFiles[promptIndex], equalTo(null))
     }
 
     @Test
@@ -76,10 +98,10 @@ class SignatureWidgetTest : FileWidgetTest<SignatureWidget>() {
     fun `the image and error message are hidden when there is no answer`() {
         val widget = createWidget()
 
-        assertThat(widget.imageView.visibility, `is`(View.GONE))
-        assertThat(widget.imageView.drawable, nullValue())
+        assertThat(widget.binding.image.visibility, `is`(View.GONE))
+        assertThat(widget.binding.image.drawable, nullValue())
 
-        assertThat(widget.errorTextView.visibility, `is`(View.GONE))
+        assertThat(widget.binding.errorMessage.visibility, `is`(View.GONE))
     }
 
     @Test
@@ -99,10 +121,10 @@ class SignatureWidgetTest : FileWidgetTest<SignatureWidget>() {
 
         val widget = createWidget()
 
-        assertThat(widget.imageView.visibility, `is`(View.GONE))
-        assertThat(widget.imageView.drawable, nullValue())
+        assertThat(widget.binding.image.visibility, `is`(View.GONE))
+        assertThat(widget.binding.image.drawable, nullValue())
 
-        assertThat(widget.errorTextView.visibility, `is`(View.VISIBLE))
+        assertThat(widget.binding.errorMessage.visibility, `is`(View.VISIBLE))
     }
 
     @Test
@@ -127,10 +149,10 @@ class SignatureWidgetTest : FileWidgetTest<SignatureWidget>() {
             .build()
 
         val widget = createWidget()
-        val imageView = widget.imageView
+        val imageView = widget.binding.image
         assertThat(imageView.visibility, `is`(View.GONE))
         assertThat(imageView.drawable, nullValue())
-        assertThat(widget.errorTextView.visibility, `is`(View.GONE))
+        assertThat(widget.binding.errorMessage.visibility, `is`(View.GONE))
     }
 
     @Test
@@ -149,7 +171,7 @@ class SignatureWidgetTest : FileWidgetTest<SignatureWidget>() {
             .build()
 
         val widget = createWidget()
-        val imageView = widget.imageView
+        val imageView = widget.binding.image
         assertThat(imageView.visibility, `is`(View.VISIBLE))
         val drawable = imageView.drawable
         assertThat(drawable, notNullValue())
